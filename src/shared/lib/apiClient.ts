@@ -35,21 +35,44 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   });
 
   if (res.status === 401) {
-    const refreshed = await tryRefresh();
-    if (refreshed) {
+    const refresh = await tryRefresh();
+    if (refresh.ok) {
       const retryRes = await fetch(`${BASE_URL}${path}`, {
         ...options,
         headers,
         credentials: 'include',
       });
-      return parseResponse<T>(retryRes);
+      return endSessionIfOrgDisabled(parseResponse<T>(retryRes));
+    } else if (refresh.error?.code === ORG_DISABLED) {
+      useAuthStore.getState().endSession(refresh.error.message);
+      throw refresh.error;
     } else {
       useAuthStore.getState().clearSession();
       throw new ApiError('TOKEN_EXPIRED', 'Session expirée. Reconnectez-vous.', 401);
     }
   }
 
-  return parseResponse<T>(res);
+  return endSessionIfOrgDisabled(parseResponse<T>(res));
+}
+
+/**
+ * Organisation désactivée (fin d'un test, ou désactivation par un
+ * superadmin) : le back répond 403 ORG_DISABLED sur toute requête
+ * authentifiée et au rafraîchissement. On coupe la session locale ; l'écran
+ * de connexion affiche le message.
+ */
+const ORG_DISABLED = 'ORG_DISABLED';
+
+async function endSessionIfOrgDisabled<T>(pending: Promise<T>): Promise<T> {
+  try {
+    return await pending;
+  } catch (err) {
+    // Sans session locale (écran de connexion), le formulaire affiche déjà l'erreur.
+    if (err instanceof ApiError && err.code === ORG_DISABLED && useAuthStore.getState().session) {
+      useAuthStore.getState().endSession(err.message);
+    }
+    throw err;
+  }
 }
 
 async function parseResponse<T>(res: Response): Promise<T> {
@@ -66,25 +89,36 @@ async function parseResponse<T>(res: Response): Promise<T> {
 
 // Mutex pour le refresh : plusieurs requêtes simultanées qui voient un 401
 // partagent la même tentative au lieu de la lancer en parallèle.
-let refreshPromise: Promise<boolean> | null = null;
+interface RefreshResult {
+  ok:     boolean;
+  /** Erreur renvoyée par /auth/refresh, si elle en porte une (ex. ORG_DISABLED). */
+  error?: ApiError;
+}
 
-async function tryRefresh(): Promise<boolean> {
+let refreshPromise: Promise<RefreshResult> | null = null;
+
+async function tryRefresh(): Promise<RefreshResult> {
   if (refreshPromise) return refreshPromise;
   refreshPromise = doRefresh().finally(() => { refreshPromise = null; });
   return refreshPromise;
 }
 
-async function doRefresh(): Promise<boolean> {
+async function doRefresh(): Promise<RefreshResult> {
   try {
     const res = await fetch(`${BASE_URL}/auth/refresh`, {
       method:      'POST',
       credentials: 'include',
     });
-    return res.ok;
     // Le nouveau access token est posé en cookie par le backend ; pas besoin
     // de toucher au store côté frontend.
+    if (res.ok) return { ok: true };
+    const body = await res.json().catch(() => null);
+    const code = body?.error?.code;
+    return code
+      ? { ok: false, error: new ApiError(code, body.error.message ?? 'Une erreur est survenue.', res.status) }
+      : { ok: false };
   } catch {
-    return false;
+    return { ok: false };
   }
 }
 

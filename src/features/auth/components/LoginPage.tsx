@@ -6,6 +6,7 @@ import { OAuthButtons } from './OAuthButtons';
 import { useLogin }     from '../hooks/useLogin';
 import { useRegister }  from '../hooks/useRegister';
 import { useToast }     from '../../../shared/lib/useToast';
+import { useAuthStore } from '../../../store/authStore';
 import type { AuthSession } from '../types';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { ResetPasswordForm }  from './ResetPasswordForm';
@@ -17,6 +18,8 @@ interface LoginPageProps {
 export function LoginPage({ onLoginSuccess }: LoginPageProps) {
   const [mode, setMode] = useState<'login' | 'register' | 'forgot' | 'reset'>('login');
   const toast = useToast();
+  // Session coupée par le serveur (ex. ORG_DISABLED en cours de navigation).
+  const sessionEndedReason = useAuthStore(s => s.sessionEndedReason);
 
   // Détection du token de reset dans l'URL
 const resetToken = new URLSearchParams(window.location.search).get('reset_token');
@@ -69,6 +72,9 @@ React.useEffect(() => {
         Accédez à la base de connaissance de votre équipe.
       </p>
     </div>
+    {sessionEndedReason && (
+      <p className="login-page__notice" role="alert">{sessionEndedReason}</p>
+    )}
     <OAuthButtons mode="login" onSuccess={handleLoginSuccess} />
     <LoginForm
       values={login.values}

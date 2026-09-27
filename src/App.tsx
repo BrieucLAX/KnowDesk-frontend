@@ -35,7 +35,7 @@ import { ImpersonateBanner } from './shared/components/ui/ImpersonateBanner';
 import { NetworkErrorBanner } from './shared/components/ui/NetworkErrorBanner';
 import { ToastContainer }   from './shared/components/ui/ToastContainer';
 import { ProtectedRoute }   from './router/ProtectedRoute';
-import { apiClient }          from './shared/lib/apiClient';
+import { apiClient, ApiError } from './shared/lib/apiClient';
 import {
   useAuthStore, selectIsLoggedIn, selectUserRole, selectOrganization,
 } from './store/authStore';
@@ -263,7 +263,13 @@ export function App() {
           setSession({ user: data.user, organization: data.organization });
         }
       })
-      .catch(() => { /* 401/réseau : on tombe sur LoginPage, comportement par défaut */ })
+      .catch(err => {
+        // Cookie valide mais espace désactivé : l'écran de connexion le dit.
+        if (alive && err instanceof ApiError && err.code === 'ORG_DISABLED') {
+          useAuthStore.getState().endSession(err.message);
+        }
+        /* 401/réseau : on tombe sur LoginPage, comportement par défaut */
+      })
       .finally(() => { if (alive) setBootValidated(true); });
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps

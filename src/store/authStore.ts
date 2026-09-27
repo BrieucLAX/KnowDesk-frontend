@@ -8,8 +8,13 @@ interface AuthState {
   isLoaded:       boolean;
   onboardingDone: boolean;
   impersonating:  { orgName: string; saToken: string } | null;
+  /** Pourquoi la session a été coupée par le serveur (ex. espace désactivé) ;
+   *  affiché sur l'écran de connexion jusqu'à la prochaine connexion. */
+  sessionEndedReason: string | null;
   setSession:        (session: AuthSession) => void;
   clearSession:      () => void;
+  /** Coupe la session locale en gardant la raison à afficher. */
+  endSession:        (reason: string) => void;
   /** Vraie déconnexion : POST /auth/logout (clear cookies serveur) puis clearSession. */
   logout:            () => Promise<void>;
   setOnboardingDone: () => void;
@@ -24,14 +29,18 @@ export const useAuthStore = create<AuthState>()(
       isLoaded:       false,
       onboardingDone: false,
       impersonating:  null,
+      sessionEndedReason: null,
 
       setSession: (session) => set({
         session,
         isLoaded:       true,
+        sessionEndedReason: null,
         onboardingDone: session.user.onboardingDone ?? get().onboardingDone,
       }),
 
-      clearSession: () => set({ session: null, isLoaded: true, onboardingDone: false, impersonating: null }),
+      clearSession: () => set({ session: null, isLoaded: true, onboardingDone: false, impersonating: null, sessionEndedReason: null }),
+
+      endSession: (reason) => set({ session: null, isLoaded: true, onboardingDone: false, impersonating: null, sessionEndedReason: reason }),
 
       logout: async () => {
         // POST /auth/logout pour invalider les cookies HTTP-only (access_token
@@ -45,7 +54,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (err) {
           console.warn('[authStore] /auth/logout failed:', (err as Error)?.message ?? err);
         }
-        set({ session: null, isLoaded: true, onboardingDone: false, impersonating: null });
+        set({ session: null, isLoaded: true, onboardingDone: false, impersonating: null, sessionEndedReason: null });
       },
 
       setOnboardingDone: () => {
