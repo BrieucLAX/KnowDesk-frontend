@@ -64,6 +64,16 @@ describe('AnalysisProgress', () => {
     expect(alert).not.toHaveTextContent(/relancer|indisponible/);
   });
 
+  it('code d\'erreur hors contrat : problème de notre côté, pas d\'invitation à relancer', () => {
+    render(<AnalysisProgress analysis={analysis({
+      status: 'failed', stage: 'extraction', errorCode: 'pipeline_invalid_error_code', finishedAt: new Date(START + 5_000).toISOString(),
+    })} />);
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent('problème de notre côté');
+    expect(alert).toHaveTextContent('ne compte pas dans votre quota. Nous sommes prévenus.');
+    expect(alert).not.toHaveTextContent(/relancer/);
+  });
+
   it('réussite : toutes les étapes terminées', () => {
     render(<AnalysisProgress analysis={analysis({ status: 'succeeded', stage: 'storing', finishedAt: new Date(START + 1500_000).toISOString() })} />);
     expect(screen.getByRole('heading', { name: 'Analyse terminée' })).toBeInTheDocument();
