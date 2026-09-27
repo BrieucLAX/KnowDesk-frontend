@@ -1,6 +1,7 @@
 import React from 'react';
 import { SideNav, type NavRoute } from './SideNav';
-import { useAuthStore } from '../../../store/authStore';
+import { useAuthStore, selectOrganization } from '../../../store/authStore';
+import { isTestOrganization } from '../../lib/modules';
 
 interface AppLayoutProps {
   children:     React.ReactNode;
@@ -16,6 +17,7 @@ export function AppLayout({
 }: AppLayoutProps) {
   const logout        = useAuthStore(s => s.logout);
   const impersonating = useAuthStore(s => s.impersonating);
+  const organization  = useAuthStore(selectOrganization);
 
   const handleNavigate = (route: NavRoute) => {
     onNavigate?.(route);
@@ -23,25 +25,19 @@ export function AppLayout({
 
   return (
     <div className="app-layout" style={impersonating ? { marginTop: '40px' } : undefined}>
-      <SideNav active={activeRoute} onNavigate={handleNavigate} onHelp={onHelp ?? (() => {})} />
+      <SideNav active={activeRoute} onNavigate={handleNavigate} onHelp={onHelp} />
       <div className="app-layout__body">
+        {/* Organisations de test (module onboarding) : bandeau permanent. */}
+        {isTestOrganization(organization) && (
+          <div className="test-version-banner" role="status">
+            <strong>Version de test</strong> — ce parcours est en cours de développement.
+          </div>
+        )}
         <header className="topbar" role="banner">
           {pageTitle && <h1 className="topbar__title sr-only">{pageTitle}</h1>}
           <div className="topbar__search-wrap">
-            {searchSlot ?? (
-              <div className="topbar__search">
-                <span className="topbar__search-icon">
-                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
-                    <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" strokeWidth="1.3"/>
-                    <line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                  </svg>
-                </span>
-                <input
-                  type="search" className="topbar__search-input"
-                  placeholder="Rechercher… (⌘K)" aria-label="Recherche globale"
-                />
-              </div>
-            )}
+            {/* Barre de recherche : absente sans le module knowledge (App.tsx). */}
+            {searchSlot}
           </div>
           <div className="topbar__actions">
             <button

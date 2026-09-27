@@ -4,11 +4,16 @@ import '../superadmin.css';
 import { Button }          from '../../../shared/components/ui/Button';
 import { ConfirmDialog }   from '../../../shared/components/ui/ConfirmDialog';
 import { formatRelative }  from '../../../shared/lib/formatDate';
+import { CreateTestOrgModal } from './CreateTestOrgModal';
+
+/** Organisation de test : créée par la route superadmin, module onboarding seul. */
+const isTestOrg = (org: { enabled_modules?: string[] }) => org.enabled_modules?.includes('onboarding') ?? false;
 
 export function SuperadminApp() {
   const {
     session, orgs, loading, error, loginErr,
     login, logout, disableOrg, enableOrg, impersonate, reindexSearch, recomputeResolutions,
+    createTestOrg, endTest,
   } = useSuperadmin();
 
   const [email,        setEmail]        = useState('');
@@ -20,6 +25,25 @@ export function SuperadminApp() {
   const [recomputeState, setRecomputeState] = useState<'idle' | 'running' | 'done' | 'error'>('idle');
   const [recomputeInfo,  setRecomputeInfo]  = useState<string>('');
   const [recomputeConfirm, setRecomputeConfirm] = useState(false);
+  // Organisations de test (prérequis 17, « Terminer le test »)
+  const [creatingTestOrg, setCreatingTestOrg] = useState(false);
+  const [endTestTarget,   setEndTestTarget]   = useState<{ id: string; name: string } | null>(null);
+  const [endTestLoading,  setEndTestLoading]  = useState(false);
+  const [endTestError,    setEndTestError]    = useState('');
+
+  const confirmEndTest = async () => {
+    if (!endTestTarget) return;
+    setEndTestLoading(true);
+    setEndTestError('');
+    try {
+      await endTest(endTestTarget.id);
+    } catch (err) {
+      setEndTestError(err instanceof Error ? err.message : 'Impossible de terminer le test.');
+    } finally {
+      setEndTestLoading(false);
+      setEndTestTarget(null);
+    }
+  };
 
   const runReindex = async () => {
     setReindexState('running');
@@ -210,9 +234,13 @@ export function SuperadminApp() {
         <div className="sa-section">
           <div className="sa-section__header">
             <h2 className="sa-section__title">Organisations</h2>
+            <Button variant="primary" size="sm" onClick={() => setCreatingTestOrg(true)}>
+              Nouvelle organisation de test
+            </Button>
           </div>
 
           {error && <div className="sa-error" role="alert">{error}</div>}
+          {endTestError && <div className="sa-error" role="alert">{endTestError}</div>}
 
           {loading ? (
             <p className="sa-loading">Chargement…</p>
@@ -235,7 +263,10 @@ export function SuperadminApp() {
                   {orgs.map(org => (
                     <tr key={org.id} className={org.disabled_at ? 'sa-table__row--disabled' : ''}>
                       <td>
-                        <div className="sa-org-name">{org.name}</div>
+                        <div className="sa-org-name">
+                          {org.name}
+                          {isTestOrg(org) && <span className="sa-badge-test">Test</span>}
+                        </div>
                         <div className="sa-org-slug">{org.slug}</div>
                       </td>
                       <td><span className={`sa-plan sa-plan--${org.plan}`}>{org.plan}</span></td>
@@ -244,14 +275,17 @@ export function SuperadminApp() {
                       <td>{org.stats.articlesCount}</td>
                       <td>{formatRelative(org.created_at)}</td>
                       <td>
-                        {org.disabled_at
-                          ? <span className="sa-status sa-status--disabled">Désactivé</span>
-                          : <span className="sa-status sa-status--active">Actif</span>
+                        {org.test_ended_at
+                          ? <span className="sa-status sa-status--disabled" title={`Test terminé ${formatRelative(org.test_ended_at)}`}>Test terminé</span>
+                          : org.disabled_at
+                            ? <span className="sa-status sa-status--disabled">Désactivé</span>
+                            : <span className="sa-status sa-status--active">Actif</span>
                         }
                       </td>
                       <td>
   <div className="sa-org__actions">
-    {org.disabled_at ? (
+    {/* Test terminé : réactivation refusée par le back (TEST_ENDED). */}
+    {org.test_ended_at ? null : org.disabled_at ? (
       <Button variant="ghost" size="sm"
         onClick={() => setConfirm({ orgId: org.id, action: 'enable' })}>
         Réactiver
@@ -267,6 +301,12 @@ export function SuperadminApp() {
           Accéder
         </Button>
       </>
+    )}
+    {isTestOrg(org) && !org.test_ended_at && (
+      <Button variant="danger" size="sm"
+        onClick={() => { setEndTestError(''); setEndTestTarget({ id: org.id, name: org.name }); }}>
+        Terminer le test
+      </Button>
     )}
   </div>
 </td>
@@ -296,6 +336,27 @@ export function SuperadminApp() {
             setConfirm(null);
           }}
           onCancel={() => setConfirm(null)}
+        />
+      )}
+
+      {creatingTestOrg && (
+        <CreateTestOrgModal onCreate={createTestOrg} onClose={() => setCreatingTestOrg(false)} />
+      )}
+
+      {endTestTarget && (
+        <ConfirmDialog
+          title={`Terminer le test de « ${endTestTarget.name} »`}
+          description={
+            'L\'espace est désactivé immédiatement : ses utilisateurs ne peuvent plus se connecter. '
+          + 'La date de fin du test est enregistrée : elle fixe la purge des données de test à 30 jours '
+          + '(purge automatique pas encore livrée, étape D du plan). '
+          + 'C\'est définitif : l\'espace ne pourra pas être réactivé.'
+          }
+          confirmLabel="Terminer le test"
+          variant="danger"
+          loading={endTestLoading}
+          onConfirm={confirmEndTest}
+          onCancel={() => setEndTestTarget(null)}
         />
       )}
 

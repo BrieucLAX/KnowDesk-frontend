@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { SuperadminSession, OrgRow } from '../types';
+import type { SuperadminSession, OrgRow, TestOrgCreated } from '../types';
 import type { OrgPlan } from '../../../shared/types';
 import { useAuthStore } from '../../../store/authStore';
 
@@ -132,6 +132,9 @@ export function useSuperadmin() {
           name: data.org.name,
           slug: known?.slug ?? '',
           plan: (known?.plan as OrgPlan | undefined) ?? 'free',
+          // Sans ce champ, une organisation de test serait vue comme historique
+          // jusqu'au /auth/me du chargement suivant.
+          enabledModules: known?.enabled_modules,
         },
       });
       window.location.href = '/';
@@ -139,6 +142,33 @@ export function useSuperadmin() {
       setError(err instanceof Error ? err.message : 'Erreur.');
     }
   }, [session, orgs, setImpersonating, setSessionStore]);
+
+  /**
+   * Crée une organisation de test ({onboarding}) et invite son admin
+   * (prérequis 17). La réponse porte le lien d'invitation, à transmettre à la
+   * main si l'email n'est pas parti.
+   */
+  const createTestOrg = useCallback(async (name: string, adminEmail: string): Promise<TestOrgCreated> => {
+    if (!session) throw new Error('Non connecté.');
+    const data = await saFetch<TestOrgCreated>('/test-organizations', session.accessToken, {
+      method: 'POST',
+      body:   JSON.stringify({ name, adminEmail }),
+    });
+    void loadOrgs(session.accessToken);
+    return data;
+  }, [session, loadOrgs]);
+
+  /**
+   * « Terminer le test » : renseigne test_ended_at et désactive l'espace.
+   * Irréversible : le back refuse ensuite la réactivation.
+   */
+  const endTest = useCallback(async (orgId: string) => {
+    if (!session) return;
+    const org = await saFetch<Pick<OrgRow, 'id' | 'disabled_at' | 'test_ended_at'>>(
+      `/organizations/${orgId}/end-test`, session.accessToken, { method: 'POST' },
+    );
+    setOrgs(prev => prev.map(o => o.id === orgId ? { ...o, disabled_at: org.disabled_at, test_ended_at: org.test_ended_at } : o));
+  }, [session]);
 
   // Recharge les orgs quand la session est établie
   useEffect(() => {
@@ -174,6 +204,6 @@ export function useSuperadmin() {
   return {
     session, orgs, loading, error, loginErr,
     login, logout, loadOrgs, disableOrg, enableOrg, impersonate,
-    reindexSearch, recomputeResolutions,
+    reindexSearch, recomputeResolutions, createTestOrg, endTest,
   };
 }

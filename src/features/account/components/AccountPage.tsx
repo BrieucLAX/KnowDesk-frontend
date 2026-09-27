@@ -4,13 +4,15 @@ import '../account.css';
 import { Button }      from '../../../shared/components/ui/Button';
 import { Input }       from '../../../shared/components/ui/Input';
 import { PageHeader }  from '../../../shared/components/layout/PageHeader';
-import { useAuthStore, selectUserRole } from '../../../store/authStore';
+import { useAuthStore, selectUserRole, selectOrganization } from '../../../store/authStore';
+import { canRunSetupWizard } from '../../../shared/lib/modules';
 import { useToast }    from '../../../shared/lib/useToast';
 import { ApiError }    from '../../../shared/lib/apiClient';
 
 export function AccountPage() {
   const { profile, loading, updateProfile, changePassword, requestEmailChange } = useAccount();
   const role            = useAuthStore(selectUserRole);
+  const organization    = useAuthStore(selectOrganization);
   const resetOnboarding = useAuthStore(s => s.resetOnboarding);
   const toast           = useToast();
   const [resettingOnboarding, setResettingOnboarding] = useState(false);
@@ -209,7 +211,7 @@ export function AccountPage() {
         </form>
       </section>
 
-      {role === 'admin' && (
+      {role === 'admin' && canRunSetupWizard(organization) && (
         <section className="account-section">
           <div className="account-section__header">
             <h2 className="account-section__title">Onboarding</h2>

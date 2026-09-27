@@ -80,6 +80,16 @@
 .sidenav__avatar:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; }
 
 /* ── TopBar ───────────────────────────────────────────────────── */
+/* Bandeau « Version de test » : organisations de test (module onboarding). */
+.test-version-banner {
+  padding: 8px 40px;
+  background: var(--brand-50);
+  border-bottom: 1px solid var(--brand-100);
+  color: var(--brand-700);
+  font-size: 13px;
+  text-align: center;
+}
+
 .topbar {
   height: 56px; background: var(--neutral-0);
   border-bottom: 1px solid var(--neutral-100);

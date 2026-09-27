@@ -35,10 +35,11 @@ import { ImpersonateBanner } from './shared/components/ui/ImpersonateBanner';
 import { NetworkErrorBanner } from './shared/components/ui/NetworkErrorBanner';
 import { ToastContainer }   from './shared/components/ui/ToastContainer';
 import { ProtectedRoute }   from './router/ProtectedRoute';
-import { apiClient }          from './shared/lib/apiClient';
+import { apiClient, ApiError } from './shared/lib/apiClient';
 import {
-  useAuthStore, selectIsLoggedIn, selectUserRole,
+  useAuthStore, selectIsLoggedIn, selectUserRole, selectOrganization,
 } from './store/authStore';
+import { canRunSetupWizard, canSeeScreen, hasModule } from './shared/lib/modules';
 import type { AuthSession }  from './features/auth/types';
 import type { SearchResult } from './features/search/types';
 
@@ -167,10 +168,19 @@ function viewToPath(view: View): string | null {
   }
 }
 
+/**
+ * Écran d'accueil d'une organisation : le tableau de bord si elle a le module,
+ * sinon Mon compte (toujours permis).
+ */
+function homeView(org: Parameters<typeof canSeeScreen>[0]): View {
+  return canSeeScreen(org, 'dashboard') ? { screen: 'dashboard' } : { screen: 'account' };
+}
+
 export function App() {
 
 
   const isLoggedIn        = useAuthStore(selectIsLoggedIn);
+  const organization      = useAuthStore(selectOrganization);
   const setSession        = useAuthStore(s => s.setSession);
   const role              = useAuthStore(selectUserRole);
   const onboardingDone    = useAuthStore(s => s.onboardingDone);
@@ -226,7 +236,25 @@ export function App() {
   // LoginPage avant la rehydratation.
   const [bootValidated, setBootValidated] = useState(isLoggedIn);
   useEffect(() => {
-    if (isLoggedIn) { setBootValidated(true); return; }
+    if (isLoggedIn) {
+      setBootValidated(true);
+      // Session déjà en localStorage : on relit /auth/me en arrière-plan pour
+      // rafraîchir organization.enabledModules (un changement de modules prend
+      // effet au prochain chargement). /auth/me ne renvoie pas `plan` : on
+      // fusionne au lieu de remplacer.
+      apiClient.get<{ user: AuthSession['user']; organization: Partial<AuthSession['organization']> }>('/auth/me')
+        .then(data => {
+          const current = useAuthStore.getState().session;
+          if (!current || !data?.user || !data?.organization) return;
+          setSession({
+            ...current,
+            user:         { ...current.user, ...data.user },
+            organization: { ...current.organization, ...data.organization },
+          });
+        })
+        .catch(() => { /* 401 : apiClient efface la session ; réseau : on garde l'état local */ });
+      return;
+    }
     let alive = true;
     apiClient.get<{ user: AuthSession['user']; organization: AuthSession['organization'] }>('/auth/me')
       .then(data => {
@@ -235,13 +263,29 @@ export function App() {
           setSession({ user: data.user, organization: data.organization });
         }
       })
-      .catch(() => { /* 401/réseau : on tombe sur LoginPage, comportement par défaut */ })
+      .catch(err => {
+        // Cookie valide mais espace désactivé : l'écran de connexion le dit.
+        if (alive && err instanceof ApiError && err.code === 'ORG_DISABLED') {
+          useAuthStore.getState().endSession(err.message);
+        }
+        /* 401/réseau : on tombe sur LoginPage, comportement par défaut */
+      })
       .finally(() => { if (alive) setBootValidated(true); });
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const needsOnboarding = isLoggedIn && role === 'admin' && !onboardingDone;
+  const needsOnboarding = isLoggedIn && role === 'admin' && !onboardingDone && canRunSetupWizard(organization);
+
+  // Aiguillage filtré par les modules de l'organisation : un écran non permis
+  // (lien direct, URL inconnue, retour arrière) est remplacé par l'accueil de
+  // l'organisation. `shown` est rendu tout de suite, sans monter l'écran refusé
+  // ni déclencher ses appels ; l'effet réaligne l'état et l'URL.
+  const allowed = canSeeScreen(organization, view.screen);
+  const shown: View = allowed ? view : homeView(organization);
+  useEffect(() => {
+    if (isLoggedIn && !allowed) setView(homeView(organization));
+  }, [isLoggedIn, allowed, organization]);
 
   const go = useCallback((v: View) => setView(v), []);
 
@@ -255,11 +299,11 @@ export function App() {
       const from = view.from ?? 'dashboard';
       if (from === 'knowledge') go({ screen: 'knowledge' });
       else if (from === 'editor') go({ screen: 'knowledge' });
-      else go({ screen: 'dashboard' });
+      else go(homeView(organization));
     } else {
-      go({ screen: 'dashboard' });
+      go(homeView(organization));
     }
-  }, [view, go]);
+  }, [view, go, organization]);
 
   const handleSearchSelect = useCallback((result: SearchResult) => {
     if (result.type === 'tree') {
@@ -270,17 +314,17 @@ export function App() {
   }, [go, view.screen]);
 
   const activeRoute = (
-    view.screen === 'trees' || view.screen === 'tree-editor' || view.screen === 'tree' ? 'trees' :
-    view.screen === 'faqs'  || view.screen === 'faq-editor'  ? 'faqs' :
-    view.screen === 'account' ? 'settings' :
-    view.screen === 'knowledge' || view.screen === 'article' || view.screen === 'editor'
+    shown.screen === 'trees' || shown.screen === 'tree-editor' || shown.screen === 'tree' ? 'trees' :
+    shown.screen === 'faqs'  || shown.screen === 'faq-editor'  ? 'faqs' :
+    shown.screen === 'account' ? 'settings' :
+    shown.screen === 'knowledge' || shown.screen === 'article' || shown.screen === 'editor'
       ? 'knowledge'
-    : view.screen === 'members'   ? 'team'
-    : view.screen === 'analytics' ? 'analytics'
-    : view.screen === 'chats'     ? 'chats'
-    : view.screen === 'brand-monitoring' ? 'brand-monitoring'
-    : view.screen === 'learning' || view.screen === 'learning-edit' || view.screen === 'learning-play' ? 'learning'
-    : view.screen === 'settings'  ? 'settings'
+    : shown.screen === 'members'   ? 'team'
+    : shown.screen === 'analytics' ? 'analytics'
+    : shown.screen === 'chats'     ? 'chats'
+    : shown.screen === 'brand-monitoring' ? 'brand-monitoring'
+    : shown.screen === 'learning' || shown.screen === 'learning-edit' || shown.screen === 'learning-play' ? 'learning'
+    : shown.screen === 'settings'  ? 'settings'
     : 'dashboard'
   ) as 'dashboard' | 'search' | 'knowledge' | 'faqs' | 'trees' | 'learning' | 'team' | 'analytics' | 'chats' | 'brand-monitoring' | 'settings';
 
@@ -344,7 +388,7 @@ if (!isLoggedIn) {
       <EmailVerificationBanner />
       <ProtectedRoute>
         <AppLayout
-          onHelp={() => setHelpOpen(true)}
+          onHelp={hasModule(organization, 'help') ? () => setHelpOpen(true) : undefined}
           activeRoute={activeRoute}
           onNavigate={route => {
             if (route === 'dashboard') go({ screen: 'dashboard' });
@@ -359,56 +403,56 @@ if (!isLoggedIn) {
             if (route === 'faqs')      go({ screen: 'faqs'      });
             if (route === 'account')   go({ screen: 'account'   });
           }}
-          searchSlot={<SearchBar onSelect={handleSearchSelect} />}
+          searchSlot={hasModule(organization, 'knowledge') ? <SearchBar onSelect={handleSearchSelect} /> : null}
         >
-          {view.screen === 'dashboard' && (
+          {shown.screen === 'dashboard' && (
             <DashboardPage
               onArticleClick={id => go({ screen: 'article', articleId: id, from: 'dashboard' })}
               onNewArticle={() => go({ screen: 'editor', from: 'dashboard' })}
             />
           )}
-          {view.screen === 'knowledge' && (
+          {shown.screen === 'knowledge' && (
             <KnowledgePage
               onOpenArticle={id  => go({ screen: 'article', articleId: id, from: 'knowledge' })}
               onNewArticle={() => go({ screen: 'editor', from: 'knowledge' })}
             />
           )}
-          {view.screen === 'article' && (
+          {shown.screen === 'article' && (
             <ArticlePage
-              articleId={view.articleId}
+              articleId={shown.articleId}
               onBack={goBack}
               onEdit={id => go({ screen: 'editor', articleId: id, from: 'article' })}
             />
           )}
-          {view.screen === 'tree' && (
+          {shown.screen === 'tree' && (
             <QuestionTreePage
-              treeId={view.treeId}
+              treeId={shown.treeId}
               onBack={goBack}
               onViewArticle={id => go({ screen: 'article', articleId: id, from: 'tree' })}
             />
           )}
-          {view.screen === 'editor' && (
+          {shown.screen === 'editor' && (
             <ArticleEditor
-              articleId={view.articleId}
+              articleId={shown.articleId}
               onSaved={id => go({ screen: 'article', articleId: id, from: 'editor' })}
               onCancel={goBack}
             />
           )}
-          {view.screen === 'members'  && <MembersPage />}
-          {view.screen === 'faqs' && (
+          {shown.screen === 'members'  && <MembersPage />}
+          {shown.screen === 'faqs' && (
             <FaqsPage
               onNewFaq={() => go({ screen: 'faq-editor' })}
               onEditFaq={id => go({ screen: 'faq-editor', faqId: id })}
             />
           )}
-          {view.screen === 'faq-editor' && (
+          {shown.screen === 'faq-editor' && (
             <FaqEditor
-              faqId={view.faqId}
+              faqId={shown.faqId}
               onSaved={() => go({ screen: 'faqs' })}
               onCancel={() => go({ screen: 'faqs' })}
             />
           )}
-          {view.screen === 'analytics' && (
+          {shown.screen === 'analytics' && (
             <AnalyticsPage
               onOpenArticle={id => go({ screen: 'article', articleId: id, from: 'analytics' })}
               onCreateFaq={question => {
@@ -418,58 +462,58 @@ if (!isLoggedIn) {
               }}
             />
           )}
-          {view.screen === 'settings' && (
-            <SettingsPage initialSection={view.section as any} />
+          {shown.screen === 'settings' && (
+            <SettingsPage initialSection={shown.section as any} />
           )}
-          {view.screen === 'chats' && <ChatsPage />}
-          {view.screen === 'brand-monitoring' && <BrandMonitoringPage />}
-          {view.screen === 'learning' && (
+          {shown.screen === 'chats' && <ChatsPage />}
+          {shown.screen === 'brand-monitoring' && <BrandMonitoringPage />}
+          {shown.screen === 'learning' && (
             <LearningPage
               onEditPath={id => go({ screen: 'learning-edit', pathId: id })}
               onOpenModule={moduleId => go({ screen: 'learning-play', moduleId })}
             />
           )}
-          {view.screen === 'learning-edit' && (
+          {shown.screen === 'learning-edit' && (
             <LearningPathEditor
-              pathId={view.pathId}
+              pathId={shown.pathId}
               onBack={() => go({ screen: 'learning' })}
             />
           )}
-          {view.screen === 'learning-play' && (
+          {shown.screen === 'learning-play' && (
             <LearningPlayer
-              moduleId={view.moduleId}
+              moduleId={shown.moduleId}
               onBack={() => go({ screen: 'learning' })}
             />
           )}
-          {view.screen === 'trees' && (
+          {shown.screen === 'trees' && (
   <TreesPage
     onOpenTree={id    => go({ screen: 'tree-editor', treeId: id })}
     onEditTree={id    => go({ screen: 'tree-editor', treeId: id })}
     onPreviewTree={id => go({ screen: 'tree',        treeId: id, from: 'trees' })}
   />
 )}
-{view.screen === 'tree-editor' && (
+{shown.screen === 'tree-editor' && (
   <TreeEditor
-    treeId={view.treeId}
+    treeId={shown.treeId}
     onBack={() => go({ screen: 'trees' })}
     onPreview={id => go({ screen: 'tree', treeId: id, from: 'tree-editor' })}
   />
 )}
-{view.screen === 'account' && <AccountPage />}
-{!(['dashboard','knowledge','article','tree','editor','members','analytics','chats','brand-monitoring','settings','trees','tree-editor','account','faqs','faq-editor','learning','learning-edit','learning-play'] as string[]).includes(view.screen) && (
+{shown.screen === 'account' && <AccountPage />}
+{!(['dashboard','knowledge','article','tree','editor','members','analytics','chats','brand-monitoring','settings','trees','tree-editor','account','faqs','faq-editor','learning','learning-edit','learning-play'] as string[]).includes(shown.screen) && (
   <NotFoundPage onBack={() => go({ screen: 'dashboard' })} />
 )}
         </AppLayout>
       </ProtectedRoute>
-      {helpOpen && (
+      {helpOpen && hasModule(organization, 'help') && (
   <HelpPanel
     onClose={() => setHelpOpen(false)}
-    currentScreen={view.screen}
+    currentScreen={shown.screen}
   />
 )}
 
       <NetworkErrorBanner />
-      <CommandPalette />
+      {hasModule(organization, 'knowledge') && <CommandPalette />}
       <ToastContainer />
     </>
   );

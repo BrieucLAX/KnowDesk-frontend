@@ -14,6 +14,10 @@ const ERROR_MESSAGES: Record<string, string> = {
   TOO_MANY_REQUESTS:     'Trop de tentatives. Attendez 1 minute.',
   INTERNAL_ERROR:        'Une erreur interne est survenue. Réessayez.',
   UNSUPPORTED_MEDIA_TYPE:'Format de requête invalide.',
+  // Accès (B3b côté back) — mêmes textes que le back.
+  ORG_DISABLED:          'Cet espace est désactivé.',
+  REGISTRATION_CLOSED:   'Les inscriptions sont fermées. L\'accès se fait sur invitation.',
+  ACCOUNT_NOT_FOUND:     'Aucun compte Knowdesk n\'est associé à cette adresse. L\'accès se fait sur invitation.',
 };
 
 export function getErrorMessage(err: unknown): string {

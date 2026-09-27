@@ -1,7 +1,9 @@
 import React, { useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '../../lib/cn';
 import { computeInitials } from '../../lib/initials';
-import { useAuthStore, selectUserRole } from '../../../store/authStore';
+import { useAuthStore, selectUserRole, selectOrganization } from '../../../store/authStore';
+import { hasModule, type ModuleName } from '../../lib/modules';
 import { useNotifications } from '../../../features/notifications/hooks/useNotifications';
 import { NotificationPanel } from '../../../features/notifications/components/NotificationPanel';
 // .sidenav__badge est défini dans notifications.css (couplage badge ↔ feature notif)
@@ -18,33 +20,37 @@ interface NavItem {
   /** True : visible UNIQUEMENT pour role='admin' (exclut manager).
    *  Sert pour les pages où le backend exige role strict ('admin' seul). */
   adminStrict?: boolean;
+  /** Module requis sur l'organisation (organization.enabledModules). */
+  module:    ModuleName;
 }
 
 interface SideNavProps {
   active:     NavRoute;
   onNavigate: (route: NavRoute) => void;
-  onHelp:     () => void;
+  /** Absent : pas de bouton Aide (organisation sans le module help). */
+  onHelp?:    () => void;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'dashboard', label: 'Accueil',   href: '/',           icon: <HomeIcon /> },
-  { id: 'knowledge', label: 'Articles',  href: '/knowledge',  icon: <BookIcon /> },
-  { id: 'faqs',      label: 'FAQs',      href: '/faqs',       icon: <FaqIcon /> },
-  { id: 'trees',     label: 'Processus', href: '/trees',      icon: <TreeIcon /> },
-  { id: 'learning',  label: 'Formations', href: '/learning',   icon: <LearningIcon /> },
-  { id: 'analytics', label: 'Analyse',       href: '/analytics',  icon: <ChartIcon />, adminOnly: true },
-  { id: 'chats',     label: 'Conversations', href: '/chats',      icon: <ChatIcon />,  adminOnly: true },
-  { id: 'brand-monitoring', label: 'Brand monitoring', href: '/brand-monitoring', icon: <RadarIcon />, adminOnly: true },
+  { id: 'dashboard', label: 'Accueil',   href: '/',           icon: <HomeIcon />, module: 'dashboard' },
+  { id: 'knowledge', label: 'Articles',  href: '/knowledge',  icon: <BookIcon />, module: 'knowledge' },
+  { id: 'faqs',      label: 'FAQs',      href: '/faqs',       icon: <FaqIcon />,  module: 'faqs' },
+  { id: 'trees',     label: 'Processus', href: '/trees',      icon: <TreeIcon />, module: 'trees' },
+  { id: 'learning',  label: 'Formations', href: '/learning',   icon: <LearningIcon />, module: 'learning' },
+  { id: 'analytics', label: 'Analyse',       href: '/analytics',  icon: <ChartIcon />, adminOnly: true, module: 'analytics' },
+  { id: 'chats',     label: 'Conversations', href: '/chats',      icon: <ChatIcon />,  adminOnly: true, module: 'chats' },
+  { id: 'brand-monitoring', label: 'Brand monitoring', href: '/brand-monitoring', icon: <RadarIcon />, adminOnly: true, module: 'brand_monitoring' },
 ];
 
 const BOTTOM_ITEMS: NavItem[] = [
-  { id: 'team',      label: 'Équipe',     href: '/team',     icon: <TeamIcon />,    adminOnly: true },
-  { id: 'settings',  label: 'Paramètres', href: '/settings', icon: <SettingsIcon /> },
+  { id: 'team',      label: 'Équipe',     href: '/team',     icon: <TeamIcon />,    adminOnly: true, module: 'members' },
+  { id: 'settings',  label: 'Paramètres', href: '/settings', icon: <SettingsIcon />, module: 'settings' },
 ];
 
 export function SideNav({ active, onNavigate, onHelp }: SideNavProps) {
   const role    = useAuthStore(selectUserRole);
   const isAdmin = role === 'admin' || role === 'manager';
+  const organization = useAuthStore(selectOrganization);
   const session  = useAuthStore(s => s.session);
 const initials = (() => {
   const fn = session?.user?.firstName;
@@ -58,18 +64,8 @@ const initials = (() => {
     : (parts[0][0] ?? 'K').toUpperCase();
 })();
 
-  const [showNotifs, setShowNotifs] = useState(false);
-  const {
-    notifications, unreadCount, loading,
-    markAsRead, markAllAsRead, refetch,
-  } = useNotifications();
-
-  const handleNotifOpen = useCallback(() => {
-    setShowNotifs(true);
-    refetch();
-  }, [refetch]);
-
   const renderItem = (item: NavItem) => {
+    if (!hasModule(organization, item.module)) return null;
     if (item.adminOnly && !isAdmin) return null;
     if (item.adminStrict && role !== 'admin') return null;
     const isActive = item.id === active;
@@ -105,27 +101,11 @@ const initials = (() => {
 
         {/* Bottom nav */}
         <ul className="sidenav__list sidenav__list--bottom" role="list">
-          {/* Bouton notifications */}
-          <li>
-            <button
-              className="sidenav__item sidenav__item--notif"
-              onClick={handleNotifOpen}
-              title="Notifications"
-              aria-label={`Notifications${unreadCount > 0 ? ` — ${unreadCount} non lues` : ''}`}
-            >
-              <span className="sidenav__icon" aria-hidden="true">
-                <BellIcon />
-              </span>
-              {unreadCount > 0 && (
-                <span className="sidenav__badge" aria-hidden="true">
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              )}
-              <span className="sidenav__label">Notifications</span>
-            </button>
-          </li>
+          {/* Notifications : ni bouton ni interrogation périodique sans le module. */}
+          {hasModule(organization, 'notifications') && <NotificationsItem />}
 
           {BOTTOM_ITEMS.map(renderItem)}
+{onHelp && (
 <li>
   <button
     type="button"
@@ -138,6 +118,7 @@ const initials = (() => {
     <span className="sidenav__label">Aide</span>
   </button>
 </li>
+)}
 <li>
   <button
     type="button"
@@ -152,18 +133,56 @@ const initials = (() => {
 </li>
         </ul>
       </nav>
+    </>
+  );
+}
 
-      {/* Panneau notifications */}
-      {showNotifs && (
+/**
+ * Bouton et panneau des notifications. Monté seulement si l'organisation a le
+ * module : useNotifications interroge /notifications toutes les 30 s.
+ */
+function NotificationsItem() {
+  const [showNotifs, setShowNotifs] = useState(false);
+  const {
+    notifications, unreadCount, loading,
+    markAsRead, markAllAsRead, refetch,
+  } = useNotifications();
+
+  const handleNotifOpen = useCallback(() => {
+    setShowNotifs(true);
+    refetch();
+  }, [refetch]);
+
+  return (
+    <li>
+      <button
+        className="sidenav__item sidenav__item--notif"
+        onClick={handleNotifOpen}
+        title="Notifications"
+        aria-label={`Notifications${unreadCount > 0 ? ` — ${unreadCount} non lues` : ''}`}
+      >
+        <span className="sidenav__icon" aria-hidden="true">
+          <BellIcon />
+        </span>
+        {unreadCount > 0 && (
+          <span className="sidenav__badge" aria-hidden="true">
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </span>
+        )}
+        <span className="sidenav__label">Notifications</span>
+      </button>
+      {/* Panneau en position fixe, rendu hors de la liste de navigation. */}
+      {showNotifs && createPortal(
         <NotificationPanel
           notifications={notifications}
           loading={loading}
           onMarkAsRead={markAsRead}
           onMarkAllRead={markAllAsRead}
           onClose={() => setShowNotifs(false)}
-        />
+        />,
+        document.body,
       )}
-    </>
+    </li>
   );
 }
 

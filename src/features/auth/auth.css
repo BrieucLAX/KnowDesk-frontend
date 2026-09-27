@@ -326,3 +326,15 @@
 .login-form__gdpr a:hover {
   color: var(--brand-700);
 }
+
+/* Session coupée par le serveur (ex. espace désactivé) — affiché au-dessus du formulaire. */
+.login-page__notice {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  background: var(--color-danger-bg);
+  border: 1.5px solid var(--color-danger-border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--color-danger);
+  line-height: 1.4;
+}

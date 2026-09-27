@@ -139,9 +139,7 @@ export function RegisterForm({
           aria-invalid={!!errors.gdprAccepted}
         />
         <span>
-          J'accepte les{' '}
-          <a href="/cgu" target="_blank" rel="noopener noreferrer">conditions générales d'utilisation</a>
-          {' '}et la{' '}
+          J'accepte la{' '}
           <a href="/privacy" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>.
         </span>
       </label>

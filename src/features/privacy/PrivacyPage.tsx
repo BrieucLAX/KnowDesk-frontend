@@ -13,7 +13,7 @@ export function PrivacyPage() {
       <header className="privacy-page__header">
         <h1 className="privacy-page__title">Politique de confidentialité</h1>
         <p className="privacy-page__subtitle">
-          Dernière mise à jour : 11 mai 2026
+          Dernière mise à jour : 27 septembre 2026
         </p>
       </header>
 
@@ -38,7 +38,7 @@ export function PrivacyPage() {
           <li><strong>Données de compte</strong> : email, prénom, nom, organisation, rôle.</li>
           <li><strong>Contenu que vous créez</strong> : articles, FAQs, processus guidés, catégories, tags.</li>
           <li><strong>Données d'usage</strong> : recherches effectuées, articles consultés, votes 👍/👎 sur les FAQs, ouvertures de l'application. Ces données alimentent les indicateurs internes (KB Health Score, Analytics).</li>
-          <li><strong>Données techniques</strong> : adresse IP (uniquement pour rate-limiting et sécurité, non stockée à long terme), navigateur, système d'exploitation.</li>
+          <li><strong>Données techniques</strong> : adresse IP, navigateur et système d'exploitation. L'adresse IP sert à la limitation du nombre de requêtes et à la sécurité ; elle est enregistrée, avec le navigateur, dans le journal d'audit des actions sensibles, conservé 365 jours.</li>
         </ul>
       </section>
 
@@ -103,13 +103,13 @@ export function PrivacyPage() {
         <h2>6. Sous-traitants</h2>
         <p>Pour fournir le service, KnowDesk s'appuie sur :</p>
         <ul>
-          <li><strong>Railway</strong> (hébergement backend + PostgreSQL + Redis) — région UE.</li>
-          <li><strong>Vercel</strong> (hébergement frontend) — région UE.</li>
-          <li><strong>Cloudflare R2</strong> (stockage images articles) — région UE.</li>
-          <li><strong>Resend</strong> (envoi d'emails transactionnels) — région UE.</li>
-          <li><strong>Mistral AI</strong> (génération de réponses IA et de résumés thématiques) — région UE (Paris).</li>
-          <li><strong>Meilisearch</strong> auto-hébergé (Railway) pour l'indexation de la recherche.</li>
-          <li><strong>Sentry</strong> (monitoring d'erreurs) — données PII redactées avant envoi (emails, IBAN, cartes, téléphones masqués).</li>
+          <li><strong>Railway</strong> (hébergement de l'application, de la base PostgreSQL et de Redis) — région Union européenne.</li>
+          <li><strong>Cloudflare R2</strong> (stockage des fichiers) — juridiction Union européenne.</li>
+          <li><strong>Mistral AI</strong> (génération de réponses IA et de résumés thématiques) — traitement dans l'Union européenne.</li>
+          <li><strong>Meilisearch</strong> (indexation de la recherche), auto-hébergé sur Railway avec l'application.</li>
+          <li><strong>Vercel</strong> (hébergement de l'interface web).</li>
+          <li><strong>Resend</strong> (envoi d'emails transactionnels).</li>
+          <li><strong>Sentry</strong> (monitoring d'erreurs) — données personnelles masquées avant envoi (emails, IBAN, cartes, téléphones).</li>
         </ul>
       </section>
 
@@ -119,7 +119,7 @@ export function PrivacyPage() {
         <ul>
           <li>Accéder à vos données (page « Mon compte »).</li>
           <li>Modifier vos données (page « Mon compte »).</li>
-          <li>Supprimer votre compte et toutes les données associées (Settings → Danger Zone).</li>
+          <li>Demander la suppression de votre compte et des données associées, par email à contact@knowdesk.fr.</li>
           <li>Exporter vos données dans un format réutilisable (sur demande à contact@knowdesk.fr).</li>
           <li>Désinstaller l'extension Chrome à tout moment (les événements d'usage déjà loggués restent dans votre espace mais ne sont plus alimentés).</li>
         </ul>
@@ -133,7 +133,7 @@ export function PrivacyPage() {
         <ul>
           <li><strong>Compte utilisateur</strong> : conservé tant que le compte est actif.</li>
           <li><strong>Événements d'usage (table events)</strong> : 90 jours, purge automatique.</li>
-          <li><strong>Audit log</strong> : 365 jours, purge automatique.</li>
+          <li><strong>Audit log</strong> (dont l'adresse IP et le navigateur) : 365 jours, purge automatique.</li>
           <li><strong>Conversations chatbot</strong> : 30 à 180 jours selon configuration admin de votre organisation.</li>
           <li><strong>Tokens d'authentification</strong> : access token 15 min, refresh token 30 jours.</li>
         </ul>

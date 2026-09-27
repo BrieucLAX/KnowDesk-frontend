@@ -39,9 +39,7 @@ export function OAuthButtons({ onSuccess, mode }: {
       )}
 
       <p className="oauth-buttons__gdpr">
-        En continuant, vous acceptez les{' '}
-        <a href="/cgu"     target="_blank" rel="noopener noreferrer">CGU</a>{' '}
-        et la{' '}
+        Vos données sont traitées selon notre{' '}
         <a href="/privacy" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>.
       </p>
 

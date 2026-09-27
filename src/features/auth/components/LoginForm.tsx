@@ -12,7 +12,8 @@ interface LoginFormProps {
   onBlur:       (field: keyof LoginFormState) => void;
   onSubmit:     (e: React.FormEvent) => void;
   onTogglePassword:    () => void;
-  onSwitchToRegister: () => void;
+  /** Absent : pas de lien « Créer un espace » (inscription fermée). */
+  onSwitchToRegister?: () => void;
   onSwitchToForgot:   () => void;
 }
 
@@ -88,12 +89,14 @@ export function LoginForm({
         {isLoading ? 'Connexion…' : 'Se connecter'}
       </Button>
 
+      {onSwitchToRegister && (
       <p className="login-form__signup">
         Pas encore de compte ?{' '}
 <button type="button" className="login-form__link" onClick={e => { e.stopPropagation(); onSwitchToRegister(); }}>
   Créer un espace
 </button>
       </p>
+      )}
 
     </form>
   );
