@@ -116,3 +116,40 @@ export interface Cadrage extends CadrageVersionSummary {
 export interface SavedCadrage extends Cadrage {
   missingDocuments: string[];
 }
+
+// ── Analyses (back, étape F2) ─────────────────────────────────
+
+/** queued : pas encore acceptée par le service d'analyse ; running : en cours chez lui. */
+export type AnalysisStatus = 'queued' | 'running' | 'succeeded' | 'failed';
+
+/** Étapes du pipeline, plus `storing` (le back enregistre l'audit et ses images). */
+export type AnalysisStage = 'download' | 'cadrage' | 'parsing' | 'extraction' | 'detection' | 'questions' | 'storing';
+
+export interface OnboardingAnalysis {
+  id:             string;
+  status:         AnalysisStatus;
+  stage:          AnalysisStage | null;
+  /** Avancement i/n de l'étape en cours (lecture, extraction). */
+  done:           number;
+  total:          number;
+  llmCalls:       number;
+  llmRetries:     number;
+  /** Version de la fiche figée au lancement. */
+  cadrageVersion: number;
+  /** Documents figés au lancement. */
+  documents:      Array<{ id: string; filename: string }>;
+  /** Code seul, jamais de message (voir lib/analysisStatus.ts). */
+  errorCode:      string | null;
+  pipelineVersion: { package: string; commit: string; prompts: string[] } | null;
+  createdAt:      string;
+  createdBy:      string | null;
+  submittedAt:    string | null;
+  finishedAt:     string | null;
+  /** Au-delà, l'analyse est arrêtée (60 min après le lancement). */
+  deadlineAt:     string;
+}
+
+export interface AnalysisQuota {
+  used: number;
+  max:  number;
+}

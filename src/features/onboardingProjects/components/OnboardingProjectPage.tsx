@@ -9,14 +9,16 @@ import { onboardingApi } from '../api/onboardingApi';
 import { ProjectNameModal } from './ProjectNameModal';
 import { DocumentsTab } from './DocumentsTab';
 import { CadrageTab }   from './CadrageTab';
+import { AnalysisTab }  from './AnalysisTab';
 import type { OnboardingProject } from '../types';
 import '../onboardingProjects.css';
 
-export type ProjectTab = 'documents' | 'cadrage';
+export type ProjectTab = 'documents' | 'cadrage' | 'analysis';
 
 const TABS = [
   { id: 'documents', label: 'Documents' },
   { id: 'cadrage',   label: 'Fiche de cadrage' },
+  { id: 'analysis',  label: 'Analyse' },
 ] as const;
 
 interface OnboardingProjectPageProps {
@@ -26,7 +28,7 @@ interface OnboardingProjectPageProps {
   onBack:      () => void;
 }
 
-/** Un projet d'onboarding : ses documents et sa fiche de cadrage. */
+/** Un projet d'onboarding : ses documents, sa fiche de cadrage et ses analyses. */
 export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: OnboardingProjectPageProps) {
   const toast = useToast();
   const [project,  setProject]  = useState<OnboardingProject | null>(null);
@@ -97,6 +99,7 @@ export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: O
       <div className="obp-tab">
         {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
         {tab === 'cadrage' && <CadrageTab project={project} onSaved={reload} onDirtyChange={setCadrageDirty} />}
+        {tab === 'analysis' && <AnalysisTab project={project} onChanged={reload} />}
       </div>
 
       {pendingLeave && (

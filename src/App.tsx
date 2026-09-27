@@ -90,6 +90,9 @@ type View =
   | { screen: 'onboarding' }
   | { screen: 'onboarding-project'; projectId: string; tab: ProjectTab };
 
+/** Suffixe d'URL de chaque onglet d'un projet d'onboarding. */
+const ONBOARDING_TAB_PATHS: Record<ProjectTab, string> = { documents: '', cadrage: '/cadrage', analysis: '/analyse' };
+
 /** Maps URL pathname to a View. Returns null for unmapped paths. */
 function pathToView(pathname: string, fallbackFrom: Screen): View | null {
   if (pathname === '/' || pathname === '')        return { screen: 'dashboard' };
@@ -113,9 +116,10 @@ function pathToView(pathname: string, fallbackFrom: Screen): View | null {
   if (pathname === '/faqs')                       return { screen: 'faqs' };
   if (pathname === '/faqs/new')                   return { screen: 'faq-editor' };
   if (pathname === '/onboarding')                 return { screen: 'onboarding' };
-  const onboardingMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)(\/cadrage)?$/);
+  const onboardingMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)(?:\/(cadrage|analyse))?$/);
   if (onboardingMatch) {
-    return { screen: 'onboarding-project', projectId: onboardingMatch[1], tab: onboardingMatch[2] ? 'cadrage' : 'documents' };
+    const tab = onboardingMatch[2] === 'cadrage' ? 'cadrage' : onboardingMatch[2] === 'analyse' ? 'analysis' : 'documents';
+    return { screen: 'onboarding-project', projectId: onboardingMatch[1], tab };
   }
 
   const faqEditMatch = pathname.match(/^\/faqs\/([^/]+)\/edit$/);
@@ -176,7 +180,7 @@ function viewToPath(view: View): string | null {
     case 'faq-editor':  return view.faqId ? `/faqs/${view.faqId}/edit` : '/faqs/new';
     case 'onboarding':  return '/onboarding';
     case 'onboarding-project':
-      return `/onboarding/projects/${view.projectId}${view.tab === 'cadrage' ? '/cadrage' : ''}`;
+      return `/onboarding/projects/${view.projectId}${ONBOARDING_TAB_PATHS[view.tab]}`;
     default:            return null;
   }
 }

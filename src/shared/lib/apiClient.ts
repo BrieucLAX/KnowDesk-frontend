@@ -20,7 +20,13 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+/** Succès avec `meta` (quota, pagination…), pour les routes qui en renvoient une. */
+export interface WithMeta<T, M> {
+  data: T;
+  meta: M;
+}
+
+async function request<T>(path: string, options: RequestInit = {}, withMeta = false): Promise<T> {
   // Envoi de fichiers : le navigateur pose lui-même le Content-Type
   // multipart et sa frontière ; on ne force le JSON que pour le reste.
   const headers: Record<string, string> = {
@@ -44,7 +50,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
         headers,
         credentials: 'include',
       });
-      return endSessionIfOrgDisabled(parseResponse<T>(retryRes));
+      return endSessionIfOrgDisabled(parseResponse<T>(retryRes, withMeta));
     } else if (refresh.error?.code === ORG_DISABLED) {
       useAuthStore.getState().endSession(refresh.error.message);
       throw refresh.error;
@@ -54,7 +60,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     }
   }
 
-  return endSessionIfOrgDisabled(parseResponse<T>(res));
+  return endSessionIfOrgDisabled(parseResponse<T>(res, withMeta));
 }
 
 /**
@@ -77,7 +83,7 @@ async function endSessionIfOrgDisabled<T>(pending: Promise<T>): Promise<T> {
   }
 }
 
-async function parseResponse<T>(res: Response): Promise<T> {
+async function parseResponse<T>(res: Response, withMeta = false): Promise<T> {
   // 204 No Content (suppressions du brand monitoring et d'un document
   // d'onboarding, POST /events…) : pas de corps à lire (R15).
   const text = await res.text();
@@ -93,7 +99,7 @@ async function parseResponse<T>(res: Response): Promise<T> {
       res.status,
     );
   }
-  return body.data as T;
+  return (withMeta ? { data: body.data, meta: body.meta } : body.data) as T;
 }
 
 // Mutex pour le refresh : plusieurs requêtes simultanées qui voient un 401
@@ -133,6 +139,8 @@ async function doRefresh(): Promise<RefreshResult> {
 
 export const apiClient = {
   get:    <T>(path: string)                 => request<T>(path),
+  /** GET qui garde la `meta` de la réponse, à côté de `data`. */
+  getWithMeta: <T, M>(path: string)         => request<WithMeta<T, M>>(path, {}, true),
   post:   <T>(path: string, body: unknown)  => request<T>(path, { method: 'POST',   body: JSON.stringify(body) }),
   patch:  <T>(path: string, body: unknown)  => request<T>(path, { method: 'PATCH',  body: JSON.stringify(body) }),
   put:    <T>(path: string, body?: unknown) => request<T>(path, { method: 'PUT',    body: body ? JSON.stringify(body) : undefined }),

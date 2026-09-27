@@ -1,12 +1,12 @@
 import { apiClient } from '../../../shared/lib/apiClient';
 import type {
-  Cadrage, CadrageForm, CadrageVersionSummary, OnboardingDocument, OnboardingNotice,
-  OnboardingProject, OnboardingProjectSummary, SavedCadrage,
+  AnalysisQuota, Cadrage, CadrageForm, CadrageVersionSummary, OnboardingAnalysis, OnboardingDocument,
+  OnboardingNotice, OnboardingProject, OnboardingProjectSummary, SavedCadrage,
 } from '../types';
 
 const BASE = '/onboarding';
 
-/** Module Onboarding (back, étape F1). Toutes les routes : admin ou manager, module onboarding. */
+/** Module Onboarding (back, étapes F1 et F2). Toutes les routes : admin ou manager, module onboarding. */
 export const onboardingApi = {
   getNotice:    () => apiClient.get<OnboardingNotice>(`${BASE}/notice`),
   acceptNotice: (version: string) =>
@@ -41,4 +41,17 @@ export const onboardingApi = {
   /** Crée une nouvelle version libre : le texte part tel quel au pipeline. */
   saveFreeCadrage: (projectId: string, text: string, sourceFilename: string | null) =>
     apiClient.post<SavedCadrage>(`${BASE}/projects/${projectId}/cadrages`, { kind: 'free', text, sourceFilename }),
+
+  /**
+   * 202 : l'analyse part en file. Fige la fiche courante et les documents du
+   * projet. Refus : NO_DOCUMENTS, CADRAGE_REQUIRED, ANALYSIS_IN_PROGRESS,
+   * ANALYSIS_QUOTA_EXCEEDED.
+   */
+  launchAnalysis: (projectId: string) =>
+    apiClient.post<OnboardingAnalysis>(`${BASE}/projects/${projectId}/analyses`, {}),
+  /** La plus récente d'abord ; le quota de l'organisation en meta. */
+  listAnalyses:   (projectId: string) =>
+    apiClient.getWithMeta<OnboardingAnalysis[], { quota: AnalysisQuota }>(`${BASE}/projects/${projectId}/analyses`),
+  getAnalysis:    (projectId: string, analysisId: string) =>
+    apiClient.get<OnboardingAnalysis>(`${BASE}/projects/${projectId}/analyses/${analysisId}`),
 };

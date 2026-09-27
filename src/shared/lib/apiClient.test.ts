@@ -24,6 +24,15 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+describe('apiClient — succès', () => {
+  it('get renvoie data seul ; getWithMeta garde aussi meta', async () => {
+    const body = { data: [{ id: 'a' }], meta: { quota: { used: 1, max: 5 } }, error: null };
+    fetchMock.mockResolvedValueOnce(json(200, body)).mockResolvedValueOnce(json(200, body));
+    expect(await apiClient.get('/x')).toEqual([{ id: 'a' }]);
+    expect(await apiClient.getWithMeta('/x')).toEqual({ data: [{ id: 'a' }], meta: { quota: { used: 1, max: 5 } } });
+  });
+});
+
 describe('apiClient — erreurs', () => {
   it('transmet le code et le message du back', async () => {
     fetchMock.mockResolvedValueOnce(json(409, { data: null, error: { code: 'DUPLICATE_FILENAME', message: 'déjà là' } }));

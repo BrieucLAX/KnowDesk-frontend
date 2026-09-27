@@ -24,6 +24,10 @@ vi.mock('./shared/lib/apiClient', () => ({
       if (path.endsWith('/documents')) return Promise.resolve([]);
       return Promise.reject(new Error(`appel inattendu : ${path}`));
     }),
+    getWithMeta: vi.fn((path: string) => {
+      if (path === '/onboarding/projects/p1/analyses') return Promise.resolve({ data: [], meta: { quota: { used: 0, max: 5 } } });
+      return Promise.reject(new Error(`appel inattendu : ${path}`));
+    }),
     post: vi.fn(() => Promise.resolve({})),
     patch: vi.fn(() => Promise.resolve({})),
   },
@@ -42,5 +46,13 @@ describe('App — aiguillage', () => {
     expect(await screen.findByRole('heading', { name: 'Base SAV' })).toBeInTheDocument();
     expect(screen.queryByText(/introuvable/i)).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /tableau de bord/i })).not.toBeInTheDocument();
+  });
+
+  it('/onboarding/projects/:id/analyse ouvre l\'onglet Analyse', async () => {
+    render(<MemoryRouter initialEntries={['/onboarding/projects/p1/analyse']}><App /></MemoryRouter>);
+    expect(await screen.findByRole('heading', { name: 'Lancer l\'analyse' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Lancer l\'analyse' })).toBeDisabled();
+    expect(screen.getByText(/Importez au moins un document/)).toBeInTheDocument();
+    expect(screen.queryByText(/introuvable/i)).not.toBeInTheDocument();
   });
 });
