@@ -6,6 +6,7 @@ import { Skeleton }   from '../../../shared/components/ui/Skeleton';
 import { useToast }   from '../../../shared/lib/useToast';
 import { onboardingApi } from '../api/onboardingApi';
 import { ProjectNameModal } from './ProjectNameModal';
+import { DocumentsTab } from './DocumentsTab';
 import type { OnboardingProject } from '../types';
 import '../onboardingProjects.css';
 
@@ -84,7 +85,7 @@ export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: O
         ariaLabel="Sections du projet"
       />
       <div className="obp-tab">
-        {tab === 'documents' && null}
+        {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
         {tab === 'cadrage' && null}
       </div>
 
