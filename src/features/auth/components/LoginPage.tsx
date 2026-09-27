@@ -11,6 +11,14 @@ import type { AuthSession } from '../types';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { ResetPasswordForm }  from './ResetPasswordForm';
 
+/**
+ * Inscription publique fermée (plan d'onboarding, décision produit 1) : le
+ * back répond 403 REGISTRATION_CLOSED à /auth/register et refuse la création
+ * d'un compte par Google/Microsoft. Les comptes naissent d'une invitation.
+ * Le formulaire d'inscription reste dans le code, sans être atteignable.
+ */
+const REGISTRATION_OPEN = false;
+
 interface LoginPageProps {
   onLoginSuccess: (session: AuthSession) => void;
 }
@@ -85,12 +93,12 @@ React.useEffect(() => {
       onBlur={login.handleBlur}
       onSubmit={login.handleSubmit}
       onTogglePassword={login.togglePassword}
-      onSwitchToRegister={() => setMode('register')}
+      onSwitchToRegister={REGISTRATION_OPEN ? () => setMode('register') : undefined}
       onSwitchToForgot={() => setMode('forgot')}
     />
   </>
 )}
-{mode === 'register' && (
+{REGISTRATION_OPEN && mode === 'register' && (
   <>
     <div className="login-page__header">
       <h1 className="login-page__title">Créer un espace</h1>
