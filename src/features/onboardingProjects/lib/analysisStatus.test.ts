@@ -43,10 +43,12 @@ describe('analysisStatus', () => {
     expect(analysisFailureMessage('constructor')).toBe('L\'analyse a échoué.');
     expect(analysisFailureMessage('provider_auth')).toContain('configuration de notre côté');
     expect(analysisFailureMessage('provider_error')).toContain('indisponible');
+    expect(analysisFailureMessage('pipeline_invalid_error_code')).toContain('problème de notre côté');
   });
 
   it('relancer n\'est proposé que si cela peut servir', () => {
     expect(analysisFailureNote('provider_auth')).toBe('Elle ne compte pas dans votre quota. Nous sommes prévenus.');
+    expect(analysisFailureNote('pipeline_invalid_error_code')).toBe('Elle ne compte pas dans votre quota. Nous sommes prévenus.');
     expect(analysisFailureNote('provider_error')).toContain('vous pouvez la relancer');
     expect(analysisFailureNote(null)).toContain('vous pouvez la relancer');
   });
