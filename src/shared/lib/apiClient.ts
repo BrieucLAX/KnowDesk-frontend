@@ -26,7 +26,12 @@ export interface WithMeta<T, M> {
   meta: M;
 }
 
-async function request<T>(path: string, options: RequestInit = {}, withMeta = false): Promise<T> {
+/** Lecture d'une réponse réussie ; par défaut, l'enveloppe JSON `{ data, error }`. */
+type Parse<T> = (res: Response) => Promise<T>;
+
+async function request<T>(
+  path: string, options: RequestInit = {}, parse: Parse<T> = res => parseResponse<T>(res),
+): Promise<T> {
   // Envoi de fichiers : le navigateur pose lui-même le Content-Type
   // multipart et sa frontière ; on ne force le JSON que pour le reste.
   const headers: Record<string, string> = {
@@ -50,7 +55,7 @@ async function request<T>(path: string, options: RequestInit = {}, withMeta = fa
         headers,
         credentials: 'include',
       });
-      return endSessionIfOrgDisabled(parseResponse<T>(retryRes, withMeta));
+      return endSessionIfOrgDisabled(parse(retryRes));
     } else if (refresh.error?.code === ORG_DISABLED) {
       useAuthStore.getState().endSession(refresh.error.message);
       throw refresh.error;
@@ -60,7 +65,16 @@ async function request<T>(path: string, options: RequestInit = {}, withMeta = fa
     }
   }
 
-  return endSessionIfOrgDisabled(parseResponse<T>(res, withMeta));
+  return endSessionIfOrgDisabled(parse(res));
+}
+
+/**
+ * Corps binaire (image d'audit, fichier exporté). Une erreur garde
+ * l'enveloppe JSON du back et lève la même ApiError que les autres routes.
+ */
+async function parseBlob(res: Response): Promise<Blob> {
+  if (!res.ok) return parseResponse<never>(res);
+  return res.blob();
 }
 
 /**
@@ -140,7 +154,9 @@ async function doRefresh(): Promise<RefreshResult> {
 export const apiClient = {
   get:    <T>(path: string)                 => request<T>(path),
   /** GET qui garde la `meta` de la réponse, à côté de `data`. */
-  getWithMeta: <T, M>(path: string)         => request<WithMeta<T, M>>(path, {}, true),
+  getWithMeta: <T, M>(path: string)         => request<WithMeta<T, M>>(path, {}, res => parseResponse(res, true)),
+  /** GET d'un contenu binaire, avec le même rafraîchissement de session et les mêmes erreurs. */
+  getBlob: (path: string)                   => request<Blob>(path, {}, parseBlob),
   post:   <T>(path: string, body: unknown)  => request<T>(path, { method: 'POST',   body: JSON.stringify(body) }),
   patch:  <T>(path: string, body: unknown)  => request<T>(path, { method: 'PATCH',  body: JSON.stringify(body) }),
   put:    <T>(path: string, body?: unknown) => request<T>(path, { method: 'PUT',    body: body ? JSON.stringify(body) : undefined }),

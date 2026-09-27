@@ -91,7 +91,9 @@ type View =
   | { screen: 'onboarding-project'; projectId: string; tab: ProjectTab };
 
 /** Suffixe d'URL de chaque onglet d'un projet d'onboarding. */
-const ONBOARDING_TAB_PATHS: Record<ProjectTab, string> = { documents: '', cadrage: '/cadrage', analysis: '/analyse' };
+const ONBOARDING_TAB_PATHS: Record<ProjectTab, string> = {
+  documents: '', cadrage: '/cadrage', analysis: '/analyse', audit: '/audit',
+};
 
 /** Maps URL pathname to a View. Returns null for unmapped paths. */
 function pathToView(pathname: string, fallbackFrom: Screen): View | null {
@@ -116,9 +118,12 @@ function pathToView(pathname: string, fallbackFrom: Screen): View | null {
   if (pathname === '/faqs')                       return { screen: 'faqs' };
   if (pathname === '/faqs/new')                   return { screen: 'faq-editor' };
   if (pathname === '/onboarding')                 return { screen: 'onboarding' };
-  const onboardingMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)(?:\/(cadrage|analyse))?$/);
+  const onboardingMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)(?:\/(cadrage|analyse|audit))?$/);
   if (onboardingMatch) {
-    const tab = onboardingMatch[2] === 'cadrage' ? 'cadrage' : onboardingMatch[2] === 'analyse' ? 'analysis' : 'documents';
+    const tab: ProjectTab = onboardingMatch[2] === 'cadrage' ? 'cadrage'
+      : onboardingMatch[2] === 'analyse' ? 'analysis'
+      : onboardingMatch[2] === 'audit' ? 'audit'
+      : 'documents';
     return { screen: 'onboarding-project', projectId: onboardingMatch[1], tab };
   }
 
