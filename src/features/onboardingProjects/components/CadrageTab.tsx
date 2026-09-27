@@ -10,7 +10,8 @@ import {
   type CadrageErrors,
 } from '../lib/cadrageForm';
 import { CadrageSections } from './CadrageSections';
-import type { CadrageForm, OnboardingDocument, OnboardingProject } from '../types';
+import { CadrageHistory } from './CadrageHistory';
+import type { Cadrage, CadrageForm, OnboardingDocument, OnboardingProject } from '../types';
 
 interface CadrageTabProps {
   project:       OnboardingProject;
@@ -22,7 +23,7 @@ interface CadrageTabProps {
 
 /**
  * Fiche de cadrage : formulaire en six sections, enregistré en versions
- * immuables (chaque enregistrement crée une version).
+ * immuables (chaque enregistrement crée une version), et leur historique.
  */
 export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps) {
   const toast = useToast();
@@ -33,6 +34,8 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
   const [formError, setFormError] = useState('');
   const [dirty,     setDirty]     = useState(false);
   const [saving,    setSaving]    = useState(false);
+  /** Version dont le formulaire est reparti, tant qu'il n'est pas enregistré. */
+  const [restoredFrom, setRestoredFrom] = useState<number | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -82,6 +85,15 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
     markDirty(true);
   }, [markDirty]);
 
+  const restore = useCallback((cadrage: Cadrage) => {
+    setForm(normalizeCadrageForm(cadrage.form));
+    setErrors({});
+    setFormError('');
+    setRestoredFrom(cadrage.version);
+    markDirty(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [markDirty]);
+
   const documentIds = useMemo(() => new Set((documents ?? []).map(d => d.id)), [documents]);
 
   const save = async () => {
@@ -99,6 +111,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
       const saved = await onboardingApi.saveCadrage(project.id, cleanCadrageForm(form));
       setForm(normalizeCadrageForm(saved.form));
       setVersion({ number: saved.version, createdAt: saved.createdAt });
+      setRestoredFrom(null);
       markDirty(false);
       toast.success(`Version ${saved.version} enregistrée.`);
       onSaved();
@@ -119,12 +132,14 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
   if (!form || !documents) return <Skeleton className="obp-skeleton-block" />;
 
   return (
+    <>
     <form className="obp-cadrage" onSubmit={e => { e.preventDefault(); void save(); }} noValidate>
       <div className="obp-cadrage__bar">
         <p className="obp-muted" aria-live="polite">
           {version
             ? `Version ${version.number}, enregistrée le ${formatFull(version.createdAt)}.`
             : 'Aucune version enregistrée.'}
+          {restoredFrom !== null && dirty && ` Formulaire repris de la version ${restoredFrom}.`}
           {dirty && <strong className="obp-dirty"> Modifications non enregistrées.</strong>}
         </p>
         <Button type="submit" variant="primary" size="md" loading={saving} disabled={!dirty}>
@@ -145,5 +160,9 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
         </Button>
       </div>
     </form>
+
+    {/* Hors du formulaire : ses boutons (et sa modale) ne doivent pas l'envoyer. */}
+    <CadrageHistory projectId={project.id} latest={version?.number ?? null} dirty={dirty} onRestore={restore} />
+    </>
   );
 }

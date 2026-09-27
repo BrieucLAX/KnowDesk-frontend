@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 
 vi.mock('../api/onboardingApi', () => ({
-  onboardingApi: { getCadrage: vi.fn(), listDocuments: vi.fn(), saveCadrage: vi.fn() },
+  onboardingApi: { getCadrage: vi.fn(), listDocuments: vi.fn(), saveCadrage: vi.fn(), listCadrages: vi.fn() },
 }));
 
 import { onboardingApi } from '../api/onboardingApi';
@@ -33,6 +33,8 @@ describe('CadrageTab', () => {
     vi.mocked(onboardingApi.getCadrage).mockRejectedValue(new ApiError('NOT_FOUND', 'Aucun cadrage enregistré pour ce projet.', 404));
     vi.mocked(onboardingApi.listDocuments).mockResolvedValue(docs);
     vi.mocked(onboardingApi.saveCadrage).mockReset();
+    vi.mocked(onboardingApi.listCadrages).mockResolvedValue([]);
+    window.scrollTo = vi.fn() as unknown as typeof window.scrollTo; // absent de jsdom
   });
 
   it('sans version : formulaire vide, six sections', async () => {
@@ -90,5 +92,26 @@ describe('CadrageTab', () => {
     const level2 = (await screen.findAllByRole('group', { name: 'Documents de ce niveau' }))[1];
     expect(within(level2).getByRole('checkbox', { name: /cgv\.pdf/ })).toBeDisabled();
     expect(within(level2).getByRole('checkbox', { name: /faq\.docx/ })).not.toBeDisabled();
+  });
+
+  it('historique : consulte une ancienne version et repart d\'elle', async () => {
+    const v1 = {
+      version: 1, createdAt: '2026-09-26T10:00:00Z', createdBy: 'u1', markdown: '# Cadrage métier — Base SAV\n\n## 1. Les offres',
+      form: { ...emptyCadrageForm(), offers: [{ name: 'Ancienne offre', description: '' }] },
+    };
+    const v2 = { ...v1, version: 2, createdAt: '2026-09-27T10:00:00Z', markdown: '', form: emptyCadrageForm() };
+    vi.mocked(onboardingApi.getCadrage).mockImplementation(async (_p, version) => (version === 1 ? v1 : v2));
+    vi.mocked(onboardingApi.listCadrages).mockResolvedValue([v2, v1]);
+    const onDirtyChange = vi.fn();
+    renderTab({ onDirtyChange });
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Consulter la version 1' }));
+    expect(await screen.findByRole('heading', { name: 'Cadrage métier — Base SAV' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Repartir de cette version' }));
+
+    expect(await screen.findByDisplayValue('Ancienne offre')).toBeInTheDocument();
+    expect(screen.getByText(/Formulaire repris de la version 1/)).toBeInTheDocument();
+    expect(onDirtyChange).toHaveBeenLastCalledWith(true);
+    expect(onboardingApi.saveCadrage).not.toHaveBeenCalled();
   });
 });
