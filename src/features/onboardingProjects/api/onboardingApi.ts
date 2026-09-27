@@ -35,7 +35,10 @@ export const onboardingApi = {
   /** Dernière version si `version` est omis ; 404 s'il n'y en a aucune. */
   getCadrage:   (projectId: string, version?: number) =>
     apiClient.get<Cadrage>(`${BASE}/projects/${projectId}/cadrages/${version ?? 'current'}`),
-  /** Crée une nouvelle version (les versions sont immuables). */
+  /** Crée une nouvelle version structurée (les versions sont immuables). */
   saveCadrage:  (projectId: string, form: CadrageForm) =>
     apiClient.post<SavedCadrage>(`${BASE}/projects/${projectId}/cadrages`, { form }),
+  /** Crée une nouvelle version libre : le texte part tel quel au pipeline. */
+  saveFreeCadrage: (projectId: string, text: string, sourceFilename: string | null) =>
+    apiClient.post<SavedCadrage>(`${BASE}/projects/${projectId}/cadrages`, { kind: 'free', text, sourceFilename }),
 };

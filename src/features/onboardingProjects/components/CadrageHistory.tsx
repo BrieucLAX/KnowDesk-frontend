@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button }  from '../../../shared/components/ui/Button';
 import { Modal }   from '../../../shared/components/ui/Modal';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
@@ -11,7 +11,9 @@ import type { Cadrage, CadrageVersionSummary } from '../types';
 
 interface CadrageHistoryProps {
   projectId:  string;
-  /** Change à chaque enregistrement : la liste est relue. */
+  /** Toutes les versions, libres et structurées, la plus récente d'abord (null : en chargement). */
+  versions:   CadrageVersionSummary[] | null;
+  /** Version actuelle. */
   latest:     number | null;
   /** Des modifications non enregistrées seraient remplacées. */
   dirty:      boolean;
@@ -25,24 +27,11 @@ interface CadrageHistoryProps {
  * l'analyse) et on peut repartir d'elle, ce qui crée une nouvelle version à
  * l'enregistrement.
  */
-export function CadrageHistory({ projectId, latest, dirty, onRestore }: CadrageHistoryProps) {
+export function CadrageHistory({ projectId, versions, latest, dirty, onRestore }: CadrageHistoryProps) {
   const toast  = useToast();
   const userId = useAuthStore(selectUser)?.id;
-  const [versions, setVersions] = useState<CadrageVersionSummary[] | null>(null);
   const [opened,   setOpened]   = useState<Cadrage | null>(null);
   const [loading,  setLoading]  = useState<number | null>(null);
-
-  useEffect(() => {
-    let alive = true;
-    onboardingApi.listCadrages(projectId)
-      .then(data => { if (alive) setVersions(data); })
-      .catch(err => {
-        if (!alive) return;
-        setVersions([]);
-        toast.error(err instanceof Error ? err.message : 'Impossible de charger l\'historique.');
-      });
-    return () => { alive = false; };
-  }, [projectId, latest, toast]);
 
   const open = async (version: number) => {
     setLoading(version);
@@ -69,10 +58,13 @@ export function CadrageHistory({ projectId, latest, dirty, onRestore }: CadrageH
           {versions.map(v => (
             <li key={v.version} className="obp-doc">
               <span className="obp-doc__name">
-                Version {v.version}{v.version === latest && <span className="obp-muted"> (actuelle)</span>}
+                Version {v.version}
+                <span className={`obp-kind obp-kind--${v.kind}`}>{v.kind === 'free' ? 'Libre' : 'Structurée'}</span>
+                {v.version === latest && <span className="obp-muted"> (actuelle)</span>}
               </span>
               <span className="obp-doc__meta">
                 {formatFull(v.createdAt)}{v.createdBy === userId && ' · par vous'}
+                {v.sourceFilename && ` · importée de ${v.sourceFilename}`}
               </span>
               <Button variant="ghost" size="sm" loading={loading === v.version} onClick={() => open(v.version)}
                 aria-label={`Consulter la version ${v.version}`}>
@@ -85,7 +77,7 @@ export function CadrageHistory({ projectId, latest, dirty, onRestore }: CadrageH
 
       {opened && (
         <Modal
-          title={`Version ${opened.version} — ${formatFull(opened.createdAt)}`}
+          title={`Version ${opened.version} (${opened.kind === 'free' ? 'libre' : 'structurée'}) — ${formatFull(opened.createdAt)}`}
           size="lg"
           onClose={() => setOpened(null)}
           footer={
@@ -101,7 +93,8 @@ export function CadrageHistory({ projectId, latest, dirty, onRestore }: CadrageH
         >
           {opened.version !== latest && (
             <p className="obp-muted obp-history__note">
-              Repartir de cette version la charge dans le formulaire ; l'enregistrer crée une nouvelle version.
+              Repartir de cette version la charge dans {opened.kind === 'free' ? 'le texte libre' : 'le formulaire'} ;
+              l'enregistrer crée une nouvelle version.
               {dirty && ' Vos modifications non enregistrées seront remplacées.'}
             </p>
           )}

@@ -179,3 +179,21 @@
 }
 .obp-doc-pick.is-absent span:first-of-type { color: var(--neutral-500); text-decoration: line-through; }
 .obp-absent-note { margin: 0; font-size: 12px; color: var(--neutral-500); }
+
+/* ── Fiche en texte libre ────────────────────────────────────── */
+.obp-free { display: flex; flex-direction: column; gap: 12px; }
+.obp-free__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.obp-free__text { min-height: 360px; font-size: 14px; }
+.obp-free__docs { display: flex; flex-direction: column; gap: 6px; }
+.obp-free__doc-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.obp-free__doc-list code {
+  display: inline-block; padding: 2px 8px; border-radius: var(--radius-sm);
+  background: var(--neutral-100); color: var(--neutral-700); font-size: 12px;
+}
+
+.obp-kind {
+  margin-left: 8px; padding: 1px 8px; border-radius: 99px;
+  font-size: 11px; font-weight: 500; vertical-align: middle;
+}
+.obp-kind--free       { background: var(--brand-50); color: var(--brand-700); }
+.obp-kind--structured { background: var(--neutral-100); color: var(--neutral-700); }

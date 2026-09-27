@@ -90,15 +90,25 @@ export interface CadrageForm {
   limitedDocuments: LimitedDocument[];
 }
 
+/**
+ * Une version de fiche est soit libre (texte collé ou importé, envoyé tel
+ * quel au pipeline), soit structurée (formulaire en six sections).
+ */
+export type CadrageKind = 'free' | 'structured';
+
 export interface CadrageVersionSummary {
-  version:   number;
-  createdAt: string;
-  createdBy: string;
+  version:        number;
+  kind:           CadrageKind;
+  /** Fichier .md/.txt dont le texte libre a été importé, s'il y en a un. */
+  sourceFilename: string | null;
+  createdAt:      string;
+  createdBy:      string;
 }
 
 export interface Cadrage extends CadrageVersionSummary {
-  form:     CadrageForm;
-  /** Rendu figé à l'enregistrement : c'est ce qui part au pipeline. */
+  /** Nul pour une version libre. */
+  form:     CadrageForm | null;
+  /** Ce qui part au pipeline : le texte libre tel quel, ou le rendu du formulaire. */
   markdown: string;
 }
 
