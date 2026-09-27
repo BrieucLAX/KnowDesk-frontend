@@ -67,3 +67,13 @@ describe('SideNav — filtrage par modules', () => {
     expect(apiClient.get).not.toHaveBeenCalled();
   });
 });
+
+describe('SideNav — libellés', () => {
+  it('affiche le libellé de chaque entrée, pas seulement une info-bulle', () => {
+    useAuthStore.setState({ session: sessionWith(['onboarding']), isLoaded: true });
+    render(<SideNav active="onboarding" onNavigate={() => {}} />);
+    const entry = screen.getByRole('button', { name: 'Onboarding' });
+    expect(entry).toHaveTextContent('Onboarding');
+    expect(entry).not.toHaveAttribute('title');
+  });
+});

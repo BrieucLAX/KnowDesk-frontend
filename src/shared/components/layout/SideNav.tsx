@@ -77,7 +77,6 @@ const initials = (() => {
           className={cn('sidenav__item', isActive && 'sidenav__item--active')}
           onClick={() => onNavigate(item.id)}
           aria-current={isActive ? 'page' : undefined}
-          title={item.label}
           aria-label={item.label}
         >
           <span className="sidenav__icon" aria-hidden="true">{item.icon}</span>
@@ -91,8 +90,9 @@ const initials = (() => {
     <>
       <nav className="sidenav" aria-label="Navigation principale">
         {/* Logo */}
-        <div className="sidenav__logo" aria-label="KnowDesk">
-          <span className="sidenav__logo-mark">K</span>
+        <div className="sidenav__logo">
+          <span className="sidenav__logo-mark" aria-hidden="true">K</span>
+          <span className="sidenav__logo-name">KnowDesk</span>
         </div>
 
         {/* Main nav */}
@@ -112,7 +112,6 @@ const initials = (() => {
     type="button"
     className="sidenav__item sidenav__item--help"
     onClick={onHelp}
-    title="Aide"
     aria-label="Aide"
   >
     <span className="sidenav__icon" aria-hidden="true"><HelpIcon /></span>
@@ -125,7 +124,6 @@ const initials = (() => {
     type="button"
     className="sidenav__item sidenav__initials"
     onClick={() => onNavigate('account')}
-    title="Mon compte"
     aria-label="Mon compte"
   >
     <span className="sidenav__initials-circle" aria-hidden="true">{initials}</span>
@@ -159,18 +157,17 @@ function NotificationsItem() {
       <button
         className="sidenav__item sidenav__item--notif"
         onClick={handleNotifOpen}
-        title="Notifications"
         aria-label={`Notifications${unreadCount > 0 ? ` — ${unreadCount} non lues` : ''}`}
       >
         <span className="sidenav__icon" aria-hidden="true">
           <BellIcon />
         </span>
+        <span className="sidenav__label">Notifications</span>
         {unreadCount > 0 && (
           <span className="sidenav__badge" aria-hidden="true">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
-        <span className="sidenav__label">Notifications</span>
       </button>
       {/* Panneau en position fixe, rendu hors de la liste de navigation. */}
       {showNotifs && createPortal(
