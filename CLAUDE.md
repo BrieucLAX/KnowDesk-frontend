@@ -30,7 +30,7 @@ npm run build && npm test
 
 ## Conventions réelles (rétro `03b`)
 
-- **Navigation** : pas de `<Routes>`. `App.tsx` tient un `useState<View>` synchronisé avec l'URL par `pathToView` / `viewToPath`, puis rend chaque écran par un bloc conditionnel. Tout nouvel écran passe par ces deux fonctions et par `screenModule` (`src/shared/lib/modules.ts`).
+- **Navigation** : pas de `<Routes>`. `App.tsx` tient un `useState<View>` synchronisé avec l'URL par `pathToView` / `viewToPath`, puis rend chaque écran par un bloc conditionnel. Tout nouvel écran passe par ces deux fonctions et par `SCREEN_MODULES` (`src/shared/lib/modules.ts`).
 - **Modules par organisation** : `organization.enabledModules` (renvoyé par le login, l'OAuth et `/auth/me`) décide de ce qui est visible, via `hasModule`. Le back renvoie 404 sur un module absent ; le front masque l'entrée de navigation, l'écran **et** les appels en arrière-plan (notifications, recherche, événements). Une organisation de test n'a que `onboarding`.
 - **Appels API** : toujours `apiClient` (cookie, rafraîchissement, `ApiError` avec `code`). Succès `{ data, error: null }`, erreur `{ data: null, error: { code, message } }`. Un 204 renvoie `undefined`. Les messages par code sont dans `src/shared/lib/apiErrors.ts`.
 - **Erreurs** : action utilisateur ou chargement initial en échec → `toast.error()`. Un appel de fond non critique peut échouer en silence.

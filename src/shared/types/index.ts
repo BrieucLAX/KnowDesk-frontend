@@ -19,6 +19,9 @@ export interface Organization {
   name: string;
   slug: string;
   plan: OrgPlan;
+  /** Modules activés (`organizations.enabled_modules`). Absent d'une session
+   *  gardée avant que le back ne l'expose : voir `hasModule`. */
+  enabledModules?: string[];
 }
 
 export type AsyncState<T> =

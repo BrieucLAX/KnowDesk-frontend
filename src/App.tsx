@@ -226,7 +226,25 @@ export function App() {
   // LoginPage avant la rehydratation.
   const [bootValidated, setBootValidated] = useState(isLoggedIn);
   useEffect(() => {
-    if (isLoggedIn) { setBootValidated(true); return; }
+    if (isLoggedIn) {
+      setBootValidated(true);
+      // Session déjà en localStorage : on relit /auth/me en arrière-plan pour
+      // rafraîchir organization.enabledModules (un changement de modules prend
+      // effet au prochain chargement). /auth/me ne renvoie pas `plan` : on
+      // fusionne au lieu de remplacer.
+      apiClient.get<{ user: AuthSession['user']; organization: Partial<AuthSession['organization']> }>('/auth/me')
+        .then(data => {
+          const current = useAuthStore.getState().session;
+          if (!current || !data?.user || !data?.organization) return;
+          setSession({
+            ...current,
+            user:         { ...current.user, ...data.user },
+            organization: { ...current.organization, ...data.organization },
+          });
+        })
+        .catch(() => { /* 401 : apiClient efface la session ; réseau : on garde l'état local */ });
+      return;
+    }
     let alive = true;
     apiClient.get<{ user: AuthSession['user']; organization: AuthSession['organization'] }>('/auth/me')
       .then(data => {
