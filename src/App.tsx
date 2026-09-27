@@ -14,6 +14,8 @@ import { AcceptInvitationPage } from './features/invitation/components/AcceptInv
 import { TreesPage }    from './features/trees/components/TreesPage';
 import { TreeEditor }  from './features/trees/components/TreeEditor';
 import { AccountPage }      from './features/account/components/AccountPage';
+import { OnboardingHomePage }    from './features/onboardingProjects/components/OnboardingHomePage';
+import { OnboardingProjectPage, type ProjectTab } from './features/onboardingProjects/components/OnboardingProjectPage';
 import { FaqsPage }         from './features/faqs/components/FaqsPage';
 import { FaqEditor }        from './features/faqs/components/FaqEditor';
 import { SuperadminApp }   from './features/superadmin/components/SuperadminApp';
@@ -63,7 +65,9 @@ type Screen =
   | 'faq-editor'
   | 'learning'
   | 'learning-edit'
-  | 'learning-play';
+  | 'learning-play'
+  | 'onboarding'
+  | 'onboarding-project';
 
 type View =
   | { screen: 'dashboard' }
@@ -83,7 +87,9 @@ type View =
   | { screen: 'faq-editor'; faqId?: string }
   | { screen: 'learning' }
   | { screen: 'learning-edit'; pathId: string }
-  | { screen: 'learning-play'; moduleId: string };
+  | { screen: 'learning-play'; moduleId: string }
+  | { screen: 'onboarding' }
+  | { screen: 'onboarding-project'; projectId: string; tab: ProjectTab };
 
 /** Maps URL pathname to a View. Returns null for unmapped paths. */
 function pathToView(pathname: string, fallbackFrom: Screen): View | null {
@@ -107,6 +113,11 @@ function pathToView(pathname: string, fallbackFrom: Screen): View | null {
   if (pathname === '/trees')                      return { screen: 'trees' };
   if (pathname === '/faqs')                       return { screen: 'faqs' };
   if (pathname === '/faqs/new')                   return { screen: 'faq-editor' };
+  if (pathname === '/onboarding')                 return { screen: 'onboarding' };
+  const onboardingMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)(\/cadrage)?$/);
+  if (onboardingMatch) {
+    return { screen: 'onboarding-project', projectId: onboardingMatch[1], tab: onboardingMatch[2] ? 'cadrage' : 'documents' };
+  }
 
   const faqEditMatch = pathname.match(/^\/faqs\/([^/]+)\/edit$/);
   if (faqEditMatch) return { screen: 'faq-editor', faqId: faqEditMatch[1] };
@@ -164,16 +175,32 @@ function viewToPath(view: View): string | null {
     case 'account':     return '/account';
     case 'faqs':        return '/faqs';
     case 'faq-editor':  return view.faqId ? `/faqs/${view.faqId}/edit` : '/faqs/new';
+    case 'onboarding':  return '/onboarding';
+    case 'onboarding-project':
+      return `/onboarding/projects/${view.projectId}${view.tab === 'cadrage' ? '/cadrage' : ''}`;
     default:            return null;
   }
 }
 
 /**
- * Écran d'accueil d'une organisation : le tableau de bord si elle a le module,
- * sinon Mon compte (toujours permis).
+ * Écrans réservés aux admins et managers, comme leurs routes côté back.
+ * (Les écrans historiques ne sont pas gardés ici : voir S12.)
  */
-function homeView(org: Parameters<typeof canSeeScreen>[0]): View {
-  return canSeeScreen(org, 'dashboard') ? { screen: 'dashboard' } : { screen: 'account' };
+const MANAGER_SCREENS: ReadonlySet<string> = new Set(['onboarding', 'onboarding-project']);
+
+function isScreenAllowed(org: Parameters<typeof canSeeScreen>[0], role: string | null, screen: string): boolean {
+  if (!canSeeScreen(org, screen)) return false;
+  return !MANAGER_SCREENS.has(screen) || role === 'admin' || role === 'manager';
+}
+
+/**
+ * Écran d'accueil d'une organisation : le tableau de bord si elle a le module,
+ * sinon l'Onboarding, sinon Mon compte (toujours permis).
+ */
+function homeView(org: Parameters<typeof canSeeScreen>[0], role: string | null): View {
+  if (isScreenAllowed(org, role, 'dashboard'))  return { screen: 'dashboard' };
+  if (isScreenAllowed(org, role, 'onboarding')) return { screen: 'onboarding' };
+  return { screen: 'account' };
 }
 
 export function App() {
@@ -205,7 +232,9 @@ export function App() {
       next.screen === view.screen &&
       (next as { articleId?: string }).articleId === (view as { articleId?: string }).articleId &&
       (next as { treeId?: string }).treeId       === (view as { treeId?: string }).treeId &&
-      (next as { faqId?: string }).faqId         === (view as { faqId?: string }).faqId;
+      (next as { faqId?: string }).faqId         === (view as { faqId?: string }).faqId &&
+      (next as { projectId?: string }).projectId === (view as { projectId?: string }).projectId &&
+      (next as { tab?: string }).tab             === (view as { tab?: string }).tab;
     if (sameTarget) return;
     setView(next);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -281,11 +310,11 @@ export function App() {
   // (lien direct, URL inconnue, retour arrière) est remplacé par l'accueil de
   // l'organisation. `shown` est rendu tout de suite, sans monter l'écran refusé
   // ni déclencher ses appels ; l'effet réaligne l'état et l'URL.
-  const allowed = canSeeScreen(organization, view.screen);
-  const shown: View = allowed ? view : homeView(organization);
+  const allowed = isScreenAllowed(organization, role, view.screen);
+  const shown: View = allowed ? view : homeView(organization, role);
   useEffect(() => {
-    if (isLoggedIn && !allowed) setView(homeView(organization));
-  }, [isLoggedIn, allowed, organization]);
+    if (isLoggedIn && !allowed) setView(homeView(organization, role));
+  }, [isLoggedIn, allowed, organization, role]);
 
   const go = useCallback((v: View) => setView(v), []);
 
@@ -299,11 +328,11 @@ export function App() {
       const from = view.from ?? 'dashboard';
       if (from === 'knowledge') go({ screen: 'knowledge' });
       else if (from === 'editor') go({ screen: 'knowledge' });
-      else go(homeView(organization));
+      else go(homeView(organization, role));
     } else {
-      go(homeView(organization));
+      go(homeView(organization, role));
     }
-  }, [view, go, organization]);
+  }, [view, go, organization, role]);
 
   const handleSearchSelect = useCallback((result: SearchResult) => {
     if (result.type === 'tree') {
@@ -325,8 +354,9 @@ export function App() {
     : shown.screen === 'brand-monitoring' ? 'brand-monitoring'
     : shown.screen === 'learning' || shown.screen === 'learning-edit' || shown.screen === 'learning-play' ? 'learning'
     : shown.screen === 'settings'  ? 'settings'
+    : shown.screen === 'onboarding' || shown.screen === 'onboarding-project' ? 'onboarding'
     : 'dashboard'
-  ) as 'dashboard' | 'search' | 'knowledge' | 'faqs' | 'trees' | 'learning' | 'team' | 'analytics' | 'chats' | 'brand-monitoring' | 'settings';
+  ) as 'dashboard' | 'search' | 'knowledge' | 'faqs' | 'trees' | 'learning' | 'team' | 'analytics' | 'chats' | 'brand-monitoring' | 'settings' | 'onboarding';
 
 // Mode superadmin — accessible via ?superadmin dans l'URL
 if (window.location.search.includes('superadmin')) {
@@ -402,6 +432,7 @@ if (!isLoggedIn) {
             if (route === 'learning')  go({ screen: 'learning'  });
             if (route === 'faqs')      go({ screen: 'faqs'      });
             if (route === 'account')   go({ screen: 'account'   });
+            if (route === 'onboarding') go({ screen: 'onboarding' });
           }}
           searchSlot={hasModule(organization, 'knowledge') ? <SearchBar onSelect={handleSearchSelect} /> : null}
         >
@@ -500,6 +531,19 @@ if (!isLoggedIn) {
   />
 )}
 {shown.screen === 'account' && <AccountPage />}
+{shown.screen === 'onboarding' && (
+  <OnboardingHomePage
+    onOpenProject={projectId => go({ screen: 'onboarding-project', projectId, tab: 'documents' })}
+  />
+)}
+{shown.screen === 'onboarding-project' && (
+  <OnboardingProjectPage
+    projectId={shown.projectId}
+    tab={shown.tab}
+    onTabChange={tab => go({ screen: 'onboarding-project', projectId: shown.projectId, tab })}
+    onBack={() => go({ screen: 'onboarding' })}
+  />
+)}
 {!(['dashboard','knowledge','article','tree','editor','members','analytics','chats','brand-monitoring','settings','trees','tree-editor','account','faqs','faq-editor','learning','learning-edit','learning-play'] as string[]).includes(shown.screen) && (
   <NotFoundPage onBack={() => go({ screen: 'dashboard' })} />
 )}

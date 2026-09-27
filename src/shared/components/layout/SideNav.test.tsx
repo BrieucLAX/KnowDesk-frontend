@@ -58,11 +58,11 @@ describe('SideNav — filtrage par modules', () => {
     expect(screen.getByRole('button', { name: /^Notifications/ })).toBeInTheDocument();
   });
 
-  it('organisation de test : Mon compte seul, et les notifications ne sont pas montées', () => {
+  it('organisation de test : Onboarding et Mon compte, et les notifications ne sont pas montées', () => {
     useAuthStore.setState({ session: sessionWith(['onboarding']), isLoaded: true });
     render(<SideNav active="dashboard" onNavigate={() => {}} />);
     const labels = screen.getAllByRole('button').map(b => b.getAttribute('aria-label'));
-    expect(labels).toEqual(['Mon compte']);
+    expect(labels).toEqual(['Onboarding', 'Mon compte']);
     expect(useNotificationsSpy).not.toHaveBeenCalled();
     expect(apiClient.get).not.toHaveBeenCalled();
   });

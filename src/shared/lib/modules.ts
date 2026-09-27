@@ -71,6 +71,8 @@ export const SCREEN_MODULES: Record<string, ModuleName | null> = {
   'brand-monitoring': 'brand_monitoring',
   'members':          'members',
   'settings':         'settings',
+  'onboarding':         ONBOARDING_MODULE,
+  'onboarding-project': ONBOARDING_MODULE,
   'account':          null,
 };
 

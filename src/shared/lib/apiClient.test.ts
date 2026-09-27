@@ -88,3 +88,22 @@ describe('apiClient — réponses sans corps (R15)', () => {
     await expect(apiClient.get('/x')).resolves.toEqual({ ok: 1 });
   });
 });
+
+describe('apiClient — envoi de fichiers', () => {
+  it('postForm envoie le FormData sans imposer de Content-Type', async () => {
+    fetchMock.mockResolvedValueOnce(json(201, { data: [{ id: 'd1' }], error: null }));
+    const form = new FormData();
+    form.append('files', new Blob(['%PDF-1.7']), 'a.pdf');
+    await expect(apiClient.postForm('/onboarding/projects/p/documents', form)).resolves.toEqual([{ id: 'd1' }]);
+    const [, init] = fetchMock.mock.calls[0];
+    expect(init?.body).toBe(form);
+    expect((init?.headers as Record<string, string>)['Content-Type']).toBeUndefined();
+  });
+
+  it('les requêtes JSON gardent leur Content-Type', async () => {
+    fetchMock.mockResolvedValueOnce(json(200, { data: {}, error: null }));
+    await apiClient.post('/x', { a: 1 });
+    const [, init] = fetchMock.mock.calls[0];
+    expect((init?.headers as Record<string, string>)['Content-Type']).toBe('application/json');
+  });
+});

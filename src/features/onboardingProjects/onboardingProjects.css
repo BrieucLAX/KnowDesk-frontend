@@ -1,0 +1,166 @@
+/* ─────────────────────────────────────────────────────────────
+   Module Onboarding (organisations de test) — préfixe obp-.
+   ───────────────────────────────────────────────────────────── */
+
+.obp-page { display: flex; flex-direction: column; gap: 20px; }
+
+.obp-back {
+  align-self: flex-start;
+  padding: 0; border: 0; background: none;
+  color: var(--brand-600); font: inherit; font-size: 13px;
+  cursor: pointer;
+}
+.obp-back:hover { text-decoration: underline; }
+
+.obp-skeleton-card  { height: 72px; }
+.obp-skeleton-title { height: 32px; width: 40%; }
+.obp-skeleton-block { height: 200px; }
+
+/* ── Accueil : projets ────────────────────────────────────────── */
+.obp-projects {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  margin: 0; padding: 0; list-style: none;
+}
+.obp-project-card {
+  display: flex; flex-direction: column; gap: 6px;
+  width: 100%; padding: 16px 18px;
+  background: var(--neutral-0);
+  border: 1px solid var(--neutral-200); border-radius: var(--radius-lg);
+  font: inherit; text-align: left; cursor: pointer;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.obp-project-card:hover,
+.obp-project-card:focus-visible {
+  border-color: var(--brand-200);
+  box-shadow: 0 0 0 3px var(--brand-50);
+  outline: none;
+}
+.obp-project-card__name { font-size: 15px; font-weight: 600; color: var(--neutral-900); }
+.obp-project-card__meta { font-size: 13px; color: var(--neutral-500); }
+
+.obp-tab { display: flex; flex-direction: column; gap: 20px; }
+
+.obp-section-title { margin: 0 0 12px; font-size: 15px; font-weight: 600; color: var(--neutral-900); }
+.obp-count {
+  margin-left: 6px; padding: 1px 8px; border-radius: 99px;
+  background: var(--neutral-100); color: var(--neutral-500);
+  font-size: 12px; font-weight: 500;
+}
+.obp-muted { margin: 0; font-size: 13px; color: var(--neutral-500); }
+.obp-link {
+  padding: 0; border: 0; background: none;
+  color: var(--brand-600); font: inherit; text-decoration: underline; cursor: pointer;
+}
+
+/* ── Texte d'information ─────────────────────────────────────── */
+.obp-notice {
+  display: flex; flex-direction: column; gap: 14px;
+  padding: 20px 24px;
+  background: var(--neutral-0);
+  border: 1px solid var(--brand-100); border-radius: var(--radius-lg);
+}
+.obp-notice__title { margin: 0; font-size: 16px; font-weight: 600; color: var(--neutral-900); }
+.obp-notice__text  { margin: 0; font-size: 14px; line-height: 1.6; color: var(--neutral-700); }
+.obp-notice__check { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+.obp-notice-reminder { font-size: 13px; color: var(--neutral-500); }
+
+/* ── Documents ───────────────────────────────────────────────── */
+.obp-docs {
+  margin: 0; padding: 0; list-style: none;
+  background: var(--neutral-0);
+  border: 1px solid var(--neutral-200); border-radius: var(--radius-lg);
+}
+.obp-doc {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+}
+.obp-doc + .obp-doc { border-top: 1px solid var(--neutral-100); }
+.obp-doc__name { flex: 1; min-width: 0; font-size: 14px; color: var(--neutral-900); overflow-wrap: anywhere; }
+.obp-doc__meta { font-size: 12px; color: var(--neutral-500); white-space: nowrap; }
+
+/* ── Import ──────────────────────────────────────────────────── */
+.obp-upload { display: flex; flex-direction: column; gap: 10px; }
+.obp-dropzone {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 32px 16px;
+  background: var(--neutral-0);
+  border: 1.5px dashed var(--neutral-300); border-radius: var(--radius-lg);
+  text-align: center; cursor: pointer;
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+.obp-dropzone:hover,
+.obp-dropzone:focus-visible,
+.obp-dropzone.is-drag-over { border-color: var(--brand-500); background: var(--brand-50); outline: none; }
+.obp-dropzone.is-busy { cursor: progress; opacity: .7; }
+.obp-dropzone__input { display: none; }
+.obp-dropzone__main { font-size: 14px; font-weight: 500; color: var(--neutral-900); }
+.obp-dropzone__hint { font-size: 12px; color: var(--neutral-500); }
+
+.obp-alert {
+  margin: 0; padding: 12px 14px;
+  background: var(--color-danger-bg);
+  border: 1.5px solid var(--color-danger-border); border-radius: var(--radius-md);
+  font-size: 13px; line-height: 1.4; color: var(--color-danger);
+}
+
+/* ── Fiche de cadrage ────────────────────────────────────────── */
+.obp-cadrage { display: flex; flex-direction: column; gap: 20px; }
+.obp-cadrage__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.obp-cadrage__bar--end { justify-content: flex-end; }
+.obp-dirty { color: var(--brand-700); font-weight: 500; }
+
+.obp-cadrage-section {
+  display: flex; flex-direction: column; gap: 12px;
+  margin: 0; padding: 20px 24px;
+  background: var(--neutral-0);
+  border: 1px solid var(--neutral-200); border-radius: var(--radius-lg);
+}
+.obp-cadrage-section__title {
+  padding: 0 6px; margin-left: -6px;
+  font-size: 15px; font-weight: 600; color: var(--neutral-900);
+}
+.obp-cadrage-section__errors {
+  margin-left: 8px; padding: 1px 8px; border-radius: 99px;
+  background: var(--color-danger-bg); color: var(--color-danger);
+  font-size: 12px; font-weight: 500;
+}
+
+.obp-cadrage-item {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 14px 16px;
+  background: var(--neutral-50);
+  border: 1px solid var(--neutral-100); border-radius: var(--radius-md);
+}
+.obp-cadrage-item__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.obp-cadrage-item__title { font-size: 13px; font-weight: 600; color: var(--neutral-700); overflow-wrap: anywhere; }
+.obp-cadrage-item__actions { display: flex; gap: 4px; }
+.obp-cadrage-sub { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+
+.obp-textarea { height: auto; min-height: 64px; padding-top: 10px; padding-bottom: 10px; resize: vertical; line-height: 1.5; }
+
+.obp-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 720px) { .obp-grid-2 { grid-template-columns: 1fr; } }
+
+.obp-radio-row { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.obp-radio { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--neutral-700); cursor: pointer; }
+
+.obp-inline-row { display: flex; align-items: flex-end; gap: 8px; }
+.obp-inline-row .field { flex: 1; }
+
+.obp-doc-picks { display: flex; flex-direction: column; gap: 4px; max-height: 220px; overflow-y: auto; }
+.obp-doc-pick { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--neutral-700); cursor: pointer; }
+.obp-doc-pick.is-taken { color: var(--neutral-400); cursor: default; }
+
+/* ── Historique des versions ─────────────────────────────────── */
+.obp-history { display: flex; flex-direction: column; gap: 4px; }
+.obp-history__note { margin-bottom: 12px; }
+.obp-history__render {
+  max-height: 60vh; overflow: auto;
+  padding: 12px 20px;
+  background: var(--neutral-50);
+  border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
+  font-size: 14px; line-height: 1.6;
+}

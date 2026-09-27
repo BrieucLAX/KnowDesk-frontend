@@ -1,0 +1,66 @@
+/* ─────────────────────────────────────────────────────────────
+   MarkdownContent — rendu Markdown en lecture seule (brand monitoring,
+   fiche de cadrage de l'onboarding).
+   ───────────────────────────────────────────────────────────── */
+.markdown-content > * + * { margin-top: 12px; }
+.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.markdown-content h1 { font-size: 20px; }
+.markdown-content h2 { font-size: 17px; }
+.markdown-content h3 { font-size: 15px; }
+.markdown-content h4 { font-size: 14px; }
+.markdown-content p { margin: 0; }
+.markdown-content ul, .markdown-content ol { padding-left: 24px; margin: 8px 0; }
+.markdown-content li { margin-bottom: 4px; }
+.markdown-content li > p { margin: 0; }
+.markdown-content strong { font-weight: 600; }
+.markdown-content em { font-style: italic; }
+.markdown-content code {
+  background: var(--neutral-100);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.9em;
+}
+.markdown-content pre {
+  background: var(--neutral-100);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  overflow-x: auto;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.markdown-content pre code { background: transparent; padding: 0; }
+.markdown-content blockquote {
+  border-left: 3px solid var(--neutral-300);
+  padding-left: 12px;
+  color: var(--neutral-600);
+  font-style: italic;
+}
+.markdown-content a {
+  color: var(--brand-600);
+  text-decoration: underline;
+  word-break: break-word;
+}
+.markdown-content a:hover { color: var(--brand-700); }
+.markdown-content table {
+  border-collapse: collapse;
+  font-size: 13px;
+  width: 100%;
+}
+.markdown-content th, .markdown-content td {
+  border: 1px solid var(--neutral-200);
+  padding: 6px 10px;
+  text-align: left;
+}
+.markdown-content th { background: var(--neutral-100); font-weight: 600; }
+.markdown-content hr {
+  border: 0;
+  border-top: 1px solid var(--neutral-200);
+  margin: 16px 0;
+}

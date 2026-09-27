@@ -35,5 +35,5 @@ npm run build && npm test
 - **Appels API** : toujours `apiClient` (cookie, rafraîchissement, `ApiError` avec `code`). Succès `{ data, error: null }`, erreur `{ data: null, error: { code, message } }`. Un 204 renvoie `undefined`. Les messages par code sont dans `src/shared/lib/apiErrors.ts`.
 - **Erreurs** : action utilisateur ou chargement initial en échec → `toast.error()`. Un appel de fond non critique peut échouer en silence.
 - **UI** : composants de `src/shared/components/ui/` (`Button`, `Input`, `Modal`, `ConfirmDialog`, `Skeleton`, `EmptyState`…) ; jamais `window.confirm()`. CSS co-localisé par feature, tokens de `src/styles/tokens.css` ; pas de `style={{}}` hors valeurs calculées.
-- **Features** : `src/features/<feature>/{api,components,hooks,types}`. Attention : `features/onboarding/` est l'assistant de configuration historique des admins, sans rapport avec le module Onboarding des testeurs.
+- **Features** : `src/features/<feature>/{api,components,hooks,types}`. Attention : `features/onboarding/` est l'assistant de configuration historique des admins ; le module Onboarding des testeurs (projets, documents, fiche de cadrage) est dans `features/onboardingProjects/`, sous `/onboarding`.
 - Pas de `any` sauf nécessité. Aucune donnée client dans `console.*` ni dans Sentry.
