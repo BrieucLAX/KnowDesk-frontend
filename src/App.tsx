@@ -21,7 +21,6 @@ import { FaqEditor }        from './features/faqs/components/FaqEditor';
 import { SuperadminApp }   from './features/superadmin/components/SuperadminApp';
 import { HelpPanel }       from './features/help/components/HelpPanel';
 import { ApiDocsApp }     from './features/apidocs/components/ApiDocsApp';
-import { NotFoundPage } from './shared/components/ui/NotFoundPage';
 import { MembersPage }      from './features/members/components/MembersPage';
 import { SettingsPage }     from './features/settings/components/SettingsPage';
 import { AnalyticsPage }    from './features/analytics/components/AnalyticsPage';
@@ -543,9 +542,6 @@ if (!isLoggedIn) {
     onTabChange={tab => go({ screen: 'onboarding-project', projectId: shown.projectId, tab })}
     onBack={() => go({ screen: 'onboarding' })}
   />
-)}
-{!(['dashboard','knowledge','article','tree','editor','members','analytics','chats','brand-monitoring','settings','trees','tree-editor','account','faqs','faq-editor','learning','learning-edit','learning-play'] as string[]).includes(shown.screen) && (
-  <NotFoundPage onBack={() => go({ screen: 'dashboard' })} />
 )}
         </AppLayout>
       </ProtectedRoute>

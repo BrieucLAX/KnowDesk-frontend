@@ -46,6 +46,7 @@
   --radius-xl:  16px;
   --input-h:    42px;
   --sidebar-w:  420px;
+  --sidenav-w:  216px;   /* barre de navigation principale, libellés visibles */
 
   /* Transitions */
   --t-fast:   120ms ease;

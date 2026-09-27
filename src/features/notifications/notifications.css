@@ -5,7 +5,7 @@
 /* ── Notification badge sur SideNav ──────────────────────────── */
 .sidenav__item--notif { position: relative; }
 .sidenav__badge {
-  position: absolute; top: 4px; right: 4px;
+  margin-left: auto;
   min-width: 16px; height: 16px; padding: 0 4px;
   background: var(--color-danger); color: #fff;
   font-size: 10px; font-weight: 700; border-radius: 99px;
@@ -15,7 +15,7 @@
 
 /* ── NotificationPanel ────────────────────────────────────────── */
 .notif-panel {
-  position: fixed; top: 0; left: 56px;
+  position: fixed; top: 0; left: var(--sidenav-w);
   width: 340px; height: 100vh;
   background: var(--neutral-0);
   border-right: 1px solid var(--neutral-100);
