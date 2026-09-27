@@ -22,7 +22,17 @@ export interface AuditResponse {
   imageIds:      string[];
 }
 
-export interface Condition { text: string }
+export interface ConditionClause {
+  dimension: string;
+  operator:  string;
+  value:     string | string[];
+}
+
+export interface Condition {
+  text:    string;
+  /** Forme normalisée (conjonction), quand la détection la fournit. */
+  clauses: ConditionClause[];
+}
 
 export interface SourceRef {
   format:        string;
@@ -44,9 +54,11 @@ export interface SourceRef {
 }
 
 export interface Assertion {
-  id:      string;
-  subject: string;
-  source:  SourceRef | null;
+  id:        string;
+  subject:   string;
+  source:    SourceRef | null;
+  /** Cas auquel la source restreint le fait (« En Corse »), s'il y en a un. */
+  condition: Condition | null;
 }
 
 export interface Impact { level: string; score: number }
@@ -133,7 +145,11 @@ const objs  = (v: unknown): Obj[] => (Array.isArray(v) ? v.filter(isObj) : []);
 const strs  = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
 
 function condition(v: unknown): Condition | null {
-  return isObj(v) && typeof v.text === 'string' && v.text.length > 0 ? { text: v.text } : null;
+  if (!isObj(v) || typeof v.text !== 'string' || v.text.length === 0) return null;
+  const clauses = objs(v.clauses)
+    .filter(c => typeof c.dimension === 'string' && (typeof c.value === 'string' || Array.isArray(c.value)))
+    .map(c => ({ dimension: str(c.dimension), operator: str(c.operator, 'eq'), value: typeof c.value === 'string' ? c.value : strs(c.value) }));
+  return { text: v.text, clauses };
 }
 
 export function sourceRef(v: unknown): SourceRef | null {
@@ -206,7 +222,7 @@ export function normalizeAudit(raw: unknown): Audit | null {
       .map(i => ({ documentId: str(i.document_id), path: str(i.path), format: str(i.format), status: str(i.status, 'pending') })),
     assertions: new Map(objs(raw.assertions)
       .filter(a => typeof a.id === 'string')
-      .map(a => [str(a.id), { id: str(a.id), subject: str(a.subject), source: sourceRef(a.source) }])),
+      .map(a => [str(a.id), { id: str(a.id), subject: str(a.subject), source: sourceRef(a.source), condition: condition(a.condition) }])),
     conflicts: new Map(objs(raw.conflicts)
       .filter(c => typeof c.id === 'string')
       .map(c => [str(c.id), { id: str(c.id), status: str(c.status, 'open'), proposedCondition: condition(c.proposed_condition) }])),
@@ -280,6 +296,29 @@ export function proposedCondition(audit: Audit, q: Question): Condition | null {
     if (c) return c;
   }
   return null;
+}
+
+/**
+ * Condition de chaque option, pour préremplir « deux cas distincts » sur un
+ * cas à confirmer. Pour chaque option, la condition de sa première
+ * assertion, réduite aux dimensions que la détection propose de séparer
+ * (« zone : Corse ») ; à défaut, le texte entier de cette condition ; à
+ * défaut, vide. Les valeurs de la condition proposée ne sont pas reprises
+ * telles quelles : leur ordre ne suit pas celui des options.
+ */
+export function proposedCases(audit: Audit, q: Question): string[] {
+  const dims = new Set((proposedCondition(audit, q)?.clauses ?? []).map(c => c.dimension.toLowerCase()));
+  return q.options.map(o => {
+    const cond = o.assertionIds.length > 0 ? audit.assertions.get(o.assertionIds[0])?.condition ?? null : null;
+    if (!cond) return '';
+    const kept = cond.clauses
+      .filter(c => dims.has(c.dimension.toLowerCase()))
+      .map(c => {
+        const values = Array.isArray(c.value) ? c.value.join(' / ') : c.value;
+        return `${c.dimension} : ${c.operator === 'neq' || c.operator === 'not_in' ? 'non ' : ''}${values}`;
+      });
+    return kept.length > 0 ? kept.join(' ; ') : cond.text;
+  });
 }
 
 /**

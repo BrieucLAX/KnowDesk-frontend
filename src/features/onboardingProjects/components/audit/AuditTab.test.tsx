@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 
 vi.mock('../../api/onboardingApi', () => ({
-  onboardingApi: { listAnalyses: vi.fn(), getAudit: vi.fn(), getAuditImage: vi.fn() },
+  onboardingApi: { listAnalyses: vi.fn(), getAudit: vi.fn(), getAuditImage: vi.fn(), listDecisions: vi.fn() },
 }));
 
 import { onboardingApi } from '../../api/onboardingApi';
@@ -94,6 +94,9 @@ describe('AuditTab', () => {
     vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue(listed([analysis('a-new')]));
     vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue({
       analysisId: 'a-new', schemaVersion: '0.6.0', audit: AUDIT, imageIds: ['img-ok'],
+    });
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue({
+      decisions: [], counts: { decided: 0, later: 0, skipped: 0 }, arbitrable: true,
     });
     vi.mocked(onboardingApi.getAuditImage).mockReset().mockResolvedValue(new Blob([new Uint8Array([1])], { type: 'image/png' }));
     createObjectURL = vi.fn(() => 'blob:image-1');

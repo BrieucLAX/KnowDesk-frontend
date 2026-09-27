@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  documentName, groupQuestions, isSupportedAudit, normalizeAudit, optionSources, proposedCondition, questionKind,
+  documentName, groupQuestions, isSupportedAudit, normalizeAudit, optionSources, proposedCases, proposedCondition, questionKind,
   type Audit,
 } from './audit';
 import { discardReasonLabel, impactLabel, questionTypeLabel, sourceLocation } from './auditLabels';
@@ -108,7 +108,7 @@ describe('lecture de l\'audit', () => {
       ],
     });
     expect(audit.questions.map(x => questionKind(audit, x))).toEqual(['decision', 'to_verify', 'to_confirm']);
-    expect(proposedCondition(audit, audit.questions[2])).toEqual({ text: 'En Corse' });
+    expect(proposedCondition(audit, audit.questions[2])).toEqual({ text: 'En Corse', clauses: [] });
     expect(proposedCondition(audit, audit.questions[0])).toBeNull();
   });
 
@@ -118,6 +118,30 @@ describe('lecture de l\'audit', () => {
       questions: [q('q1', { group_id: 'g1' }), q('q2', { group_id: 'g2' }), q('q3', { group_id: 'g1' }), q('q4')],
     });
     expect(groupQuestions(audit.questions).map(g => g.map(x => x.id))).toEqual([['q1', 'q3'], ['q2'], ['q4']]);
+  });
+});
+
+describe('cas proposés pour « deux cas distincts »', () => {
+  const pdfSource = { format: 'pdf', document_id: 'd', excerpt: 'e', page: 1 };
+  const audit = (conditions: Array<object | null>, proposed: object | null) => normalized({
+    ...MINIMAL,
+    assertions: conditions.map((condition, i) => ({ id: `a${i + 1}`, subject: 's', source: pdfSource, condition })),
+    conflicts: [{ id: 'c-q1', status: 'to_confirm', proposed_condition: proposed }],
+    questions: [q('q1', { blocking: false })],
+  });
+  const zone = { text: 'zone : Corse / France métropolitaine', clauses: [{ dimension: 'zone', operator: 'in', value: ['Corse', 'France métropolitaine'] }] };
+
+  it('reprend, pour chaque option, la condition de sa source sur la dimension proposée', () => {
+    const a = audit([
+      { text: 'En Corse ; Livraison à domicile', clauses: [{ dimension: 'zone', operator: 'eq', value: 'Corse' }, { dimension: 'canal', operator: 'in', value: ['Domicile'] }] },
+      { text: 'particuliers, Domicile (France métropolitaine)', clauses: [{ dimension: 'Zone', operator: 'eq', value: 'France métropolitaine' }] },
+    ], zone);
+    expect(proposedCases(a, a.questions[0])).toEqual(['zone : Corse', 'Zone : France métropolitaine']);
+  });
+
+  it('sans clause sur la dimension : le texte de la condition ; sans condition : vide', () => {
+    const a = audit([{ text: 'Pour les pros', clauses: [] }, null], zone);
+    expect(proposedCases(a, a.questions[0])).toEqual(['Pour les pros', '']);
   });
 });
 

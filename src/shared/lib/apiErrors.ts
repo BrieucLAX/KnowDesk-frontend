@@ -18,6 +18,9 @@ const ERROR_MESSAGES: Record<string, string> = {
   ORG_DISABLED:          'Cet espace est désactivé.',
   REGISTRATION_CLOSED:   'Les inscriptions sont fermées. L\'accès se fait sur invitation.',
   ACCOUNT_NOT_FOUND:     'Aucun compte Knowdesk n\'est associé à cette adresse. L\'accès se fait sur invitation.',
+  // Arbitrage de l'audit (F3, B-F3b).
+  DECISION_CONFLICT:     'Cette question a été modifiée entre-temps.',
+  AUDIT_READ_ONLY:       'Cet audit est celui d\'une analyse précédente : il se consulte, mais ne s\'arbitre plus.',
 };
 
 export function getErrorMessage(err: unknown): string {
