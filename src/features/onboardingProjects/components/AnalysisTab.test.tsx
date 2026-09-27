@@ -38,7 +38,7 @@ describe('AnalysisTab', () => {
   it('lance l\'analyse après confirmation, puis affiche sa progression', async () => {
     vi.mocked(onboardingApi.launchAnalysis).mockResolvedValue(analysis());
     const onChanged = vi.fn();
-    render(<AnalysisTab project={project()} onChanged={onChanged} />);
+    render(<AnalysisTab project={project()} onChanged={onChanged} onOpenAudit={() => {}} />);
 
     expect(await screen.findByText('Analyses restantes : 5 sur 5')).toBeInTheDocument();
     expect(screen.getByText('Fiche de cadrage : version 3')).toBeInTheDocument();
@@ -58,17 +58,17 @@ describe('AnalysisTab', () => {
   });
 
   it('bloque le lancement sans document, sans fiche, ou quota atteint', async () => {
-    const { unmount } = render(<AnalysisTab project={project({ documentsCount: 0 })} onChanged={() => {}} />);
+    const { unmount } = render(<AnalysisTab project={project({ documentsCount: 0 })} onChanged={() => {}} onOpenAudit={() => {}} />);
     expect(await screen.findByText(/Importez au moins un document/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Lancer l\'analyse' })).toBeDisabled();
     unmount();
 
-    const second = render(<AnalysisTab project={project({ cadrageVersion: null })} onChanged={() => {}} />);
+    const second = render(<AnalysisTab project={project({ cadrageVersion: null })} onChanged={() => {}} onOpenAudit={() => {}} />);
     expect(await screen.findByText(/Enregistrez la fiche de cadrage/)).toBeInTheDocument();
     second.unmount();
 
     vi.mocked(onboardingApi.listAnalyses).mockResolvedValue(listed([analysis({ status: 'succeeded', finishedAt: new Date().toISOString() })], 5));
-    render(<AnalysisTab project={project()} onChanged={() => {}} />);
+    render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={() => {}} />);
     expect(await screen.findByText(/a atteint son nombre d'analyses \(5\)/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Lancer l\'analyse' })).toBeDisabled();
   });
@@ -77,7 +77,7 @@ describe('AnalysisTab', () => {
     vi.mocked(onboardingApi.launchAnalysis).mockRejectedValue(
       new ApiError('ANALYSIS_QUOTA_EXCEEDED', 'Votre espace a atteint son nombre d\'analyses (5).', 409),
     );
-    render(<AnalysisTab project={project()} onChanged={() => {}} />);
+    render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={() => {}} />);
     fireEvent.click(await screen.findByRole('button', { name: 'Lancer l\'analyse' }));
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Lancer l\'analyse' }));
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
@@ -90,7 +90,7 @@ describe('AnalysisTab', () => {
     vi.mocked(onboardingApi.getAnalysis)
       .mockResolvedValueOnce(analysis({ status: 'running', stage: 'extraction', done: 2, total: 2, llmCalls: 17 }))
       .mockResolvedValueOnce(analysis({ status: 'succeeded', stage: 'storing', llmCalls: 60, finishedAt: new Date().toISOString() }));
-    render(<AnalysisTab project={project()} onChanged={() => {}} />);
+    render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={() => {}} />);
 
     expect(await screen.findByRole('heading', { name: 'Analyse en cours' })).toBeInTheDocument();
     expect(screen.getByText('Lecture des documents').closest('li')).toHaveTextContent('1 / 2');
@@ -115,7 +115,7 @@ describe('AnalysisTab', () => {
       analysis({ id: 'a2', status: 'succeeded', finishedAt: new Date().toISOString() }),
       analysis({ id: 'a1', status: 'failed', errorCode: 'pipeline_restarted', cadrageVersion: 1, finishedAt: new Date().toISOString() }),
     ], 1));
-    render(<AnalysisTab project={project()} onChanged={() => {}} />);
+    render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={() => {}} />);
     expect(await screen.findByRole('heading', { name: 'Analyses précédentes' })).toBeInTheDocument();
     expect(screen.getByText('Interrompue')).toBeInTheDocument();
     expect(screen.getByText('fiche version 1, 2 documents')).toBeInTheDocument();
