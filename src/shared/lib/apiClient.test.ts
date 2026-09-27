@@ -71,3 +71,20 @@ describe('apiClient — erreurs', () => {
     expect(useAuthStore.getState().sessionEndedReason).toBeNull();
   });
 });
+
+describe('apiClient — réponses sans corps (R15)', () => {
+  it('un 204 renvoie undefined', async () => {
+    fetchMock.mockResolvedValueOnce(new Response(null, { status: 204 }));
+    await expect(apiClient.delete('/brand-monitoring/prompts/1')).resolves.toBeUndefined();
+  });
+
+  it('une erreur sans corps reste une ApiError', async () => {
+    fetchMock.mockResolvedValueOnce(new Response(null, { status: 502 }));
+    await expect(apiClient.get('/x')).rejects.toMatchObject({ code: 'UNKNOWN_ERROR', status: 502 });
+  });
+
+  it('un succès JSON renvoie data', async () => {
+    fetchMock.mockResolvedValueOnce(json(200, { data: { ok: 1 }, error: null }));
+    await expect(apiClient.get('/x')).resolves.toEqual({ ok: 1 });
+  });
+});

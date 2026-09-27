@@ -76,7 +76,14 @@ async function endSessionIfOrgDisabled<T>(pending: Promise<T>): Promise<T> {
 }
 
 async function parseResponse<T>(res: Response): Promise<T> {
-  const body = await res.json();
+  // 204 No Content (suppressions du brand monitoring et d'un document
+  // d'onboarding, POST /events…) : pas de corps à lire (R15).
+  const text = await res.text();
+  if (!text) {
+    if (!res.ok) throw new ApiError('UNKNOWN_ERROR', 'Une erreur est survenue.', res.status);
+    return undefined as T;
+  }
+  const body = JSON.parse(text);
   if (!res.ok || body.error) {
     throw new ApiError(
       body.error?.code    ?? 'UNKNOWN_ERROR',
