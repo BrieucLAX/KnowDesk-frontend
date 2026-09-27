@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  ANALYSIS_STEPS, analysisFailureMessage, elapsedMs, formatElapsed, isAnalysisActive, stepStates,
+  ANALYSIS_STEPS, analysisFailureMessage, analysisFailureNote, elapsedMs, formatElapsed, isAnalysisActive, stepStates,
 } from './analysisStatus';
 
 describe('analysisStatus', () => {
@@ -41,5 +41,13 @@ describe('analysisStatus', () => {
     expect(analysisFailureMessage('internal_error')).toBe('L\'analyse a échoué.');
     expect(analysisFailureMessage(null)).toBe('L\'analyse a échoué.');
     expect(analysisFailureMessage('constructor')).toBe('L\'analyse a échoué.');
+    expect(analysisFailureMessage('provider_auth')).toContain('configuration de notre côté');
+    expect(analysisFailureMessage('provider_error')).toContain('indisponible');
+  });
+
+  it('relancer n\'est proposé que si cela peut servir', () => {
+    expect(analysisFailureNote('provider_auth')).toBe('Elle ne compte pas dans votre quota. Nous sommes prévenus.');
+    expect(analysisFailureNote('provider_error')).toContain('vous pouvez la relancer');
+    expect(analysisFailureNote(null)).toContain('vous pouvez la relancer');
   });
 });
