@@ -35,3 +35,9 @@
 }
 
 
+
+/* ── Chargement et rappel (compte existant) ──────────────────── */
+.invitation-loading { display: flex; flex-direction: column; gap: 16px; }
+.invitation-loading__line  { height: 28px; width: 60%; }
+.invitation-loading__block { height: 160px; }
+.invitation-hint { margin: 0; font-size: 13px; line-height: 1.5; color: var(--neutral-500); }
