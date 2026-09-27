@@ -3,10 +3,11 @@ import type {
   AnalysisQuota, Cadrage, CadrageForm, CadrageVersionSummary, OnboardingAnalysis, OnboardingDocument,
   OnboardingNotice, OnboardingProject, OnboardingProjectSummary, SavedCadrage,
 } from '../types';
+import type { AuditResponse } from '../lib/audit';
 
 const BASE = '/onboarding';
 
-/** Module Onboarding (back, étapes F1 et F2). Toutes les routes : admin ou manager, module onboarding. */
+/** Module Onboarding (back, étapes F1 à F3). Toutes les routes : admin ou manager, module onboarding. */
 export const onboardingApi = {
   getNotice:    () => apiClient.get<OnboardingNotice>(`${BASE}/notice`),
   acceptNotice: (version: string) =>
@@ -54,4 +55,11 @@ export const onboardingApi = {
     apiClient.getWithMeta<OnboardingAnalysis[], { quota: AnalysisQuota }>(`${BASE}/projects/${projectId}/analyses`),
   getAnalysis:    (projectId: string, analysisId: string) =>
     apiClient.get<OnboardingAnalysis>(`${BASE}/projects/${projectId}/analyses/${analysisId}`),
+
+  /** Audit d'une analyse réussie, tel que livré ; 404 sinon. */
+  getAudit: (projectId: string, analysisId: string) =>
+    apiClient.get<AuditResponse>(`${BASE}/projects/${projectId}/analyses/${analysisId}/audit`),
+  /** Image citée par l'audit (octets relayés par le back depuis le bucket privé). */
+  getAuditImage: (projectId: string, analysisId: string, imageId: string) =>
+    apiClient.getBlob(`${BASE}/projects/${projectId}/analyses/${analysisId}/images/${encodeURIComponent(imageId)}`),
 };

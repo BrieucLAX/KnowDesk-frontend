@@ -10,15 +10,17 @@ import { ProjectNameModal } from './ProjectNameModal';
 import { DocumentsTab } from './DocumentsTab';
 import { CadrageTab }   from './CadrageTab';
 import { AnalysisTab }  from './AnalysisTab';
+import { AuditTab }     from './audit/AuditTab';
 import type { OnboardingProject } from '../types';
 import '../onboardingProjects.css';
 
-export type ProjectTab = 'documents' | 'cadrage' | 'analysis';
+export type ProjectTab = 'documents' | 'cadrage' | 'analysis' | 'audit';
 
 const TABS = [
   { id: 'documents', label: 'Documents' },
   { id: 'cadrage',   label: 'Fiche de cadrage' },
   { id: 'analysis',  label: 'Analyse' },
+  { id: 'audit',     label: 'Audit' },
 ] as const;
 
 interface OnboardingProjectPageProps {
@@ -28,7 +30,7 @@ interface OnboardingProjectPageProps {
   onBack:      () => void;
 }
 
-/** Un projet d'onboarding : ses documents, sa fiche de cadrage et ses analyses. */
+/** Un projet d'onboarding : ses documents, sa fiche de cadrage, ses analyses et leur audit. */
 export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: OnboardingProjectPageProps) {
   const toast = useToast();
   const [project,  setProject]  = useState<OnboardingProject | null>(null);
@@ -100,6 +102,7 @@ export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: O
         {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
         {tab === 'cadrage' && <CadrageTab project={project} onSaved={reload} onDirtyChange={setCadrageDirty} />}
         {tab === 'analysis' && <AnalysisTab project={project} onChanged={reload} />}
+        {tab === 'audit' && <AuditTab project={project} onGoToAnalysis={() => onTabChange('analysis')} />}
       </div>
 
       {pendingLeave && (

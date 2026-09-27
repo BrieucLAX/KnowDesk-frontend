@@ -116,3 +116,30 @@ describe('apiClient — envoi de fichiers', () => {
     expect((init?.headers as Record<string, string>)['Content-Type']).toBe('application/json');
   });
 });
+
+describe('apiClient — contenu binaire', () => {
+  it('getBlob renvoie le corps tel quel', async () => {
+    fetchMock.mockResolvedValueOnce(new Response(new Uint8Array([1, 2, 3]), { status: 200, headers: { 'Content-Type': 'image/png' } }));
+    const blob = await apiClient.getBlob('/img');
+    expect(blob.type).toBe('image/png');
+    expect(new Uint8Array(await blob.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]));
+  });
+
+  it('getBlob en erreur : ApiError avec le code du back', async () => {
+    fetchMock.mockResolvedValueOnce(json(404, { data: null, error: { code: 'NOT_FOUND', message: 'Image introuvable.' } }));
+    const err = await apiClient.getBlob('/img').catch(e => e);
+    expect(err).toBeInstanceOf(ApiError);
+    expect(err).toMatchObject({ code: 'NOT_FOUND', status: 404 });
+  });
+
+  it('getBlob après un 401 : rafraîchit la session puis relit le binaire', async () => {
+    fetchMock
+      .mockResolvedValueOnce(json(401, { data: null, error: { code: 'TOKEN_EXPIRED', message: 'expiré' } }))
+      .mockResolvedValueOnce(json(200, { data: null, error: null }))
+      .mockResolvedValueOnce(new Response(new Uint8Array([9]), { status: 200 }));
+    const blob = await apiClient.getBlob('/img');
+    expect(new Uint8Array(await blob.arrayBuffer())).toEqual(new Uint8Array([9]));
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(String(fetchMock.mock.calls[1][0])).toContain('/auth/refresh');
+  });
+});
