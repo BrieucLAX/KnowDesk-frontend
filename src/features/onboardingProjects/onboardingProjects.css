@@ -103,3 +103,53 @@
   border: 1.5px solid var(--color-danger-border); border-radius: var(--radius-md);
   font-size: 13px; line-height: 1.4; color: var(--color-danger);
 }
+
+/* ── Fiche de cadrage ────────────────────────────────────────── */
+.obp-cadrage { display: flex; flex-direction: column; gap: 20px; }
+.obp-cadrage__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.obp-cadrage__bar--end { justify-content: flex-end; }
+.obp-dirty { color: var(--brand-700); font-weight: 500; }
+
+.obp-cadrage-section {
+  display: flex; flex-direction: column; gap: 12px;
+  margin: 0; padding: 20px 24px;
+  background: var(--neutral-0);
+  border: 1px solid var(--neutral-200); border-radius: var(--radius-lg);
+}
+.obp-cadrage-section__title {
+  padding: 0 6px; margin-left: -6px;
+  font-size: 15px; font-weight: 600; color: var(--neutral-900);
+}
+.obp-cadrage-section__errors {
+  margin-left: 8px; padding: 1px 8px; border-radius: 99px;
+  background: var(--color-danger-bg); color: var(--color-danger);
+  font-size: 12px; font-weight: 500;
+}
+
+.obp-cadrage-item {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 14px 16px;
+  background: var(--neutral-50);
+  border: 1px solid var(--neutral-100); border-radius: var(--radius-md);
+}
+.obp-cadrage-item__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.obp-cadrage-item__title { font-size: 13px; font-weight: 600; color: var(--neutral-700); overflow-wrap: anywhere; }
+.obp-cadrage-item__actions { display: flex; gap: 4px; }
+.obp-cadrage-sub { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+
+.obp-textarea { height: auto; min-height: 64px; padding-top: 10px; padding-bottom: 10px; resize: vertical; line-height: 1.5; }
+
+.obp-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 720px) { .obp-grid-2 { grid-template-columns: 1fr; } }
+
+.obp-radio-row { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.obp-radio { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--neutral-700); cursor: pointer; }
+
+.obp-inline-row { display: flex; align-items: flex-end; gap: 8px; }
+.obp-inline-row .field { flex: 1; }
+
+.obp-doc-picks { display: flex; flex-direction: column; gap: 4px; max-height: 220px; overflow-y: auto; }
+.obp-doc-pick { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--neutral-700); cursor: pointer; }
+.obp-doc-pick.is-taken { color: var(--neutral-400); cursor: default; }

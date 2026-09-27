@@ -3,10 +3,12 @@ import { PageHeader } from '../../../shared/components/layout/PageHeader';
 import { Button }     from '../../../shared/components/ui/Button';
 import { FilterTabs } from '../../../shared/components/ui/FilterTabs';
 import { Skeleton }   from '../../../shared/components/ui/Skeleton';
+import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { useToast }   from '../../../shared/lib/useToast';
 import { onboardingApi } from '../api/onboardingApi';
 import { ProjectNameModal } from './ProjectNameModal';
 import { DocumentsTab } from './DocumentsTab';
+import { CadrageTab }   from './CadrageTab';
 import type { OnboardingProject } from '../types';
 import '../onboardingProjects.css';
 
@@ -30,6 +32,14 @@ export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: O
   const [project,  setProject]  = useState<OnboardingProject | null>(null);
   const [missing,  setMissing]  = useState(false);
   const [renaming, setRenaming] = useState(false);
+  // Fiche de cadrage modifiée et non enregistrée : on confirme avant de quitter l'onglet.
+  const [cadrageDirty, setCadrageDirty] = useState(false);
+  const [pendingLeave, setPendingLeave] = useState<(() => void) | null>(null);
+
+  const leave = (action: () => void) => {
+    if (cadrageDirty) setPendingLeave(() => action);
+    else action();
+  };
 
   /** Relit le projet (compteurs, plafonds, version du cadrage) après un changement. */
   const reload = useCallback(async () => {
@@ -54,7 +64,7 @@ export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: O
   }, [projectId]);
 
   const back = (
-    <button type="button" className="obp-back" onClick={onBack}>← Tous les projets</button>
+    <button type="button" className="obp-back" onClick={() => leave(onBack)}>← Tous les projets</button>
   );
 
   if (missing) {
@@ -81,13 +91,25 @@ export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: O
       <FilterTabs
         options={TABS}
         value={tab}
-        onChange={id => onTabChange(id)}
+        onChange={id => { if (id !== tab) leave(() => onTabChange(id)); }}
         ariaLabel="Sections du projet"
       />
       <div className="obp-tab">
         {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
-        {tab === 'cadrage' && null}
+        {tab === 'cadrage' && <CadrageTab project={project} onSaved={reload} onDirtyChange={setCadrageDirty} />}
       </div>
+
+      {pendingLeave && (
+        <ConfirmDialog
+          title="Quitter sans enregistrer ?"
+          description="Les modifications de la fiche de cadrage seront perdues."
+          confirmLabel="Quitter sans enregistrer"
+          cancelLabel="Rester"
+          variant="danger"
+          onConfirm={() => { const go = pendingLeave; setPendingLeave(null); setCadrageDirty(false); go(); }}
+          onCancel={() => setPendingLeave(null)}
+        />
+      )}
 
       {renaming && (
         <ProjectNameModal
