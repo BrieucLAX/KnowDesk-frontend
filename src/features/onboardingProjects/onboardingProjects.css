@@ -1,0 +1,42 @@
+/* ─────────────────────────────────────────────────────────────
+   Module Onboarding (organisations de test) — préfixe obp-.
+   ───────────────────────────────────────────────────────────── */
+
+.obp-page { display: flex; flex-direction: column; gap: 20px; }
+
+.obp-back {
+  align-self: flex-start;
+  padding: 0; border: 0; background: none;
+  color: var(--brand-600); font: inherit; font-size: 13px;
+  cursor: pointer;
+}
+.obp-back:hover { text-decoration: underline; }
+
+.obp-skeleton-card  { height: 72px; }
+.obp-skeleton-title { height: 32px; width: 40%; }
+.obp-skeleton-block { height: 200px; }
+
+/* ── Accueil : projets ────────────────────────────────────────── */
+.obp-projects {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  margin: 0; padding: 0; list-style: none;
+}
+.obp-project-card {
+  display: flex; flex-direction: column; gap: 6px;
+  width: 100%; padding: 16px 18px;
+  background: var(--neutral-0);
+  border: 1px solid var(--neutral-200); border-radius: var(--radius-lg);
+  font: inherit; text-align: left; cursor: pointer;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.obp-project-card:hover,
+.obp-project-card:focus-visible {
+  border-color: var(--brand-200);
+  box-shadow: 0 0 0 3px var(--brand-50);
+  outline: none;
+}
+.obp-project-card__name { font-size: 15px; font-weight: 600; color: var(--neutral-900); }
+.obp-project-card__meta { font-size: 13px; color: var(--neutral-500); }
+
+.obp-tab { display: flex; flex-direction: column; gap: 20px; }

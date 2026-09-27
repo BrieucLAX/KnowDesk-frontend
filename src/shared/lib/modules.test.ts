@@ -32,14 +32,16 @@ describe('isTestOrganization', () => {
 });
 
 describe('canSeeScreen', () => {
-  it('une organisation historique voit tous les écrans', () => {
-    for (const screen of Object.keys(SCREEN_MODULES)) expect(canSeeScreen(legacyOrg, screen)).toBe(true);
-    for (const screen of Object.keys(SCREEN_MODULES)) expect(canSeeScreen(staleOrg, screen)).toBe(true);
+  it('une organisation historique voit tous les écrans, sauf l\'onboarding', () => {
+    for (const org of [legacyOrg, staleOrg]) {
+      const hidden = Object.keys(SCREEN_MODULES).filter(s => !canSeeScreen(org, s));
+      expect(hidden).toEqual(['onboarding', 'onboarding-project']);
+    }
   });
 
-  it('une organisation de test ne voit que Mon compte', () => {
+  it('une organisation de test ne voit que l\'onboarding et Mon compte', () => {
     const visible = Object.keys(SCREEN_MODULES).filter(s => canSeeScreen(testOrg, s));
-    expect(visible).toEqual(['account']);
+    expect(visible).toEqual(['onboarding', 'onboarding-project', 'account']);
   });
 
   it('refuse un écran inconnu', () => {

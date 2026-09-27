@@ -9,7 +9,7 @@ import { NotificationPanel } from '../../../features/notifications/components/No
 // .sidenav__badge est défini dans notifications.css (couplage badge ↔ feature notif)
 import '../../../features/notifications/notifications.css';
 
-export type NavRoute = 'dashboard' | 'search' | 'knowledge' | 'faqs' | 'trees' | 'learning' | 'team' | 'analytics' | 'chats' | 'brand-monitoring' | 'settings' | 'account';
+export type NavRoute = 'dashboard' | 'search' | 'knowledge' | 'faqs' | 'trees' | 'learning' | 'team' | 'analytics' | 'chats' | 'brand-monitoring' | 'settings' | 'account' | 'onboarding';
 
 interface NavItem {
   id:        NavRoute;
@@ -40,6 +40,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'analytics', label: 'Analyse',       href: '/analytics',  icon: <ChartIcon />, adminOnly: true, module: 'analytics' },
   { id: 'chats',     label: 'Conversations', href: '/chats',      icon: <ChatIcon />,  adminOnly: true, module: 'chats' },
   { id: 'brand-monitoring', label: 'Brand monitoring', href: '/brand-monitoring', icon: <RadarIcon />, adminOnly: true, module: 'brand_monitoring' },
+  { id: 'onboarding', label: 'Onboarding', href: '/onboarding', icon: <OnboardingIcon />, adminOnly: true, module: 'onboarding' },
 ];
 
 const BOTTOM_ITEMS: NavItem[] = [
@@ -351,6 +352,17 @@ function AuditIcon() {
         stroke="currentColor" strokeWidth="1.4" fill="none"/>
       <path d="M6 6h6M6 9h6M6 12h4"
         stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function OnboardingIcon() {
+  // Dossier avec flèche d'import : projets et documents importés.
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <path d="M2 5a1.5 1.5 0 011.5-1.5h3l1.5 1.5h6.5A1.5 1.5 0 0116 6.5v7a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 012 13.5V5z"
+        stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" fill="none"/>
+      <path d="M9 7.5v4.5M7 10l2 2 2-2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
