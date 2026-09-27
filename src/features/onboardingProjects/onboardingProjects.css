@@ -164,3 +164,18 @@
   border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
   font-size: 14px; line-height: 1.6;
 }
+
+/* ── Documents cités mais absents du projet (signalés, non bloquants) ── */
+.obp-warning {
+  margin: 0; padding: 12px 14px;
+  background: var(--brand-50);
+  border: 1px solid var(--brand-100); border-radius: var(--radius-md);
+  font-size: 13px; line-height: 1.5; color: var(--brand-900);
+}
+.obp-absent {
+  margin-left: 6px; padding: 1px 6px; border-radius: 99px;
+  background: var(--neutral-100); color: var(--neutral-500);
+  font-size: 11px;
+}
+.obp-doc-pick.is-absent span:first-of-type { color: var(--neutral-500); text-decoration: line-through; }
+.obp-absent-note { margin: 0; font-size: 12px; color: var(--neutral-500); }

@@ -207,9 +207,11 @@ export function SourceHierarchySection({ form, errors, documents, edit, readOnly
   const count = Object.keys(errors).filter(k => k.startsWith('sourceHierarchy')).length;
   const err = (path: string) => errors[`sourceHierarchy.${path}`];
 
-  /** Niveau (index) où chaque document est déjà rangé. */
+  /** Niveau (index) où chaque document est déjà rangé, par nom de fichier. */
   const levelOf = new Map<string, number>();
-  levels.forEach((l, i) => l.documentIds.forEach(id => { if (!levelOf.has(id)) levelOf.set(id, i); }));
+  levels.forEach((l, i) => l.documents.forEach(name => { if (!levelOf.has(name)) levelOf.set(name, i); }));
+  const projectNames = documents.map(d => d.filename);
+  const inProject = new Set(projectNames);
 
   const move = (i: number, delta: -1 | 1) => edit(d => {
     const list = d.sourceHierarchy.levels;
@@ -243,39 +245,42 @@ export function SourceHierarchySection({ form, errors, documents, edit, readOnly
             onChange={e => edit(d => { d.sourceHierarchy.levels[i].detail = e.target.value; })} />
           <div className="field" role="group" aria-labelledby={`obp-levels-${i}-docs`}>
             <span id={`obp-levels-${i}-docs`} className="field-label">Documents de ce niveau</span>
-            {documents.length === 0 ? (
+            {documents.length === 0 && l.documents.length === 0 ? (
               <p className="obp-muted">Importez des documents pour les rattacher à un niveau.</p>
             ) : (
               <div className="obp-doc-picks">
-                {documents.map(doc => {
-                  const elsewhere = levelOf.get(doc.id);
-                  const checked = l.documentIds.includes(doc.id);
+                {/* Documents du projet, puis ceux que ce niveau cite mais qui en sont absents. */}
+                {[...projectNames, ...l.documents.filter(name => !inProject.has(name))].map(name => {
+                  const elsewhere = levelOf.get(name);
+                  const checked = l.documents.includes(name);
                   const taken = !checked && elsewhere !== undefined && elsewhere !== i;
+                  const absent = !inProject.has(name);
                   return (
-                    <label key={doc.id} className={`obp-doc-pick${taken ? ' is-taken' : ''}`}>
+                    <label key={name} className={`obp-doc-pick${taken ? ' is-taken' : ''}${absent ? ' is-absent' : ''}`}>
                       <input
                         type="checkbox"
                         checked={checked}
                         disabled={readOnly || taken}
                         onChange={e => edit(d => {
-                          const ids = d.sourceHierarchy.levels[i].documentIds;
-                          if (e.target.checked) ids.push(doc.id);
-                          else ids.splice(ids.indexOf(doc.id), 1);
+                          const names = d.sourceHierarchy.levels[i].documents;
+                          if (e.target.checked) names.push(name);
+                          else names.splice(names.indexOf(name), 1);
                         })}
                       />
-                      <span>{doc.filename}</span>
+                      <span>{name}</span>
                       {taken && <span className="obp-muted"> (niveau {elsewhere! + 1})</span>}
+                      {absent && <span className="obp-absent">absent du projet</span>}
                     </label>
                   );
                 })}
               </div>
             )}
-            {err(`levels.${i}.documentIds`) && <p className="field-error" role="alert">{err(`levels.${i}.documentIds`)}</p>}
+            {err(`levels.${i}.documents`) && <p className="field-error" role="alert">{err(`levels.${i}.documents`)}</p>}
           </div>
         </div>
       ))}
       <AddButton label="Ajouter un niveau" count={levels.length} max={CADRAGE_LIMITS.levels} readOnly={readOnly}
-        onAdd={() => edit(d => { d.sourceHierarchy.levels.push({ label: '', detail: '', documentIds: [] }); })} />
+        onAdd={() => edit(d => { d.sourceHierarchy.levels.push({ label: '', detail: '', documents: [] }); })} />
 
       <div className="obp-cadrage-sub">
         <span className="field-label">Cas particuliers</span>
@@ -303,7 +308,7 @@ export function SourceHierarchySection({ form, errors, documents, edit, readOnly
 export function LimitedDocumentsSection({ form, errors, documents, edit, readOnly }: SectionProps) {
   const count = Object.keys(errors).filter(k => k.startsWith('limitedDocuments')).length;
   const err = (i: number, f: string) => errors[`limitedDocuments.${i}.${f}`];
-  const nameOf = (id: string) => documents.find(d => d.id === id)?.filename;
+  const inProject = new Set(documents.map(d => d.filename));
 
   return (
     <SectionFrame sectionKey="limitedDocuments" errorCount={count}>
@@ -311,7 +316,7 @@ export function LimitedDocumentsSection({ form, errors, documents, edit, readOnl
       {form.limitedDocuments.map((ld, i) => (
         <ItemFrame
           key={i}
-          title={nameOf(ld.documentId) ?? `Document ${i + 1}`}
+          title={ld.document || `Document ${i + 1}`}
           readOnly={readOnly}
           onRemove={() => edit(d => { d.limitedDocuments.splice(i, 1); })}
         >
@@ -319,17 +324,24 @@ export function LimitedDocumentsSection({ form, errors, documents, edit, readOnl
             <label htmlFor={`obp-limited-${i}-doc`} className="field-label">Document</label>
             <select
               id={`obp-limited-${i}-doc`}
-              className={`field-input${err(i, 'documentId') ? ' field-input--error' : ''}`}
-              value={ld.documentId}
+              className={`field-input${err(i, 'document') ? ' field-input--error' : ''}`}
+              value={ld.document}
               disabled={readOnly}
-              aria-invalid={!!err(i, 'documentId')}
-              onChange={e => edit(d => { d.limitedDocuments[i].documentId = e.target.value; })}
+              aria-invalid={!!err(i, 'document')}
+              onChange={e => edit(d => { d.limitedDocuments[i].document = e.target.value; })}
             >
               <option value="">Choisir un document…</option>
-              {documents.map(doc => <option key={doc.id} value={doc.id}>{doc.filename}</option>)}
-              {ld.documentId && !nameOf(ld.documentId) && <option value={ld.documentId}>Document retiré du projet</option>}
+              {documents.map(doc => <option key={doc.id} value={doc.filename}>{doc.filename}</option>)}
+              {ld.document && !inProject.has(ld.document) && (
+                <option value={ld.document}>{ld.document} (absent du projet)</option>
+              )}
             </select>
-            {err(i, 'documentId') && <p className="field-error" role="alert">{err(i, 'documentId')}</p>}
+            {ld.document && !inProject.has(ld.document) && (
+              <p className="obp-absent-note">
+                Ce document n'est plus dans le projet. Réimportez-le sous le même nom pour qu'il reprenne sa place.
+              </p>
+            )}
+            {err(i, 'document') && <p className="field-error" role="alert">{err(i, 'document')}</p>}
           </div>
           <div className="obp-grid-2">
             <Input id={`obp-limited-${i}-from`} label="Valable à partir du" type="date" value={ld.validFrom ?? ''}
@@ -361,7 +373,7 @@ export function LimitedDocumentsSection({ form, errors, documents, edit, readOnl
         <p className="obp-muted">Importez des documents pour en désigner un.</p>
       ) : (
         <AddButton label="Ajouter un document" count={form.limitedDocuments.length} max={CADRAGE_LIMITS.limitedDocuments} readOnly={readOnly}
-          onAdd={() => edit(d => { d.limitedDocuments.push({ documentId: '', validFrom: null, validUntil: null, effect: 'replaces', scope: '' }); })} />
+          onAdd={() => edit(d => { d.limitedDocuments.push({ document: '', validFrom: null, validUntil: null, effect: 'replaces', scope: '' }); })} />
       )}
     </SectionFrame>
   );

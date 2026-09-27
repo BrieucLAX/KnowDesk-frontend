@@ -57,11 +57,11 @@ export function cleanCadrageForm(form: CadrageForm): CadrageForm {
     services: form.services.map(o => ({ name: t(o.name), description: t(o.description), status: o.status })),
     notions:  form.notions.map(n => ({ first: t(n.first), second: t(n.second), explanation: t(n.explanation) })),
     sourceHierarchy: {
-      levels: form.sourceHierarchy.levels.map(l => ({ label: t(l.label), detail: t(l.detail), documentIds: l.documentIds })),
+      levels: form.sourceHierarchy.levels.map(l => ({ label: t(l.label), detail: t(l.detail), documents: l.documents })),
       specialCases: form.sourceHierarchy.specialCases.map(t),
     },
     limitedDocuments: form.limitedDocuments.map(d => ({
-      documentId: d.documentId,
+      document:   d.document,
       validFrom:  d.validFrom  || null,
       validUntil: d.validUntil || null,
       effect:     d.effect,
@@ -90,10 +90,11 @@ function isValidDate(d: string): boolean {
 }
 
 /**
- * Contrôle le formulaire. `documentIds` : documents du projet, les seuls que
- * les sections 5 et 6 peuvent citer.
+ * Contrôle le formulaire. Un document cité mais absent du projet n'est pas
+ * une erreur (voir `missingDocuments`) : il est signalé, l'enregistrement
+ * reste possible.
  */
-export function validateCadrageForm(form: CadrageForm, documentIds: ReadonlySet<string>): CadrageErrors {
+export function validateCadrageForm(form: CadrageForm): CadrageErrors {
   const errors: CadrageErrors = {};
   const L = CADRAGE_LIMITS;
 
@@ -123,12 +124,11 @@ export function validateCadrageForm(form: CadrageForm, documentIds: ReadonlySet<
   levels.forEach((l, i) => {
     checkLine(errors, `sourceHierarchy.levels.${i}.label`, l.label, L.name);
     checkParagraph(errors, `sourceHierarchy.levels.${i}.detail`, l.detail);
-    const path = `sourceHierarchy.levels.${i}.documentIds`;
-    tooMany(path, l.documentIds.length, L.levelDocuments);
-    for (const id of l.documentIds) {
-      if (!documentIds.has(id)) errors[path] = 'Un document cité n\'est plus dans le projet.';
-      else if (ranked.has(id)) errors[path] = 'Un document ne figure qu\'à un seul niveau de la hiérarchie.';
-      ranked.add(id);
+    const path = `sourceHierarchy.levels.${i}.documents`;
+    tooMany(path, l.documents.length, L.levelDocuments);
+    for (const name of l.documents) {
+      if (ranked.has(name)) errors[path] = 'Un document ne figure qu\'à un seul niveau de la hiérarchie.';
+      ranked.add(name);
     }
   });
   tooMany('sourceHierarchy.specialCases', specialCases.length, L.specialCases);
@@ -138,10 +138,9 @@ export function validateCadrageForm(form: CadrageForm, documentIds: ReadonlySet<
   const bounded = new Set<string>();
   form.limitedDocuments.forEach((d, i) => {
     const p = `limitedDocuments.${i}`;
-    if (!d.documentId) errors[`${p}.documentId`] = 'Choisissez un document.';
-    else if (!documentIds.has(d.documentId)) errors[`${p}.documentId`] = 'Ce document n\'est plus dans le projet.';
-    else if (bounded.has(d.documentId)) errors[`${p}.documentId`] = 'Document déjà listé parmi les documents à durée limitée.';
-    if (d.documentId) bounded.add(d.documentId);
+    if (!d.document) errors[`${p}.document`] = 'Choisissez un document.';
+    else if (bounded.has(d.document)) errors[`${p}.document`] = 'Document déjà listé parmi les documents à durée limitée.';
+    if (d.document) bounded.add(d.document);
     if (d.validFrom  && !isValidDate(d.validFrom))  errors[`${p}.validFrom`]  = 'Date invalide.';
     if (d.validUntil && !isValidDate(d.validUntil)) errors[`${p}.validUntil`] = 'Date invalide.';
     if (d.validFrom && d.validUntil && d.validFrom > d.validUntil) errors[`${p}.validUntil`] = 'La fin de validité précède son début.';
@@ -149,6 +148,18 @@ export function validateCadrageForm(form: CadrageForm, documentIds: ReadonlySet<
   });
 
   return errors;
+}
+
+/**
+ * Noms de fichier cités par les sections 5 et 6 mais absents du projet
+ * (retirés, ou pas encore réimportés). Signalés sans bloquer.
+ */
+export function missingDocuments(form: CadrageForm, projectFilenames: ReadonlySet<string>): string[] {
+  const cited = [
+    ...form.sourceHierarchy.levels.flatMap(l => l.documents),
+    ...form.limitedDocuments.map(d => d.document).filter(Boolean),
+  ];
+  return [...new Set(cited)].filter(name => !projectFilenames.has(name));
 }
 
 /**

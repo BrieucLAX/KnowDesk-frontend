@@ -1,7 +1,7 @@
 import { apiClient } from '../../../shared/lib/apiClient';
 import type {
   Cadrage, CadrageForm, CadrageVersionSummary, OnboardingDocument, OnboardingNotice,
-  OnboardingProject, OnboardingProjectSummary,
+  OnboardingProject, OnboardingProjectSummary, SavedCadrage,
 } from '../types';
 
 const BASE = '/onboarding';
@@ -37,5 +37,5 @@ export const onboardingApi = {
     apiClient.get<Cadrage>(`${BASE}/projects/${projectId}/cadrages/${version ?? 'current'}`),
   /** Crée une nouvelle version (les versions sont immuables). */
   saveCadrage:  (projectId: string, form: CadrageForm) =>
-    apiClient.post<Cadrage>(`${BASE}/projects/${projectId}/cadrages`, { form }),
+    apiClient.post<SavedCadrage>(`${BASE}/projects/${projectId}/cadrages`, { form }),
 };

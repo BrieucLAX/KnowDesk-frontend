@@ -6,7 +6,7 @@ import { useToast } from '../../../shared/lib/useToast';
 import { formatFull } from '../../../shared/lib/formatDate';
 import { onboardingApi } from '../api/onboardingApi';
 import {
-  cleanCadrageForm, normalizeCadrageForm, emptyCadrageForm, parseBackendError, validateCadrageForm,
+  cleanCadrageForm, normalizeCadrageForm, emptyCadrageForm, missingDocuments, parseBackendError, validateCadrageForm,
   type CadrageErrors,
 } from '../lib/cadrageForm';
 import { CadrageSections } from './CadrageSections';
@@ -94,11 +94,12 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [markDirty]);
 
-  const documentIds = useMemo(() => new Set((documents ?? []).map(d => d.id)), [documents]);
+  const projectFilenames = useMemo(() => new Set((documents ?? []).map(d => d.filename)), [documents]);
+  const absent = useMemo(() => (form ? missingDocuments(form, projectFilenames) : []), [form, projectFilenames]);
 
   const save = async () => {
     if (!form) return;
-    const found = validateCadrageForm(form, documentIds);
+    const found = validateCadrageForm(form);
     setErrors(found);
     setFormError('');
     const count = Object.keys(found).length;
@@ -114,6 +115,9 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
       setRestoredFrom(null);
       markDirty(false);
       toast.success(`Version ${saved.version} enregistrée.`);
+      if (saved.missingDocuments.length > 0) {
+        toast.warning(`Documents cités mais absents du projet : ${saved.missingDocuments.join(', ')}.`);
+      }
       onSaved();
     } catch (err) {
       if (err instanceof ApiError && err.code === 'VALIDATION_ERROR') {
@@ -151,6 +155,12 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
         Toute section peut rester vide.
       </p>
       {formError && <p className="obp-alert" role="alert">{formError}</p>}
+      {absent.length > 0 && (
+        <p className="obp-warning" role="status">
+          {absent.length > 1 ? 'Documents cités mais absents du projet' : 'Document cité mais absent du projet'} :{' '}
+          {absent.join(', ')}. L'enregistrement reste possible ; réimportez un document sous le même nom pour qu'il reprenne sa place.
+        </p>
+      )}
 
       <CadrageSections form={form} errors={errors} documents={documents} edit={edit} />
 

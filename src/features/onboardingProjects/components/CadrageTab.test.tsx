@@ -50,7 +50,7 @@ describe('CadrageTab', () => {
     const onSaved = vi.fn();
     const onDirtyChange = vi.fn();
     vi.mocked(onboardingApi.saveCadrage).mockImplementation(async (_p, form) => ({
-      version: 1, form, markdown: '# Cadrage', createdAt: '2026-09-27T10:00:00Z', createdBy: 'u1',
+      version: 1, form, markdown: '# Cadrage', createdAt: '2026-09-27T10:00:00Z', createdBy: 'u1', missingDocuments: [],
     }));
     renderTab({ onSaved, onDirtyChange });
     fireEvent.click(await screen.findByRole('button', { name: '+ Ajouter une offre' }));
@@ -84,8 +84,8 @@ describe('CadrageTab', () => {
     vi.mocked(onboardingApi.getCadrage).mockResolvedValue({
       version: 1, createdAt: '', createdBy: 'u1', markdown: '',
       form: { ...emptyCadrageForm(), sourceHierarchy: { levels: [
-        { label: 'Contractuel', detail: '', documentIds: [D1] },
-        { label: 'Commercial',  detail: '', documentIds: [] },
+        { label: 'Contractuel', detail: '', documents: ['cgv.pdf'] },
+        { label: 'Commercial',  detail: '', documents: [] },
       ], specialCases: [] } },
     });
     renderTab();
@@ -113,5 +113,39 @@ describe('CadrageTab', () => {
     expect(screen.getByText(/Formulaire repris de la version 1/)).toBeInTheDocument();
     expect(onDirtyChange).toHaveBeenLastCalledWith(true);
     expect(onboardingApi.saveCadrage).not.toHaveBeenCalled();
+  });
+
+  it('un document cité mais absent du projet est signalé sans bloquer l\'enregistrement', async () => {
+    vi.mocked(onboardingApi.getCadrage).mockResolvedValue({
+      version: 1, createdAt: '', createdBy: 'u1', markdown: '',
+      form: { ...emptyCadrageForm(),
+        sourceHierarchy: { levels: [{ label: 'Contractuel', detail: '', documents: ['cgv.pdf', 'ancien-tarif.pdf'] }], specialCases: [] },
+        limitedDocuments: [{ document: 'ancien-tarif.pdf', validFrom: null, validUntil: null, effect: 'replaces', scope: '' }],
+      },
+    });
+    vi.mocked(onboardingApi.saveCadrage).mockImplementation(async (_p, form) => ({
+      version: 2, form, markdown: '', createdAt: '2026-09-27T10:00:00Z', createdBy: 'u1', missingDocuments: ['ancien-tarif.pdf'],
+    }));
+    renderTab();
+    expect(await screen.findByRole('status')).toHaveTextContent('ancien-tarif.pdf');
+    expect(screen.getAllByText('absent du projet').length).toBeGreaterThan(0);
+
+    fireEvent.change(screen.getByDisplayValue('Contractuel'), { target: { value: 'Contractuel et tarifaire' } });
+    fireEvent.click(screen.getAllByRole('button', { name: 'Enregistrer une nouvelle version' })[0]);
+    await waitFor(() => expect(onboardingApi.saveCadrage).toHaveBeenCalled());
+    const sent = vi.mocked(onboardingApi.saveCadrage).mock.calls[0][1];
+    expect(sent.sourceHierarchy.levels[0].documents).toEqual(['cgv.pdf', 'ancien-tarif.pdf']);
+    expect(sent.limitedDocuments[0].document).toBe('ancien-tarif.pdf');
+  });
+
+  it('un document réimporté sous le même nom est de nouveau coché', async () => {
+    vi.mocked(onboardingApi.getCadrage).mockResolvedValue({
+      version: 1, createdAt: '', createdBy: 'u1', markdown: '',
+      form: { ...emptyCadrageForm(), sourceHierarchy: { levels: [{ label: 'Contractuel', detail: '', documents: ['faq.docx'] }], specialCases: [] } },
+    });
+    renderTab();
+    const group = (await screen.findAllByRole('group', { name: 'Documents de ce niveau' }))[0];
+    expect(within(group).getByRole('checkbox', { name: /faq\.docx/ })).toBeChecked();
+    expect(within(group).queryByText('absent du projet')).not.toBeInTheDocument();
   });
 });

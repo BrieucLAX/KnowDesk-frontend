@@ -63,14 +63,15 @@ export interface NotionItem {
   explanation: string;
 }
 
+/** Les documents sont cités par nom de fichier : un document réimporté sous le même nom reprend sa place. */
 export interface SourceLevel {
-  label:       string;
-  detail:      string;
-  documentIds: string[];
+  label:     string;
+  detail:    string;
+  documents: string[];
 }
 
 export interface LimitedDocument {
-  documentId: string;
+  document:   string;
   validFrom:  string | null;
   validUntil: string | null;
   effect:     'replaces' | 'suspends';
@@ -99,4 +100,9 @@ export interface Cadrage extends CadrageVersionSummary {
   form:     CadrageForm;
   /** Rendu figé à l'enregistrement : c'est ce qui part au pipeline. */
   markdown: string;
+}
+
+/** Réponse d'un enregistrement : les documents cités mais absents du projet sont signalés, pas refusés. */
+export interface SavedCadrage extends Cadrage {
+  missingDocuments: string[];
 }
