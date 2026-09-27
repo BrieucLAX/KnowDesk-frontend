@@ -4,7 +4,7 @@ import { useToast } from '../../../shared/lib/useToast';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { Modal } from '../../../shared/components/ui/Modal';
 import { formatRelative } from '../../../shared/lib/formatDate';
-import { MarkdownContent } from './MarkdownContent';
+import { MarkdownContent } from '../../../shared/components/ui/MarkdownContent';
 import type { ResponseWithMentions, Sentiment } from '../types';
 
 function sentimentEmoji(s: Sentiment | null): string {
