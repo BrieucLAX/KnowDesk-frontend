@@ -17,6 +17,14 @@ describe('LoginPage', () => {
     expect(screen.queryByText(/Pas encore de compte/)).not.toBeInTheDocument();
   });
 
+  it('n\'a plus de lien vers /terms ni /cgu', () => {
+    const { container } = render(<LoginPage onLoginSuccess={() => {}} />);
+    const hrefs = [...container.querySelectorAll('a')].map(a => a.getAttribute('href'));
+    expect(hrefs).not.toContain('/terms');
+    expect(hrefs).not.toContain('/cgu');
+    expect(hrefs).toContain('/privacy');
+  });
+
   it('affiche la raison d\'une session coupée par le serveur', () => {
     useAuthStore.setState({ session: null, sessionEndedReason: 'Cet espace est désactivé.' });
     render(<LoginPage onLoginSuccess={() => {}} />);

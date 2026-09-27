@@ -147,7 +147,6 @@ React.useEffect(() => {
         </div>
 
         <footer className="login-page__footer">
-          <a href="/terms"   className="login-page__footer-link">CGU</a>
           <a href="/privacy" className="login-page__footer-link">Confidentialité</a>
           <span className="login-page__footer-copy">© 2025 KnowDesk</span>
         </footer>
