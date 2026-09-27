@@ -80,3 +80,11 @@ export function canSeeScreen(org: Pick<Organization, 'enabledModules'> | null | 
   const module = SCREEN_MODULES[screen];
   return module === null || hasModule(org, module);
 }
+
+/**
+ * L'assistant de configuration historique (`features/onboarding/`) invite des
+ * membres et crée une catégorie : il n'a de sens qu'avec ces deux modules.
+ */
+export function canRunSetupWizard(org: Pick<Organization, 'enabledModules'> | null | undefined): boolean {
+  return hasModule(org, 'members') && hasModule(org, 'knowledge');
+}
