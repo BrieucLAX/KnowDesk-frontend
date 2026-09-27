@@ -70,3 +70,19 @@
 .sa-error   { padding: 16px 24px; color: var(--color-danger); font-size: 13px; }
 .sa-loading { padding: 32px 24px; color: var(--neutral-400); font-size: 13px; text-align: center; }
 
+
+/* ── Organisations de test (prérequis 17) ─────────────────────── */
+.sa-badge-test {
+  margin-left: 8px; padding: 1px 6px; border-radius: 99px;
+  background: var(--brand-50); color: var(--brand-700);
+  font-size: 10px; font-weight: 600; vertical-align: middle;
+}
+.sa-test-org { display: flex; flex-direction: column; gap: 12px; font-size: 13px; }
+.sa-test-org p { margin: 0; }
+.sa-test-org__desc { color: var(--neutral-500); }
+.sa-test-org__ok   { color: var(--color-success); }
+.sa-test-org__warn { color: var(--color-danger); }
+.sa-test-org__error { color: var(--color-danger); }
+.sa-test-org__link { display: flex; align-items: flex-start; gap: 8px; }
+.sa-test-org__link .field { flex: 1; margin: 0; }
+.sa-test-org__link .btn { margin-top: 22px; }

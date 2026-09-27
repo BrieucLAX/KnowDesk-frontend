@@ -21,5 +21,17 @@ export interface OrgRow {
   plan:        string;
   created_at:  string;
   disabled_at: string | null;
+  /** Modules activés ; une organisation de test n'a que `onboarding`. */
+  enabled_modules: string[];
+  /** Fin du test (« Terminer le test ») : point de départ de la purge à J+30. */
+  test_ended_at:   string | null;
   stats:       OrgStats;
+}
+
+/** Réponse de POST /superadmin/test-organizations. */
+export interface TestOrgCreated {
+  organization: { id: string; name: string; slug: string; enabledModules: string[]; createdAt: string };
+  invitation:   { email: string; role: 'admin'; expiresAt: string; acceptUrl: string };
+  /** Envoi de l'invitation : le lien reste à transmettre à la main si ce n'est pas `sent`. */
+  email:        'sent' | 'skipped_no_api_key' | 'failed';
 }
