@@ -1,6 +1,7 @@
 import React from 'react';
 import { SideNav, type NavRoute } from './SideNav';
-import { useAuthStore } from '../../../store/authStore';
+import { useAuthStore, selectOrganization } from '../../../store/authStore';
+import { isTestOrganization } from '../../lib/modules';
 
 interface AppLayoutProps {
   children:     React.ReactNode;
@@ -16,6 +17,7 @@ export function AppLayout({
 }: AppLayoutProps) {
   const logout        = useAuthStore(s => s.logout);
   const impersonating = useAuthStore(s => s.impersonating);
+  const organization  = useAuthStore(selectOrganization);
 
   const handleNavigate = (route: NavRoute) => {
     onNavigate?.(route);
@@ -25,6 +27,12 @@ export function AppLayout({
     <div className="app-layout" style={impersonating ? { marginTop: '40px' } : undefined}>
       <SideNav active={activeRoute} onNavigate={handleNavigate} onHelp={onHelp} />
       <div className="app-layout__body">
+        {/* Organisations de test (module onboarding) : bandeau permanent. */}
+        {isTestOrganization(organization) && (
+          <div className="test-version-banner" role="status">
+            <strong>Version de test</strong> — ce parcours est en cours de développement.
+          </div>
+        )}
         <header className="topbar" role="banner">
           {pageTitle && <h1 className="topbar__title sr-only">{pageTitle}</h1>}
           <div className="topbar__search-wrap">
