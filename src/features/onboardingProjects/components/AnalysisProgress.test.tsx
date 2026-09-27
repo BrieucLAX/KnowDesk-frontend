@@ -49,9 +49,19 @@ describe('AnalysisProgress', () => {
       finishedAt: new Date(START + 3600_000).toISOString(),
     })} />);
     expect(screen.getByRole('alert')).toHaveTextContent('durée maximale d\'une heure');
-    expect(screen.getByRole('alert')).toHaveTextContent('ne compte pas dans votre quota');
+    expect(screen.getByRole('alert')).toHaveTextContent('ne compte pas dans votre quota : vous pouvez la relancer');
     expect(screen.getByText('1 h 00 min')).toBeInTheDocument();
     expect(screen.queryByText(/Vous pouvez fermer/)).not.toBeInTheDocument();
+  });
+
+  it('identifiants refusés par le fournisseur : problème de notre côté, pas d\'invitation à relancer', () => {
+    render(<AnalysisProgress analysis={analysis({
+      status: 'failed', stage: 'cadrage', errorCode: 'provider_auth', finishedAt: new Date(START + 5_000).toISOString(),
+    })} />);
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent('problème de configuration de notre côté');
+    expect(alert).toHaveTextContent('ne compte pas dans votre quota. Nous sommes prévenus.');
+    expect(alert).not.toHaveTextContent(/relancer|indisponible/);
   });
 
   it('réussite : toutes les étapes terminées', () => {

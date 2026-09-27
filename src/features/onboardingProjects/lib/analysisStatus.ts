@@ -68,6 +68,7 @@ const FAILURE_MESSAGES = new Map<string, string>(Object.entries({
   checksum_mismatch:    'Un document a été modifié pendant son envoi au service d\'analyse.',
   document_too_large:   'Un document dépasse la taille acceptée par le service d\'analyse.',
   rate_limited:         'Le service d\'IA est saturé pour le moment.',
+  provider_auth:        'L\'analyse n\'a pas pu démarrer à cause d\'un problème de configuration de notre côté.',
   provider_error:       'Le service d\'IA est indisponible pour le moment.',
   model_output_invalid: 'L\'IA a renvoyé une réponse inexploitable.',
   pipeline_restarted:   'Le service d\'analyse a redémarré pendant l\'analyse.',
@@ -78,4 +79,14 @@ const FAILURE_MESSAGES = new Map<string, string>(Object.entries({
 
 export function analysisFailureMessage(code: string | null): string {
   return (code !== null && FAILURE_MESSAGES.get(code)) || 'L\'analyse a échoué.';
+}
+
+/** Échecs dus à notre configuration : relancer n'y change rien, et le back nous a prévenus. */
+const NOT_RETRYABLE = new Set(['provider_auth']);
+
+/** Suite du message d'échec : l'analyse ne compte pas dans le quota ; relancer, si cela peut servir. */
+export function analysisFailureNote(code: string | null): string {
+  return code !== null && NOT_RETRYABLE.has(code)
+    ? 'Elle ne compte pas dans votre quota. Nous sommes prévenus.'
+    : 'Elle ne compte pas dans votre quota : vous pouvez la relancer.';
 }

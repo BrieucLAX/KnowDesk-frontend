@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { usePolling } from '../../../shared/lib/usePolling';
 import {
-  ANALYSIS_STEPS, analysisFailureMessage, elapsedMs, formatElapsed, isAnalysisActive, stepStates,
+  ANALYSIS_STEPS, analysisFailureMessage, analysisFailureNote, elapsedMs, formatElapsed, isAnalysisActive, stepStates,
 } from '../lib/analysisStatus';
 import type { OnboardingAnalysis } from '../types';
 
@@ -70,7 +70,7 @@ export function AnalysisProgress({ analysis }: AnalysisProgressProps) {
       )}
       {analysis.status === 'failed' && (
         <p className="obp-analysis__error" role="alert">
-          {analysisFailureMessage(analysis.errorCode)} Elle ne compte pas dans votre quota : vous pouvez la relancer.
+          {analysisFailureMessage(analysis.errorCode)} {analysisFailureNote(analysis.errorCode)}
         </p>
       )}
       {analysis.status === 'succeeded' && (
