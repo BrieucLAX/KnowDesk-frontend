@@ -6,7 +6,9 @@ import {
 import type { OnboardingAnalysis } from '../types';
 
 interface AnalysisProgressProps {
-  analysis: OnboardingAnalysis;
+  analysis:    OnboardingAnalysis;
+  /** Ouvre l'onglet « Audit », qui montre l'audit de la dernière analyse réussie. */
+  onOpenAudit: () => void;
 }
 
 const STEP_STATE_LABEL = { done: 'terminée', current: 'en cours', pending: 'à venir' } as const;
@@ -16,7 +18,7 @@ const STEP_STATE_LABEL = { done: 'terminée', current: 'en cours', pending: 'à 
  * écoulé. Le temps avance chaque seconde côté navigateur ; le reste vient
  * des relectures du parent.
  */
-export function AnalysisProgress({ analysis }: AnalysisProgressProps) {
+export function AnalysisProgress({ analysis, onOpenAudit }: AnalysisProgressProps) {
   const active = isAnalysisActive(analysis);
   const [now, setNow] = useState(() => Date.now());
   usePolling(() => setNow(Date.now()), 1000, active);
@@ -74,7 +76,10 @@ export function AnalysisProgress({ analysis }: AnalysisProgressProps) {
         </p>
       )}
       {analysis.status === 'succeeded' && (
-        <p className="obp-muted">L'audit est enregistré. Sa consultation arrive dans une prochaine version.</p>
+        <p className="obp-muted">
+          L'audit est prêt.{' '}
+          <button type="button" className="obp-link" onClick={onOpenAudit}>Consulter l'audit →</button>
+        </p>
       )}
     </section>
   );

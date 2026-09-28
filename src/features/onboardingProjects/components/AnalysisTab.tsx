@@ -14,6 +14,8 @@ interface AnalysisTabProps {
   project:   OnboardingProject;
   /** Une analyse a été lancée : le projet relit ses documents (désormais figés). */
   onChanged: () => void;
+  /** Ouvre l'onglet « Audit ». */
+  onOpenAudit: () => void;
 }
 
 const STATUS_LABEL: Record<OnboardingAnalysis['status'], string> = {
@@ -26,7 +28,7 @@ const plural = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : 
  * Onglet « Analyse » : lancement, puis suivi de l'analyse en cours (relue
  * toutes les 5 s tant qu'elle est en file ou en cours), et analyses passées.
  */
-export function AnalysisTab({ project, onChanged }: AnalysisTabProps) {
+export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProps) {
   const toast = useToast();
   const [analyses,   setAnalyses]   = useState<OnboardingAnalysis[] | null>(null);
   const [quota,      setQuota]      = useState<AnalysisQuota | null>(null);
@@ -89,7 +91,7 @@ export function AnalysisTab({ project, onChanged }: AnalysisTabProps) {
 
   return (
     <>
-      {latest && <AnalysisProgress analysis={latest} />}
+      {latest && <AnalysisProgress analysis={latest} onOpenAudit={onOpenAudit} />}
 
       {!active && (
         <section className="obp-launch" aria-labelledby="obp-launch-title">

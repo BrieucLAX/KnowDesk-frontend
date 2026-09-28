@@ -101,7 +101,7 @@ export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: O
       <div className="obp-tab">
         {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
         {tab === 'cadrage' && <CadrageTab project={project} onSaved={reload} onDirtyChange={setCadrageDirty} />}
-        {tab === 'analysis' && <AnalysisTab project={project} onChanged={reload} />}
+        {tab === 'analysis' && <AnalysisTab project={project} onChanged={reload} onOpenAudit={() => onTabChange('audit')} />}
         {tab === 'audit' && <AuditTab project={project} onGoToAnalysis={() => onTabChange('analysis')} />}
       </div>
 

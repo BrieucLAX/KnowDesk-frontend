@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import { AnalysisProgress } from './AnalysisProgress';
 import type { OnboardingAnalysis } from '../types';
 
@@ -19,7 +19,7 @@ afterEach(() => { vi.useRealTimers(); });
 describe('AnalysisProgress', () => {
   it('en cours : étapes, avancement i/n, appels, temps qui avance, « vous pouvez fermer »', async () => {
     vi.useFakeTimers({ now: START + (12 * 60 + 5) * 1000 });
-    render(<AnalysisProgress analysis={analysis()} />);
+    render(<AnalysisProgress analysis={analysis()} onOpenAudit={() => {}} />);
 
     expect(screen.getByRole('heading', { name: 'Analyse en cours' })).toBeInTheDocument();
     const current = screen.getByText('Extraction des informations').closest('li')!;
@@ -37,7 +37,7 @@ describe('AnalysisProgress', () => {
   });
 
   it('en file : attend que le service soit libre, aucune étape commencée', () => {
-    render(<AnalysisProgress analysis={analysis({ status: 'queued', stage: null, done: 0, total: 0, llmCalls: 0 })} />);
+    render(<AnalysisProgress analysis={analysis({ status: 'queued', stage: null, done: 0, total: 0, llmCalls: 0 })} onOpenAudit={() => {}} />);
     expect(screen.getByRole('heading', { name: 'Analyse en attente de démarrage' })).toBeInTheDocument();
     expect(screen.getByText(/traite une analyse à la fois/)).toBeInTheDocument();
     expect(screen.queryByRole('listitem', { current: 'step' })).not.toBeInTheDocument();
@@ -47,7 +47,7 @@ describe('AnalysisProgress', () => {
     render(<AnalysisProgress analysis={analysis({
       status: 'failed', stage: 'detection', errorCode: 'time_limit_exceeded',
       finishedAt: new Date(START + 3600_000).toISOString(),
-    })} />);
+    })} onOpenAudit={() => {}} />);
     expect(screen.getByRole('alert')).toHaveTextContent('durée maximale d\'une heure');
     expect(screen.getByRole('alert')).toHaveTextContent('ne compte pas dans votre quota : vous pouvez la relancer');
     expect(screen.getByText('1 h 00 min')).toBeInTheDocument();
@@ -57,7 +57,7 @@ describe('AnalysisProgress', () => {
   it('identifiants refusés par le fournisseur : problème de notre côté, pas d\'invitation à relancer', () => {
     render(<AnalysisProgress analysis={analysis({
       status: 'failed', stage: 'cadrage', errorCode: 'provider_auth', finishedAt: new Date(START + 5_000).toISOString(),
-    })} />);
+    })} onOpenAudit={() => {}} />);
     const alert = screen.getByRole('alert');
     expect(alert).toHaveTextContent('problème de configuration de notre côté');
     expect(alert).toHaveTextContent('ne compte pas dans votre quota. Nous sommes prévenus.');
@@ -67,7 +67,7 @@ describe('AnalysisProgress', () => {
   it('code d\'erreur hors contrat : problème de notre côté, pas d\'invitation à relancer', () => {
     render(<AnalysisProgress analysis={analysis({
       status: 'failed', stage: 'extraction', errorCode: 'pipeline_invalid_error_code', finishedAt: new Date(START + 5_000).toISOString(),
-    })} />);
+    })} onOpenAudit={() => {}} />);
     const alert = screen.getByRole('alert');
     expect(alert).toHaveTextContent('problème de notre côté');
     expect(alert).toHaveTextContent('ne compte pas dans votre quota. Nous sommes prévenus.');
@@ -75,9 +75,29 @@ describe('AnalysisProgress', () => {
   });
 
   it('réussite : toutes les étapes terminées', () => {
-    render(<AnalysisProgress analysis={analysis({ status: 'succeeded', stage: 'storing', finishedAt: new Date(START + 1500_000).toISOString() })} />);
+    render(<AnalysisProgress analysis={analysis({ status: 'succeeded', stage: 'storing', finishedAt: new Date(START + 1500_000).toISOString() })} onOpenAudit={() => {}} />);
     expect(screen.getByRole('heading', { name: 'Analyse terminée' })).toBeInTheDocument();
     expect(screen.getAllByText(': terminée', { exact: false })).toHaveLength(6);
     expect(screen.getByText('25 min 00 s')).toBeInTheDocument();
+  });
+
+  it('réussite : l\'audit est prêt, le lien ouvre l\'onglet « Audit », plus de « prochaine version »', () => {
+    const onOpenAudit = vi.fn();
+    render(<AnalysisProgress
+      analysis={analysis({ status: 'succeeded', stage: 'storing', finishedAt: new Date(START + 1500_000).toISOString() })}
+      onOpenAudit={onOpenAudit}
+    />);
+    expect(screen.getByText(/L'audit est prêt/)).toBeInTheDocument();
+    expect(screen.queryByText(/prochaine version/)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Consulter l\'audit →' }));
+    expect(onOpenAudit).toHaveBeenCalledOnce();
+  });
+
+  it('en cours ou en échec : pas de lien vers l\'audit', () => {
+    const { unmount } = render(<AnalysisProgress analysis={analysis()} onOpenAudit={() => {}} />);
+    expect(screen.queryByRole('button', { name: /Consulter l'audit/ })).not.toBeInTheDocument();
+    unmount();
+    render(<AnalysisProgress analysis={analysis({ status: 'failed', errorCode: 'time_limit_exceeded', finishedAt: new Date(START + 60_000).toISOString() })} onOpenAudit={() => {}} />);
+    expect(screen.queryByRole('button', { name: /Consulter l'audit/ })).not.toBeInTheDocument();
   });
 });
