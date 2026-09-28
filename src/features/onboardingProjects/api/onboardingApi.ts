@@ -4,6 +4,7 @@ import type {
   OnboardingNotice, OnboardingProject, OnboardingProjectSummary, SavedCadrage,
 } from '../types';
 import type { AuditResponse } from '../lib/audit';
+import type { CancelResult, Decision, DecisionAction, DecisionsState } from '../lib/decisions';
 
 const BASE = '/onboarding';
 
@@ -62,4 +63,20 @@ export const onboardingApi = {
   /** Image citée par l'audit (octets relayés par le back depuis le bucket privé). */
   getAuditImage: (projectId: string, analysisId: string, imageId: string) =>
     apiClient.getBlob(`${BASE}/projects/${projectId}/analyses/${analysisId}/images/${encodeURIComponent(imageId)}`),
+
+  /** Décision courante de chaque question décidée, compteurs, et si l'audit s'arbitre encore. */
+  listDecisions: (projectId: string, analysisId: string) =>
+    apiClient.get<DecisionsState>(`${BASE}/projects/${projectId}/analyses/${analysisId}/decisions`),
+  /** Historique d'une question, du plus ancien au plus récent, annulations comprises. */
+  questionHistory: (projectId: string, analysisId: string, questionId: string) =>
+    apiClient.get<Decision[]>(`${BASE}/projects/${projectId}/analyses/${analysisId}/decisions?questionId=${encodeURIComponent(questionId)}`),
+  /**
+   * 201. `expectedCurrentId` : la décision courante affichée (null si aucune) ;
+   * 409 DECISION_CONFLICT si elle a changé entre-temps.
+   */
+  decide: (projectId: string, analysisId: string, body: { questionId: string; expectedCurrentId: string | null; action: DecisionAction }) =>
+    apiClient.post<Decision>(`${BASE}/projects/${projectId}/analyses/${analysisId}/decisions`, body),
+  /** Annule la décision courante d'une question (Q1). */
+  cancelDecision: (projectId: string, analysisId: string, decisionId: string) =>
+    apiClient.post<CancelResult>(`${BASE}/projects/${projectId}/analyses/${analysisId}/decisions/${decisionId}/cancel`, {}),
 };

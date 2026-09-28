@@ -24,6 +24,14 @@ const STATUS_LABEL: Record<OnboardingAnalysis['status'], string> = {
 
 const plural = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : one}`;
 
+/** Q2 : les décisions de l'audit actuel ne suivent pas sur le nouvel audit. */
+function decisionsNotice(count: number | null): string {
+  if (count === 0) return '';
+  if (count === null) return 'Les décisions éventuelles de l\'audit actuel restent consultables avec lui, mais ne seront pas reportées sur le nouvel audit. ';
+  return `${count > 1 ? `Vos ${count} décisions restent consultables` : 'Votre décision reste consultable'} avec l'audit actuel, `
+    + `mais ${count > 1 ? 'ne seront pas reportées' : 'ne sera pas reportée'} sur le nouvel audit. `;
+}
+
 /**
  * Onglet « Analyse » : lancement, puis suivi de l'analyse en cours (relue
  * toutes les 5 s tant qu'elle est en file ou en cours), et analyses passées.
@@ -34,6 +42,9 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
   const [quota,      setQuota]      = useState<AnalysisQuota | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [launching,  setLaunching]  = useState(false);
+  /** Décisions de l'audit courant, relues à l'ouverture de la confirmation ; null : inconnu. */
+  const [decisionsCount, setDecisionsCount] = useState<number | null>(0);
+  const [checking,   setChecking]   = useState(false);
 
   const load = useCallback(async () => {
     const { data, meta } = await onboardingApi.listAnalyses(project.id);
@@ -61,6 +72,25 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
     else toast.error(analysisFailureMessage(fresh.errorCode));
     await load().catch(() => { /* le quota sera relu au prochain affichage */ });
   }, ANALYSIS_POLL_MS, active);
+
+  /**
+   * Avant une nouvelle analyse (Q2) : les décisions de l'audit courant (celui
+   * de la dernière analyse réussie) ne seront pas reportées sur le nouvel
+   * audit. On les compte pour le dire dans la confirmation.
+   */
+  const askLaunch = async () => {
+    const audited = analyses?.find(a => a.status === 'succeeded');
+    if (!audited) { setDecisionsCount(0); setConfirming(true); return; }
+    setChecking(true);
+    try {
+      setDecisionsCount((await onboardingApi.listDecisions(project.id, audited.id)).decisions.length);
+    } catch {
+      setDecisionsCount(null);   // inconnu : la confirmation le signale sans chiffre
+    } finally {
+      setChecking(false);
+      setConfirming(true);
+    }
+  };
 
   const launch = async () => {
     setLaunching(true);
@@ -108,7 +138,7 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
             {quota && remaining !== null && <li>Analyses restantes : {remaining} sur {quota.max}</li>}
           </ul>
           <div className="obp-launch__actions">
-            <Button variant="primary" size="md" disabled={blocker !== null} onClick={() => setConfirming(true)}>
+            <Button variant="primary" size="md" disabled={blocker !== null} loading={checking} onClick={() => void askLaunch()}>
               Lancer l'analyse
             </Button>
             {blocker && <span className="obp-muted">{blocker}</span>}
@@ -136,7 +166,8 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
         <ConfirmDialog
           title="Lancer l'analyse ?"
           description={
-            `Les ${plural(project.documentsCount, 'document', 'documents')} du projet et la version ${project.cadrageVersion} `
+            decisionsNotice(decisionsCount)
+            + `Les ${plural(project.documentsCount, 'document', 'documents')} du projet et la version ${project.cadrageVersion} `
             + 'de la fiche de cadrage seront figés : vous ne pourrez plus retirer ces documents. '
             + (remaining !== null ? `Il vous restera ${remaining - 1} analyse${remaining - 1 > 1 ? 's' : ''}.` : '')
           }

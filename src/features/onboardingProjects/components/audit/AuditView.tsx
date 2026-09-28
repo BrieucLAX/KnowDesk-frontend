@@ -1,5 +1,5 @@
 import React from 'react';
-import { groupQuestions, questionKind, type Audit } from '../../lib/audit';
+import { groupQuestions, questionKind, type Audit, type Question } from '../../lib/audit';
 import { detectionLabel, discardReasonLabel, impactLabel, unpairedReasonLabel } from '../../lib/auditLabels';
 import { AuditQuestionGroup } from './AuditQuestion';
 import { AuditSource } from './AuditSource';
@@ -49,8 +49,16 @@ function Detection({ audit, name, children, count }: {
   );
 }
 
-/** L'audit, en lecture seule, dans l'ordre où le pipeline le livre. */
-export function AuditView({ audit }: { audit: Audit }) {
+interface AuditViewProps {
+  audit: Audit;
+  /** Sous l'annonce : l'entrée de l'arbitrage (F-F3b). */
+  arbitration?: React.ReactNode;
+  /** Sous chaque question : sa décision courante, en lecture. */
+  questionFooter?: (q: Question) => React.ReactNode;
+}
+
+/** L'audit, en lecture, dans l'ordre où le pipeline le livre ; l'arbitrage se fait dans sa session. */
+export function AuditView({ audit, arbitration, questionFooter }: AuditViewProps) {
   const { summary } = audit;
   const decisions = groupQuestions(audit.questions.filter(q => questionKind(audit, q) === 'decision'));
   const toVerify  = groupQuestions(audit.questions.filter(q => questionKind(audit, q) === 'to_verify'));
@@ -91,17 +99,18 @@ export function AuditView({ audit }: { audit: Audit }) {
         {impacts.length > 0 && ` (${impacts.join(', ')})`}.
         {' '}Les points à vérifier et les cas à confirmer sont listés à part : ils ne bloquent pas la publication.
       </p>
+      {arbitration}
 
       <Section id="obp-audit-decisions" title="Décisions à prendre" count={decisions.length}>
         {decisions.length === 0
           ? <p className="obp-muted">Aucune décision à prendre.</p>
-          : decisions.map((g, i) => <AuditQuestionGroup key={g[0].id} audit={audit} group={g} title={`Décision ${i + 1}`} />)}
+          : decisions.map((g, i) => <AuditQuestionGroup key={g[0].id} audit={audit} group={g} title={`Décision ${i + 1}`} footer={questionFooter} />)}
       </Section>
 
       {toVerify.length > 0 && (
         <Section id="obp-audit-to-verify" title="Points à vérifier visuellement" count={toVerify.length}>
           <p className="obp-muted">Un des côtés a été lu dans une image : comparez l'extrait à l'image avant de trancher.</p>
-          {toVerify.map((g, i) => <AuditQuestionGroup key={g[0].id} audit={audit} group={g} title={`Point à vérifier ${i + 1}`} />)}
+          {toVerify.map((g, i) => <AuditQuestionGroup key={g[0].id} audit={audit} group={g} title={`Point à vérifier ${i + 1}`} footer={questionFooter} />)}
         </Section>
       )}
 
@@ -109,7 +118,7 @@ export function AuditView({ audit }: { audit: Audit }) {
         <Section id="obp-audit-to-confirm" title="Cas à confirmer" count={toConfirm.length}>
           <p className="obp-muted">Ces valeurs semblent s'appliquer à des cas différents : il reste à le confirmer.</p>
           {toConfirm.map((g, i) => (
-            <AuditQuestionGroup key={g[0].id} audit={audit} group={g} title={`Cas à confirmer ${i + 1}`} showProposedCondition />
+            <AuditQuestionGroup key={g[0].id} audit={audit} group={g} title={`Cas à confirmer ${i + 1}`} showProposedCondition footer={questionFooter} />
           ))}
         </Section>
       )}

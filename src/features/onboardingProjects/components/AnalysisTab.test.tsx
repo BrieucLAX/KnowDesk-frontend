@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act, within } from '@testing-library/react';
 
 vi.mock('../api/onboardingApi', () => ({
-  onboardingApi: { listAnalyses: vi.fn(), getAnalysis: vi.fn(), launchAnalysis: vi.fn() },
+  onboardingApi: { listAnalyses: vi.fn(), getAnalysis: vi.fn(), launchAnalysis: vi.fn(), listDecisions: vi.fn() },
 }));
 
 import { onboardingApi } from '../api/onboardingApi';
@@ -32,6 +32,7 @@ describe('AnalysisTab', () => {
     vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue(listed([]));
     vi.mocked(onboardingApi.getAnalysis).mockReset();
     vi.mocked(onboardingApi.launchAnalysis).mockReset();
+    vi.mocked(onboardingApi.listDecisions).mockReset();
   });
   afterEach(() => { vi.useRealTimers(); });
 
@@ -108,6 +109,48 @@ describe('AnalysisTab', () => {
     expect(onboardingApi.getAnalysis).toHaveBeenCalledTimes(2);
     // Terminée : on peut en relancer une.
     expect(screen.getByRole('heading', { name: 'Lancer une nouvelle analyse' })).toBeInTheDocument();
+  });
+
+  describe('nouvelle analyse sur un audit déjà arbitré (Q2)', () => {
+    const decided = (n: number) => ({
+      decisions: Array.from({ length: n }, (_, i) => ({ id: `d${i}` })), counts: { decided: n, later: 0, skipped: 0 }, arbitrable: true,
+    }) as unknown as Awaited<ReturnType<typeof onboardingApi.listDecisions>>;
+    const done = () => analysis({ id: 'a-done', status: 'succeeded', finishedAt: new Date().toISOString() });
+
+    it('des décisions sur l\'audit courant : la confirmation dit qu\'elles ne seront pas reportées', async () => {
+      vi.mocked(onboardingApi.listAnalyses).mockResolvedValue(listed([done()]));
+      vi.mocked(onboardingApi.listDecisions).mockResolvedValue(decided(3));
+      render(<AnalysisTab project={project()} onChanged={() => {}} />);
+      fireEvent.click(await screen.findByRole('button', { name: 'Lancer l\'analyse' }));
+      const dialog = await screen.findByRole('dialog');
+      expect(onboardingApi.listDecisions).toHaveBeenCalledWith('p1', 'a-done');
+      expect(dialog).toHaveTextContent('Vos 3 décisions restent consultables avec l\'audit actuel, mais ne seront pas reportées sur le nouvel audit.');
+    });
+
+    it('aucune décision : la confirmation habituelle, sans mention des décisions', async () => {
+      vi.mocked(onboardingApi.listAnalyses).mockResolvedValue(listed([done()]));
+      vi.mocked(onboardingApi.listDecisions).mockResolvedValue(decided(0));
+      render(<AnalysisTab project={project()} onChanged={() => {}} />);
+      fireEvent.click(await screen.findByRole('button', { name: 'Lancer l\'analyse' }));
+      const dialog = await screen.findByRole('dialog');
+      expect(dialog).toHaveTextContent('Les 2 documents du projet');
+      expect(dialog).not.toHaveTextContent(/décision/);
+    });
+
+    it('aucun audit encore : les décisions ne sont pas demandées', async () => {
+      render(<AnalysisTab project={project()} onChanged={() => {}} />);
+      fireEvent.click(await screen.findByRole('button', { name: 'Lancer l\'analyse' }));
+      expect(await screen.findByRole('dialog')).not.toHaveTextContent(/décision/);
+      expect(onboardingApi.listDecisions).not.toHaveBeenCalled();
+    });
+
+    it('décisions illisibles : la confirmation le signale sans chiffre', async () => {
+      vi.mocked(onboardingApi.listAnalyses).mockResolvedValue(listed([done()]));
+      vi.mocked(onboardingApi.listDecisions).mockRejectedValue(new Error('réseau'));
+      render(<AnalysisTab project={project()} onChanged={() => {}} />);
+      fireEvent.click(await screen.findByRole('button', { name: 'Lancer l\'analyse' }));
+      expect(await screen.findByRole('dialog')).toHaveTextContent('Les décisions éventuelles de l\'audit actuel');
+    });
   });
 
   it('liste les analyses précédentes, avec le motif d\'un échec', async () => {

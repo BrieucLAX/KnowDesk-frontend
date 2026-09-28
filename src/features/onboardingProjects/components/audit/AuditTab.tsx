@@ -1,13 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Button }     from '../../../../shared/components/ui/Button';
 import { Skeleton }   from '../../../../shared/components/ui/Skeleton';
 import { EmptyState } from '../../../../shared/components/ui/EmptyState';
 import { useToast }   from '../../../../shared/lib/useToast';
 import { formatFull } from '../../../../shared/lib/formatDate';
 import { onboardingApi } from '../../api/onboardingApi';
-import { isSupportedAudit, normalizeAudit, type Audit } from '../../lib/audit';
+import { groupQuestions, isSupportedAudit, normalizeAudit, questionKind, type Audit } from '../../lib/audit';
+import { progress } from '../../lib/decisions';
+import { useArbitration } from '../../hooks/useArbitration';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from './AuditSource';
 import { AuditView } from './AuditView';
+import { ArbitrationSession } from './ArbitrationSession';
+import { CurrentDecision } from './DecisionActions';
 
 interface AuditTabProps {
   project:        OnboardingProject;
@@ -21,15 +26,17 @@ type Loaded =
   | { state: 'ready'; audit: Audit; imageIds: ReadonlySet<string> };
 
 /**
- * Onglet « Audit » (F3, lecture seule). Affiche l'audit de la dernière
- * analyse réussie ; les audits des analyses réussies précédentes restent
- * consultables, en lecture seule.
+ * Onglet « Audit » (F3). Affiche l'audit de la dernière analyse réussie, et
+ * son arbitrage ; les audits des analyses réussies précédentes restent
+ * consultables, décisions comprises, en lecture seule (Q2).
  */
 export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
   const toast = useToast();
   const [analyses, setAnalyses] = useState<OnboardingAnalysis[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [loaded,   setLoaded]   = useState<Loaded>({ state: 'loading' });
+  const [session,  setSession]  = useState(false);
+  const arbitration = useArbitration(project.id, loaded.state === 'ready' ? selected : null);
 
   useEffect(() => {
     let cancelled = false;
@@ -52,6 +59,7 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
     if (selected === null) return;
     let cancelled = false;
     setLoaded({ state: 'loading' });
+    setSession(false);
     onboardingApi.getAudit(project.id, selected)
       .then(res => {
         if (cancelled) return;
@@ -126,9 +134,57 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
       )}
       {loaded.state === 'ready' && (
         <AuditImagesContext.Provider value={images}>
-          <AuditView audit={loaded.audit} />
+          {session && arbitration.state.status === 'ready' && arbitration.state.arbitrable ? (
+            <ArbitrationSession
+              audit={loaded.audit}
+              projectId={project.id}
+              analysisId={current.id}
+              arbitration={arbitration}
+              onExit={() => setSession(false)}
+            />
+          ) : (
+            <AuditView
+              audit={loaded.audit}
+              arbitration={<ArbitrationEntry audit={loaded.audit} arbitration={arbitration} onStart={() => setSession(true)} />}
+              questionFooter={q => {
+                const decision = arbitration.state.status === 'ready' ? arbitration.state.current.get(q.id) : undefined;
+                return decision && <CurrentDecision question={q} current={decision} />;
+              }}
+            />
+          )}
         </AuditImagesContext.Provider>
       )}
     </>
+  );
+}
+
+/**
+ * Sous l'annonce du nombre de décisions et de la durée : « Commencer
+ * l'arbitrage », ou « Reprendre » s'il y a déjà des décisions. Un audit
+ * précédent ne s'arbitre plus : ses décisions se lisent sur chaque question.
+ */
+function ArbitrationEntry({ audit, arbitration, onStart }: {
+  audit: Audit; arbitration: ReturnType<typeof useArbitration>; onStart: () => void;
+}) {
+  const { state } = arbitration;
+  if (state.status === 'loading') return <Skeleton className="obp-arb-entry__loading" />;
+  if (state.status === 'error') return null;
+  if (!state.arbitrable) {
+    return (
+      <p className="obp-arb-entry obp-arb-entry--readonly" role="status">
+        Audit d'une analyse précédente : ses décisions restent consultables sur chaque question, mais ne se modifient plus.
+      </p>
+    );
+  }
+  const steps = groupQuestions(audit.questions.filter(q => questionKind(audit, q) === 'decision'));
+  const p = progress(steps, state.current);
+  const started = state.current.size > 0;
+  return (
+    <div className="obp-arb-entry">
+      <Button variant="primary" size="md" onClick={onStart}>
+        {started ? 'Reprendre l\'arbitrage' : 'Commencer l\'arbitrage'}
+      </Button>
+      {steps.length > 0 && <span className="obp-muted">{p.done} sur {p.total} {p.total > 1 ? 'décisions prises' : 'décision prise'}</span>}
+    </div>
   );
 }

@@ -11,14 +11,16 @@ interface AuditQuestionGroupProps {
   title:  string;
   /** Cas à confirmer : la condition proposée par la détection est montrée. */
   showProposedCondition?: boolean;
+  /** Sous chaque question : sa décision (lecture), ou les actions d'arbitrage. */
+  footer?: (q: Question) => React.ReactNode;
 }
 
 /**
- * Une étape de l'audit, en lecture seule : chaque question, ses options dans
- * l'ordre proposé (la source qui fait le plus foi d'abord) et les extraits
- * qui les appuient.
+ * Une étape de l'audit : chaque question, ses options dans l'ordre proposé
+ * (la source qui fait le plus foi d'abord) et les extraits qui les
+ * appuient ; sous chaque question, ce que `footer` y met.
  */
-export function AuditQuestionGroup({ audit, group, title, showProposedCondition = false }: AuditQuestionGroupProps) {
+export function AuditQuestionGroup({ audit, group, title, showProposedCondition = false, footer }: AuditQuestionGroupProps) {
   const first = group[0];
   return (
     <article className="obp-audit-card" aria-label={title}>
@@ -30,6 +32,7 @@ export function AuditQuestionGroup({ audit, group, title, showProposedCondition 
       {group.map(q => (
         <section key={q.id} className="obp-audit-question">
           <p className="obp-audit-question__text">{q.question || q.subject}</p>
+          {q.question && q.subject && <p className="obp-muted">Sujet : {q.subject}</p>}
           {showProposedCondition && (() => {
             const condition = proposedCondition(audit, q);
             return condition && <p className="obp-muted">Condition qui séparerait les cas : {condition.text}</p>;
@@ -50,6 +53,7 @@ export function AuditQuestionGroup({ audit, group, title, showProposedCondition 
             })}
           </ol>
           {q.rationale && <p className="obp-muted">Ce que l'analyse a lu : {q.rationale}</p>}
+          {footer?.(q)}
         </section>
       ))}
     </article>
