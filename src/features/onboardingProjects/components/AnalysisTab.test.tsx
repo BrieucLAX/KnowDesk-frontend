@@ -120,7 +120,7 @@ describe('AnalysisTab', () => {
     it('des décisions sur l\'audit courant : la confirmation dit qu\'elles ne seront pas reportées', async () => {
       vi.mocked(onboardingApi.listAnalyses).mockResolvedValue(listed([done()]));
       vi.mocked(onboardingApi.listDecisions).mockResolvedValue(decided(3));
-      render(<AnalysisTab project={project()} onChanged={() => {}} />);
+      render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={vi.fn()} />);
       fireEvent.click(await screen.findByRole('button', { name: 'Lancer l\'analyse' }));
       const dialog = await screen.findByRole('dialog');
       expect(onboardingApi.listDecisions).toHaveBeenCalledWith('p1', 'a-done');
@@ -130,7 +130,7 @@ describe('AnalysisTab', () => {
     it('aucune décision : la confirmation habituelle, sans mention des décisions', async () => {
       vi.mocked(onboardingApi.listAnalyses).mockResolvedValue(listed([done()]));
       vi.mocked(onboardingApi.listDecisions).mockResolvedValue(decided(0));
-      render(<AnalysisTab project={project()} onChanged={() => {}} />);
+      render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={vi.fn()} />);
       fireEvent.click(await screen.findByRole('button', { name: 'Lancer l\'analyse' }));
       const dialog = await screen.findByRole('dialog');
       expect(dialog).toHaveTextContent('Les 2 documents du projet');
@@ -138,7 +138,7 @@ describe('AnalysisTab', () => {
     });
 
     it('aucun audit encore : les décisions ne sont pas demandées', async () => {
-      render(<AnalysisTab project={project()} onChanged={() => {}} />);
+      render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={vi.fn()} />);
       fireEvent.click(await screen.findByRole('button', { name: 'Lancer l\'analyse' }));
       expect(await screen.findByRole('dialog')).not.toHaveTextContent(/décision/);
       expect(onboardingApi.listDecisions).not.toHaveBeenCalled();
@@ -147,7 +147,7 @@ describe('AnalysisTab', () => {
     it('décisions illisibles : la confirmation le signale sans chiffre', async () => {
       vi.mocked(onboardingApi.listAnalyses).mockResolvedValue(listed([done()]));
       vi.mocked(onboardingApi.listDecisions).mockRejectedValue(new Error('réseau'));
-      render(<AnalysisTab project={project()} onChanged={() => {}} />);
+      render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={vi.fn()} />);
       fireEvent.click(await screen.findByRole('button', { name: 'Lancer l\'analyse' }));
       expect(await screen.findByRole('dialog')).toHaveTextContent('Les décisions éventuelles de l\'audit actuel');
     });
