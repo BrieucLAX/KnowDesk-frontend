@@ -73,9 +73,20 @@ describe('normalizeAudit', () => {
     expect(discardReasonLabel('constructor')).toBe('Autre raison');
   });
 
-  it('seule la version 0.6.0 est lisible', () => {
+  it('les versions 0.6.0 et 0.7.0 sont lisibles, pas les autres', () => {
     expect(isSupportedAudit({ schemaVersion: '0.6.0' })).toBe(true);
-    expect(isSupportedAudit({ schemaVersion: '0.7.0' })).toBe(false);
+    expect(isSupportedAudit({ schemaVersion: '0.7.0' })).toBe(true);
+    expect(isSupportedAudit({ schemaVersion: '0.8.0' })).toBe(false);
+  });
+
+  it('un audit 0.7.0 se lit comme un 0.6.0 : ses champs nouveaux sont ignorés', () => {
+    const audit = normalized({
+      ...MINIMAL,
+      schema_version: '0.7.0',
+      cards: [{ id: 'card_1', nature: 'dated_change', question_ids: [], conflict_ids: [] }],
+      extraction_notes: [{ document_id: 'd', reason: 'model_returned_nothing', units_read: 1, units_empty: 1, rejected: 0 }],
+    });
+    expect(audit).not.toBeNull();
   });
 });
 

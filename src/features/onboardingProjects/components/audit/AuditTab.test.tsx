@@ -190,9 +190,9 @@ describe('AuditTab', () => {
   });
 
   it('version de schéma inconnue : un message, rien d\'autre', async () => {
-    vi.mocked(onboardingApi.getAudit).mockResolvedValue({ analysisId: 'a-new', schemaVersion: '0.7.0', audit: AUDIT, imageIds: [] });
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue({ analysisId: 'a-new', schemaVersion: '0.8.0', audit: AUDIT, imageIds: [] });
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    expect(await screen.findByRole('status')).toHaveTextContent('format que cette version de l\'application ne sait pas afficher (version 0.7.0)');
+    expect(await screen.findByRole('status')).toHaveTextContent('format que cette version de l\'application ne sait pas afficher (version 0.8.0)');
     expect(screen.queryByRole('heading', { name: /Décisions à prendre/ })).not.toBeInTheDocument();
   });
 

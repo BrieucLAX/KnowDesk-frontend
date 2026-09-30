@@ -10,8 +10,13 @@
  * Plan d'onboarding §5.3.
  */
 
-/** Seule version que cet écran sait lire (le back ne stocke qu'elle). */
-export const SUPPORTED_AUDIT_SCHEMA = '0.6.0';
+/**
+ * Versions que cet écran sait lire. 0.7.0 ajoute des champs à 0.6.0 (cartes,
+ * notes d'extraction, conflits en attente de lecture) sans en retirer :
+ * `normalizeAudit` ne garde que ce que l'écran lit, les deux se lisent donc de
+ * la même façon pendant la transition.
+ */
+export const SUPPORTED_AUDIT_SCHEMAS: readonly string[] = ['0.6.0', '0.7.0'];
 
 /** Réponse de GET …/analyses/:id/audit. */
 export interface AuditResponse {
@@ -256,7 +261,7 @@ export function normalizeAudit(raw: unknown): Audit | null {
 }
 
 export function isSupportedAudit(res: Pick<AuditResponse, 'schemaVersion'>): boolean {
-  return res.schemaVersion === SUPPORTED_AUDIT_SCHEMA;
+  return SUPPORTED_AUDIT_SCHEMAS.includes(res.schemaVersion);
 }
 
 /**
