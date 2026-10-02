@@ -5,6 +5,7 @@ import { useToast } from '../../../shared/lib/useToast';
 import { onboardingApi } from '../api/onboardingApi';
 import type { Question } from '../lib/audit';
 import type { Decision, DecisionAction } from '../lib/decisions';
+import type { CardAction } from '../lib/reading';
 
 export type ArbitrationState =
   | { status: 'loading' }
@@ -83,8 +84,31 @@ export function useArbitration(projectId: string, analysisId: string | null) {
     }
   };
 
-  /** Retire la décision courante : la question revient à la précédente, ou redevient ouverte. */
-  const cancel = async (question: Question): Promise<boolean> => {
+  /** Vrai si la réponse à la carte (audit 0.8.0) est enregistrée. */
+  const answer = async (cardId: string, action: CardAction): Promise<boolean> => {
+    if (analysisId === null || state.status !== 'ready') return false;
+    setPending(cardId);
+    try {
+      const saved = await onboardingApi.answerCard(projectId, analysisId, {
+        cardId,
+        expectedCurrentId: state.current.get(cardId)?.id ?? null,
+        action,
+      });
+      setCurrent(cardId, saved);
+      return true;
+    } catch (err) {
+      await fail(err, 'Impossible d\'enregistrer la réponse.');
+      return false;
+    } finally {
+      setPending(null);
+    }
+  };
+
+  /**
+   * Retire la décision courante d'une question ou d'une carte (par son identifiant) : elle
+   * revient à la précédente, ou redevient ouverte.
+   */
+  const cancel = async (question: Pick<Question, 'id'>): Promise<boolean> => {
     if (analysisId === null || state.status !== 'ready') return false;
     const current = state.current.get(question.id);
     if (!current) return false;
@@ -101,7 +125,7 @@ export function useArbitration(projectId: string, analysisId: string | null) {
     }
   };
 
-  return { state, pending, decide, cancel, reload: load };
+  return { state, pending, decide, answer, cancel, reload: load };
 }
 
 export type Arbitration = ReturnType<typeof useArbitration>;

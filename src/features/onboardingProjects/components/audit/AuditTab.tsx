@@ -7,12 +7,15 @@ import { formatFull } from '../../../../shared/lib/formatDate';
 import { onboardingApi } from '../../api/onboardingApi';
 import { groupQuestions, isSupportedAudit, normalizeAudit, questionKind, type Audit } from '../../lib/audit';
 import { progress } from '../../lib/decisions';
+import { READING_AUDIT_SCHEMA, type Reading } from '../../lib/reading';
 import { useArbitration } from '../../hooks/useArbitration';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from './AuditSource';
 import { AuditView } from './AuditView';
 import { ArbitrationSession } from './ArbitrationSession';
 import { CurrentDecision } from './DecisionActions';
+import { ClarifyView } from '../clarify/ClarifyView';
+import { ClarifySession } from '../clarify/ClarifySession';
 
 interface AuditTabProps {
   project:        OnboardingProject;
@@ -23,12 +26,16 @@ type Loaded =
   | { state: 'loading' }
   | { state: 'error' }
   | { state: 'unsupported'; schemaVersion: string }
-  | { state: 'ready'; audit: Audit; imageIds: ReadonlySet<string> };
+  | { state: 'ready'; audit: Audit; imageIds: ReadonlySet<string> }
+  /** Audit 0.8.0 : `audit` n'en garde que l'inventaire (noms de fichier), les cartes sont dans `reading`. */
+  | { state: 'reading'; audit: Audit; reading: Reading; imageIds: ReadonlySet<string> };
 
 /**
- * Onglet « Audit » (F3). Affiche l'audit de la dernière analyse réussie, et
- * son arbitrage ; les audits des analyses réussies précédentes restent
- * consultables, décisions comprises, en lecture seule (Q2).
+ * Onglet « À clarifier » (F3, F-C'). Affiche l'audit de la dernière analyse
+ * réussie, et son arbitrage ; les audits des analyses réussies précédentes
+ * restent consultables, décisions comprises, en lecture seule (Q2). Un audit
+ * 0.8.0 (lecture globale) montre ses cartes ; un audit 0.6.0 ou 0.7.0, ses
+ * questions, comme avant.
  */
 export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
   const toast = useToast();
@@ -36,7 +43,9 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
   const [selected, setSelected] = useState<string | null>(null);
   const [loaded,   setLoaded]   = useState<Loaded>({ state: 'loading' });
   const [session,  setSession]  = useState(false);
-  const arbitration = useArbitration(project.id, loaded.state === 'ready' ? selected : null);
+  /** Session « À clarifier » ouverte, sur une carte (null : la première à traiter) ; undefined : fermée. */
+  const [clarify,  setClarify]  = useState<string | null | undefined>(undefined);
+  const arbitration = useArbitration(project.id, loaded.state === 'ready' || loaded.state === 'reading' ? selected : null);
 
   useEffect(() => {
     let cancelled = false;
@@ -60,9 +69,17 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
     let cancelled = false;
     setLoaded({ state: 'loading' });
     setSession(false);
+    setClarify(undefined);
     onboardingApi.getAudit(project.id, selected)
       .then(res => {
         if (cancelled) return;
+        if (res.schemaVersion === READING_AUDIT_SCHEMA && res.reading) {
+          const inventory = normalizeAudit(res.audit);
+          setLoaded(inventory
+            ? { state: 'reading', audit: inventory, reading: res.reading, imageIds: new Set(res.imageIds) }
+            : { state: 'unsupported', schemaVersion: res.schemaVersion });
+          return;
+        }
         const audit = isSupportedAudit(res) ? normalizeAudit(res.audit) : null;
         setLoaded(audit
           ? { state: 'ready', audit, imageIds: new Set(res.imageIds) }
@@ -81,7 +98,7 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
     [project.id, selected],
   );
   const images = useMemo<AuditImages>(
-    () => ({ available: loaded.state === 'ready' ? loaded.imageIds : new Set(), load: loadImage }),
+    () => ({ available: loaded.state === 'ready' || loaded.state === 'reading' ? loaded.imageIds : new Set(), load: loadImage }),
     [loaded, loadImage],
   );
 
@@ -131,6 +148,23 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
           Cet audit est dans un format que cette version de l'application ne sait pas afficher
           (version {loaded.schemaVersion}).
         </p>
+      )}
+      {loaded.state === 'reading' && (
+        <AuditImagesContext.Provider value={images}>
+          {clarify !== undefined && arbitration.state.status === 'ready' ? (
+            <ClarifySession
+              audit={loaded.audit}
+              reading={loaded.reading}
+              projectId={project.id}
+              analysisId={current.id}
+              arbitration={arbitration}
+              startCardId={clarify}
+              onExit={() => setClarify(undefined)}
+            />
+          ) : (
+            <ClarifyView audit={loaded.audit} reading={loaded.reading} arbitration={arbitration} onOpen={setClarify} />
+          )}
+        </AuditImagesContext.Provider>
       )}
       {loaded.state === 'ready' && (
         <AuditImagesContext.Provider value={images}>

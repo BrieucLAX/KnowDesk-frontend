@@ -1,3 +1,5 @@
+import type { Reading } from './reading';
+
 /**
  * Audit livré par le pipeline (KnowDesk-pipeline, schemas/audit.schema.json).
  *
@@ -11,10 +13,11 @@
  */
 
 /**
- * Versions que cet écran sait lire. 0.7.0 ajoute des champs à 0.6.0 (cartes,
- * notes d'extraction, conflits en attente de lecture) sans en retirer :
- * `normalizeAudit` ne garde que ce que l'écran lit, les deux se lisent donc de
- * la même façon pendant la transition.
+ * Versions que la vue des questions sait lire. 0.7.0 ajoute des champs à 0.6.0
+ * (cartes, notes d'extraction, conflits en attente de lecture) sans en
+ * retirer : `normalizeAudit` ne garde que ce que l'écran lit, les deux se
+ * lisent donc de la même façon pendant la transition. L'audit 0.8.0 de la
+ * lecture globale a sa propre vue (« À clarifier », lib/reading.ts).
  */
 export const SUPPORTED_AUDIT_SCHEMAS: readonly string[] = ['0.6.0', '0.7.0'];
 
@@ -25,6 +28,8 @@ export interface AuditResponse {
   audit:         unknown;
   /** Images réellement conservées : une image citée peut manquer. */
   imageIds:      string[];
+  /** Cartes, notes et points écartés de l'audit 0.8.0, lus par le back ; null pour un autre audit. */
+  reading?:      Reading | null;
 }
 
 export interface ConditionClause {
