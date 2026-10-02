@@ -4,8 +4,8 @@ import { formatFull } from '../../../../shared/lib/formatDate';
 import { TextArea } from '../TextArea';
 import type { Decision } from '../../lib/decisions';
 import {
-  ANSWERS, describeCardAnswer, NATURES, sideDocuments, substantiveAnswers, toQuotes, TYPED_ANSWERS,
-  type CardAction, type ReadingCard, type TypedAnswer,
+  ANSWERS, describeCardAnswer, isBriefingOnly, missingSide, NATURES, sideDocuments, sidesQuestion, substantiveAnswers,
+  toQuotes, TYPED_ANSWERS, type CardAction, type ReadingCard, type TypedAnswer,
 } from '../../lib/reading';
 
 interface CardAnswersProps {
@@ -40,7 +40,10 @@ export function CurrentAnswer({ card, current, name }: { card: ReadingCard | und
 /**
  * Les réponses d'une carte, celles de sa nature seulement (§3.4) : un côté à retenir (« Retenir
  * A : fichiers », le libellé de la nature en sous-titre), les réponses de fond, « Autre réponse »
- * et « Plus tard » ; « Ce sujet n'a pas sa place dans la base » dans un menu secondaire. Une
+ * et « Plus tard » ; « Ce sujet n'a pas sa place dans la base » dans un menu secondaire. Un côté
+ * qui ne cite que la fiche se retient comme « votre fiche de cadrage ». Si l'un des deux côtés
+ * n'a pas été retrouvé, la question porte sur le seul passage vérifié (« Oui, ce passage est
+ * juste »), sans les réponses qui comparent deux côtés. Une
  * carte répondue montre sa réponse, « Annuler » (retour à la précédente) et « Changer ».
  */
 export function CardAnswers({ card, current, arbitrable, busy, name, onAnswer, onCancel }: CardAnswersProps) {
@@ -99,6 +102,13 @@ export function CardAnswers({ card, current, arbitrable, busy, name, onAnswer, o
   };
 
   const sides = card.answers.includes('accept_side') ? card.sides : [];
+  const oneSided = missingSide(card) !== null;
+  const retain = (s: ReadingCard['sides'][number]) => {
+    const quotes = toQuotes(s.quotes);
+    if (oneSided) return 'Oui, ce passage est juste';
+    if (isBriefingOnly(quotes)) return 'Retenir votre fiche de cadrage';
+    return `Retenir ${s.label} : ${sideDocuments(quotes, name).join(', ')}`;
+  };
 
   return (
     <div className="obp-decision">
@@ -106,12 +116,12 @@ export function CardAnswers({ card, current, arbitrable, busy, name, onAnswer, o
 
       {sides.length > 0 && (
         <div className="obp-clarify-answer__group" role="group" aria-label="Retenir un côté">
-          <p className="obp-clarify-answer__subtitle">{NATURES[card.nature].label} : {NATURES[card.nature].sides}</p>
+          <p className="obp-clarify-answer__subtitle">{NATURES[card.nature].label} : {sidesQuestion(card)}</p>
           <div className="obp-decision__actions">
             {sides.map(s => (
               <Button key={s.label} variant="secondary" size="sm" disabled={busy}
                 onClick={() => void submit({ type: 'accept_side', side: s.label })}>
-                Retenir {s.label} : {sideDocuments(toQuotes(s.quotes), name).join(', ')}
+                {retain(s)}
               </Button>
             ))}
           </div>

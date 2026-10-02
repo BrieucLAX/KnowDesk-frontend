@@ -12,7 +12,7 @@ vi.mock('../../api/onboardingApi', () => ({
 import { onboardingApi } from '../../api/onboardingApi';
 import { AuditTab } from '../audit/AuditTab';
 import type { AuditResponse } from '../../lib/audit';
-import { orderedCards } from '../../lib/reading';
+import { orderedCards, unverifiedReasonLabel } from '../../lib/reading';
 import type { Decision, DecisionsState } from '../../lib/decisions';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import PILOTE_2 from './fixtures/audit-0.8.0-pilote-2.response.json';
@@ -27,6 +27,15 @@ const RESPONSE_3 = PILOTE_3 as unknown as AuditResponse;
 const reading2 = RESPONSE_2.reading!;
 const dated = reading2.cards.find(c => c.rank === 1)!;
 const incomplete = reading2.cards.find(c => c.nature === 'incomplete_or_outdated')!;
+const ordered2 = orderedCards(reading2.cards);
+/** Carte à un seul côté retrouvé, dont la citation refusée de l'autre côté est rendue (pilote 2). */
+const oneSidedWithRefused = reading2.cards.find(c => c.nature === 'dated_change' && c.sides.length === 1)!;
+/** Carte à un seul côté retrouvé, sans citation refusée rendue (pilote 3). */
+const oneSidedBare = RESPONSE_3.reading!.cards.find(c => c.nature === 'probable_error' && c.sides.length === 1)!;
+
+const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** Ouvre une carte depuis la navigation de la session, par son sujet. */
+const goTo = (subject: string) => fireEvent.click(screen.getByRole('button', { name: new RegExp(`^${escape(subject)}`) }));
 
 const MB = 1024 * 1024;
 const project: OnboardingProject = {
@@ -71,6 +80,8 @@ describe('À clarifier (audit 0.8.0)', () => {
   it('annonce le nombre de cartes, les regroupe par nature, et dit les notes temporaires « non disponible »', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
     expect(await screen.findByRole('heading', { name: '9 cartes à clarifier' })).toBeInTheDocument();
+    expect(screen.getByText('9 cartes : 3 changements datés, 1 erreur probable et 5 incomplets ou périmés.')).toBeInTheDocument();
+    expect(await screen.findByText(/^\d+ bloquent la publication tant qu'elles n'ont pas de réponse, dont \d+ encore à traiter\.$/)).toBeInTheDocument();
 
     const headings = screen.getAllByRole('heading', { level: 3 }).map(h => h.textContent);
     expect(headings).toEqual(expect.arrayContaining(['Changements datés 3', 'Erreurs probables 1', 'Incomplets ou périmés 5']));
@@ -80,14 +91,28 @@ describe('À clarifier (audit 0.8.0)', () => {
     expect(screen.getAllByText('non disponible').length).toBeGreaterThan(0);
     expect(screen.getByText(/Non disponible : la lecture ne repère pas encore les situations temporaires/)).toBeInTheDocument();
     expect(screen.queryByText(/Aucune note temporaire/)).not.toBeInTheDocument();
+
+    // Chaque carte nommée par son sujet, jamais « Carte N ».
+    for (const c of reading2.cards) expect(screen.getByRole('button', { name: new RegExp(`^${escape(c.analysis.subject)}`) })).toBeInTheDocument();
+    expect(screen.queryByText(/^Carte \d+$/)).not.toBeInTheDocument();
   });
 
   it('une carte : documents par nom de fichier, citations de chaque côté, analyse de l\'IA à part', async () => {
     const card = await openSession();
+    expect(within(card).getByRole('heading', { level: 4 })).toHaveTextContent(dated.analysis.subject);
+    expect(within(card).getByText('Carte 1 sur 9')).toBeInTheDocument();
     expect(within(card).getByText('Changement daté')).toBeInTheDocument();
     const sideA = within(card).getByRole('region', { name: 'Côté A' });
     expect(sideA).toHaveTextContent('base-connaissance-mutuelle-notion/03-cotisations-tarification.docx');
     expect(within(card).getByRole('region', { name: 'Côté B' })).toHaveTextContent('email-3-changement-tarifaire.docx');
+    // Le nom du fichier au-dessus de chaque citation seulement, pas dans le titre du côté.
+    expect(within(sideA).getByRole('heading', { level: 5 })).toHaveTextContent(/^Côté A$/);
+
+    // Citation tirée d'un tableau : lignes et cellules, sans barres verticales ni tirets.
+    const grid = within(sideA).getAllByRole('table')[0];
+    expect(within(grid).getAllByRole('columnheader').map(h => h.textContent)).toEqual(['Tranche d\'âge', 'ESSENTIELLE', 'CONFORT', 'SÉRÉNITÉ+']);
+    expect(within(grid).getByRole('cell', { name: '45,80 €' })).toBeInTheDocument();
+    for (const quote of card.querySelectorAll('blockquote')) expect(quote.textContent).not.toMatch(/\||---|\*\*/);
 
     const ai = within(card).getByRole('complementary', { name: 'Analyse proposée par l\'IA' });
     const proposal = dated.analysis.proposal.slice(0, 60);
@@ -98,16 +123,57 @@ describe('À clarifier (audit 0.8.0)', () => {
 
   it('extrait lu par vision : la mention et l\'image à côté ; citation de la fiche de cadrage nommée comme telle', async () => {
     await openSession();
-    fireEvent.click(screen.getByRole('button', { name: /^Carte 2/ }));
+    goTo(ordered2[1].analysis.subject);
     const card = await screen.findByRole('article', { name: /^Carte 2 sur/ });
     expect(within(card).getAllByText('Extrait transcrit par vision, non vérifié').length).toBeGreaterThan(0);
     expect(await within(card).findAllByRole('img')).not.toHaveLength(0);
     expect(onboardingApi.getAuditImage).toHaveBeenCalledWith('p1', 'a1', 'img_9d517478bad6ba9c');
 
     const withBriefing = reading2.cards.find(c => c.sides.some(s => s.quotes.some(q => q.kind === 'briefing')))!;
-    const position = orderedCards(reading2.cards).indexOf(withBriefing) + 1;
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(`^Carte ${position}\\b`) }));
-    expect(await screen.findByText('Fiche de cadrage')).toBeInTheDocument();
+    goTo(withBriefing.analysis.subject);
+    const other = await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(withBriefing) + 1} sur 9` });
+    // Le côté de la fiche se présente comme la fiche de l'utilisateur, pas comme un document de la base.
+    const fiche = within(other).getByRole('region', { name: 'Votre fiche de cadrage' });
+    expect(fiche).toHaveTextContent('Ce que vous avez écrit, pas un document de la base.');
+    expect(within(other).queryByRole('region', { name: 'Côté B' })).not.toBeInTheDocument();
+  });
+
+  it('un seul côté retrouvé, citation refusée rendue : le dire, la citer comme texte de l\'IA, une question sur ce passage', async () => {
+    vi.mocked(onboardingApi.answerCard).mockResolvedValue(answer(oneSidedWithRefused.id, { type: 'accept_side', side: 'A' }));
+    await openSession();
+    goTo(oneSidedWithRefused.analysis.subject);
+    const card = await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(oneSidedWithRefused) + 1} sur 9` });
+    const missing = within(card).getByRole('region', { name: 'Passage non retrouvé' });
+    expect(missing).toHaveTextContent('L\'autre passage cité n\'a pas pu être retrouvé dans vos documents.');
+    const [refused] = oneSidedWithRefused.unverifiedQuotes;
+    expect(missing).toHaveTextContent(`Texte rendu par l'IA (${refused.document}, ${refused.location}, ${unverifiedReasonLabel(refused.reason)}), qui n'est pas une citation`);
+    expect(missing.querySelector('blockquote')).toBeNull();
+
+    expect(screen.getByText('Changement daté : Ce passage est-il juste ?')).toBeInTheDocument();
+    const answers = screen.getByRole('group', { name: 'Répondre à la carte' });
+    expect(within(answers).getAllByRole('button').map(b => b.textContent)).toEqual([
+      'Oui, mais la date ou le périmètre est différent', 'Autre réponse', 'Plus tard', 'Autres réponses…',
+    ]);
+    fireEvent.click(screen.getByRole('button', { name: 'Oui, ce passage est juste' }));
+    await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalledWith('p1', 'a1', expect.objectContaining({
+      action: { type: 'accept_side', side: 'A' },
+    })));
+    expect(await screen.findByText(/^Passage jugé juste : /)).toBeInTheDocument();
+  });
+
+  it('un seul côté retrouvé, sans citation refusée rendue : le dire quand même', async () => {
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue(RESPONSE_3);
+    await openSession();
+    goTo(oneSidedBare.analysis.subject);
+    const position = orderedCards(RESPONSE_3.reading!.cards).indexOf(oneSidedBare) + 1;
+    const card = await screen.findByRole('article', { name: `Carte ${position} sur ${RESPONSE_3.reading!.cards.length}` });
+    const missing = within(card).getByRole('region', { name: 'Passage non retrouvé' });
+    expect(missing).toHaveTextContent('L\'autre passage cité n\'a pas pu être retrouvé dans vos documents.');
+    expect(missing).not.toHaveTextContent('Texte rendu par l\'IA');
+    expect(screen.getByText('Erreur probable : Ce passage est-il juste ?')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Oui, ce passage est juste' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Ce sont deux sujets différents' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'C\'est un exemple, pas une règle' })).toBeInTheDocument();
   });
 
   it('changement daté : « Retenir A / B » avec les fichiers et la nature en sous-titre, puis les réponses de la nature', async () => {
@@ -191,7 +257,7 @@ describe('À clarifier (audit 0.8.0)', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Consulter les cartes' }));
     // Ouverte sur la première carte sans réponse ; la carte 1 se consulte depuis la vue d'ensemble.
     await screen.findByRole('article', { name: /^Carte 2 sur/ });
-    fireEvent.click(screen.getByRole('button', { name: /^Carte 1/ }));
+    goTo(dated.analysis.subject);
     await screen.findByRole('article', { name: /^Carte 1 sur/ });
     expect(screen.getByText('Ils disent la même chose')).toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Répondre à la carte' })).not.toBeInTheDocument();

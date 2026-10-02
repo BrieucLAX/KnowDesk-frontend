@@ -457,3 +457,23 @@
 
 .obp-clarify-unverified { margin: 0; font-size: 13px; color: var(--neutral-500); overflow-wrap: anywhere; }
 .obp-clarify-counts { margin: 0; padding-left: 20px; font-size: 13px; color: var(--neutral-700); }
+
+/* Extrait tiré d'un tableau : lignes et cellules, sans le balisage markdown. */
+.obp-excerpt-text { margin: 0; }
+.obp-excerpt-text + .obp-excerpt-table, .obp-excerpt-table + .obp-excerpt-text { margin-top: 6px; }
+.obp-excerpt-table { max-width: 100%; overflow-x: auto; white-space: normal; }
+.obp-excerpt-table table { border-collapse: collapse; font-size: 13px; }
+.obp-excerpt-table th, .obp-excerpt-table td {
+  padding: 4px 8px; border: 1px solid var(--neutral-200);
+  text-align: left; vertical-align: top; overflow-wrap: normal;
+}
+.obp-excerpt-table th { font-weight: 600; color: var(--neutral-900); background: var(--neutral-100); }
+
+.obp-clarify-card__position { margin: 0; font-size: 12px; color: var(--neutral-500); }
+.obp-clarify-side--briefing { background: var(--brand-50); }
+.obp-clarify-side__note { margin: 0; font-size: 12px; color: var(--neutral-500); }
+.obp-clarify-side--missing { background: var(--neutral-0); border: 1px dashed var(--neutral-300); }
+.obp-clarify-summary { display: flex; flex-direction: column; gap: 4px; }
+.obp-clarify-summary p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--neutral-900); }
+.obp-clarify-summary p.obp-muted { color: var(--neutral-500); font-size: 13px; }
+.obp-clarify-nav__title { min-width: 0; overflow-wrap: anywhere; text-align: left; }

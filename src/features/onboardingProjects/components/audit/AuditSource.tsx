@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { documentName, type Audit, type SourceRef } from '../../lib/audit';
 import { sourceLocation, VISION_NOTE } from '../../lib/auditLabels';
+import { ExcerptText } from './ExcerptText';
 
 /** Images de l'audit affiché : celles conservées par le back, et leur lecture. */
 export interface AuditImages {
@@ -69,7 +70,7 @@ export function AuditSource({ audit, source, imageShown = false }: {
         <span className="obp-muted">{location}</span>
       </figcaption>
       <div className="obp-audit-source__body">
-        <blockquote className="obp-audit-source__excerpt">{source.excerpt}</blockquote>
+        <blockquote className="obp-audit-source__excerpt"><ExcerptText excerpt={source.excerpt} /></blockquote>
         {source.visionUnverified && (
           <>
             <p className="obp-audit-vision">{VISION_NOTE}</p>
