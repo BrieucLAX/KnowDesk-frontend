@@ -4,7 +4,7 @@ import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { documentName, type Audit } from '../../lib/audit';
 import {
   CARD_STATUS_LABEL, cardProgress, cardStatus, groupByNature, modelNatureLabel, NATURES, orderedCards,
-  rejectionReasonLabel, toQuotes, unavailableLabel, unverifiedReasonLabel, type Reading,
+  rejectionReasonLabel, toQuotes, unavailableLabel, unverifiedCounts, unverifiedReasonLabel, type Reading,
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
 import { ClarifyQuote, ModelAnalysisBox } from './ReadingCardView';
@@ -162,7 +162,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
                 jamais montrées comme des citations.
               </p>
               <ul className="obp-clarify-counts">
-                {Object.entries(reading.unverifiedQuotes).map(([reason, n]) => (
+                {unverifiedCounts(reading.unverifiedQuotes).map(([reason, n]) => (
                   <li key={reason}>{n} {unverifiedReasonLabel(reason)}</li>
                 ))}
               </ul>

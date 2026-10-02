@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   cardProgress, describeCardAnswer, firstOpenCard, groupByNature, isBlocking, orderedCards, sideDocuments,
-  substantiveAnswers, toQuotes, type ReadingCard,
+  substantiveAnswers, toQuotes, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
 import type { Decision } from './decisions';
 
@@ -65,5 +65,13 @@ describe('reading', () => {
     expect(describeCardAnswer({ type: 'accept_side', side: 'B' }, c, name)).toBe('Côté B retenu : d2.pdf');
     expect(describeCardAnswer({ type: 'distinct_cases', text: 'A en Corse.' }, c, name)).toBe('Les deux sont vraies, selon le cas : « A en Corse. »');
     expect(describeCardAnswer({ type: 'later' }, c, name)).toBe('Plus tard');
+  });
+
+  it('raisons des citations non vérifiées : description d\'image, « autre raison » en dernier', () => {
+    expect(unverifiedReasonLabel('image_description_only')).toBe('reprend seulement la description d\'une image, pas son texte');
+    expect(unverifiedReasonLabel('other')).toBe('autre raison');
+    expect(unverifiedReasonLabel('inconnue')).toBe('autre raison');
+    expect(unverifiedCounts({ other: 2, image_description_only: 1, not_found: 3 }))
+      .toEqual([['image_description_only', 1], ['not_found', 3], ['other', 2]]);
   });
 });

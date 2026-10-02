@@ -206,4 +206,29 @@ describe('À clarifier (audit 0.8.0)', () => {
     expect(details).toHaveTextContent('Incomplet ou périmé · Ne cite que la fiche de cadrage');
     expect(details).toHaveTextContent('1 introuvable dans le corpus');
   });
+
+  it('détails de l\'analyse : description d\'image et « autre raison », comptées et nommées', async () => {
+    const reading3 = RESPONSE_3.reading!;
+    const [point] = reading3.rejectedPoints;
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue({
+      ...RESPONSE_3,
+      reading: {
+        ...reading3,
+        rejectedPoints: [{ ...point, unverifiedQuotes: [
+          { side: 'A', document: 'doc.pdf', location: 'p. 1', text: 'Schéma des garanties.', reason: 'image_description_only' },
+          { side: 'B', document: 'doc.pdf', location: 'p. 2', text: 'Texte rendu.', reason: 'other' },
+        ] }],
+        unverifiedQuotes: { other: 2, image_description_only: 1, not_found: 1 },
+      },
+    });
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    const details = screen.getByText('Détails de l\'analyse').closest('details')!;
+    expect(details).toHaveTextContent('Texte rendu par l\'IA (doc.pdf, reprend seulement la description d\'une image, pas son texte), qui n\'est pas une citation : Schéma des garanties.');
+    expect(details).toHaveTextContent('Texte rendu par l\'IA (doc.pdf, autre raison), qui n\'est pas une citation : Texte rendu.');
+    const counts = [...details.querySelectorAll('.obp-clarify-counts')][0];
+    expect([...counts.querySelectorAll('li')].map(li => li.textContent)).toEqual([
+      '1 reprend seulement la description d\'une image, pas son texte', '1 introuvable dans le corpus', '2 autre raison',
+    ]);
+  });
 });

@@ -227,13 +227,25 @@ const REJECTION_REASONS: Readonly<Record<string, string>> = {
 };
 export const rejectionReasonLabel = (r: string) => REJECTION_REASONS[r] ?? 'Autre raison';
 
+/**
+ * `other` : une raison que le back ne connaît pas encore ; il la compte et la journalise
+ * plutôt que de l'écarter.
+ */
 const UNVERIFIED_REASONS: Readonly<Record<string, string>> = {
-  not_found:         'introuvable dans le corpus',
-  wrong_document:    'trouvée dans un autre document que celui nommé',
-  punctuation_only:  'ne se retrouve dans la source qu\'en ignorant la ponctuation',
-  found_in_briefing: 'trouvée seulement dans la fiche de cadrage',
+  not_found:              'introuvable dans le corpus',
+  wrong_document:         'trouvée dans un autre document que celui nommé',
+  punctuation_only:       'ne se retrouve dans la source qu\'en ignorant la ponctuation',
+  found_in_briefing:      'trouvée seulement dans la fiche de cadrage',
+  image_description_only: 'reprend seulement la description d\'une image, pas son texte',
+  other:                  'autre raison',
 };
-export const unverifiedReasonLabel = (r: string) => UNVERIFIED_REASONS[r] ?? 'autre raison';
+export const unverifiedReasonLabel = (r: string) => UNVERIFIED_REASONS[r] ?? UNVERIFIED_REASONS.other;
+
+/** Les décomptes par raison, « autre raison » en dernier. */
+export const unverifiedCounts = (counts: Reading['unverifiedQuotes']): Array<[string, number]> =>
+  Object.entries(counts)
+    .flatMap(([reason, n]): Array<[string, number]> => (n === undefined ? [] : [[reason, n]]))
+    .sort(([a], [b]) => Number(a === 'other') - Number(b === 'other'));
 
 const UNAVAILABLE: Readonly<Record<string, string>> = {
   temporary_notes: 'Notes temporaires',
