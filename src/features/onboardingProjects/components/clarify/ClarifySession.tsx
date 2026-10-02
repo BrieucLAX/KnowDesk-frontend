@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import { documentName, type Audit } from '../../lib/audit';
 import {
-  CARD_STATUS_LABEL, cardProgress, cardStatus, firstOpenCard, groupByNature, NATURES, orderedCards, type Reading,
+  CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, firstOpenCard, groupByNature, NATURES, orderedCards, type Reading,
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
 import { ReadingCardView } from './ReadingCardView';
@@ -82,7 +82,7 @@ export function ClarifySession({ audit, reading, projectId, analysisId, arbitrat
                     <li key={c.id}>
                       <button type="button" className={`obp-arb__overview-item${at === i ? ' is-current' : ''}`}
                         aria-current={at === i ? 'step' : undefined} onClick={() => setIndex(at)}>
-                        <span>Carte {at + 1}</span>
+                        <span className="obp-clarify-nav__title">{cardTitle(c, at + 1)}</span>
                         <span className={`obp-arb__status obp-arb__status--${STATUS_CLASS[st]}`}>{CARD_STATUS_LABEL[st]}</span>
                       </button>
                     </li>
@@ -94,7 +94,8 @@ export function ClarifySession({ audit, reading, projectId, analysisId, arbitrat
         </nav>
 
         <div className="obp-arb__step">
-          <ReadingCardView key={card.id} audit={audit} card={card} title={`Carte ${i + 1} sur ${ordered.length}`} />
+          <ReadingCardView key={card.id} audit={audit} card={card} title={cardTitle(card, i + 1)}
+            position={`Carte ${i + 1} sur ${ordered.length}`} />
           <div className="obp-decision-block">
             <CardAnswers
               key={card.id}

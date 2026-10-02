@@ -3,8 +3,8 @@ import { Button }   from '../../../../shared/components/ui/Button';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { documentName, type Audit } from '../../lib/audit';
 import {
-  CARD_STATUS_LABEL, cardProgress, cardStatus, groupByNature, modelNatureLabel, NATURES, orderedCards,
-  rejectionReasonLabel, toQuotes, unavailableLabel, unverifiedCounts, unverifiedReasonLabel, type Reading,
+  CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, groupByNature,
+  modelNatureLabel, NATURES, orderedCards, rejectionReasonLabel, toQuotes, unavailableLabel, unverifiedCounts, unverifiedReasonLabel, type Reading,
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
 import { ClarifyQuote, ModelAnalysisBox } from './ReadingCardView';
@@ -21,8 +21,9 @@ interface ClarifyViewProps {
 const STATUS_CLASS = { open: 'todo', answered: 'decided', later: 'later' } as const;
 
 /**
- * Vue d'ensemble de l'audit 0.8.0 : le nombre de cartes annoncé, les cartes regroupées par
- * nature, les notes temporaires à part, et le volet replié « Détails de l'analyse » (points
+ * Vue d'ensemble de l'audit 0.8.0 : le nombre de cartes annoncé et son résumé (cartes par nature,
+ * dont celles qui bloquent la publication), les cartes regroupées par nature et nommées par leur
+ * sujet, les notes temporaires à part, et le volet replié « Détails de l'analyse » (points
  * écartés, citations non vérifiées). Une détection que la lecture ne produit pas encore
  * s'affiche « non disponible », jamais « 0 ».
  */
@@ -46,18 +47,12 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
             ? 'Aucune carte à clarifier'
             : `${reading.cards.length} ${reading.cards.length > 1 ? 'cartes' : 'carte'} à clarifier`}
         </h3>
-        <dl className="obp-audit-summary">
-          {groups.map(g => (
-            <div key={g.nature}>
-              <dt>{NATURES[g.nature].plural}{NATURES[g.nature].blocking ? '' : ' (ne bloquent pas)'}</dt>
-              <dd>{g.cards.length}</dd>
-            </div>
-          ))}
-          <div>
-            <dt>Notes temporaires</dt>
-            <dd>{notesUnavailable ? <span className="obp-clarify-unavailable">non disponible</span> : reading.temporaryNotes.length}</dd>
-          </div>
-        </dl>
+        <div className="obp-clarify-summary">
+          {describeSummary(clarifySummary(reading.cards, current), ready).map(line => <p key={line}>{line}</p>)}
+          <p className="obp-muted">
+            Notes temporaires : {notesUnavailable ? <span className="obp-clarify-unavailable">non disponible</span> : reading.temporaryNotes.length}
+          </p>
+        </div>
         {state.status === 'loading' && <Skeleton className="obp-arb-entry__loading" />}
         {ready && reading.cards.length > 0 && (
           <div className="obp-arb-entry">
@@ -87,7 +82,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
               return (
                 <li key={c.id} className="obp-clarify-row">
                   <button type="button" className="obp-clarify-row__open" onClick={() => onOpen(c.id)}>
-                    <span className="obp-clarify-row__title">Carte {ordered.indexOf(c) + 1}</span>
+                    <span className="obp-clarify-row__title">{cardTitle(c, ordered.indexOf(c) + 1)}</span>
                     <span className="obp-clarify-row__docs">{c.documentIds.map(name).join(', ')}</span>
                     {ready && <span className={`obp-arb__status obp-arb__status--${STATUS_CLASS[st]}`}>{CARD_STATUS_LABEL[st]}</span>}
                   </button>

@@ -6,8 +6,9 @@
  * notes temporaires, les points écartés. Ici : les libellés, l'ordre des natures, la progression
  * et la forme des réponses envoyées (decision-0.8.0).
  *
- * L'analyse du modèle (sujet, raison, proposition) ne s'affiche que sous « Analyse proposée par
- * l'IA » : elle aide à répondre, elle n'entre jamais dans une réponse.
+ * L'analyse du modèle (raison, proposition) ne s'affiche que sous « Analyse proposée par l'IA » :
+ * elle aide à répondre, elle n'entre jamais dans une réponse. Seul son sujet sert aussi de libellé
+ * de repérage à la carte (cardTitle).
  */
 import { sourceRef, type SourceRef } from './audit';
 import type { Decision } from './decisions';
@@ -88,6 +89,9 @@ export function toQuote(q: RawQuote): Quote | null {
 
 export const toQuotes = (quotes: RawQuote[]): Quote[] => quotes.map(toQuote).filter((q): q is Quote => q !== null);
 
+/** Un côté qui ne cite que la fiche de cadrage : il se présente comme « Votre fiche de cadrage ». */
+export const isBriefingOnly = (quotes: Quote[]): boolean => quotes.length > 0 && quotes.every(q => q.kind === 'briefing');
+
 /** Une citation lue par vision, non vérifiée. */
 const isVision = (q: Quote) => q.kind === 'document' && q.source.visionUnverified;
 
@@ -149,17 +153,38 @@ export const ANSWERS: Readonly<Record<Exclude<CardAnswerCode, 'accept_side'>, { 
   later:              { label: 'Plus tard' },
 };
 
+/**
+ * Côté manquant d'une carte qui compare deux côtés (contradiction, changement daté, erreur
+ * probable) : le back retire un côté dont aucune citation n'a été retrouvée dans les documents.
+ * Null pour une carte complète, ou d'une nature qui n'a pas à comparer deux côtés.
+ */
+export function missingSide(card: ReadingCard): SideLabel | null {
+  if (!NATURES[card.nature].blocking || card.sides.length !== 1) return null;
+  return card.sides[0].label === 'A' ? 'B' : 'A';
+}
+
+/** Réponses qui comparent deux côtés : sans objet quand l'un d'eux manque. */
+const TWO_SIDED: ReadonlySet<CardAnswerCode> = new Set(['distinct_cases', 'same_meaning', 'different_subjects']);
+
+/** Question posée sur une carte qui compare deux côtés, ou sur son seul côté retrouvé. */
+export const sidesQuestion = (card: ReadingCard): string =>
+  missingSide(card) ? 'Ce passage est-il juste ?' : NATURES[card.nature].sides;
+
 /** Réponses de fond de la carte, hors côtés, « Autre réponse », « Plus tard » et menu secondaire. */
 export function substantiveAnswers(card: ReadingCard): Array<Exclude<CardAnswerCode, 'accept_side'>> {
   const secondary = new Set<CardAnswerCode>(['accept_side', 'other_answer', 'later', 'out_of_scope']);
-  return card.answers.filter((a): a is Exclude<CardAnswerCode, 'accept_side'> => !secondary.has(a));
+  const oneSided = missingSide(card) !== null;
+  return card.answers.filter((a): a is Exclude<CardAnswerCode, 'accept_side'> => !secondary.has(a) && !(oneSided && TWO_SIDED.has(a)));
 }
 
-/** Noms de fichier des documents d'un côté, sans doublon ; « fiche de cadrage » pour une citation de la fiche. */
+/** Noms de fichier des documents d'un côté, sans doublon ; « votre fiche de cadrage » pour une citation de la fiche. */
 export function sideDocuments(quotes: Quote[], name: (documentId: string) => string): string[] {
-  const names = quotes.map(q => (q.kind === 'document' ? name(q.source.documentId) : 'fiche de cadrage'));
+  const names = quotes.map(q => (q.kind === 'document' ? name(q.source.documentId) : 'votre fiche de cadrage'));
   return [...new Set(names)];
 }
+
+/** Libellé de repérage d'une carte : son sujet (rédigé par l'IA), sinon « Carte N ». */
+export const cardTitle = (card: ReadingCard, position: number): string => card.analysis.subject.trim() || `Carte ${position}`;
 
 // ── Réponses (decision-0.8.0) ─────────────────────────────────
 
@@ -200,6 +225,47 @@ export function cardProgress(cards: ReadingCard[], current: ReadonlyMap<string, 
   };
 }
 
+/**
+ * Résumé de la vue d'ensemble : cartes par nature, dans l'ordre d'affichage ; celles qui bloquent
+ * la publication (isBlocking), dont celles encore à traiter (« Plus tard » compris) ; et celles
+ * d'une nature bloquante qui ne bloquent pas, faute de lecture d'image confirmée.
+ */
+export function clarifySummary(cards: ReadingCard[], current: ReadonlyMap<string, Decision>) {
+  const blocking = cards.filter(isBlocking);
+  return {
+    total:          cards.length,
+    byNature:       groupByNature(cards).map(g => ({ nature: g.nature, count: g.cards.length })),
+    blocking:       blocking.length,
+    blockingOpen:   blocking.filter(c => cardStatus(current.get(c.id)) !== 'answered').length,
+    visionPending:  cards.filter(c => NATURES[c.nature].blocking && !isBlocking(c)).length,
+  };
+}
+
+/** Le résumé en clair : « 10 cartes : 2 contradictions, 1 erreur probable et 7 incomplets ou périmés. » */
+export function describeSummary(s: ReturnType<typeof clarifySummary>, withStatus: boolean): string[] {
+  if (s.total === 0) return [];
+  const parts = s.byNature.map(({ nature, count }) =>
+    `${count} ${(count > 1 ? NATURES[nature].plural : NATURES[nature].label).toLowerCase()}`);
+  const list = parts.length > 1 ? `${parts.slice(0, -1).join(', ')} et ${parts[parts.length - 1]}` : parts[0];
+  const lines = [`${s.total} ${s.total > 1 ? 'cartes' : 'carte'} : ${list}.`];
+
+  if (s.blocking === 0) lines.push('Aucune ne bloque la publication.');
+  else if (withStatus && s.blockingOpen === 0) {
+    lines.push(s.blocking > 1
+      ? `Les ${s.blocking} cartes qui bloquaient la publication ont toutes une réponse.`
+      : 'La carte qui bloquait la publication a une réponse.');
+  } else {
+    const head = s.blocking > 1
+      ? `${s.blocking} bloquent la publication tant qu'elles n'ont pas de réponse`
+      : '1 bloque la publication tant qu\'elle n\'a pas de réponse';
+    lines.push(withStatus ? `${head}, dont ${s.blockingOpen} encore à traiter.` : `${head}.`);
+  }
+  if (s.visionPending > 0) {
+    lines.push(`${s.visionPending} ${s.visionPending > 1 ? 'ne bloquent pas encore' : 'ne bloque pas encore'} : lecture d'image à confirmer.`);
+  }
+  return lines;
+}
+
 /** Première carte à traiter (« Plus tard » compris) dans l'ordre d'affichage, sinon la première. */
 export function firstOpenCard(ordered: ReadingCard[], current: ReadonlyMap<string, Decision>): number {
   const i = ordered.findIndex(c => cardStatus(current.get(c.id)) !== 'answered');
@@ -211,8 +277,11 @@ export function describeCardAnswer(action: Decision['action'], card: ReadingCard
   const a = action as { type: string; side?: SideLabel; text?: string };
   if (a.type === 'accept_side' && a.side) {
     const side = card?.sides.find(s => s.label === a.side);
-    const docs = side ? sideDocuments(toQuotes(side.quotes), name) : [];
-    return `Côté ${a.side} retenu${docs.length > 0 ? ` : ${docs.join(', ')}` : ''}`;
+    const quotes = side ? toQuotes(side.quotes) : [];
+    if (isBriefingOnly(quotes)) return 'Votre fiche de cadrage retenue';
+    const docs = sideDocuments(quotes, name);
+    const label = card && missingSide(card) ? 'Passage jugé juste' : `Côté ${a.side} retenu`;
+    return `${label}${docs.length > 0 ? ` : ${docs.join(', ')}` : ''}`;
   }
   const known = a.type in ANSWERS ? ANSWERS[a.type as keyof typeof ANSWERS] : null;
   if (!known) return 'Réponse';

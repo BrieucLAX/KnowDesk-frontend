@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import {
-  cardProgress, describeCardAnswer, firstOpenCard, groupByNature, isBlocking, orderedCards, sideDocuments,
-  substantiveAnswers, toQuotes, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
+  cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
+  missingSide, orderedCards, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
 import type { Decision } from './decisions';
 
 const doc = (documentId: string, extra: object = {}) =>
   ({ kind: 'document' as const, excerptRealigned: false, source: { format: 'pdf', document_id: documentId, page: 1, excerpt: 'Texte.', ...extra } });
+const briefing = { kind: 'briefing' as const, excerptRealigned: false, excerpt: 'Fiche.' };
 const vision = (documentId: string) => doc(documentId, { zone: 'image', image_id: 'img-1', excerpt_origin: 'vision_unverified' });
 
 const card = (id: string, nature: ReadingCard['nature'], rank: number, sides: ReadingCard['sides'] = [
@@ -55,7 +56,7 @@ describe('reading', () => {
 
   it('documents d\'un côté par nom de fichier, sans doublon ; la fiche de cadrage nommée comme telle', () => {
     const quotes = toQuotes([doc('d1'), doc('d1'), { kind: 'briefing', excerptRealigned: false, excerpt: 'Fiche.' }]);
-    expect(sideDocuments(quotes, id => `${id}.pdf`)).toEqual(['d1.pdf', 'fiche de cadrage']);
+    expect(sideDocuments(quotes, id => `${id}.pdf`)).toEqual(['d1.pdf', 'votre fiche de cadrage']);
     expect(toQuotes([{ kind: 'document', excerptRealigned: false, source: {} }])).toEqual([]);
   });
 
@@ -65,6 +66,49 @@ describe('reading', () => {
     expect(describeCardAnswer({ type: 'accept_side', side: 'B' }, c, name)).toBe('Côté B retenu : d2.pdf');
     expect(describeCardAnswer({ type: 'distinct_cases', text: 'A en Corse.' }, c, name)).toBe('Les deux sont vraies, selon le cas : « A en Corse. »');
     expect(describeCardAnswer({ type: 'later' }, c, name)).toBe('Plus tard');
+    const withBriefing = card('b', 'contradiction', 1, [{ label: 'A', quotes: [doc('d1')] }, { label: 'B', quotes: [briefing] }]);
+    expect(describeCardAnswer({ type: 'accept_side', side: 'B' }, withBriefing, name)).toBe('Votre fiche de cadrage retenue');
+    const oneSided = card('o', 'probable_error', 1, [{ label: 'A', quotes: [doc('d1')] }]);
+    expect(describeCardAnswer({ type: 'accept_side', side: 'A' }, oneSided, name)).toBe('Passage jugé juste : d1.pdf');
+  });
+
+  it('un seul côté retrouvé : le côté manquant, une question sur ce passage, sans les réponses qui comparent', () => {
+    const oneSided = card('o', 'dated_change', 1, [{ label: 'B', quotes: [doc('d2')] }]);
+    expect(missingSide(oneSided)).toBe('A');
+    expect(missingSide(card('a', 'probable_error', 1, [{ label: 'A', quotes: [doc('d1')] }]))).toBe('B');
+    expect(missingSide(card('c', 'contradiction', 1))).toBeNull();
+    // « Incomplet ou périmé » n'a pas à comparer deux côtés.
+    expect(missingSide(card('i', 'incomplete_or_outdated', 1, [{ label: 'A', quotes: [doc('d1')] }]))).toBeNull();
+    expect(sidesQuestion(oneSided)).toBe('Ce passage est-il juste ?');
+    expect(sidesQuestion(card('c', 'contradiction', 1))).toBe('Quel côté est juste ?');
+    expect(substantiveAnswers(oneSided)).toEqual(['adjust']);
+  });
+
+  it('titre : le sujet de la carte, sinon « Carte N »', () => {
+    const c = card('c', 'contradiction', 1);
+    expect(cardTitle({ ...c, analysis: { ...c.analysis, subject: ' Forfait optique ' } }, 3)).toBe('Forfait optique');
+    expect(cardTitle({ ...c, analysis: { ...c.analysis, subject: '' } }, 3)).toBe('Carte 3');
+  });
+
+  it('résumé : cartes par nature, celles qui bloquent la publication et celles encore à traiter', () => {
+    const v = card('v', 'probable_error', 5, [{ label: 'A', quotes: [vision('d1')] }, { label: 'B', quotes: [doc('d2')] }]);
+    const all = [...cards, v];
+    const none = new Map<string, Decision>();
+    expect(describeSummary(clarifySummary(all, none), true)).toEqual([
+      '5 cartes : 1 contradiction, 2 changements datés, 1 erreur probable et 1 incomplet ou périmé.',
+      '3 bloquent la publication tant qu\'elles n\'ont pas de réponse, dont 3 encore à traiter.',
+      '1 ne bloque pas encore : lecture d\'image à confirmer.',
+    ]);
+    const some = new Map([['c1', decision('c1', { type: 'same_meaning' })], ['d1', decision('d1', { type: 'later' })]]);
+    expect(describeSummary(clarifySummary(all, some), true)[1]).toBe('3 bloquent la publication tant qu\'elles n\'ont pas de réponse, dont 2 encore à traiter.');
+    expect(describeSummary(clarifySummary(all, some), false)[1]).toBe('3 bloquent la publication tant qu\'elles n\'ont pas de réponse.');
+    const done = new Map(['c1', 'd1', 'd2'].map(id => [id, decision(id, { type: 'same_meaning' })]));
+    expect(describeSummary(clarifySummary(all, done), true)[1]).toBe('Les 3 cartes qui bloquaient la publication ont toutes une réponse.');
+    expect(describeSummary(clarifySummary([card('c', 'contradiction', 1)], none), true)).toEqual([
+      '1 carte : 1 contradiction.', '1 bloque la publication tant qu\'elle n\'a pas de réponse, dont 1 encore à traiter.',
+    ]);
+    expect(describeSummary(clarifySummary([card('i', 'incomplete_or_outdated', 1)], none), true)[1]).toBe('Aucune ne bloque la publication.');
+    expect(describeSummary(clarifySummary([], none), true)).toEqual([]);
   });
 
   it('raisons des citations non vérifiées : description d\'image, « autre raison » en dernier', () => {
