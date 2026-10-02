@@ -1,0 +1,1591 @@
+{
+  "analysisId": "a1",
+  "schemaVersion": "0.8.0",
+  "audit": {
+    "schema_version": "0.8.0",
+    "generated_at": "2026-10-02T09:59:05.794040Z",
+    "reading_date": "2026-10-01",
+    "briefing_given": true,
+    "inventory": [
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_00_sommaire_docx_74baf1a6",
+        "path": "base-connaissance-mutuelle-notion/00-sommaire.docx",
+        "format": "docx",
+        "size_bytes": 43789,
+        "sha256": "90a3c6ac3679a4da506db5f0764122e4704c1009c93694e80fbf0f98fb248593",
+        "unit_count": 5,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_01_presentation_offre_docx_bfef828e",
+        "path": "base-connaissance-mutuelle-notion/01-presentation-offre.docx",
+        "format": "docx",
+        "size_bytes": 39679,
+        "sha256": "6885b5c3881907f238d4b972e8a363dcc89d3a308afecdf7770ded440ccae1c4",
+        "unit_count": 10,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_02_adhesion_souscription_docx_6d6bc1de",
+        "path": "base-connaissance-mutuelle-notion/02-adhesion-souscription.docx",
+        "format": "docx",
+        "size_bytes": 103690,
+        "sha256": "1e8367007f83512280bf4ab1aad5c2524d213794eb30dbfdac51e9b4069265f0",
+        "unit_count": 11,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+        "path": "base-connaissance-mutuelle-notion/03-cotisations-tarification.docx",
+        "format": "docx",
+        "size_bytes": 39297,
+        "sha256": "4016897d5e3da557a2ddb0ff1ecc45920c533a9212826ff2ee8c6160c9cf17d9",
+        "unit_count": 13,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_04_remboursements_sante_docx_86c53c91",
+        "path": "base-connaissance-mutuelle-notion/04-remboursements-sante.docx",
+        "format": "docx",
+        "size_bytes": 79184,
+        "sha256": "5926d698177e79f90921d6b20c10c68ca09aba54cce4013704aef2ff3d72b558",
+        "unit_count": 9,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+        "path": "base-connaissance-mutuelle-notion/05-tiers-payant.docx",
+        "format": "docx",
+        "size_bytes": 138728,
+        "sha256": "05ce162ee5d0cdb0cbc24e471d1e36a253ada2b217898357fc70ea698b1a6067",
+        "unit_count": 9,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+        "path": "base-connaissance-mutuelle-notion/06-reclamations-litiges.docx",
+        "format": "docx",
+        "size_bytes": 90766,
+        "sha256": "4c5ac755f96766a8bb294dfb3dae7cc31e415fba0ee2f36bbb4ee0bc91d3c41a",
+        "unit_count": 10,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_07_resiliation_docx_d58c0826",
+        "path": "base-connaissance-mutuelle-notion/07-resiliation.docx",
+        "format": "docx",
+        "size_bytes": 88280,
+        "sha256": "28c4e6dec1ed3ffb26024e9f2d786b53b81e80b3147a22838a6acb1a0ceb7197",
+        "unit_count": 9,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_08_prevoyance_incapacite_docx_16e591c7",
+        "path": "base-connaissance-mutuelle-notion/08-prevoyance-incapacite.docx",
+        "format": "docx",
+        "size_bytes": 38518,
+        "sha256": "7ff8ed9913cf473e6f41bb7beb2733e8e6f104f03ba5a51fa4d07889dd0e41c7",
+        "unit_count": 8,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_09_portail_assure_app_docx_e83c6ffd",
+        "path": "base-connaissance-mutuelle-notion/09-portail-assure-app.docx",
+        "format": "docx",
+        "size_bytes": 82771,
+        "sha256": "dbee79d7460691e1dda17874fb764d0bd8f0c44dc2c1db7cb555899896c25c9a",
+        "unit_count": 7,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_10_relations_professionnels_sante_docx_47f2f49a",
+        "path": "base-connaissance-mutuelle-notion/10-relations-professionnels-sante.docx",
+        "format": "docx",
+        "size_bytes": 37951,
+        "sha256": "fefe36554f014869ea94f5c872f241ade6b37d4c394d1c3c2b5112e8f1d7fe35",
+        "unit_count": 8,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_11_outils_internes_si_docx_a9ba8a5f",
+        "path": "base-connaissance-mutuelle-notion/11-outils-internes-si.docx",
+        "format": "docx",
+        "size_bytes": 107569,
+        "sha256": "4f4b6682c0b4ccea6b5e0f8bb695f084cd2059d5e2e13839320aa60dd351aff2",
+        "unit_count": 8,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_12_fraude_controle_docx_e49037c5",
+        "path": "base-connaissance-mutuelle-notion/12-fraude-controle.docx",
+        "format": "docx",
+        "size_bytes": 38303,
+        "sha256": "c97010fab4376d603efbb8a7c071198727874b32bb6d293c432206e90e857c08",
+        "unit_count": 8,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_13_glossaire_docx_9c2a4268",
+        "path": "base-connaissance-mutuelle-notion/13-glossaire.docx",
+        "format": "docx",
+        "size_bytes": 37966,
+        "sha256": "9680fc6b50379fb973f5277b83d4f7ccf13e5437de3bce103efa875f49a59c35",
+        "unit_count": 1,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_14_faq_transverse_docx_b1be64d4",
+        "path": "base-connaissance-mutuelle-notion/14-faq-transverse.docx",
+        "format": "docx",
+        "size_bytes": 39258,
+        "sha256": "351bc30b2c848baea697bcd686c6e9529aea08bdfc18884237fbdfbc80563960",
+        "unit_count": 8,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_15_cas_pratiques_docx_2a9e3667",
+        "path": "base-connaissance-mutuelle-notion/15-cas-pratiques.docx",
+        "format": "docx",
+        "size_bytes": 40589,
+        "sha256": "f4833eb9293aa54c848b7bb3d5d11a38d6840728a55f46b87047930cead3fc5b",
+        "unit_count": 11,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_brief_nouvelle_activite_teleconsultation_pdf_e905d5e7",
+        "path": "brief-nouvelle-activite-teleconsultation.pdf",
+        "format": "pdf",
+        "size_bytes": 15395,
+        "sha256": "be7822b612a19ef5554d5c7a301f1597276bddc25baa52b6e6a6f04ab3cfcb27",
+        "unit_count": 6,
+        "title": "Brief nouvelle activité — Téléconsultation médicale",
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_email_1_changement_temporaire_maintenance_docx_abe6efe6",
+        "path": "email-1-changement-temporaire-maintenance.docx",
+        "format": "docx",
+        "size_bytes": 19917,
+        "sha256": "1db3ebe93d37adedfa88138522c6aae4d6e838db61d8312341ec435998d10b94",
+        "unit_count": 1,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_email_2_changement_process_definitif_docx_00a20f9b",
+        "path": "email-2-changement-process-definitif.docx",
+        "format": "docx",
+        "size_bytes": 12252,
+        "sha256": "d43b2814d81f03e8a2abf641df6e0d97afbbfa8ddf7f02f92214389acf82b44f",
+        "unit_count": 1,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+        "path": "email-3-changement-tarifaire.docx",
+        "format": "docx",
+        "size_bytes": 20057,
+        "sha256": "91b6b25dadc52cfccc1c0408fa618b455f7e7ea7b93651292d4d7980e395ccde",
+        "unit_count": 1,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_formation_traitement_reclamations_pptx_761e39af",
+        "path": "formation-traitement-reclamations.pptx",
+        "format": "pptx",
+        "size_bytes": 361636,
+        "sha256": "83ec4cdd8d88adfced36c18b1e98c4231da6a83ea6d69701f1049ea96d2f1238",
+        "unit_count": 14,
+        "title": "PptxGenJS Presentation",
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      }
+    ],
+    "cards": [
+      {
+        "id": "card_3b9517fd6e7b9b82",
+        "nature": "dated_change",
+        "rank": 1,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+          "doc_email_3_changement_tarifaire_docx_046acbac"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+                  "excerpt": "| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |\n| 30-39 ans | 38,40 € | 54,90 € | 73,50 € |\n| 40-49 ans | 44,70 € | 63,90 € | 85,60 € |\n| 50-59 ans | 55,20 € | 78,90 € | 105,80 € |\n| 60-69 ans | 68,90 € | 98,40 € | 131,90 € |\n| 70 ans et + | 82,30 € | 117,60 € | 157,60 € |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 3 — Cotisations et tarification",
+                    "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
+                    "Zone 1 (Île-de-France et grandes métropoles)"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+                  "excerpt": "⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024. Les montants ci-dessous servent de référence pour comprendre la structure de la grille tarifaire (zones, tranches d'âge, coefficients), mais ne doivent pas être communiqués tels quels à un adhérent ou un prospect. Une révision tarifaire a eu lieu depuis — se référer à la dernière note tarifaire transmise par la Direction Commerciale avant toute communication de montant.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 3 — Cotisations et tarification"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Le Conseil d'Administration du 28 août 2026 a validé la nouvelle grille tarifaire applicable à l'ensemble des contrats individuels (formules ESSENTIELLE, CONFORT, SÉRÉNITÉ+) à compter du 1er janvier 2027. [...] La grille actuellement documentée au chapitre 3 de la base de connaissance (« Cotisations et tarification ») date de juin 2024 et ne doit plus être communiquée à un adhérent ou prospect, y compris à titre indicatif, à compter de ce jour.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 4
+                },
+                "excerpt_realigned": false
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Exemples de nouveaux tarifs (Zone 1, à titre indicatif — voir grille complète en pièce jointe)\n\n- 18-29 ans, formule CONFORT : 47,80 € (contre 35,80 € en 2024).\n\n- 40-49 ans, formule CONFORT : 66,60 € (contre 63,90 € en 2024).\n\n- 60-69 ans, formule SÉRÉNITÉ+ : 137,60 € (contre 131,90 € en 2024).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 9
+                },
+                "excerpt_realigned": true
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Grille tarifaire applicable aux contrats individuels",
+          "reason": "La grille tarifaire du chapitre 3 de la base de connaissance est obsolète depuis juin 2024 et ne doit plus être utilisée pour communiquer des montants aux adhérents ou prospects. L'email du 4 septembre 2026 annonce une nouvelle grille tarifaire applicable au 1er janvier 2027, avec des montants significativement différents. La coexistence des deux grilles dans les documents peut induire en erreur les gestionnaires et les adhérents.",
+          "proposal": "Mettre à jour le chapitre 3 de la base de connaissance avec la nouvelle grille tarifaire applicable au 1er janvier 2027, en intégrant les montants communiqués dans l'email du 4 septembre 2026. Ajouter une note claire indiquant que cette grille remplace définitivement celle de juin 2024 et que toute communication antérieure est caduque. Inclure également une mention sur la période de transition (novembre-décembre 2026) pour l'édition des devis 2027."
+        },
+        "answers": [
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": []
+      },
+      {
+        "id": "card_c75f15b6c8998492",
+        "nature": "dated_change",
+        "rank": 2,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+          "doc_email_2_changement_process_definitif_docx_00a20f9b"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+                  "excerpt": "Arbre de décision — Refus de tiers payant\n> Un pharmacien ou professionnel de santé signale un refus de carte de tiers payant\n> Le refus concerne-t-il un acte pharmacie ou un acte médical/paramédical ?\n> PHARMACIE\n> MÉDECIN / PARAMÉDICAL\n> Vérifier dans l'outil GESTOR (onglet 'Droits Tiers Payant') si les droits sont ouverts à la date de l'acte\n> Le professionnel est-il conventionné avec le réseau de soins Alviva Santé ?\n> Droits fermés → vérifier la cotisation Droits ouverts mais refus technique → vérifier le flux carte Vitale / NOEMIE et relancer sous 24h",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_9d517478bad6ba9c",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 5 — Tiers payant",
+                    "5.3 Traiter un refus de tiers payant"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                },
+                "excerpt_realigned": true
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+                  "excerpt": "Dans tous les cas : tracer l'incident dans GESTOR (motif « Incident Tiers Payant ») et informer l'adhérent du délai de résolution (48h ouvrées)",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_9d517478bad6ba9c",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 5 — Tiers payant",
+                    "5.3 Traiter un refus de tiers payant"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_email_2_changement_process_definitif_docx_00a20f9b",
+                  "excerpt": "À compter du 1er octobre 2026, et à titre de période pilote sur deux mois, la procédure décrite au chapitre 5.3 de la base de connaissance (« Traiter un refus de tiers payant ») est complétée de la façon suivante :\n\n- Un nouveau statut « Incident TP — Priorité Flux » doit être sélectionné dans GESTOR (module Tiers Payant) dès qu'un incident technique de flux est identifié, à la place du statut générique « Incident Tiers Payant » utilisé jusqu'ici.\n\n- Ce nouveau statut déclenche automatiquement une notification à la cellule Flux, sans action de transfert manuelle du gestionnaire (suppression de l'étape d'appel téléphonique ou d'email à la cellule Flux).\n\n- Un accusé de traitement est envoyé automatiquement à l'adhérent par SMS dans les 15 minutes, l'informant du délai de résolution.\n\n- Le délai cible reste 48h ouvrées, mais un tableau de suivi en temps réel sera accessible à tous les gestionnaires (onglet « Suivi Flux » de GESTOR, en cours de déploiement).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 6
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Procédure de traitement des incidents de tiers payant",
+          "reason": "La procédure décrite dans le chapitre 5.3 de la base de connaissance est partiellement obsolète à partir du 1er octobre 2026 pour les incidents de tiers payant en pharmacie. L'email du 7 septembre 2026 introduit une nouvelle procédure automatisée pour les incidents techniques de flux, qui remplace l'étape manuelle de transmission à la cellule Flux. La coexistence des deux procédures peut entraîner des confusions et des erreurs de traitement.",
+          "proposal": "Mettre à jour le chapitre 5.3 de la base de connaissance pour intégrer la nouvelle procédure applicable à partir du 1er octobre 2026, en précisant que cette procédure pilote concerne uniquement les pharmacies jusqu'au 30 novembre 2026. Ajouter une note indiquant que la procédure pour les professionnels du réseau Alviva Santé reste inchangée pendant cette période. Prévoir une mise à jour définitive au 1er décembre 2026 pour généraliser la procédure à tous les incidents de tiers payant."
+        },
+        "answers": [
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": [
+          {
+            "side": "B",
+            "document": "email-2-changement-process-definitif.docx",
+            "location": "[début du document]",
+            "text": "Calendrier\n\n- Du 1er octobre au 30 novembre 2026 : période pilote sur le périmètre des pharmacies uniquement. Les incidents concernant les professionnels du réseau Alviva Santé continuent de suivre la procédure actuelle du chapitre 5.3 pendant cette période.\n\n- Sous réserve de ce bilan, généralisation à l'ensemble des incidents de tiers payant (pharmacies et réseau de soins) à compter du 1er décembre 2026, avec mise à jour définitive de la base de connaissance à cette date.",
+            "reason": "not_found"
+          }
+        ]
+      },
+      {
+        "id": "card_0e607766ff03e4c5",
+        "nature": "dated_change",
+        "rank": 3,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+          "doc_email_1_changement_temporaire_maintenance_docx_abe6efe6"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+                  "excerpt": "Ce module doit être utilisé avant de trancher un litige de refus de tiers payant : il affiche en temps réel (sous réserve de synchronisation nocturne) l'état des droits, le plafond restant sur les postes soumis à plafond annuel (optique notamment), et les alertes de flux.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 5 — Tiers payant",
+                    "5.2 Fonctionnement général",
+                    "Vérifier les droits d'un adhérent"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 2
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_email_1_changement_temporaire_maintenance_docx_abe6efe6",
+                  "excerpt": "Dans le cadre de la migration de l'infrastructure serveur de GESTOR vers notre nouvel hébergeur, une intervention technique majeure aura lieu du dimanche 28 septembre 2026 à 20h00 au lundi 29 septembre 2026 à 06h00. Pendant ce créneau, GESTOR sera totalement inaccessible, y compris en consultation.\n\nCe qui change pendant l'intervention\n\nLe module de vérification des droits tiers payant (chapitre 5 de la base de connaissance) ne sera pas disponible. Pour toute vérification urgente pendant la fenêtre de maintenance ou au cours de la journée du 29 septembre (le temps que les données se resynchronisent), merci d'appliquer la procédure de secours suivante, à titre EXCEPTIONNEL ET TEMPORAIRE :\n\n- Consulter le fichier extrait « Droits_TP_export_13092026.xlsx » déposé sur le lecteur partagé [...] .",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 4
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Disponibilité de GESTOR pendant la maintenance technique",
+          "reason": "Le chapitre 5 de la base de connaissance indique que le module de vérification des droits tiers payant dans GESTOR est disponible en temps réel, sous réserve de synchronisation nocturne. Cependant, l'email du 9 septembre 2026 annonce une indisponibilité totale de GESTOR du 28 au 29 septembre 2026, y compris pour la consultation. Cette contradiction peut induire en erreur les gestionnaires qui tenteraient d'utiliser GESTOR pendant cette période.",
+          "proposal": "Ajouter une note temporaire dans le chapitre 5 de la base de connaissance pour informer les gestionnaires de l'indisponibilité prévue de GESTOR du 28 septembre 2026 à 20h00 au 29 septembre 2026 à 06h00. Préciser la procédure de secours à appliquer pendant cette période, comme décrit dans l'email du 9 septembre 2026. Retirer cette note après le 29 septembre 2026."
+        },
+        "answers": [
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": []
+      },
+      {
+        "id": "card_ac6d129ac4914d93",
+        "nature": "probable_error",
+        "rank": 5,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_email_3_changement_tarifaire_docx_046acbac"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Exemples de nouveaux tarifs (Zone 1, à titre indicatif — voir grille complète en pièce jointe)\n\n- 18-29 ans, formule CONFORT : 47,80 € (contre 35,80 € en 2024).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 9
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Montant de la cotisation pour la formule CONFORT (18-29 ans, Zone 1)",
+          "reason": "L'email du 4 septembre 2026 mentionne un montant de 35,80 € pour la formule CONFORT (18-29 ans, Zone 1) en 2024, alors que la grille tarifaire du chapitre 3 de la base de connaissance indique 45,80 € pour la même formule, tranche d'âge et zone. Cette incohérence peut provenir d'une erreur de frappe dans l'email ou d'une confusion avec une autre formule ou zone.",
+          "proposal": "Vérifier auprès de la Direction Commerciale le montant exact de la cotisation pour la formule CONFORT (18-29 ans, Zone 1) en 2024. Corriger l'email ou la base de connaissance en conséquence pour assurer la cohérence des informations. Si l'erreur provient de l'email, envoyer une correction aux destinataires initiaux."
+        },
+        "answers": [
+          "accept_side",
+          "different_subjects",
+          "example_only",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": []
+      },
+      {
+        "id": "card_6a8f5a06e30fed57",
+        "nature": "incomplete_or_outdated",
+        "rank": 6,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+          "doc_formation_traitement_reclamations_pptx_761e39af"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+                  "excerpt": "- un accusé de réception sous 10 jours ouvrés maximum ;\n\n- une réponse motivée sous 2 mois maximum à compter de la réception (délai cible interne : 10 jours ouvrés) ;",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 6 — Réclamations et litiges",
+                    "6.1 Définition et cadre réglementaire"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                },
+                "excerpt_realigned": true
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+                  "excerpt": "Traité par le gestionnaire en charge du dossier ou par le Service Relation Adhérents.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 6 — Réclamations et litiges",
+                    "6.2 Les deux niveaux de traitement interne",
+                    "Niveau 1 — Traitement de premier niveau"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_formation_traitement_reclamations_pptx_761e39af",
+                  "excerpt": "J0\n\nJ+2\n\nJ+10\n\n+1 an\n\nRéception\n\nTraçabilité\n\nRéponse\n\nMédiation\n\nRéclamation reçue (écrit, oral, portail)\n\nCréation systématique du dossier dans GESTOR\n\nRéponse motivée apportée à l'adhérent (délai cible)\n\nRecours possible au Médiateur si désaccord persistant",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "pptx",
+                  "slide": 7
+                },
+                "excerpt_realigned": true
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Délai de traitement des réclamations",
+          "reason": "Le chapitre 6 de la base de connaissance et la formation indiquent que le délai cible interne pour répondre à une réclamation est de 10 jours ouvrés. Cependant, ni la base de connaissance ni la formation ne précisent explicitement si ce délai s'applique uniquement au niveau 1 ou également au niveau 2. Cette ambiguïté peut entraîner des confusions sur les attentes en matière de délai pour les réclamations escaladées.",
+          "proposal": "Clarifier dans le chapitre 6 de la base de connaissance que le délai cible de 10 jours ouvrés s'applique au traitement de premier niveau (niveau 1). Ajouter une mention indiquant que les réclamations escaladées (niveau 2) peuvent nécessiter un délai supplémentaire, sans dépasser le délai réglementaire de 2 mois. Préciser également dans la formation que le délai de 10 jours ouvrés est une cible interne pour le niveau 1."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": []
+      },
+      {
+        "id": "card_a6137f06c15b4d26",
+        "nature": "incomplete_or_outdated",
+        "rank": 7,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_02_adhesion_souscription_docx_6d6bc1de"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_02_adhesion_souscription_docx_6d6bc1de",
+                  "excerpt": "| Poste de garantie | Délai de carence standard | Délai si continuité de couverture prouvée |\n|---|---|---|\n| Soins courants | Aucun | Aucun |\n| Optique | 3 mois | Aucun |\n| Dentaire prothétique | 6 mois | Aucun |\n| Hospitalisation programmée | 3 mois | Aucun |\n| Maternité | 10 mois | Aucun |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 2 — Adhésion et souscription",
+                    "2.3 Délai de carence"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 2
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Délai de carence pour les actes d'optique et dentaire prothétique",
+          "reason": "Le chapitre 2.3 de la base de connaissance indique les délais de carence standard pour les actes d'optique (3 mois) et dentaire prothétique (6 mois), ainsi que leur suppression en cas de continuité de couverture prouvée. Cependant, il ne précise pas si ces délais s'appliquent à toutes les formules (ESSENTIELLE, CONFORT, SÉRÉNITÉ+) ou s'il existe des exceptions pour certaines formules, notamment la SÉRÉNITÉ+ qui offre des garanties plus étendues.",
+          "proposal": "Ajouter une note dans le chapitre 2.3 pour préciser que les délais de carence s'appliquent uniformément à toutes les formules (ESSENTIELLE, CONFORT, SÉRÉNITÉ+), sans exception. Confirmer auprès de la Direction des Prestations que ces délais sont bien identiques pour toutes les formules et qu'aucune dérogation n'est prévue pour la formule SÉRÉNITÉ+."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": []
+      },
+      {
+        "id": "card_22d51fde8f282d7b",
+        "nature": "incomplete_or_outdated",
+        "rank": 8,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_01_presentation_offre_docx_bfef828e"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_01_presentation_offre_docx_bfef828e",
+                  "excerpt": "- la portabilité des droits (maintien de la couverture santé et prévoyance pendant 12 mois maximum pour un salarié quittant l'entreprise et bénéficiant de l'assurance chômage, financée par mutualisation, sans contrepartie de cotisation) ;",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+                    "1.3 L'offre collective entreprise"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 5
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Portabilité des droits pour les salariés",
+          "reason": "Le chapitre 1.3 mentionne la portabilité des droits pour les salariés quittant leur entreprise, avec un maintien de la couverture santé et prévoyance pendant 12 mois maximum. Cependant, il ne précise pas si cette portabilité s'applique également aux ayants droit du salarié (conjoint, enfants) ou uniquement au salarié lui-même. Cette information est essentielle pour répondre aux questions des adhérents concernés.",
+          "proposal": "Compléter le chapitre 1.3 pour préciser que la portabilité des droits s'applique au salarié ainsi qu'à ses ayants droit couverts par le contrat collectif, sous réserve des mêmes conditions (bénéfice de l'assurance chômage pour le salarié). Vérifier auprès de la Direction des Adhésions que cette règle est bien applicable et qu'aucune restriction ne s'applique aux ayants droit."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": []
+      },
+      {
+        "id": "card_b3b2ff94ed61d26a",
+        "nature": "incomplete_or_outdated",
+        "rank": 9,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_04_remboursements_sante_docx_86c53c91"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_04_remboursements_sante_docx_86c53c91",
+                  "excerpt": "| **Délai cible** | 5 jours ouvrés pour un flux électronique NOEMIE, 10 jours ouvrés pour une feuille de soins papier |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 4 — Remboursements santé",
+                    "4.1 Synthèse"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_04_remboursements_sante_docx_86c53c91",
+                  "excerpt": "Un flux NOEMIE (Norme Ouverte d'Échange entre la Maladie et les Intervenants Extérieurs) est transmis automatiquement à Alviva Mutuelle, généralement sous 24 à 48h.\n\n4. GESTOR calcule automatiquement la part complémentaire due selon la formule de l'adhérent et déclenche le virement.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 4 — Remboursements santé",
+                    "4.2 Le circuit de remboursement en flux électronique (cas le plus fréquent)"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 3
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Délai de traitement des remboursements en flux NOEMIE",
+          "reason": "Le chapitre 4.1 indique un délai cible de 5 jours ouvrés pour les remboursements en flux électronique NOEMIE, tandis que le chapitre 4.2 précise que le flux NOEMIE est transmis sous 24 à 48h. Cependant, ni l'un ni l'autre ne clarifie si le délai de 5 jours ouvrés inclut ou exclut le temps de transmission du flux NOEMIE. Cette ambiguïté peut entraîner des incompréhensions sur le délai réel entre la consultation et le remboursement effectif.",
+          "proposal": "Clarifier dans le chapitre 4.1 que le délai cible de 5 jours ouvrés pour les remboursements en flux NOEMIE commence à partir de la réception du flux par Alviva Mutuelle, et non à partir de la date de l'acte. Ajouter une note expliquant que ce délai n'inclut pas le temps de transmission du flux NOEMIE par la Sécurité sociale, qui peut prendre 24 à 48h supplémentaires."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": []
+      }
+    ],
+    "temporary_notes": [],
+    "rejected_points": [
+      {
+        "rank": 4,
+        "nature": "incomplet_ou_perime",
+        "documents": [
+          "fiche-de-cadrage.md",
+          "brief-nouvelle-activite-teleconsultation.pdf"
+        ],
+        "reason": "briefing_only",
+        "briefing_quotes": [
+          {
+            "kind": "briefing",
+            "excerpt": "**Téléconsultation médicale** — activité réelle en préparation (lancement visé au 01/03/2027), documentée uniquement dans un brief d’activité : **absente des fiches officielles de la base**, à ne pas considérer comme un service actif tant que la date de lancement n’est pas atteinte.",
+            "excerpt_realigned": false
+          }
+        ],
+        "unverified_quotes": [],
+        "analysis": {
+          "origin": "model",
+          "subject": "Service de téléconsultation médicale",
+          "reason": "La fiche de cadrage indique clairement que la téléconsultation médicale est une activité en préparation, absente des fiches officielles de la base de connaissance et non active avant le 1er mars 2027. Cependant, le brief dédié à cette nouvelle activité, daté du 8 septembre 2026, fournit des informations détaillées sur son fonctionnement, son intégration et son impact opérationnel. Ces informations sont essentielles pour préparer les équipes et mettre à jour la base de connaissance avant le lancement, mais elles ne sont pas encore intégrées dans les documents officiels.",
+          "proposal": "Créer un nouveau chapitre dans la base de connaissance dédié à la téléconsultation médicale, en intégrant les informations du brief du 8 septembre 2026. Ce chapitre doit être clairement identifié comme « en préparation » et « non actif avant le 1er mars 2027 ». Inclure les éléments suivants : description du service, populations éligibles, fonctionnement pour l'adhérent, impacts opérationnels par direction, et questions fréquentes anticipées. Mettre à jour ce chapitre au fur et à mesure des validations et des ajustements avant le lancement."
+        }
+      }
+    ],
+    "unverified_quotes": {
+      "not_found": 1
+    },
+    "unavailable_detections": [
+      "temporary_notes"
+    ],
+    "run": {
+      "model": "mistral-large-2512",
+      "prompt_id": "lecture_globale",
+      "prompt_version": 1,
+      "estimated_tokens": 43046,
+      "prompt_tokens": 34994,
+      "completion_tokens": 5716,
+      "cost_usd": 0.026071,
+      "duration_seconds": 0.004,
+      "pipeline_commit": null
+    }
+  },
+  "imageIds": [
+    "img_9d517478bad6ba9c"
+  ],
+  "cards": null,
+  "conflictsAwaitingReading": null,
+  "extractionNotes": null,
+  "reading": {
+    "readingDate": "2026-10-01",
+    "briefingGiven": true,
+    "cards": [
+      {
+        "id": "card_3b9517fd6e7b9b82",
+        "nature": "dated_change",
+        "rank": 1,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+          "doc_email_3_changement_tarifaire_docx_046acbac"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+                  "excerpt": "| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |\n| 30-39 ans | 38,40 € | 54,90 € | 73,50 € |\n| 40-49 ans | 44,70 € | 63,90 € | 85,60 € |\n| 50-59 ans | 55,20 € | 78,90 € | 105,80 € |\n| 60-69 ans | 68,90 € | 98,40 € | 131,90 € |\n| 70 ans et + | 82,30 € | 117,60 € | 157,60 € |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 3 — Cotisations et tarification",
+                    "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
+                    "Zone 1 (Île-de-France et grandes métropoles)"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 0
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+                  "excerpt": "⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024. Les montants ci-dessous servent de référence pour comprendre la structure de la grille tarifaire (zones, tranches d'âge, coefficients), mais ne doivent pas être communiqués tels quels à un adhérent ou un prospect. Une révision tarifaire a eu lieu depuis — se référer à la dernière note tarifaire transmise par la Direction Commerciale avant toute communication de montant.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 3 — Cotisations et tarification"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Le Conseil d'Administration du 28 août 2026 a validé la nouvelle grille tarifaire applicable à l'ensemble des contrats individuels (formules ESSENTIELLE, CONFORT, SÉRÉNITÉ+) à compter du 1er janvier 2027. [...] La grille actuellement documentée au chapitre 3 de la base de connaissance (« Cotisations et tarification ») date de juin 2024 et ne doit plus être communiquée à un adhérent ou prospect, y compris à titre indicatif, à compter de ce jour.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 4
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Exemples de nouveaux tarifs (Zone 1, à titre indicatif — voir grille complète en pièce jointe)\n\n- 18-29 ans, formule CONFORT : 47,80 € (contre 35,80 € en 2024).\n\n- 40-49 ans, formule CONFORT : 66,60 € (contre 63,90 € en 2024).\n\n- 60-69 ans, formule SÉRÉNITÉ+ : 137,60 € (contre 131,90 € en 2024).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 9
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Grille tarifaire applicable aux contrats individuels",
+          "reason": "La grille tarifaire du chapitre 3 de la base de connaissance est obsolète depuis juin 2024 et ne doit plus être utilisée pour communiquer des montants aux adhérents ou prospects. L'email du 4 septembre 2026 annonce une nouvelle grille tarifaire applicable au 1er janvier 2027, avec des montants significativement différents. La coexistence des deux grilles dans les documents peut induire en erreur les gestionnaires et les adhérents.",
+          "proposal": "Mettre à jour le chapitre 3 de la base de connaissance avec la nouvelle grille tarifaire applicable au 1er janvier 2027, en intégrant les montants communiqués dans l'email du 4 septembre 2026. Ajouter une note claire indiquant que cette grille remplace définitivement celle de juin 2024 et que toute communication antérieure est caduque. Inclure également une mention sur la période de transition (novembre-décembre 2026) pour l'édition des devis 2027."
+        },
+        "answers": [
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": []
+      },
+      {
+        "id": "card_c75f15b6c8998492",
+        "nature": "dated_change",
+        "rank": 2,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+          "doc_email_2_changement_process_definitif_docx_00a20f9b"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+                  "excerpt": "Arbre de décision — Refus de tiers payant\n> Un pharmacien ou professionnel de santé signale un refus de carte de tiers payant\n> Le refus concerne-t-il un acte pharmacie ou un acte médical/paramédical ?\n> PHARMACIE\n> MÉDECIN / PARAMÉDICAL\n> Vérifier dans l'outil GESTOR (onglet 'Droits Tiers Payant') si les droits sont ouverts à la date de l'acte\n> Le professionnel est-il conventionné avec le réseau de soins Alviva Santé ?\n> Droits fermés → vérifier la cotisation Droits ouverts mais refus technique → vérifier le flux carte Vitale / NOEMIE et relancer sous 24h",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_9d517478bad6ba9c",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 5 — Tiers payant",
+                    "5.3 Traiter un refus de tiers payant"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+                  "excerpt": "Dans tous les cas : tracer l'incident dans GESTOR (motif « Incident Tiers Payant ») et informer l'adhérent du délai de résolution (48h ouvrées)",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_9d517478bad6ba9c",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 5 — Tiers payant",
+                    "5.3 Traiter un refus de tiers payant"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_email_2_changement_process_definitif_docx_00a20f9b",
+                  "excerpt": "À compter du 1er octobre 2026, et à titre de période pilote sur deux mois, la procédure décrite au chapitre 5.3 de la base de connaissance (« Traiter un refus de tiers payant ») est complétée de la façon suivante :\n\n- Un nouveau statut « Incident TP — Priorité Flux » doit être sélectionné dans GESTOR (module Tiers Payant) dès qu'un incident technique de flux est identifié, à la place du statut générique « Incident Tiers Payant » utilisé jusqu'ici.\n\n- Ce nouveau statut déclenche automatiquement une notification à la cellule Flux, sans action de transfert manuelle du gestionnaire (suppression de l'étape d'appel téléphonique ou d'email à la cellule Flux).\n\n- Un accusé de traitement est envoyé automatiquement à l'adhérent par SMS dans les 15 minutes, l'informant du délai de résolution.\n\n- Le délai cible reste 48h ouvrées, mais un tableau de suivi en temps réel sera accessible à tous les gestionnaires (onglet « Suivi Flux » de GESTOR, en cours de déploiement).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 6
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Procédure de traitement des incidents de tiers payant",
+          "reason": "La procédure décrite dans le chapitre 5.3 de la base de connaissance est partiellement obsolète à partir du 1er octobre 2026 pour les incidents de tiers payant en pharmacie. L'email du 7 septembre 2026 introduit une nouvelle procédure automatisée pour les incidents techniques de flux, qui remplace l'étape manuelle de transmission à la cellule Flux. La coexistence des deux procédures peut entraîner des confusions et des erreurs de traitement.",
+          "proposal": "Mettre à jour le chapitre 5.3 de la base de connaissance pour intégrer la nouvelle procédure applicable à partir du 1er octobre 2026, en précisant que cette procédure pilote concerne uniquement les pharmacies jusqu'au 30 novembre 2026. Ajouter une note indiquant que la procédure pour les professionnels du réseau Alviva Santé reste inchangée pendant cette période. Prévoir une mise à jour définitive au 1er décembre 2026 pour généraliser la procédure à tous les incidents de tiers payant."
+        },
+        "answers": [
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": [
+          {
+            "side": "B",
+            "document": "email-2-changement-process-definitif.docx",
+            "location": "[début du document]",
+            "text": "Calendrier\n\n- Du 1er octobre au 30 novembre 2026 : période pilote sur le périmètre des pharmacies uniquement. Les incidents concernant les professionnels du réseau Alviva Santé continuent de suivre la procédure actuelle du chapitre 5.3 pendant cette période.\n\n- Sous réserve de ce bilan, généralisation à l'ensemble des incidents de tiers payant (pharmacies et réseau de soins) à compter du 1er décembre 2026, avec mise à jour définitive de la base de connaissance à cette date.",
+            "reason": "not_found"
+          }
+        ]
+      },
+      {
+        "id": "card_0e607766ff03e4c5",
+        "nature": "dated_change",
+        "rank": 3,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+          "doc_email_1_changement_temporaire_maintenance_docx_abe6efe6"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+                  "excerpt": "Ce module doit être utilisé avant de trancher un litige de refus de tiers payant : il affiche en temps réel (sous réserve de synchronisation nocturne) l'état des droits, le plafond restant sur les postes soumis à plafond annuel (optique notamment), et les alertes de flux.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 5 — Tiers payant",
+                    "5.2 Fonctionnement général",
+                    "Vérifier les droits d'un adhérent"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 2
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_email_1_changement_temporaire_maintenance_docx_abe6efe6",
+                  "excerpt": "Dans le cadre de la migration de l'infrastructure serveur de GESTOR vers notre nouvel hébergeur, une intervention technique majeure aura lieu du dimanche 28 septembre 2026 à 20h00 au lundi 29 septembre 2026 à 06h00. Pendant ce créneau, GESTOR sera totalement inaccessible, y compris en consultation.\n\nCe qui change pendant l'intervention\n\nLe module de vérification des droits tiers payant (chapitre 5 de la base de connaissance) ne sera pas disponible. Pour toute vérification urgente pendant la fenêtre de maintenance ou au cours de la journée du 29 septembre (le temps que les données se resynchronisent), merci d'appliquer la procédure de secours suivante, à titre EXCEPTIONNEL ET TEMPORAIRE :\n\n- Consulter le fichier extrait « Droits_TP_export_13092026.xlsx » déposé sur le lecteur partagé [...] .",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 4
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Disponibilité de GESTOR pendant la maintenance technique",
+          "reason": "Le chapitre 5 de la base de connaissance indique que le module de vérification des droits tiers payant dans GESTOR est disponible en temps réel, sous réserve de synchronisation nocturne. Cependant, l'email du 9 septembre 2026 annonce une indisponibilité totale de GESTOR du 28 au 29 septembre 2026, y compris pour la consultation. Cette contradiction peut induire en erreur les gestionnaires qui tenteraient d'utiliser GESTOR pendant cette période.",
+          "proposal": "Ajouter une note temporaire dans le chapitre 5 de la base de connaissance pour informer les gestionnaires de l'indisponibilité prévue de GESTOR du 28 septembre 2026 à 20h00 au 29 septembre 2026 à 06h00. Préciser la procédure de secours à appliquer pendant cette période, comme décrit dans l'email du 9 septembre 2026. Retirer cette note après le 29 septembre 2026."
+        },
+        "answers": [
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": []
+      },
+      {
+        "id": "card_ac6d129ac4914d93",
+        "nature": "probable_error",
+        "rank": 5,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_email_3_changement_tarifaire_docx_046acbac"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Exemples de nouveaux tarifs (Zone 1, à titre indicatif — voir grille complète en pièce jointe)\n\n- 18-29 ans, formule CONFORT : 47,80 € (contre 35,80 € en 2024).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 9
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Montant de la cotisation pour la formule CONFORT (18-29 ans, Zone 1)",
+          "reason": "L'email du 4 septembre 2026 mentionne un montant de 35,80 € pour la formule CONFORT (18-29 ans, Zone 1) en 2024, alors que la grille tarifaire du chapitre 3 de la base de connaissance indique 45,80 € pour la même formule, tranche d'âge et zone. Cette incohérence peut provenir d'une erreur de frappe dans l'email ou d'une confusion avec une autre formule ou zone.",
+          "proposal": "Vérifier auprès de la Direction Commerciale le montant exact de la cotisation pour la formule CONFORT (18-29 ans, Zone 1) en 2024. Corriger l'email ou la base de connaissance en conséquence pour assurer la cohérence des informations. Si l'erreur provient de l'email, envoyer une correction aux destinataires initiaux."
+        },
+        "answers": [
+          "accept_side",
+          "different_subjects",
+          "example_only",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": []
+      },
+      {
+        "id": "card_6a8f5a06e30fed57",
+        "nature": "incomplete_or_outdated",
+        "rank": 6,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+          "doc_formation_traitement_reclamations_pptx_761e39af"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+                  "excerpt": "- un accusé de réception sous 10 jours ouvrés maximum ;\n\n- une réponse motivée sous 2 mois maximum à compter de la réception (délai cible interne : 10 jours ouvrés) ;",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 6 — Réclamations et litiges",
+                    "6.1 Définition et cadre réglementaire"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+                  "excerpt": "Traité par le gestionnaire en charge du dossier ou par le Service Relation Adhérents.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 6 — Réclamations et litiges",
+                    "6.2 Les deux niveaux de traitement interne",
+                    "Niveau 1 — Traitement de premier niveau"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_formation_traitement_reclamations_pptx_761e39af",
+                  "excerpt": "J0\n\nJ+2\n\nJ+10\n\n+1 an\n\nRéception\n\nTraçabilité\n\nRéponse\n\nMédiation\n\nRéclamation reçue (écrit, oral, portail)\n\nCréation systématique du dossier dans GESTOR\n\nRéponse motivée apportée à l'adhérent (délai cible)\n\nRecours possible au Médiateur si désaccord persistant",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "pptx",
+                  "slide": 7
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Délai de traitement des réclamations",
+          "reason": "Le chapitre 6 de la base de connaissance et la formation indiquent que le délai cible interne pour répondre à une réclamation est de 10 jours ouvrés. Cependant, ni la base de connaissance ni la formation ne précisent explicitement si ce délai s'applique uniquement au niveau 1 ou également au niveau 2. Cette ambiguïté peut entraîner des confusions sur les attentes en matière de délai pour les réclamations escaladées.",
+          "proposal": "Clarifier dans le chapitre 6 de la base de connaissance que le délai cible de 10 jours ouvrés s'applique au traitement de premier niveau (niveau 1). Ajouter une mention indiquant que les réclamations escaladées (niveau 2) peuvent nécessiter un délai supplémentaire, sans dépasser le délai réglementaire de 2 mois. Préciser également dans la formation que le délai de 10 jours ouvrés est une cible interne pour le niveau 1."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": []
+      },
+      {
+        "id": "card_a6137f06c15b4d26",
+        "nature": "incomplete_or_outdated",
+        "rank": 7,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_02_adhesion_souscription_docx_6d6bc1de"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_02_adhesion_souscription_docx_6d6bc1de",
+                  "excerpt": "| Poste de garantie | Délai de carence standard | Délai si continuité de couverture prouvée |\n|---|---|---|\n| Soins courants | Aucun | Aucun |\n| Optique | 3 mois | Aucun |\n| Dentaire prothétique | 6 mois | Aucun |\n| Hospitalisation programmée | 3 mois | Aucun |\n| Maternité | 10 mois | Aucun |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 2 — Adhésion et souscription",
+                    "2.3 Délai de carence"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 2
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Délai de carence pour les actes d'optique et dentaire prothétique",
+          "reason": "Le chapitre 2.3 de la base de connaissance indique les délais de carence standard pour les actes d'optique (3 mois) et dentaire prothétique (6 mois), ainsi que leur suppression en cas de continuité de couverture prouvée. Cependant, il ne précise pas si ces délais s'appliquent à toutes les formules (ESSENTIELLE, CONFORT, SÉRÉNITÉ+) ou s'il existe des exceptions pour certaines formules, notamment la SÉRÉNITÉ+ qui offre des garanties plus étendues.",
+          "proposal": "Ajouter une note dans le chapitre 2.3 pour préciser que les délais de carence s'appliquent uniformément à toutes les formules (ESSENTIELLE, CONFORT, SÉRÉNITÉ+), sans exception. Confirmer auprès de la Direction des Prestations que ces délais sont bien identiques pour toutes les formules et qu'aucune dérogation n'est prévue pour la formule SÉRÉNITÉ+."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": []
+      },
+      {
+        "id": "card_22d51fde8f282d7b",
+        "nature": "incomplete_or_outdated",
+        "rank": 8,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_01_presentation_offre_docx_bfef828e"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_01_presentation_offre_docx_bfef828e",
+                  "excerpt": "- la portabilité des droits (maintien de la couverture santé et prévoyance pendant 12 mois maximum pour un salarié quittant l'entreprise et bénéficiant de l'assurance chômage, financée par mutualisation, sans contrepartie de cotisation) ;",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+                    "1.3 L'offre collective entreprise"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 5
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Portabilité des droits pour les salariés",
+          "reason": "Le chapitre 1.3 mentionne la portabilité des droits pour les salariés quittant leur entreprise, avec un maintien de la couverture santé et prévoyance pendant 12 mois maximum. Cependant, il ne précise pas si cette portabilité s'applique également aux ayants droit du salarié (conjoint, enfants) ou uniquement au salarié lui-même. Cette information est essentielle pour répondre aux questions des adhérents concernés.",
+          "proposal": "Compléter le chapitre 1.3 pour préciser que la portabilité des droits s'applique au salarié ainsi qu'à ses ayants droit couverts par le contrat collectif, sous réserve des mêmes conditions (bénéfice de l'assurance chômage pour le salarié). Vérifier auprès de la Direction des Adhésions que cette règle est bien applicable et qu'aucune restriction ne s'applique aux ayants droit."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": []
+      },
+      {
+        "id": "card_b3b2ff94ed61d26a",
+        "nature": "incomplete_or_outdated",
+        "rank": 9,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_04_remboursements_sante_docx_86c53c91"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_04_remboursements_sante_docx_86c53c91",
+                  "excerpt": "| **Délai cible** | 5 jours ouvrés pour un flux électronique NOEMIE, 10 jours ouvrés pour une feuille de soins papier |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 4 — Remboursements santé",
+                    "4.1 Synthèse"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 0
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_04_remboursements_sante_docx_86c53c91",
+                  "excerpt": "Un flux NOEMIE (Norme Ouverte d'Échange entre la Maladie et les Intervenants Extérieurs) est transmis automatiquement à Alviva Mutuelle, généralement sous 24 à 48h.\n\n4. GESTOR calcule automatiquement la part complémentaire due selon la formule de l'adhérent et déclenche le virement.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 4 — Remboursements santé",
+                    "4.2 Le circuit de remboursement en flux électronique (cas le plus fréquent)"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 3
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Délai de traitement des remboursements en flux NOEMIE",
+          "reason": "Le chapitre 4.1 indique un délai cible de 5 jours ouvrés pour les remboursements en flux électronique NOEMIE, tandis que le chapitre 4.2 précise que le flux NOEMIE est transmis sous 24 à 48h. Cependant, ni l'un ni l'autre ne clarifie si le délai de 5 jours ouvrés inclut ou exclut le temps de transmission du flux NOEMIE. Cette ambiguïté peut entraîner des incompréhensions sur le délai réel entre la consultation et le remboursement effectif.",
+          "proposal": "Clarifier dans le chapitre 4.1 que le délai cible de 5 jours ouvrés pour les remboursements en flux NOEMIE commence à partir de la réception du flux par Alviva Mutuelle, et non à partir de la date de l'acte. Ajouter une note expliquant que ce délai n'inclut pas le temps de transmission du flux NOEMIE par la Sécurité sociale, qui peut prendre 24 à 48h supplémentaires."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": []
+      }
+    ],
+    "temporaryNotes": [],
+    "rejectedPoints": [
+      {
+        "rank": 4,
+        "nature": "incomplet_ou_perime",
+        "documents": [
+          "fiche-de-cadrage.md",
+          "brief-nouvelle-activite-teleconsultation.pdf"
+        ],
+        "reason": "briefing_only",
+        "briefingQuotes": [
+          {
+            "kind": "briefing",
+            "excerptRealigned": false,
+            "excerpt": "**Téléconsultation médicale** — activité réelle en préparation (lancement visé au 01/03/2027), documentée uniquement dans un brief d’activité : **absente des fiches officielles de la base**, à ne pas considérer comme un service actif tant que la date de lancement n’est pas atteinte."
+          }
+        ],
+        "unverifiedQuotes": [],
+        "analysis": {
+          "subject": "Service de téléconsultation médicale",
+          "reason": "La fiche de cadrage indique clairement que la téléconsultation médicale est une activité en préparation, absente des fiches officielles de la base de connaissance et non active avant le 1er mars 2027. Cependant, le brief dédié à cette nouvelle activité, daté du 8 septembre 2026, fournit des informations détaillées sur son fonctionnement, son intégration et son impact opérationnel. Ces informations sont essentielles pour préparer les équipes et mettre à jour la base de connaissance avant le lancement, mais elles ne sont pas encore intégrées dans les documents officiels.",
+          "proposal": "Créer un nouveau chapitre dans la base de connaissance dédié à la téléconsultation médicale, en intégrant les informations du brief du 8 septembre 2026. Ce chapitre doit être clairement identifié comme « en préparation » et « non actif avant le 1er mars 2027 ». Inclure les éléments suivants : description du service, populations éligibles, fonctionnement pour l'adhérent, impacts opérationnels par direction, et questions fréquentes anticipées. Mettre à jour ce chapitre au fur et à mesure des validations et des ajustements avant le lancement."
+        }
+      }
+    ],
+    "unverifiedQuotes": {
+      "not_found": 1
+    },
+    "unavailableDetections": [
+      "temporary_notes"
+    ]
+  }
+}

@@ -55,7 +55,11 @@ export function AuditImage({ imageId, alt }: { imageId: string | null; alt: stri
  * Un extrait cité : le document (par son nom de fichier), l'emplacement,
  * le texte ; s'il a été lu par vision, la mention et l'image à côté.
  */
-export function AuditSource({ audit, source }: { audit: Audit; source: SourceRef }) {
+export function AuditSource({ audit, source, imageShown = false }: {
+  audit: Audit; source: SourceRef;
+  /** L'image de cet extrait est déjà affichée juste au-dessus (même image, même côté) : on y renvoie. */
+  imageShown?: boolean;
+}) {
   const doc = documentName(audit, source.documentId);
   const location = sourceLocation(source);
   return (
@@ -69,7 +73,9 @@ export function AuditSource({ audit, source }: { audit: Audit; source: SourceRef
         {source.visionUnverified && (
           <>
             <p className="obp-audit-vision">{VISION_NOTE}</p>
-            <AuditImage imageId={source.imageId} alt={`Image lue dans ${doc}, ${location}`} />
+            {imageShown
+              ? <p className="obp-muted">Lu dans la même image, affichée ci-dessus.</p>
+              : <AuditImage imageId={source.imageId} alt={`Image lue dans ${doc}, ${location}`} />}
           </>
         )}
       </div>

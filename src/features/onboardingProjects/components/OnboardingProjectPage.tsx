@@ -20,7 +20,8 @@ const TABS = [
   { id: 'documents', label: 'Documents' },
   { id: 'cadrage',   label: 'Fiche de cadrage' },
   { id: 'analysis',  label: 'Analyse' },
-  { id: 'audit',     label: 'Audit' },
+  // L'URL reste `audit` ; l'onglet montre l'audit de chaque analyse réussie, quelle que soit sa version.
+  { id: 'audit',     label: 'À clarifier' },
 ] as const;
 
 interface OnboardingProjectPageProps {

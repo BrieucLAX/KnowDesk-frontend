@@ -14,7 +14,7 @@ interface AnalysisTabProps {
   project:   OnboardingProject;
   /** Une analyse a été lancée : le projet relit ses documents (désormais figés). */
   onChanged: () => void;
-  /** Ouvre l'onglet « Audit ». */
+  /** Ouvre l'onglet « À clarifier ». */
   onOpenAudit: () => void;
 }
 

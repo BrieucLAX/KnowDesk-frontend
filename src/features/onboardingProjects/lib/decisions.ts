@@ -8,6 +8,7 @@
  * envoyées. Plan d'onboarding §5.1 (F-F3b) et §5.3 « Décisions ».
  */
 import type { Question } from './audit';
+import type { CardAction } from './reading';
 
 // ── Contrat (decision.schema.json 0.6.0) ──────────────────────
 
@@ -22,13 +23,17 @@ export type DecisionAction =
 
 export type DecisionActionType = DecisionAction['type'];
 
-/** Une décision telle que le back la renvoie. */
+/**
+ * Une décision telle que le back la renvoie : la réponse à une question (audits 0.6.0 et 0.7.0)
+ * ou à une carte (audit 0.8.0, `cardId` renseigné, `questionId` identique, `conflictIds` null).
+ */
 export interface Decision {
   id:           string;
   questionId:   string;
+  cardId?:      string | null;
   groupId:      string | null;
-  conflictIds:  string[];
-  action:       DecisionAction;
+  conflictIds:  string[] | null;
+  action:       DecisionAction | CardAction;
   supersedesId: string | null;
   decidedBy:    { id: string | null; name: string };
   decidedAt:    string;
@@ -40,7 +45,7 @@ export interface Decision {
 export interface DecisionsState {
   /** Décision courante de chaque question décidée. */
   decisions:  Decision[];
-  counts:     { decided: number; later: number; skipped: number };
+  counts:     { decided: number; later: number; skipped: number; cards?: number | null };
   /** Seul l'audit de la dernière analyse réussie s'arbitre (Q2). */
   arbitrable: boolean;
 }
@@ -144,7 +149,7 @@ export function buildDistinctCases(q: Question, conditions: string[]): Built {
 // ── Lecture d'une décision ────────────────────────────────────
 
 /** La décision en clair, les options désignées par leur lettre. */
-export function describeDecision(action: DecisionAction, q: Question | undefined): string {
+export function describeDecision(action: DecisionAction | CardAction, q: Question | undefined): string {
   const letterOf = (assertionId: string) => {
     const i = q?.options.findIndex(o => o.assertionIds.includes(assertionId)) ?? -1;
     return i >= 0 ? optionLetter(i) : '?';
@@ -155,6 +160,8 @@ export function describeDecision(action: DecisionAction, q: Question | undefined
     case 'write_version':
       return `Version C : « ${action.text} »${action.condition ? `, si ${action.condition.text}` : ''}`;
     case 'distinct_cases':
+      // Une réponse à une carte (0.8.0) a un texte, pas de cas : elle se décrit par describeCardAnswer.
+      if (!('cases' in action)) return 'Décision';
       return `Cas distincts : ${action.cases.map(c => `${letterOf(c.assertion_id)} si ${c.condition.text}`).join(' ; ')}`;
     case 'later':
       return 'Plus tard';

@@ -4,6 +4,7 @@ import type {
   OnboardingNotice, OnboardingProject, OnboardingProjectSummary, SavedCadrage,
 } from '../types';
 import type { AuditResponse } from '../lib/audit';
+import type { CardAction } from '../lib/reading';
 import type { CancelResult, Decision, DecisionAction, DecisionsState } from '../lib/decisions';
 
 const BASE = '/onboarding';
@@ -76,7 +77,13 @@ export const onboardingApi = {
    */
   decide: (projectId: string, analysisId: string, body: { questionId: string; expectedCurrentId: string | null; action: DecisionAction }) =>
     apiClient.post<Decision>(`${BASE}/projects/${projectId}/analyses/${analysisId}/decisions`, body),
-  /** Annule la décision courante d'une question (Q1). */
+  /** Historique d'une carte (audit 0.8.0), du plus ancien au plus récent, annulations comprises. */
+  cardHistory: (projectId: string, analysisId: string, cardId: string) =>
+    apiClient.get<Decision[]>(`${BASE}/projects/${projectId}/analyses/${analysisId}/decisions?cardId=${encodeURIComponent(cardId)}`),
+  /** Réponse à une carte (audit 0.8.0) : 201 ; 409 DECISION_CONFLICT si la réponse courante a changé entre-temps. */
+  answerCard: (projectId: string, analysisId: string, body: { cardId: string; expectedCurrentId: string | null; action: CardAction }) =>
+    apiClient.post<Decision>(`${BASE}/projects/${projectId}/analyses/${analysisId}/decisions`, body),
+  /** Annule la décision courante d'une question ou d'une carte (Q1). */
   cancelDecision: (projectId: string, analysisId: string, decisionId: string) =>
     apiClient.post<CancelResult>(`${BASE}/projects/${projectId}/analyses/${analysisId}/decisions/${decisionId}/cancel`, {}),
 };
