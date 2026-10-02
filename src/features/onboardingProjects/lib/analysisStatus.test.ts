@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  ANALYSIS_STEPS, analysisFailureMessage, analysisFailureNote, elapsedMs, formatElapsed, isAnalysisActive, stepStates,
+  ANALYSIS_STEPS, READING_STEPS, analysisFailureMessage, analysisSteps, analysisFailureNote, elapsedMs, formatElapsed, isAnalysisActive, stepStates,
 } from './analysisStatus';
 
 describe('analysisStatus', () => {
@@ -12,14 +12,30 @@ describe('analysisStatus', () => {
   });
 
   it('états des étapes selon l\'étape en cours', () => {
-    expect(stepStates({ status: 'queued', stage: null })).toEqual(ANALYSIS_STEPS.map(() => 'pending'));
-    expect(stepStates({ status: 'running', stage: 'download' })[0]).toBe('current');
-    expect(stepStates({ status: 'running', stage: 'extraction' }))
+    const v1 = { pipelineVersion: null };
+    expect(stepStates({ status: 'queued', stage: null, ...v1 })).toEqual(ANALYSIS_STEPS.map(() => 'pending'));
+    expect(stepStates({ status: 'running', stage: 'download', ...v1 })[0]).toBe('current');
+    expect(stepStates({ status: 'running', stage: 'extraction', ...v1 }))
       .toEqual(['done', 'done', 'current', 'pending', 'pending', 'pending']);
-    expect(stepStates({ status: 'succeeded', stage: 'storing' }).every(s => s === 'done')).toBe(true);
+    expect(stepStates({ status: 'succeeded', stage: 'storing', ...v1 }).every(s => s === 'done')).toBe(true);
     // Échec pendant le croisement : l'étape atteinte n'est pas marquée terminée.
-    expect(stepStates({ status: 'failed', stage: 'detection' }))
+    expect(stepStates({ status: 'failed', stage: 'detection', ...v1 }))
       .toEqual(['done', 'done', 'done', 'pending', 'pending', 'pending']);
+  });
+
+  it('lecture globale : ses étapes dès qu\'une étape ou un appel propres à la lecture se montrent', () => {
+    const version = (prompts: string[]) => ({ package: '0.8.0', commit: 'abc', prompts });
+    expect(analysisSteps({ stage: 'parsing', pipelineVersion: null })).toBe(ANALYSIS_STEPS);
+    expect(analysisSteps({ stage: 'images', pipelineVersion: null })).toBe(READING_STEPS);
+    expect(analysisSteps({ stage: 'storing', pipelineVersion: version(['describe_image v2', 'lecture_globale v1']) })).toBe(READING_STEPS);
+    expect(analysisSteps({ stage: 'storing', pipelineVersion: version(['extract_assertions v11']) })).toBe(ANALYSIS_STEPS);
+    expect(READING_STEPS.map(s => s.label)).toEqual([
+      'Lecture des documents', 'Lecture des images', 'Lecture d\'ensemble', 'Vérification des citations', 'Enregistrement des résultats',
+    ]);
+    expect(stepStates({ status: 'running', stage: 'reading', pipelineVersion: null }))
+      .toEqual(['done', 'done', 'current', 'pending', 'pending']);
+    expect(stepStates({ status: 'failed', stage: 'verification', pipelineVersion: null }))
+      .toEqual(['done', 'done', 'done', 'pending', 'pending']);
   });
 
   it('formate la durée', () => {

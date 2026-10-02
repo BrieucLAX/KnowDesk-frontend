@@ -123,7 +123,10 @@ export interface SavedCadrage extends Cadrage {
 export type AnalysisStatus = 'queued' | 'running' | 'succeeded' | 'failed';
 
 /** Étapes du pipeline, plus `storing` (le back enregistre l'audit et ses images). */
-export type AnalysisStage = 'download' | 'cadrage' | 'parsing' | 'extraction' | 'detection' | 'questions' | 'storing';
+export type AnalysisStage =
+  | 'download' | 'cadrage' | 'parsing' | 'extraction' | 'detection' | 'questions' | 'storing'
+  // Lecture globale (audit 0.8.0) : noms fixés avec le back (migration 50) et la PR 5 du pipeline.
+  | 'images' | 'reading' | 'verification';
 
 export interface OnboardingAnalysis {
   id:             string;

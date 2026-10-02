@@ -15,7 +15,7 @@ export interface AnalysisStep {
   counts?: boolean;
 }
 
-/** Étapes affichées, dans l'ordre : cadrage → lecture i/n → extraction i/n → croisement → questions. */
+/** Étapes affichées du moteur v1 (audits 0.6.0, 0.7.0) : cadrage → lecture i/n → extraction i/n → croisement → questions. */
 export const ANALYSIS_STEPS: AnalysisStep[] = [
   { stages: ['download', 'cadrage'], label: 'Lecture de la fiche de cadrage' },
   { stages: ['parsing'],    label: 'Lecture des documents', counts: true },
@@ -25,15 +25,41 @@ export const ANALYSIS_STEPS: AnalysisStep[] = [
   { stages: ['storing'],    label: 'Enregistrement des résultats' },
 ];
 
+/**
+ * Étapes affichées de la lecture globale (audit 0.8.0) : documents → images → lecture
+ * d'ensemble → vérification des citations (plan-lecture-globale.md §1).
+ */
+export const READING_STEPS: AnalysisStep[] = [
+  { stages: ['download', 'parsing'], label: 'Lecture des documents', counts: true },
+  { stages: ['images'],       label: 'Lecture des images', counts: true },
+  { stages: ['reading'],      label: 'Lecture d\'ensemble' },
+  { stages: ['verification'], label: 'Vérification des citations' },
+  { stages: ['storing'],      label: 'Enregistrement des résultats' },
+];
+
+const READING_STAGES = new Set<AnalysisStage>(['images', 'reading', 'verification']);
+
+/**
+ * Les étapes d'une analyse : celles de la lecture dès qu'une étape propre à la lecture, ou
+ * l'appel `lecture_globale`, se montre ; celles du moteur v1 sinon (les étapes communes,
+ * `download`, `parsing` et `storing`, ne disent pas quel moteur travaille).
+ */
+export function analysisSteps(a: Pick<OnboardingAnalysis, 'stage' | 'pipelineVersion'>): AnalysisStep[] {
+  const reading = (a.stage !== null && READING_STAGES.has(a.stage))
+    || (a.pipelineVersion?.prompts ?? []).some(p => p.startsWith('lecture_globale'));
+  return reading ? READING_STEPS : ANALYSIS_STEPS;
+}
+
 export type StepState = 'done' | 'current' | 'pending';
 
-/** État de chaque étape affichée pour une analyse. */
-export function stepStates(a: Pick<OnboardingAnalysis, 'status' | 'stage'>): StepState[] {
-  if (a.status === 'succeeded') return ANALYSIS_STEPS.map(() => 'done');
-  const current = a.stage === null ? -1 : ANALYSIS_STEPS.findIndex(s => s.stages.includes(a.stage!));
+/** État de chaque étape affichée pour une analyse (celles de `analysisSteps`). */
+export function stepStates(a: Pick<OnboardingAnalysis, 'status' | 'stage' | 'pipelineVersion'>): StepState[] {
+  const steps = analysisSteps(a);
+  if (a.status === 'succeeded') return steps.map(() => 'done');
+  const current = a.stage === null ? -1 : steps.findIndex(s => s.stages.includes(a.stage!));
   // En file, ou acceptée sans étape encore connue : rien n'a commencé.
-  if (current === -1) return ANALYSIS_STEPS.map(() => 'pending');
-  return ANALYSIS_STEPS.map((_, i) => {
+  if (current === -1) return steps.map(() => 'pending');
+  return steps.map((_, i) => {
     if (i < current) return 'done';
     if (i > current) return 'pending';
     return a.status === 'running' ? 'current' : 'pending';   // échec : l'étape atteinte n'est pas terminée

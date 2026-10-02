@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { usePolling } from '../../../shared/lib/usePolling';
 import {
-  ANALYSIS_STEPS, analysisFailureMessage, analysisFailureNote, elapsedMs, formatElapsed, isAnalysisActive, stepStates,
+  analysisFailureMessage, analysisSteps, analysisFailureNote, elapsedMs, formatElapsed, isAnalysisActive, stepStates,
 } from '../lib/analysisStatus';
 import type { OnboardingAnalysis } from '../types';
 
 interface AnalysisProgressProps {
   analysis:    OnboardingAnalysis;
-  /** Ouvre l'onglet « Audit », qui montre l'audit de la dernière analyse réussie. */
+  /** Ouvre l'onglet « À clarifier », qui montre l'audit de la dernière analyse réussie. */
   onOpenAudit: () => void;
 }
 
@@ -23,6 +23,7 @@ export function AnalysisProgress({ analysis, onOpenAudit }: AnalysisProgressProp
   const [now, setNow] = useState(() => Date.now());
   usePolling(() => setNow(Date.now()), 1000, active);
 
+  const steps = analysisSteps(analysis);
   const states = stepStates(analysis);
   const waiting = analysis.status === 'queued';
 
@@ -50,7 +51,7 @@ export function AnalysisProgress({ analysis, onOpenAudit }: AnalysisProgressProp
       )}
 
       <ol className="obp-steps" aria-live="polite">
-        {ANALYSIS_STEPS.map((step, i) => {
+        {steps.map((step, i) => {
           const state = states[i];
           const showCounts = step.counts && state === 'current' && analysis.total > 0;
           return (
