@@ -3,10 +3,12 @@ import { Button }   from '../../../shared/components/ui/Button';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { useToast } from '../../../shared/lib/useToast';
+import { ApiError } from '../../../shared/lib/apiClient';
 import { usePolling } from '../../../shared/lib/usePolling';
 import { formatFull } from '../../../shared/lib/formatDate';
 import { onboardingApi } from '../api/onboardingApi';
 import { ANALYSIS_POLL_MS, analysisFailureMessage, isAnalysisActive } from '../lib/analysisStatus';
+import { isCorpusTooLarge } from '../lib/volume';
 import { AnalysisProgress } from './AnalysisProgress';
 import type { AnalysisQuota, OnboardingAnalysis, OnboardingProject } from '../types';
 
@@ -42,6 +44,9 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
   const [quota,      setQuota]      = useState<AnalysisQuota | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [launching,  setLaunching]  = useState(false);
+  const [launchError, setLaunchError] = useState('');
+  // Des documents retirés ou ajoutés : l'ancien refus ne vaut plus.
+  useEffect(() => { setLaunchError(''); }, [project.documentsCount, project.textChars]);
   /** Décisions de l'audit courant, relues à l'ouverture de la confirmation ; null : inconnu. */
   const [decisionsCount, setDecisionsCount] = useState<number | null>(0);
   const [checking,   setChecking]   = useState(false);
@@ -94,13 +99,16 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
 
   const launch = async () => {
     setLaunching(true);
+    setLaunchError('');
     try {
       const created = await onboardingApi.launchAnalysis(project.id);
       setAnalyses(prev => [created, ...(prev ?? [])]);
       setQuota(q => (q ? { ...q, used: q.used + 1 } : q));
       onChanged();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Impossible de lancer l\'analyse.');
+      // Corpus trop grand : un message qui reste, avec quoi faire, plutôt qu'un toast.
+      if (err instanceof ApiError && err.code === 'CORPUS_TOO_LARGE') setLaunchError(err.message);
+      else toast.error(err instanceof Error ? err.message : 'Impossible de lancer l\'analyse.');
     } finally {
       setLaunching(false);
       setConfirming(false);
@@ -116,6 +124,7 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
     project.documentsCount === 0 ? 'Importez au moins un document pour lancer l\'analyse.'
     : project.cadrageVersion === null ? 'Enregistrez la fiche de cadrage pour lancer l\'analyse.'
     : remaining === 0 ? `Votre espace a atteint son nombre d'analyses (${quota!.max}). Contactez-nous pour en obtenir d'autres.`
+    : isCorpusTooLarge(project) ? 'Les documents dépassent le volume de texte qu\'une analyse peut lire : retirez-en dans « Vos documents ».'
     : null;
   const history = analyses.slice(1);
 
@@ -143,6 +152,7 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
             </Button>
             {blocker && <span className="obp-muted">{blocker}</span>}
           </div>
+          {launchError && <p className="obp-alert" role="alert">{launchError}</p>}
         </section>
       )}
 

@@ -477,3 +477,14 @@
 .obp-clarify-summary p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--neutral-900); }
 .obp-clarify-summary p.obp-muted { color: var(--neutral-500); font-size: 13px; }
 .obp-clarify-nav__title { min-width: 0; overflow-wrap: anywhere; text-align: left; }
+
+/* ── Volume de texte du projet (plafond d'entrée) ─────────────── */
+.obp-volume { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.obp-volume__bar {
+  height: 6px; border-radius: 99px; overflow: hidden; background: var(--neutral-100);
+}
+.obp-volume__fill { display: block; height: 100%; background: var(--brand-500); }
+.obp-volume--warning .obp-volume__fill { background: var(--neutral-700); }
+.obp-volume--over .obp-volume__fill { background: var(--color-danger); }
+.obp-volume__label { margin: 0; font-size: 13px; color: var(--neutral-700); }
+.obp-volume--over .obp-volume__label { color: var(--color-danger); }

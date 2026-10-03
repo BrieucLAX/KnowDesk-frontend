@@ -8,6 +8,8 @@ export interface OnboardingLimits {
   maxDocumentsPerProject: number;
   maxProjectBytes:        number;
   maxFilesPerUpload:      number;
+  /** Caractères de texte qu'une analyse peut lire (plafond d'entrée du back). */
+  maxTextChars?:          number;
 }
 
 export interface OnboardingProjectSummary {
@@ -23,6 +25,10 @@ export interface OnboardingProject extends OnboardingProjectSummary {
   limits:         OnboardingLimits;
   /** Dernière version de la fiche de cadrage, null s'il n'y en a pas. */
   cadrageVersion: number | null;
+  /** Caractères de texte mesurés à l'import, documents non mesurés exclus. */
+  textChars?:           number;
+  /** Documents importés avant la mesure du volume. */
+  unmeasuredDocuments?: number;
 }
 
 /** `zip` : un export Notion, lu document par document par le pipeline. */
@@ -34,6 +40,8 @@ export interface OnboardingDocument {
   format:    OnboardingFormat;
   sizeBytes: number;
   sha256:    string;
+  /** Caractères de texte mesurés à l'import ; null : importé avant la mesure. */
+  textChars?: number | null;
   /** Figé par une analyse : ne peut plus être retiré. */
   locked:    boolean;
   createdAt: string;
