@@ -3,7 +3,7 @@ import { cn } from '../../../shared/lib/cn';
 import { ApiError } from '../../../shared/lib/apiClient';
 import { useToast } from '../../../shared/lib/useToast';
 import { onboardingApi } from '../api/onboardingApi';
-import { ACCEPT_ATTRIBUTE, checkSelection } from '../lib/checkSelection';
+import { ACCEPT_ATTRIBUTE, ACCEPTED_FORMATS_TEXT, checkSelection } from '../lib/checkSelection';
 import { formatBytes } from '../lib/format';
 import type { OnboardingDocument, OnboardingProject } from '../types';
 
@@ -82,7 +82,7 @@ export function UploadZone({ project, onUploaded, onNoticeRequired }: UploadZone
         ) : (
           <>
             <span className="obp-dropzone__main">Déposez vos fichiers ici, ou cliquez pour les choisir</span>
-            <span className="obp-dropzone__hint">PDF, Word (.docx) ou PowerPoint (.pptx)</span>
+            <span className="obp-dropzone__hint">{ACCEPTED_FORMATS_TEXT}</span>
           </>
         )}
       </div>

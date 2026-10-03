@@ -297,4 +297,28 @@ describe('À clarifier (audit 0.8.0)', () => {
       '1 reprend seulement la description d\'une image, pas son texte', '1 introuvable dans le corpus', '2 autre raison',
     ]);
   });
+
+  it('détails de l\'analyse : les fichiers d\'un export Notion que l\'analyse n\'a pas lus, avec leur raison', async () => {
+    const audit = RESPONSE_3.audit as { inventory: object[] };
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue({
+      ...RESPONSE_3,
+      audit: { ...audit, inventory: [
+        ...audit.inventory,
+        { document_id: 'doc_csv', path: 'notion.zip/Export/Base 9c8d.csv', format: 'other', size_bytes: 4,
+          sha256: 'a'.repeat(64), unit_count: 0, status: 'failed', error: 'unsupported_file: format non lu' },
+      ] },
+    } as AuditResponse);
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    const details = screen.getByText('Détails de l\'analyse').closest('details')!;
+    expect(details).toHaveTextContent('L\'analyse n\'a pas lu ces fichiers');
+    expect(details).toHaveTextContent('notion.zip/Export/Base 9c8d.csv : format non lu');
+  });
+
+  it('détails de l\'analyse : tous les fichiers lus, dit comme tel', async () => {
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue(RESPONSE_3);
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    expect(screen.getByText('Détails de l\'analyse').closest('details')!).toHaveTextContent('Tous les fichiers importés ont été lus.');
+  });
 });

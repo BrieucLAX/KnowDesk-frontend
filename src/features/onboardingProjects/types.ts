@@ -25,7 +25,8 @@ export interface OnboardingProject extends OnboardingProjectSummary {
   cadrageVersion: number | null;
 }
 
-export type OnboardingFormat = 'pdf' | 'docx' | 'pptx';
+/** `zip` : un export Notion, lu document par document par le pipeline. */
+export type OnboardingFormat = 'pdf' | 'docx' | 'pptx' | 'md' | 'zip';
 
 export interface OnboardingDocument {
   id:        string;

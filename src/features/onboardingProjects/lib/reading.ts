@@ -10,7 +10,7 @@
  * elle aide à répondre, elle n'entre jamais dans une réponse. Seul son sujet sert aussi de libellé
  * de repérage à la carte (cardTitle).
  */
-import { sourceRef, type SourceRef } from './audit';
+import { sourceRef, type Audit, type SourceRef } from './audit';
 import type { Decision } from './decisions';
 
 export const READING_AUDIT_SCHEMA = '0.8.0';
@@ -315,6 +315,31 @@ export const unverifiedCounts = (counts: Reading['unverifiedQuotes']): Array<[st
   Object.entries(counts)
     .flatMap(([reason, n]): Array<[string, number]> => (n === undefined ? [] : [[reason, n]]))
     .sort(([a], [b]) => Number(a === 'other') - Number(b === 'other'));
+
+/**
+ * Fichiers que l'analyse n'a pas lus (inventaire en échec) : un document
+ * illisible, ou ce qu'une archive d'export Notion contient sans être lu. Le
+ * pipeline les liste avec leur raison (`code: détail`), pour que rien ne soit
+ * écarté en silence.
+ */
+const UNREAD_REASONS: Readonly<Record<string, string>> = {
+  unsafe_archive:     'archive refusée : chemin qui en sort, lien symbolique ou taille excessive',
+  unreadable_archive: 'archive illisible ou chiffrée',
+  nested_archive:     'archive contenue dans une archive, non lue',
+  unsupported_file:   'format non lu',
+  unreferenced_image: 'image citée par aucun document',
+};
+
+export function unreadReasonLabel(error: string | null): string {
+  const code = (error ?? '').split(':', 1)[0].trim();
+  return UNREAD_REASONS[code] ?? 'document illisible';
+}
+
+/** Les fichiers non lus, dans l'ordre de l'inventaire. */
+export const unreadFiles = (audit: Audit): Array<{ path: string; reason: string }> =>
+  audit.inventory
+    .filter(i => i.status === 'failed')
+    .map(i => ({ path: i.path, reason: unreadReasonLabel(i.error) }));
 
 const UNAVAILABLE: Readonly<Record<string, string>> = {
   temporary_notes: 'Notes temporaires',

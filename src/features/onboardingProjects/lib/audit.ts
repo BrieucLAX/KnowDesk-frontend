@@ -115,7 +115,8 @@ export interface UnpairedSummary { reason: string; count: number; explanation: s
 export interface UndefinedReference { id: string; label: string; source: SourceRef | null }
 export interface ObsolescenceHint { id: string; signal: string; source: SourceRef | null }
 
-export interface InventoryItem { documentId: string; path: string; format: string; status: string }
+/** `error` : la raison d'un fichier non lu (`status: 'failed'`), sous la forme `code: détail`. */
+export interface InventoryItem { documentId: string; path: string; format: string; status: string; error: string | null }
 
 export interface Audit {
   generatedAt: string | null;
@@ -229,7 +230,10 @@ export function normalizeAudit(raw: unknown): Audit | null {
     estimatedMinutes: isObj(raw.estimated_duration) ? numOrNull(raw.estimated_duration.minutes) : null,
     inventory: objs(raw.inventory)
       .filter(i => typeof i.document_id === 'string')
-      .map(i => ({ documentId: str(i.document_id), path: str(i.path), format: str(i.format), status: str(i.status, 'pending') })),
+      .map(i => ({
+        documentId: str(i.document_id), path: str(i.path), format: str(i.format), status: str(i.status, 'pending'),
+        error: typeof i.error === 'string' ? i.error : null,
+      })),
     assertions: new Map(objs(raw.assertions)
       .filter(a => typeof a.id === 'string')
       .map(a => [str(a.id), { id: str(a.id), subject: str(a.subject), source: sourceRef(a.source), condition: condition(a.condition) }])),

@@ -4,7 +4,7 @@ import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { documentName, type Audit } from '../../lib/audit';
 import {
   CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, groupByNature,
-  modelNatureLabel, NATURES, orderedCards, rejectionReasonLabel, toQuotes, unavailableLabel, unverifiedCounts, unverifiedReasonLabel, type Reading,
+  modelNatureLabel, NATURES, orderedCards, rejectionReasonLabel, toQuotes, unavailableLabel, unreadFiles, unverifiedCounts, unverifiedReasonLabel, type Reading,
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
 import { ClarifyQuote, ModelAnalysisBox } from './ReadingCardView';
@@ -37,6 +37,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
   const arbitrable = state.status === 'ready' && state.arbitrable;
   const p = cardProgress(reading.cards, current);
   const notesUnavailable = reading.unavailableDetections.includes('temporary_notes');
+  const unread = unreadFiles(audit);
   const unverifiedTotal = Object.values(reading.unverifiedQuotes).reduce<number>((n, c) => n + (c ?? 0), 0);
 
   return (
@@ -160,6 +161,20 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
                 {unverifiedCounts(reading.unverifiedQuotes).map(([reason, n]) => (
                   <li key={reason}>{n} {unverifiedReasonLabel(reason)}</li>
                 ))}
+              </ul>
+            </>
+          )}
+
+          <h4 className="obp-audit-item__title">Fichiers non lus</h4>
+          {unread.length === 0 ? (
+            <p className="obp-muted">Tous les fichiers importés ont été lus.</p>
+          ) : (
+            <>
+              <p className="obp-muted">
+                L'analyse n'a pas lu ces fichiers : aucune carte ne s'appuie sur eux.
+              </p>
+              <ul className="obp-clarify-counts">
+                {unread.map(f => <li key={f.path}>{f.path} : {f.reason}</li>)}
               </ul>
             </>
           )}
