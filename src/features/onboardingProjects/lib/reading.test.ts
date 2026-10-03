@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
   cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
-  missingSide, orderedCards, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
+  missingSide, orderedCards, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
+import type { Audit } from './audit';
 import type { Decision } from './decisions';
 
 const doc = (documentId: string, extra: object = {}) =>
@@ -117,5 +118,29 @@ describe('reading', () => {
     expect(unverifiedReasonLabel('inconnue')).toBe('autre raison');
     expect(unverifiedCounts({ other: 2, image_description_only: 1, not_found: 3 }))
       .toEqual([['image_description_only', 1], ['not_found', 3], ['other', 2]]);
+  });
+});
+
+describe('fichiers non lus', () => {
+  it('chaque raison du pipeline a son libellé ; un échec de lecture, « document illisible »', () => {
+    expect(unreadReasonLabel('unsupported_file: format non lu')).toBe('format non lu');
+    expect(unreadReasonLabel('unreferenced_image: image citée par aucun document')).toBe('image citée par aucun document');
+    expect(unreadReasonLabel('nested_archive: archive dans une archive, non lue')).toBe('archive contenue dans une archive, non lue');
+    expect(unreadReasonLabel('unsafe_archive: chemin qui sort de l\'archive')).toContain('archive refusée');
+    expect(unreadReasonLabel('unreadable_archive: archive chiffrée')).toBe('archive illisible ou chiffrée');
+    expect(unreadReasonLabel('UnicodeDecodeError: invalid start byte')).toBe('document illisible');
+    expect(unreadReasonLabel(null)).toBe('document illisible');
+  });
+
+  it('seuls les fichiers en échec, dans l\'ordre de l\'inventaire', () => {
+    const audit = { inventory: [
+      { documentId: 'a', path: 'export.zip/Export/Page.md', format: 'md', status: 'parsed', error: null },
+      { documentId: 'b', path: 'export.zip/Export/Base.csv', format: 'other', status: 'failed', error: 'unsupported_file: format non lu' },
+      { documentId: 'c', path: 'vieux.md', format: 'md', status: 'failed', error: 'UnicodeDecodeError: x' },
+    ] } as unknown as Audit;
+    expect(unreadFiles(audit)).toEqual([
+      { path: 'export.zip/Export/Base.csv', reason: 'format non lu' },
+      { path: 'vieux.md', reason: 'document illisible' },
+    ]);
   });
 });

@@ -16,7 +16,9 @@ interface DocumentsTabProps {
   onChanged: () => void;
 }
 
-const FORMAT_LABEL: Record<OnboardingDocument['format'], string> = { pdf: 'PDF', docx: 'Word', pptx: 'PowerPoint' };
+const FORMAT_LABEL: Record<OnboardingDocument['format'], string> = {
+  pdf: 'PDF', docx: 'Word', pptx: 'PowerPoint', md: 'Markdown', zip: 'Export Notion (.zip)',
+};
 
 /** Documents du projet : texte d'information, import, liste, retrait. */
 export function DocumentsTab({ project, onChanged }: DocumentsTabProps) {

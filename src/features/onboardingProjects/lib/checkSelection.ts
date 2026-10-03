@@ -1,8 +1,11 @@
 import type { OnboardingLimits } from '../types';
 import { formatBytes } from './format';
 
-/** Formats lus par le pipeline, comme ONBOARDING_FORMATS côté back. */
-export const ACCEPTED_EXTENSIONS = ['pdf', 'docx', 'pptx'] as const;
+/** Formats lus par le pipeline, comme ONBOARDING_FORMATS côté back ; `zip` : un export Notion. */
+export const ACCEPTED_EXTENSIONS = ['pdf', 'docx', 'pptx', 'md', 'zip'] as const;
+
+/** Les formats acceptés, en clair (message d'erreur et aide de la zone d'import). */
+export const ACCEPTED_FORMATS_TEXT = 'PDF, Word (.docx), PowerPoint (.pptx), Markdown (.md) ou export Notion (.zip)';
 export const ACCEPT_ATTRIBUTE = ACCEPTED_EXTENSIONS.map(e => `.${e}`).join(',');
 
 interface Usage {
@@ -33,7 +36,7 @@ export function checkSelection(files: File[], limits: OnboardingLimits, usage: U
 
   const unsupported = files.filter(f => !(ACCEPTED_EXTENSIONS as readonly string[]).includes(extension(f.name)));
   if (unsupported.length) {
-    return `Format non pris en charge : ${quote(unsupported.map(f => f.name))}. Formats acceptés : PDF, Word (.docx) et PowerPoint (.pptx).`;
+    return `Format non pris en charge : ${quote(unsupported.map(f => f.name))}. Formats acceptés : ${ACCEPTED_FORMATS_TEXT}.`;
   }
 
   const empty = files.filter(f => f.size === 0);

@@ -43,18 +43,20 @@ const ZONES: Readonly<Record<string, string>> = { table: 'tableau', notes: 'note
 
 /**
  * Emplacement d'un extrait dans son document : page (pdf), diapositive
- * (pptx), titres et bloc (docx), puis zone et cellule de tableau.
+ * (pptx), titres et bloc (docx, et Markdown repéré de la même façon), puis
+ * zone et cellule de tableau.
  */
 export function sourceLocation(s: SourceRef): string {
   const parts: string[] = [];
   if (s.format === 'pdf' && s.page !== null) parts.push(`page ${s.page}`);
   else if (s.format === 'pptx' && s.slide !== null) parts.push(`diapositive ${s.slide}`);
-  else if (s.format === 'docx') {
+  else if (s.format === 'docx' || s.format === 'md') {
     if (s.headingPath.length > 0) parts.push(s.headingPath.join(' › '));
     if (s.blockIndex !== null) parts.push(`${s.blockKind === 'table' ? 'tableau' : 'paragraphe'} ${s.blockIndex + 1}`);
   }
   if (parts.length === 0) parts.push('emplacement non précisé');
-  if (has(ZONES, s.zone) && !(s.format === 'docx' && s.zone === 'table' && s.blockKind === 'table')) {
+  const sectioned = s.format === 'docx' || s.format === 'md';
+  if (has(ZONES, s.zone) && !(sectioned && s.zone === 'table' && s.blockKind === 'table')) {
     parts.push(ZONES[s.zone]);
   }
   if (s.tableCell) parts.push(`ligne ${s.tableCell.row + 1}, colonne ${s.tableCell.column + 1}`);

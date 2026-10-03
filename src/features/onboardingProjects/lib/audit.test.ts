@@ -171,7 +171,16 @@ describe('emplacement d\'un extrait', () => {
       .toBe('tableau 2, ligne 1, colonne 3');
   });
 
+  it('Markdown : titres et bloc, comme un docx', () => {
+    expect(sourceLocation({ ...base, format: 'md', headingPath: ['Tiers payant', '5.1 Synthèse'], blockKind: 'paragraph', blockIndex: 2 }))
+      .toBe('Tiers payant › 5.1 Synthèse, paragraphe 3');
+    expect(sourceLocation({ ...base, format: 'md', headingPath: ['Tarifs'], blockKind: 'table', blockIndex: 0, zone: 'table' }))
+      .toBe('Tarifs, tableau 1');
+    expect(sourceLocation({ ...base, format: 'md', headingPath: [], blockKind: 'paragraph', blockIndex: 0, zone: 'image' }))
+      .toBe('paragraphe 1, image');
+  });
+
   it('format inconnu (version suivante) : emplacement non précisé', () => {
-    expect(sourceLocation({ ...base, format: 'md' })).toBe('emplacement non précisé');
+    expect(sourceLocation({ ...base, format: 'odt' })).toBe('emplacement non précisé');
   });
 });
