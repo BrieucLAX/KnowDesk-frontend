@@ -85,6 +85,34 @@ describe('AnalysisTab', () => {
     expect(screen.queryByRole('heading', { name: /Analyse en/ })).not.toBeInTheDocument();
   });
 
+  it('corpus trop grand au lancement : le message du back reste affiché, sans toast fugace', async () => {
+    const message = 'Les documents et la fiche de cadrage comptent environ 460 000 caractères de texte, soit 102 % de ce qu\'une analyse peut lire (450 000 au plus). Retirez des documents, ou répartissez-les entre plusieurs projets.';
+    vi.mocked(onboardingApi.launchAnalysis).mockRejectedValue(new ApiError('CORPUS_TOO_LARGE', message, 422));
+    render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={() => {}} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Lancer l\'analyse' }));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Lancer l\'analyse' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(message);
+  });
+
+  it('volume mesuré déjà au-delà du plafond : le lancement est bloqué, avec quoi faire', async () => {
+    render(<AnalysisTab
+      project={project({ limits: { ...project().limits, maxTextChars: 450_000 }, textChars: 500_000, unmeasuredDocuments: 0 })}
+      onChanged={() => {}} onOpenAudit={() => {}}
+    />);
+    expect(await screen.findByRole('button', { name: 'Lancer l\'analyse' })).toBeDisabled();
+    expect(screen.getByText(/dépassent le volume de texte qu'une analyse peut lire : retirez-en/)).toBeInTheDocument();
+  });
+
+  it('échec `corpus_too_large` : le motif, et une invitation à retirer des documents plutôt qu\'à relancer', async () => {
+    vi.mocked(onboardingApi.listAnalyses).mockResolvedValue(listed([
+      analysis({ status: 'failed', errorCode: 'corpus_too_large', finishedAt: new Date().toISOString() }),
+    ]));
+    render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={() => {}} />);
+    expect(await screen.findByText(/Les documents dépassent le volume de texte/)).toBeInTheDocument();
+    expect(screen.getByText(/Retirez des documents dans « Vos documents »/)).toBeInTheDocument();
+    expect(screen.queryByText(/vous pouvez la relancer/)).not.toBeInTheDocument();
+  });
+
   it('relit l\'analyse active toutes les 5 s et s\'arrête à la fin', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     vi.mocked(onboardingApi.listAnalyses).mockResolvedValue(listed([analysis({ status: 'running', stage: 'parsing', done: 1, total: 2 })]));

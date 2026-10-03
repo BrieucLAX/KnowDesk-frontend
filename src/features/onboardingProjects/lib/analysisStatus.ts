@@ -102,6 +102,7 @@ const FAILURE_MESSAGES = new Map<string, string>(Object.entries({
   schema_mismatch:      'Le résultat de l\'analyse n\'est pas dans le format attendu.',
   input_missing:        'Un document ou la fiche de cadrage a disparu avant l\'envoi.',
   cancelled:            'L\'analyse a été annulée.',
+  corpus_too_large:     'Les documents dépassent le volume de texte qu\'une analyse peut lire.',
 }));
 
 export function analysisFailureMessage(code: string | null): string {
@@ -115,8 +116,15 @@ export function analysisFailureMessage(code: string | null): string {
  */
 const NOT_RETRYABLE = new Set(['provider_auth', 'pipeline_invalid_error_code']);
 
-/** Suite du message d'échec : l'analyse ne compte pas dans le quota ; relancer, si cela peut servir. */
+/**
+ * Suite du message d'échec : l'analyse ne compte pas dans le quota ; relancer,
+ * si cela peut servir. Un corpus trop grand échouerait de nouveau : il faut
+ * d'abord retirer des documents (le back les a libérés).
+ */
 export function analysisFailureNote(code: string | null): string {
+  if (code === 'corpus_too_large') {
+    return 'Elle ne compte pas dans votre quota. Retirez des documents dans « Vos documents » avant de lancer une nouvelle analyse.';
+  }
   return code !== null && NOT_RETRYABLE.has(code)
     ? 'Elle ne compte pas dans votre quota. Nous sommes prévenus.'
     : 'Elle ne compte pas dans votre quota : vous pouvez la relancer.';

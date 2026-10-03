@@ -68,4 +68,11 @@ describe('analysisStatus', () => {
     expect(analysisFailureNote('provider_error')).toContain('vous pouvez la relancer');
     expect(analysisFailureNote(null)).toContain('vous pouvez la relancer');
   });
+
+  it('corpus trop grand : un libellé, et jamais « vous pouvez la relancer »', () => {
+    expect(analysisFailureMessage('corpus_too_large')).toBe('Les documents dépassent le volume de texte qu\'une analyse peut lire.');
+    const note = analysisFailureNote('corpus_too_large');
+    expect(note).not.toContain('relancer');
+    expect(note).toContain('Retirez des documents dans « Vos documents »');
+  });
 });

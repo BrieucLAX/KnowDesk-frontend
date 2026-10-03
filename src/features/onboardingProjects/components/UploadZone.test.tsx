@@ -58,4 +58,26 @@ describe('UploadZone', () => {
     pick(container, ['a.pdf']);
     await waitFor(() => expect(onNoticeRequired).toHaveBeenCalled());
   });
+
+  it('jauge du volume de texte : part du maximum, documents non mesurés signalés', () => {
+    const measured = { ...project, limits: { ...project.limits, maxTextChars: 450_000 }, textChars: 380_000, unmeasuredDocuments: 1 };
+    render(<UploadZone project={measured} onUploaded={() => {}} onNoticeRequired={() => {}} />);
+    const meter = screen.getByRole('meter', { name: 'Volume de texte du projet' });
+    expect(meter).toHaveAttribute('aria-valuenow', '84');
+    expect(screen.getByText('Volume de texte : 84 % de ce qu\'une analyse peut lire.')).toBeInTheDocument();
+    expect(screen.getByText('Un document importé avant cette mesure n\'est pas compté.')).toBeInTheDocument();
+  });
+
+  it('sans volume exposé par le back : pas de jauge', () => {
+    render(<UploadZone project={project} onUploaded={() => {}} onNoticeRequired={() => {}} />);
+    expect(screen.queryByRole('meter')).not.toBeInTheDocument();
+  });
+
+  it('corpus trop grand à l\'import : le message du back, qui dit de combien et quoi faire', async () => {
+    const message = 'Avec ces fichiers, le projet compterait environ 470 000 caractères de texte, soit 104 % de ce qu\'une analyse peut lire (450 000 au plus). Retirez des documents, ou répartissez-les entre plusieurs projets.';
+    vi.mocked(onboardingApi.uploadDocuments).mockRejectedValue(new ApiError('CORPUS_TOO_LARGE', message, 422));
+    const { container } = render(<UploadZone project={project} onUploaded={() => {}} onNoticeRequired={() => {}} />);
+    pick(container, ['gros.pdf']);
+    expect(await screen.findByRole('alert')).toHaveTextContent(`Aucun fichier n'a été importé : ${message}`);
+  });
 });
