@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { SuperadminSession, OrgRow, TestOrgCreated } from '../types';
+import type { SuperadminSession, OrgRow, TestOrgCreated, OnboardingProjectRow, PurgeReport } from '../types';
 import type { OrgPlan } from '../../../shared/types';
 import { useAuthStore } from '../../../store/authStore';
 
@@ -170,6 +170,30 @@ export function useSuperadmin() {
     setOrgs(prev => prev.map(o => o.id === orgId ? { ...o, disabled_at: org.disabled_at, test_ended_at: org.test_ended_at } : o));
   }, [session]);
 
+  /** Projets d'onboarding d'une organisation de test, pour choisir quoi purger. */
+  const listOnboardingProjects = useCallback(async (orgId: string): Promise<OnboardingProjectRow[]> => {
+    if (!session) throw new Error('Non connecté.');
+    return saFetch<OnboardingProjectRow[]>(`/organizations/${orgId}/onboarding-projects`, session.accessToken);
+  }, [session]);
+
+  /**
+   * « Supprimer les données de test » : toute l'organisation (projectId absent)
+   * ou un projet. L'organisation et ses comptes restent. Une purge
+   * d'organisation pose onboarding_purged_at.
+   */
+  const purgeTestData = useCallback(async (orgId: string, projectId?: string): Promise<PurgeReport> => {
+    if (!session) throw new Error('Non connecté.');
+    const path = projectId
+      ? `/organizations/${orgId}/onboarding/projects/${projectId}/purge`
+      : `/organizations/${orgId}/onboarding/purge`;
+    const report = await saFetch<PurgeReport>(path, session.accessToken, { method: 'POST' });
+    if (!projectId) {
+      const purgedAt = new Date().toISOString();
+      setOrgs(prev => prev.map(o => o.id === orgId ? { ...o, onboarding_purged_at: purgedAt } : o));
+    }
+    return report;
+  }, [session]);
+
   // Recharge les orgs quand la session est établie
   useEffect(() => {
     if (session?.accessToken) loadOrgs(session.accessToken);
@@ -205,5 +229,6 @@ export function useSuperadmin() {
     session, orgs, loading, error, loginErr,
     login, logout, loadOrgs, disableOrg, enableOrg, impersonate,
     reindexSearch, recomputeResolutions, createTestOrg, endTest,
+    listOnboardingProjects, purgeTestData,
   };
 }
