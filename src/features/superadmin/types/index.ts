@@ -25,7 +25,23 @@ export interface OrgRow {
   enabled_modules: string[];
   /** Fin du test (« Terminer le test ») : point de départ de la purge à J+30. */
   test_ended_at:   string | null;
+  /** Dernière purge des données de test de toute l'organisation (étape D). */
+  onboarding_purged_at: string | null;
   stats:       OrgStats;
+}
+
+/** GET /superadmin/organizations/:id/onboarding-projects : aucun nom, contenu du client. */
+export interface OnboardingProjectRow {
+  id:        string;
+  createdAt: string;
+  documents: number;
+}
+
+/** Réponse des routes de purge : objets R2 et lignes supprimés, par table. */
+export interface PurgeReport {
+  scope:   'org' | 'project';
+  objects: number;
+  rows:    Record<string, number>;
 }
 
 /** Réponse de POST /superadmin/test-organizations. */

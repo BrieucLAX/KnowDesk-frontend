@@ -5,6 +5,8 @@ import { Button }          from '../../../shared/components/ui/Button';
 import { ConfirmDialog }   from '../../../shared/components/ui/ConfirmDialog';
 import { formatRelative }  from '../../../shared/lib/formatDate';
 import { CreateTestOrgModal } from './CreateTestOrgModal';
+import { TestDataModal }     from './TestDataModal';
+import { formatDay, orgStatus, scheduledPurgeDate } from '../lib/testOrgStatus';
 
 /** Organisation de test : créée par la route superadmin, module onboarding seul. */
 const isTestOrg = (org: { enabled_modules?: string[] }) => org.enabled_modules?.includes('onboarding') ?? false;
@@ -13,7 +15,7 @@ export function SuperadminApp() {
   const {
     session, orgs, loading, error, loginErr,
     login, logout, disableOrg, enableOrg, impersonate, reindexSearch, recomputeResolutions,
-    createTestOrg, endTest,
+    createTestOrg, endTest, listOnboardingProjects, purgeTestData,
   } = useSuperadmin();
 
   const [email,        setEmail]        = useState('');
@@ -30,6 +32,8 @@ export function SuperadminApp() {
   const [endTestTarget,   setEndTestTarget]   = useState<{ id: string; name: string } | null>(null);
   const [endTestLoading,  setEndTestLoading]  = useState(false);
   const [endTestError,    setEndTestError]    = useState('');
+  // Étape D — données de test d'une organisation, et leur purge
+  const [testDataOrg,     setTestDataOrg]     = useState<{ id: string; name: string } | null>(null);
 
   const confirmEndTest = async () => {
     if (!endTestTarget) return;
@@ -275,12 +279,10 @@ export function SuperadminApp() {
                       <td>{org.stats.articlesCount}</td>
                       <td>{formatRelative(org.created_at)}</td>
                       <td>
-                        {org.test_ended_at
-                          ? <span className="sa-status sa-status--disabled" title={`Test terminé ${formatRelative(org.test_ended_at)}`}>Test terminé</span>
-                          : org.disabled_at
-                            ? <span className="sa-status sa-status--disabled">Désactivé</span>
-                            : <span className="sa-status sa-status--active">Actif</span>
-                        }
+                        {(() => {
+                          const status = orgStatus(org);
+                          return <span className={`sa-status sa-status--${status.tone}`} title={status.title}>{status.label}</span>;
+                        })()}
                       </td>
                       <td>
   <div className="sa-org__actions">
@@ -306,6 +308,13 @@ export function SuperadminApp() {
       <Button variant="danger" size="sm"
         onClick={() => { setEndTestError(''); setEndTestTarget({ id: org.id, name: org.name }); }}>
         Terminer le test
+      </Button>
+    )}
+    {/* Avant comme après la fin du test : suppression immédiate sur demande. */}
+    {isTestOrg(org) && (
+      <Button variant="ghost" size="sm"
+        onClick={() => setTestDataOrg({ id: org.id, name: org.name })}>
+        Données de test
       </Button>
     )}
   </div>
@@ -348,8 +357,9 @@ export function SuperadminApp() {
           title={`Terminer le test de « ${endTestTarget.name} »`}
           description={
             'L\'espace est désactivé immédiatement : ses utilisateurs ne peuvent plus se connecter. '
-          + 'La date de fin du test est enregistrée : elle fixe la purge des données de test à 30 jours '
-          + '(purge automatique pas encore livrée, étape D du plan). '
+          + 'Ses données de test (documents, fiches, analyses, audits, décisions) seront supprimées '
+          + `automatiquement 30 jours après, le ${formatDay(scheduledPurgeDate(new Date().toISOString()))}. `
+          + 'Pour les supprimer tout de suite, utilisez « Données de test ». '
           + 'C\'est définitif : l\'espace ne pourra pas être réactivé.'
           }
           confirmLabel="Terminer le test"
@@ -357,6 +367,15 @@ export function SuperadminApp() {
           loading={endTestLoading}
           onConfirm={confirmEndTest}
           onCancel={() => setEndTestTarget(null)}
+        />
+      )}
+
+      {testDataOrg && (
+        <TestDataModal
+          org={testDataOrg}
+          listProjects={listOnboardingProjects}
+          purge={purgeTestData}
+          onClose={() => setTestDataOrg(null)}
         />
       )}
 

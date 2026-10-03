@@ -86,3 +86,16 @@
 .sa-test-org__link { display: flex; align-items: flex-start; gap: 8px; }
 .sa-test-org__link .field { flex: 1; margin: 0; }
 .sa-test-org__link .btn { margin-top: 22px; }
+
+/* ── Données de test et purge (étape D) ───────────────────────── */
+.sa-status--purged { background: var(--neutral-100); color: var(--neutral-600); }
+.sa-test-data { display: flex; flex-direction: column; gap: 12px; font-size: 13px; }
+.sa-test-data p { margin: 0; }
+.sa-test-data__desc  { color: var(--neutral-500); }
+.sa-test-data__ok    { color: var(--color-success); }
+.sa-test-data__error { color: var(--color-danger); }
+.sa-test-data__list  { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.sa-test-data__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 6px 8px; border: 1px solid var(--neutral-200); border-radius: 6px;
+}
