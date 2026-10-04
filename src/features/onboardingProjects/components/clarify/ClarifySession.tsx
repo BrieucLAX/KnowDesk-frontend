@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
-import { documentName, type Audit } from '../../lib/audit';
+import { docNaming, type Audit } from '../../lib/audit';
 import {
   CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, firstOpenCard, groupByNature, NATURES, orderedCards, type Reading,
 } from '../../lib/reading';
@@ -31,7 +31,7 @@ export function ClarifySession({ audit, reading, projectId, analysisId, arbitrat
   const groups  = useMemo(() => groupByNature(reading.cards), [reading.cards]);
   const current = arbitration.state.status === 'ready' ? arbitration.state.current : new Map();
   const arbitrable = arbitration.state.status === 'ready' && arbitration.state.arbitrable;
-  const name = (id: string) => documentName(audit, id);
+  const docs = useMemo(() => docNaming(audit), [audit]);
 
   const [index, setIndex] = useState(() => {
     const start = startCardId === null ? -1 : ordered.findIndex(c => c.id === startCardId);
@@ -103,11 +103,11 @@ export function ClarifySession({ audit, reading, projectId, analysisId, arbitrat
               current={decision}
               arbitrable={arbitrable}
               busy={arbitration.pending === card.id}
-              name={name}
+              docs={docs}
               onAnswer={action => arbitration.answer(card.id, action)}
               onCancel={() => arbitration.cancel({ id: card.id })}
             />
-            <CardHistory projectId={projectId} analysisId={analysisId} card={card} name={name} currentId={decision?.id ?? null} />
+            <CardHistory projectId={projectId} analysisId={analysisId} card={card} docs={docs} currentId={decision?.id ?? null} />
           </div>
           <div className="obp-arb__nav">
             <Button variant="ghost" size="sm" disabled={i === 0} onClick={() => setIndex(i - 1)}>← Précédente</Button>

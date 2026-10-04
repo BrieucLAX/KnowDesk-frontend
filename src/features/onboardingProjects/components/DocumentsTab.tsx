@@ -17,7 +17,7 @@ interface DocumentsTabProps {
 }
 
 const FORMAT_LABEL: Record<OnboardingDocument['format'], string> = {
-  pdf: 'PDF', docx: 'Word', pptx: 'PowerPoint', md: 'Markdown', zip: 'Export Notion (.zip)',
+  pdf: 'PDF', docx: 'Word', pptx: 'PowerPoint', md: 'Markdown', zip: 'Archive (.zip)',
 };
 
 /** Documents du projet : texte d'information, import, liste, retrait. */

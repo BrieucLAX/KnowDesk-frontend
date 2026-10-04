@@ -16,7 +16,7 @@ describe('checkSelection', () => {
     expect(checkSelection([file('a.pdf'), file('b.DOCX'), file('c.pptx')], limits, empty)).toBeNull();
   });
 
-  it('accepte un fichier Markdown et un export Notion (.zip)', () => {
+  it('accepte un fichier Markdown et une archive .zip', () => {
     expect(checkSelection([file('faq.md'), file('Export-Notion.ZIP')], limits, empty)).toBeNull();
   });
 
@@ -27,7 +27,7 @@ describe('checkSelection', () => {
 
   it('nomme les fichiers refusés', () => {
     expect(checkSelection([file('a.pdf'), file('base.csv')], limits, empty)).toBe(
-      'Format non pris en charge : « base.csv ». Formats acceptés : PDF, Word (.docx), PowerPoint (.pptx), Markdown (.md) ou export Notion (.zip).',
+      'Format non pris en charge : « base.csv ». Formats acceptés : PDF, Word (.docx), PowerPoint (.pptx), Markdown (.md) ou archive .zip (un export Notion, par exemple).',
     );
     expect(checkSelection([file('vide.pdf', 0)], limits, empty)).toContain('« vide.pdf »');
     expect(checkSelection([file('gros.pdf', 51 * MB)], limits, empty)).toBe('Un fichier pèse 50 Mo au plus : « gros.pdf ».');

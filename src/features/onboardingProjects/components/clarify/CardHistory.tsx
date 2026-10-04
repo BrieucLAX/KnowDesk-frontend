@@ -3,6 +3,7 @@ import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { useToast } from '../../../../shared/lib/useToast';
 import { formatFull } from '../../../../shared/lib/formatDate';
 import { onboardingApi } from '../../api/onboardingApi';
+import { namedLabel, type DocNaming } from '../../lib/audit';
 import type { Decision } from '../../lib/decisions';
 import { describeCardAnswer, type ReadingCard } from '../../lib/reading';
 
@@ -10,7 +11,7 @@ interface CardHistoryProps {
   projectId:  string;
   analysisId: string;
   card:       ReadingCard;
-  name:       (documentId: string) => string;
+  docs:       DocNaming;
   /** Réponse courante : l'historique se relit quand elle change. */
   currentId:  string | null;
 }
@@ -19,7 +20,7 @@ interface CardHistoryProps {
  * Historique d'une carte : chaque réponse, son auteur, sa date, annulée ou non. Rien n'est
  * jamais effacé : une réponse s'annule par une nouvelle ligne. Chargé à l'ouverture.
  */
-export function CardHistory({ projectId, analysisId, card, name, currentId }: CardHistoryProps) {
+export function CardHistory({ projectId, analysisId, card, docs, currentId }: CardHistoryProps) {
   const toast = useToast();
   const [open,  setOpen]  = useState(false);
   const [items, setItems] = useState<Decision[] | null>(null);
@@ -45,18 +46,21 @@ export function CardHistory({ projectId, analysisId, card, name, currentId }: Ca
         <p className="obp-muted">Aucune réponse pour l'instant.</p>
       ) : (
         <ol className="obp-decision-history__list" aria-label="Historique de la carte">
-          {items.map(d => (
-            <li key={d.id} className={d.cancelledAt ? 'obp-decision-history__item--cancelled' : undefined}>
-              <span>{describeCardAnswer(d.action, card, name)}</span>
-              <span className="obp-muted">
-                {'text' in d.action ? ` — saisi par ${d.decidedBy.name} le ${formatFull(d.decidedAt)}` : ` — ${d.decidedBy.name}, ${formatFull(d.decidedAt)}`}
-              </span>
-              {d.cancelledAt && (
-                <span className="obp-muted"> · annulée par {d.cancelledBy?.name ?? '—'}, {formatFull(d.cancelledAt)}</span>
-              )}
-              {d.id === currentId && <span className="obp-decision-history__current"> · réponse courante</span>}
-            </li>
-          ))}
+          {items.map(d => {
+            const { label, title } = namedLabel(docs, name => describeCardAnswer(d.action, card, name));
+            return (
+              <li key={d.id} className={d.cancelledAt ? 'obp-decision-history__item--cancelled' : undefined}>
+                <span title={title}>{label}</span>
+                <span className="obp-muted">
+                  {'text' in d.action ? ` — saisi par ${d.decidedBy.name} le ${formatFull(d.decidedAt)}` : ` — ${d.decidedBy.name}, ${formatFull(d.decidedAt)}`}
+                </span>
+                {d.cancelledAt && (
+                  <span className="obp-muted"> · annulée par {d.cancelledBy?.name ?? '—'}, {formatFull(d.cancelledAt)}</span>
+                )}
+                {d.id === currentId && <span className="obp-decision-history__current"> · réponse courante</span>}
+              </li>
+            );
+          })}
         </ol>
       )}
     </details>

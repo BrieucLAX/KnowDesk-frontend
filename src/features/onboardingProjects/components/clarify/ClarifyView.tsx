@@ -1,12 +1,13 @@
 import React from 'react';
 import { Button }   from '../../../../shared/components/ui/Button';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
-import { documentName, type Audit } from '../../lib/audit';
+import { docNaming, fileName, type Audit } from '../../lib/audit';
 import {
   CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, groupByNature,
   modelNatureLabel, NATURES, orderedCards, rejectionReasonLabel, toQuotes, unavailableLabel, unreadFiles, unverifiedCounts, unverifiedReasonLabel, type Reading,
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
+import { AiFileName, DocNames, FileName } from '../audit/DocName';
 import { ClarifyQuote, ModelAnalysisBox } from './ReadingCardView';
 import { CurrentAnswer } from './CardAnswers';
 
@@ -24,13 +25,14 @@ const STATUS_CLASS = { open: 'todo', answered: 'decided', later: 'later' } as co
  * Vue d'ensemble de l'audit 0.8.0 : le nombre de cartes annoncé et son résumé (cartes par nature,
  * dont celles qui bloquent la publication), les cartes regroupées par nature et nommées par leur
  * sujet, les notes temporaires à part, et le volet replié « Détails de l'analyse » (points
- * écartés, citations non vérifiées). Une détection que la lecture ne produit pas encore
- * s'affiche « non disponible », jamais « 0 ».
+ * écartés, citations non vérifiées, fichiers non lus). Une détection que la lecture ne produit
+ * pas encore n'apparaît pas dans la vue d'ensemble, jamais comme « 0 » : seul le volet de
+ * détails la mentionne, en clair.
  */
 export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyViewProps) {
   const ordered = orderedCards(reading.cards);
   const groups = groupByNature(reading.cards);
-  const name = (id: string) => documentName(audit, id);
+  const docs = docNaming(audit);
   const { state } = arbitration;
   const ready = state.status === 'ready';
   const current = state.status === 'ready' ? state.current : new Map();
@@ -50,9 +52,9 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
         </h3>
         <div className="obp-clarify-summary">
           {describeSummary(clarifySummary(reading.cards, current), ready).map(line => <p key={line}>{line}</p>)}
-          <p className="obp-muted">
-            Notes temporaires : {notesUnavailable ? <span className="obp-clarify-unavailable">non disponible</span> : reading.temporaryNotes.length}
-          </p>
+          {!notesUnavailable && (
+            <p className="obp-muted">Notes temporaires : {reading.temporaryNotes.length}</p>
+          )}
         </div>
         {state.status === 'loading' && <Skeleton className="obp-arb-entry__loading" />}
         {ready && reading.cards.length > 0 && (
@@ -84,10 +86,10 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
                 <li key={c.id} className="obp-clarify-row">
                   <button type="button" className="obp-clarify-row__open" onClick={() => onOpen(c.id)}>
                     <span className="obp-clarify-row__title">{cardTitle(c, ordered.indexOf(c) + 1)}</span>
-                    <span className="obp-clarify-row__docs">{c.documentIds.map(name).join(', ')}</span>
+                    <span className="obp-clarify-row__docs"><DocNames audit={audit} ids={c.documentIds} /></span>
                     {ready && <span className={`obp-arb__status obp-arb__status--${STATUS_CLASS[st]}`}>{CARD_STATUS_LABEL[st]}</span>}
                   </button>
-                  {decision && <CurrentAnswer card={c} current={decision} name={name} />}
+                  {decision && <CurrentAnswer card={c} current={decision} docs={docs} />}
                 </li>
               );
             })}
@@ -95,32 +97,29 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
         </section>
       ))}
 
-      <section className="obp-audit-section" aria-labelledby="obp-clarify-notes">
-        <h3 id="obp-clarify-notes" className="obp-section-title">Notes temporaires</h3>
-        {notesUnavailable ? (
-          <p className="obp-muted">
-            Non disponible : la lecture ne repère pas encore les situations temporaires (maintenance, période limitée).
-            Leur absence ici ne veut pas dire qu'il n'y en a pas.
-          </p>
-        ) : reading.temporaryNotes.length === 0 ? (
-          <p className="obp-muted">Aucune note temporaire.</p>
-        ) : (
-          <ul className="obp-audit-list">
-            {reading.temporaryNotes.map(n => (
-              <li key={n.id} className="obp-audit-card">
-                <p className="obp-audit-card__title">
-                  {n.window.start || n.window.end
-                    ? `Du ${n.window.start ?? '…'} au ${n.window.end ?? '…'}`
-                    : 'Période non précisée'}
-                  <span className="obp-muted"> · rien à trancher</span>
-                </p>
-                {toQuotes(n.quotes).map((q, i) => <ClarifyQuote key={i} audit={audit} quote={q} />)}
-                <ModelAnalysisBox analysis={n.analysis} />
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      {!notesUnavailable && (
+        <section className="obp-audit-section" aria-labelledby="obp-clarify-notes">
+          <h3 id="obp-clarify-notes" className="obp-section-title">Notes temporaires</h3>
+          {reading.temporaryNotes.length === 0 ? (
+            <p className="obp-muted">Aucune note temporaire.</p>
+          ) : (
+            <ul className="obp-audit-list">
+              {reading.temporaryNotes.map(n => (
+                <li key={n.id} className="obp-audit-card">
+                  <p className="obp-audit-card__title">
+                    {n.window.start || n.window.end
+                      ? `Du ${n.window.start ?? '…'} au ${n.window.end ?? '…'}`
+                      : 'Période non précisée'}
+                    <span className="obp-muted"> · rien à trancher</span>
+                  </p>
+                  {toQuotes(n.quotes).map((q, i) => <ClarifyQuote key={i} audit={audit} quote={q} />)}
+                  <ModelAnalysisBox analysis={n.analysis} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
 
       <details className="obp-audit-folded">
         <summary>Détails de l'analyse</summary>
@@ -135,11 +134,15 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
                   <p className="obp-audit-item__title">
                     {modelNatureLabel(r.nature)} · {rejectionReasonLabel(r.reason)}
                   </p>
-                  {r.documents.length > 0 && <p className="obp-muted">Documents nommés par l'IA : {r.documents.join(', ')}</p>}
+                  {r.documents.length > 0 && (
+                    <p className="obp-muted">
+                      Documents nommés par l'IA : {r.documents.map((d, j) => <React.Fragment key={j}>{j > 0 && ', '}<AiFileName path={d} /></React.Fragment>)}
+                    </p>
+                  )}
                   {toQuotes(r.briefingQuotes).map((q, i) => <ClarifyQuote key={i} audit={audit} quote={q} />)}
                   {r.unverifiedQuotes.map((u, i) => (
                     <p key={i} className="obp-clarify-unverified">
-                      Texte rendu par l'IA ({u.document}, {unverifiedReasonLabel(u.reason)}), qui n'est pas une citation : {u.text}
+                      Texte rendu par l'IA (<AiFileName path={u.document} />, {unverifiedReasonLabel(u.reason)}), qui n'est pas une citation : {u.text}
                     </p>
                   ))}
                   <ModelAnalysisBox analysis={r.analysis} />
@@ -174,16 +177,16 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
                 L'analyse n'a pas lu ces fichiers : aucune carte ne s'appuie sur eux.
               </p>
               <ul className="obp-clarify-counts">
-                {unread.map(f => <li key={f.path}>{f.path} : {f.reason}</li>)}
+                {unread.map(f => <li key={f.path}><FileName name={fileName(f.path)} path={f.path} /> : {f.reason}</li>)}
               </ul>
             </>
           )}
 
           {reading.unavailableDetections.length > 0 && (
             <>
-              <h4 className="obp-audit-item__title">Non disponible</h4>
+              <h4 className="obp-audit-item__title">Ce que l'analyse ne repère pas encore</h4>
               <ul className="obp-clarify-counts">
-                {reading.unavailableDetections.map(d => <li key={d}>{unavailableLabel(d)} : non disponible</li>)}
+                {reading.unavailableDetections.map(d => <li key={d}>{unavailableLabel(d)}</li>)}
               </ul>
             </>
           )}

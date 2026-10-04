@@ -1,11 +1,11 @@
 import type { OnboardingLimits } from '../types';
 import { formatBytes } from './format';
 
-/** Formats lus par le pipeline, comme ONBOARDING_FORMATS côté back ; `zip` : un export Notion. */
+/** Formats lus par le pipeline, comme ONBOARDING_FORMATS côté back ; `zip` : une archive (un export Notion, par exemple). */
 export const ACCEPTED_EXTENSIONS = ['pdf', 'docx', 'pptx', 'md', 'zip'] as const;
 
 /** Les formats acceptés, en clair (message d'erreur et aide de la zone d'import). */
-export const ACCEPTED_FORMATS_TEXT = 'PDF, Word (.docx), PowerPoint (.pptx), Markdown (.md) ou export Notion (.zip)';
+export const ACCEPTED_FORMATS_TEXT = 'PDF, Word (.docx), PowerPoint (.pptx), Markdown (.md) ou archive .zip (un export Notion, par exemple)';
 export const ACCEPT_ATTRIBUTE = ACCEPTED_EXTENSIONS.map(e => `.${e}`).join(',');
 
 interface Usage {

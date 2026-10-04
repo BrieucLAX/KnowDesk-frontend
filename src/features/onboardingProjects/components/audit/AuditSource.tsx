@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { documentName, type Audit, type SourceRef } from '../../lib/audit';
 import { sourceLocation, VISION_NOTE } from '../../lib/auditLabels';
+import { DocName } from './DocName';
 import { ExcerptText } from './ExcerptText';
 
 /** Images de l'audit affiché : celles conservées par le back, et leur lecture. */
@@ -66,7 +67,7 @@ export function AuditSource({ audit, source, imageShown = false }: {
   return (
     <figure className={`obp-audit-source${source.visionUnverified ? ' obp-audit-source--vision' : ''}`}>
       <figcaption className="obp-audit-source__where">
-        <span className="obp-audit-source__doc">{doc}</span>
+        <DocName audit={audit} id={source.documentId} className="obp-audit-source__doc" />
         <span className="obp-muted">{location}</span>
       </figcaption>
       <div className="obp-audit-source__body">

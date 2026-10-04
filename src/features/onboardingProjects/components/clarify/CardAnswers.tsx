@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import { formatFull } from '../../../../shared/lib/formatDate';
 import { TextArea } from '../TextArea';
+import { namedLabel, type DocNaming } from '../../lib/audit';
 import type { Decision } from '../../lib/decisions';
 import {
   ANSWERS, describeCardAnswer, isBriefingOnly, missingSide, NATURES, sideDocuments, sidesQuestion, substantiveAnswers,
@@ -14,8 +15,8 @@ interface CardAnswersProps {
   /** Faux pour l'audit d'une analyse précédente : la réponse se lit, sans action. */
   arbitrable: boolean;
   busy:       boolean;
-  /** Nom de fichier d'un document. */
-  name:       (documentId: string) => string;
+  /** Nom de fichier d'un document, et son chemin pour l'infobulle. */
+  docs:       DocNaming;
   onAnswer:   (action: CardAction) => Promise<boolean>;
   onCancel:   () => Promise<boolean>;
 }
@@ -23,12 +24,13 @@ interface CardAnswersProps {
 const isTyped = (a: string): a is TypedAnswer => (TYPED_ANSWERS as readonly string[]).includes(a);
 
 /** Réponse courante d'une carte, en clair : la réponse, qui l'a donnée, quand. Un texte saisi est « saisi par X le Y ». */
-export function CurrentAnswer({ card, current, name }: { card: ReadingCard | undefined; current: Decision; name: (id: string) => string }) {
+export function CurrentAnswer({ card, current, docs }: { card: ReadingCard | undefined; current: Decision; docs: DocNaming }) {
   const typed = 'text' in current.action;
+  const { label, title } = namedLabel(docs, name => describeCardAnswer(current.action, card, name));
   return (
     <p className="obp-decision__current">
-      <span className={`obp-decision__badge obp-decision__badge--${current.action.type}`}>
-        {describeCardAnswer(current.action, card, name)}
+      <span className={`obp-decision__badge obp-decision__badge--${current.action.type}`} title={title}>
+        {label}
       </span>
       <span className="obp-muted">
         {typed ? ` — saisi par ${current.decidedBy.name} le ${formatFull(current.decidedAt)}` : ` — ${current.decidedBy.name}, ${formatFull(current.decidedAt)}`}
@@ -46,7 +48,7 @@ export function CurrentAnswer({ card, current, name }: { card: ReadingCard | und
  * juste »), sans les réponses qui comparent deux côtés. Une
  * carte répondue montre sa réponse, « Annuler » (retour à la précédente) et « Changer ».
  */
-export function CardAnswers({ card, current, arbitrable, busy, name, onAnswer, onCancel }: CardAnswersProps) {
+export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, onCancel }: CardAnswersProps) {
   const [editing, setEditing] = useState(false);
   const [typing,  setTyping]  = useState<TypedAnswer | null>(null);
   const [text,    setText]    = useState('');
@@ -58,14 +60,14 @@ export function CardAnswers({ card, current, arbitrable, busy, name, onAnswer, o
 
   if (!arbitrable) {
     return current
-      ? <CurrentAnswer card={card} current={current} name={name} />
+      ? <CurrentAnswer card={card} current={current} docs={docs} />
       : <p className="obp-muted">Aucune réponse.</p>;
   }
 
   if (current && !editing) {
     return (
       <div className="obp-decision">
-        <CurrentAnswer card={card} current={current} name={name} />
+        <CurrentAnswer card={card} current={current} docs={docs} />
         <div className="obp-decision__actions">
           <Button variant="ghost" size="sm" loading={busy} onClick={() => void onCancel()}>Annuler</Button>
           <Button variant="ghost" size="sm" disabled={busy} onClick={() => setEditing(true)}>Changer</Button>
@@ -103,27 +105,30 @@ export function CardAnswers({ card, current, arbitrable, busy, name, onAnswer, o
 
   const sides = card.answers.includes('accept_side') ? card.sides : [];
   const oneSided = missingSide(card) !== null;
-  const retain = (s: ReadingCard['sides'][number]) => {
+  const retain = (s: ReadingCard['sides'][number]): { label: string; title?: string } => {
     const quotes = toQuotes(s.quotes);
-    if (oneSided) return 'Oui, ce passage est juste';
-    if (isBriefingOnly(quotes)) return 'Retenir votre fiche de cadrage';
-    return `Retenir ${s.label} : ${sideDocuments(quotes, name).join(', ')}`;
+    if (oneSided) return { label: 'Oui, ce passage est juste' };
+    if (isBriefingOnly(quotes)) return { label: 'Retenir votre fiche de cadrage' };
+    return namedLabel(docs, name => `Retenir ${s.label} : ${sideDocuments(quotes, name).join(', ')}`);
   };
 
   return (
     <div className="obp-decision">
-      {current && <CurrentAnswer card={card} current={current} name={name} />}
+      {current && <CurrentAnswer card={card} current={current} docs={docs} />}
 
       {sides.length > 0 && (
         <div className="obp-clarify-answer__group" role="group" aria-label="Retenir un côté">
           <p className="obp-clarify-answer__subtitle">{NATURES[card.nature].label} : {sidesQuestion(card)}</p>
           <div className="obp-decision__actions">
-            {sides.map(s => (
-              <Button key={s.label} variant="secondary" size="sm" disabled={busy}
-                onClick={() => void submit({ type: 'accept_side', side: s.label })}>
-                {retain(s)}
-              </Button>
-            ))}
+            {sides.map(s => {
+              const { label, title } = retain(s);
+              return (
+                <Button key={s.label} variant="secondary" size="sm" disabled={busy} title={title}
+                  onClick={() => void submit({ type: 'accept_side', side: s.label })}>
+                  {label}
+                </Button>
+              );
+            })}
           </div>
         </div>
       )}

@@ -31,7 +31,7 @@ export interface OnboardingProject extends OnboardingProjectSummary {
   unmeasuredDocuments?: number;
 }
 
-/** `zip` : un export Notion, lu document par document par le pipeline. */
+/** `zip` : une archive (un export Notion, par exemple), lue document par document par le pipeline. */
 export type OnboardingFormat = 'pdf' | 'docx' | 'pptx' | 'md' | 'zip';
 
 export interface OnboardingDocument {

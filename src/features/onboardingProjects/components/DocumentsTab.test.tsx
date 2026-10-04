@@ -16,8 +16,8 @@ const project: OnboardingProject = {
   id: 'p1', name: 'Base SAV', createdAt: '', updatedAt: '', documentsCount: 2, totalBytes: 3 * MB, cadrageVersion: null,
   limits: { maxFileBytes: 50 * MB, maxDocumentsPerProject: 50, maxProjectBytes: 300 * MB, maxFilesPerUpload: 10 },
 };
-const doc = (id: string, filename: string, locked = false): OnboardingDocument =>
-  ({ id, filename, format: 'pdf', sizeBytes: MB, sha256: id, locked, createdAt: '2026-09-27T08:00:00Z' });
+const doc = (id: string, filename: string, locked = false, format: OnboardingDocument['format'] = 'pdf'): OnboardingDocument =>
+  ({ id, filename, format, sizeBytes: MB, sha256: id, locked, createdAt: '2026-09-27T08:00:00Z' });
 
 describe('DocumentsTab', () => {
   beforeEach(() => {
@@ -42,6 +42,13 @@ describe('DocumentsTab', () => {
     await waitFor(() => expect(screen.queryByText('cgv.pdf')).not.toBeInTheDocument());
     expect(onboardingApi.deleteDocument).toHaveBeenCalledWith('p1', 'd1');
     expect(onChanged).toHaveBeenCalled();
+  });
+
+  it('une archive .zip se présente comme une archive, quel que soit son contenu', async () => {
+    vi.mocked(onboardingApi.listDocuments).mockResolvedValue([doc('d3', 'pilote-corpus.zip', false, 'zip')]);
+    render(<DocumentsTab project={project} onChanged={() => {}} />);
+    expect(await screen.findByText(/^Archive \(\.zip\) · /)).toBeInTheDocument();
+    expect(screen.queryByText(/Export Notion/)).not.toBeInTheDocument();
   });
 
   it('un document figé par une analyse ne peut pas être retiré', async () => {

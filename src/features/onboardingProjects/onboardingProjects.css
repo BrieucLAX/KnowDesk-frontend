@@ -400,7 +400,6 @@
 .obp-decision-history__current { font-weight: 600; color: var(--color-success); }
 
 /* ── À clarifier, audit 0.8.0 (F-C') ─────────────────────────── */
-.obp-clarify-unavailable { font-size: 14px; font-weight: 500; color: var(--neutral-500); }
 
 .obp-clarify-row {
   display: flex; flex-direction: column; gap: 6px;
