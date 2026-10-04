@@ -11,7 +11,8 @@ vi.mock('../../api/onboardingApi', () => ({
 
 import { onboardingApi } from '../../api/onboardingApi';
 import { AuditTab } from '../audit/AuditTab';
-import type { AuditResponse } from '../../lib/audit';
+import { ClarifyQuote } from './ReadingCardView';
+import type { Audit, AuditResponse } from '../../lib/audit';
 import { orderedCards, unverifiedReasonLabel } from '../../lib/reading';
 import type { Decision, DecisionsState } from '../../lib/decisions';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
@@ -45,7 +46,7 @@ const project: OnboardingProject = {
 
 const analysis: OnboardingAnalysis = {
   id: 'a1', status: 'succeeded', stage: 'storing', done: 0, total: 0, llmCalls: 3, llmRetries: 0, cadrageVersion: 1,
-  documents: [], errorCode: null, pipelineVersion: null, createdAt: '2026-10-02T10:00:00Z', createdBy: 'u1',
+  documents: [{ id: 'd1', filename: 'notion.zip' }], errorCode: null, pipelineVersion: null, createdAt: '2026-10-02T10:00:00Z', createdBy: 'u1',
   submittedAt: null, finishedAt: '2026-10-02T10:04:00Z', deadlineAt: '2026-10-02T11:00:00Z',
 };
 
@@ -77,7 +78,7 @@ describe('À clarifier (audit 0.8.0)', () => {
   });
   afterEach(() => { vi.restoreAllMocks(); });
 
-  it('annonce le nombre de cartes, les regroupe par nature, et dit les notes temporaires « non disponible »', async () => {
+  it('annonce le nombre de cartes et les regroupe par nature ; une détection absente ne se montre que dans les détails, en clair', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
     expect(await screen.findByRole('heading', { name: '9 cartes à clarifier' })).toBeInTheDocument();
     expect(screen.getByText('9 cartes : 3 changements datés, 1 erreur probable et 5 incomplets ou périmés.')).toBeInTheDocument();
@@ -88,9 +89,23 @@ describe('À clarifier (audit 0.8.0)', () => {
     // Les natures qui bloquent la publication d'abord.
     expect(headings.indexOf('Changements datés 3')).toBeLessThan(headings.indexOf('Incomplets ou périmés 5'));
 
-    expect(screen.getAllByText('non disponible').length).toBeGreaterThan(0);
-    expect(screen.getByText(/Non disponible : la lecture ne repère pas encore les situations temporaires/)).toBeInTheDocument();
+    // Les notes temporaires ne sont pas encore repérées : rien dans la vue d'ensemble.
+    const details = screen.getByText('Détails de l\'analyse').closest('details')!;
+    expect(screen.queryAllByText(/non disponible|Notes temporaires/i)).toHaveLength(0);
+    expect(screen.queryByRole('heading', { name: 'Notes temporaires' })).not.toBeInTheDocument();
     expect(screen.queryByText(/Aucune note temporaire/)).not.toBeInTheDocument();
+    expect(within(details).getByRole('heading', { name: 'Ce que l\'analyse ne repère pas encore' })).toBeInTheDocument();
+    expect(details).toHaveTextContent('Les situations temporaires (maintenance, offre limitée dans le temps) : si aucune n\'est signalée, cela ne veut pas dire qu\'il n\'y en a pas.');
+    expect(details).not.toHaveTextContent(/non disponible/i);
+
+    // L'en-tête compte les documents lus par l'analyse, pas les fichiers importés.
+    expect(screen.getByText('Fiche de cadrage version 1, 21 documents lus (dans 1 fichier importé).')).toBeInTheDocument();
+
+    // Les documents d'une carte, par leur nom de fichier, le chemin de l'archive en infobulle.
+    const row = screen.getByRole('button', { name: new RegExp(`^${escape(dated.analysis.subject)}`) });
+    const doc = within(row).getByText('03-cotisations-tarification.docx');
+    expect(doc).toHaveAttribute('title', 'base-connaissance-mutuelle-notion/03-cotisations-tarification.docx');
+    expect(row).not.toHaveTextContent('base-connaissance-mutuelle-notion/');
 
     // Chaque carte nommée par son sujet, jamais « Carte N ».
     for (const c of reading2.cards) expect(screen.getByRole('button', { name: new RegExp(`^${escape(c.analysis.subject)}`) })).toBeInTheDocument();
@@ -103,7 +118,11 @@ describe('À clarifier (audit 0.8.0)', () => {
     expect(within(card).getByText('Carte 1 sur 9')).toBeInTheDocument();
     expect(within(card).getByText('Changement daté')).toBeInTheDocument();
     const sideA = within(card).getByRole('region', { name: 'Côté A' });
-    expect(sideA).toHaveTextContent('base-connaissance-mutuelle-notion/03-cotisations-tarification.docx');
+    expect(sideA).toHaveTextContent('03-cotisations-tarification.docx');
+    expect(sideA).not.toHaveTextContent('base-connaissance-mutuelle-notion/');
+    expect(within(sideA).getAllByText('03-cotisations-tarification.docx')[0])
+      .toHaveAttribute('title', 'base-connaissance-mutuelle-notion/03-cotisations-tarification.docx');
+    expect(within(card).getByText(/^Documents :/).parentElement).not.toHaveTextContent('base-connaissance-mutuelle-notion/');
     expect(within(card).getByRole('region', { name: 'Côté B' })).toHaveTextContent('email-3-changement-tarifaire.docx');
     // Le nom du fichier au-dessus de chaque citation seulement, pas dans le titre du côté.
     expect(within(sideA).getByRole('heading', { level: 5 })).toHaveTextContent(/^Côté A$/);
@@ -136,6 +155,13 @@ describe('À clarifier (audit 0.8.0)', () => {
     const fiche = within(other).getByRole('region', { name: 'Votre fiche de cadrage' });
     expect(fiche).toHaveTextContent('Ce que vous avez écrit, pas un document de la base.');
     expect(within(other).queryByRole('region', { name: 'Côté B' })).not.toBeInTheDocument();
+  });
+
+  it('citation de la fiche de cadrage : les lignes d\'un même paragraphe rejointes à l\'affichage', () => {
+    const excerpt = 'Les TNS ne peuvent pas\nrésilier en cours\nd\'année.\n\nLes particuliers, si.';
+    const { container } = render(<ClarifyQuote audit={{} as Audit} quote={{ kind: 'briefing', excerpt, realigned: false }} />);
+    expect(container.querySelector('blockquote')!.textContent)
+      .toBe('Les TNS ne peuvent pas résilier en cours d\'année.\n\nLes particuliers, si.');
   });
 
   it('un seul côté retrouvé, citation refusée rendue : le dire, la citer comme texte de l\'IA, une question sur ce passage', async () => {
@@ -188,6 +214,10 @@ describe('À clarifier (audit 0.8.0)', () => {
       'Autre réponse', 'Plus tard', 'Autres réponses…',
     ]);
     expect(screen.queryByRole('button', { name: 'C\'est un exemple, pas une règle' })).not.toBeInTheDocument();
+    // Le chemin de l'archive en infobulle, le nom de fichier seul sur le bouton.
+    expect(screen.getByRole('button', { name: 'Retenir A : 03-cotisations-tarification.docx' }))
+      .toHaveAttribute('title', 'Retenir A : base-connaissance-mutuelle-notion/03-cotisations-tarification.docx');
+    expect(screen.getByRole('button', { name: 'Retenir B : email-3-changement-tarifaire.docx' })).not.toHaveAttribute('title');
 
     fireEvent.click(screen.getByRole('button', { name: 'Retenir B : email-3-changement-tarifaire.docx' }));
     await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalledWith('p1', 'a1', {
@@ -298,7 +328,7 @@ describe('À clarifier (audit 0.8.0)', () => {
     ]);
   });
 
-  it('détails de l\'analyse : les fichiers d\'un export Notion que l\'analyse n\'a pas lus, avec leur raison', async () => {
+  it('détails de l\'analyse : les fichiers d\'une archive que l\'analyse n\'a pas lus, avec leur raison', async () => {
     const audit = RESPONSE_3.audit as { inventory: object[] };
     vi.mocked(onboardingApi.getAudit).mockResolvedValue({
       ...RESPONSE_3,
@@ -312,7 +342,8 @@ describe('À clarifier (audit 0.8.0)', () => {
     await screen.findByRole('heading', { name: /cartes à clarifier/ });
     const details = screen.getByText('Détails de l\'analyse').closest('details')!;
     expect(details).toHaveTextContent('L\'analyse n\'a pas lu ces fichiers');
-    expect(details).toHaveTextContent('notion.zip/Export/Base 9c8d.csv : format non lu');
+    expect(details).toHaveTextContent('Base 9c8d.csv : format non lu');
+    expect(within(details).getByText('Base 9c8d.csv')).toHaveAttribute('title', 'notion.zip/Export/Base 9c8d.csv');
   });
 
   it('détails de l\'analyse : tous les fichiers lus, dit comme tel', async () => {

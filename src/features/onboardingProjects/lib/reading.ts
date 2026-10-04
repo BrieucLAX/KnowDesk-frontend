@@ -341,8 +341,11 @@ export const unreadFiles = (audit: Audit): Array<{ path: string; reason: string 
     .filter(i => i.status === 'failed')
     .map(i => ({ path: i.path, reason: unreadReasonLabel(i.error) }));
 
+/** Ce que la lecture ne produit pas encore, en clair : rien n'en est montré dans la vue d'ensemble. */
 const UNAVAILABLE: Readonly<Record<string, string>> = {
-  temporary_notes: 'Notes temporaires',
-  corpus_split:    'Découpage d\'un corpus trop grand pour une lecture',
+  temporary_notes: 'Les situations temporaires (maintenance, offre limitée dans le temps) : '
+    + 'si aucune n\'est signalée, cela ne veut pas dire qu\'il n\'y en a pas.',
+  corpus_split:    'Les ensembles de documents trop volumineux pour être lus en une seule fois : '
+    + 'ils ne sont pas encore découpés en plusieurs lectures.',
 };
 export const unavailableLabel = (d: string) => UNAVAILABLE[d] ?? d;

@@ -51,3 +51,25 @@ export function parseExcerpt(excerpt: string): ExcerptBlock[] {
   }
   return blocks;
 }
+
+const BREAKS_LINE = /^\s*([-*+•>]\s|\d+[.)]\s|#|\|)/;
+
+/**
+ * Texte de la fiche de cadrage, pour l'affichage seulement : les retours à la ligne saisis dans
+ * un paragraphe coupent la phrase ; on rejoint ces lignes par une espace. Une ligne vide sépare
+ * toujours deux paragraphes, et une ligne de liste, de titre ou de tableau garde sa ligne. Le
+ * texte enregistré n'est pas modifié.
+ */
+export function joinParagraphLines(text: string): string {
+  return text
+    .replace(/\r\n?/g, '\n')
+    .split(/\n[ \t]*\n/)
+    .map(paragraph => paragraph.split('\n').reduce((out, line, i, lines) => {
+      if (i === 0) return line.trimEnd();
+      if (!line.trim()) return out;
+      // Après un titre ou une ligne de tableau, la ligne suivante garde aussi sa place.
+      const keep = BREAKS_LINE.test(line) || /^\s*(#|\|)/.test(lines[i - 1]);
+      return keep ? `${out}\n${line.trimEnd()}` : `${out} ${line.trim()}`;
+    }, ''))
+    .join('\n\n');
+}

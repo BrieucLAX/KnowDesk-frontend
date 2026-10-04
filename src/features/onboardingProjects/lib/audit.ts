@@ -273,13 +273,49 @@ export function isSupportedAudit(res: Pick<AuditResponse, 'schemaVersion'>): boo
   return SUPPORTED_AUDIT_SCHEMAS.includes(res.schemaVersion);
 }
 
-/**
- * Nom d'un document, toujours son nom de fichier (chemin de l'inventaire),
- * jamais le titre laissé par l'outil qui l'a produit.
- */
-export function documentName(audit: Audit, documentId: string): string {
+/** Le nom de fichier d'un chemin (`dossier/03-tarifs.md` → `03-tarifs.md`). */
+export const fileName = (path: string): string => path.split(/[\\/]/).filter(Boolean).pop() ?? path;
+
+/** Chemin complet d'un document dans l'inventaire (dans l'archive, pour un fichier qui en vient). */
+export function documentPath(audit: Audit, documentId: string): string {
   return audit.inventory.find(i => i.documentId === documentId)?.path || documentId;
 }
+
+/**
+ * Nom d'un document, toujours son nom de fichier, jamais le titre laissé par l'outil qui l'a
+ * produit ; sans le chemin de l'archive, qui reste en infobulle (`documentPath`). Deux fichiers
+ * de même nom dans des dossiers différents gardent leur chemin, pour ne pas se confondre.
+ */
+export function documentName(audit: Audit, documentId: string): string {
+  const path = documentPath(audit, documentId);
+  const name = fileName(path);
+  const homonym = audit.inventory.some(i => i.documentId !== documentId && fileName(i.path) === name);
+  return homonym ? path : name;
+}
+
+/** Les deux façons de nommer un document : son nom de fichier, et son chemin complet (infobulle). */
+export interface DocNaming {
+  name: (documentId: string) => string;
+  path: (documentId: string) => string;
+}
+
+export const docNaming = (audit: Audit): DocNaming => ({
+  name: id => documentName(audit, id),
+  path: id => documentPath(audit, id),
+});
+
+/**
+ * Un libellé qui nomme des documents (bouton, réponse) : écrit avec les noms de fichier, et
+ * réécrit avec les chemins complets pour l'infobulle quand ils diffèrent.
+ */
+export function namedLabel(docs: DocNaming, build: (name: (documentId: string) => string) => string): { label: string; title?: string } {
+  const label = build(docs.name);
+  const full = build(docs.path);
+  return full === label ? { label } : { label, title: full };
+}
+
+/** Nombre de documents lus par l'analyse : l'inventaire, sans les fichiers non lus. */
+export const readDocumentsCount = (audit: Audit): number => audit.inventory.filter(i => i.status !== 'failed').length;
 
 /** Sources des assertions d'une option, dans l'ordre de l'option. */
 export function optionSources(audit: Audit, option: QuestionOption): SourceRef[] {
@@ -351,4 +387,17 @@ export function groupQuestions(questions: Question[]): Question[][] {
     if (q.groupId) byId.set(q.groupId, group);
   }
   return groups;
+}
+
+/**
+ * Les documents d'une analyse : ceux que l'analyse a lus (son inventaire, une archive comptant
+ * pour chacun de ses fichiers), et les fichiers importés s'ils diffèrent. Tant que l'audit
+ * charge (ou sans inventaire), les fichiers importés seuls.
+ */
+export function documentsLine(imported: number, audit: Audit | null): string {
+  const files = `${imported} fichier${imported > 1 ? 's' : ''} importé${imported > 1 ? 's' : ''}`;
+  if (!audit || audit.inventory.length === 0) return files;
+  const read = readDocumentsCount(audit);
+  const docs = `${read} document${read > 1 ? 's' : ''} lu${read > 1 ? 's' : ''}`;
+  return read === imported ? docs : `${docs} (dans ${files})`;
 }

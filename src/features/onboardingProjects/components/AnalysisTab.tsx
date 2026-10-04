@@ -164,7 +164,7 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
               <li key={a.id} className="obp-history__item">
                 <span className={`obp-history__status obp-history__status--${a.status}`}>{STATUS_LABEL[a.status]}</span>
                 <span>{formatFull(a.createdAt)}</span>
-                <span>fiche version {a.cadrageVersion}, {plural(a.documents.length, 'document', 'documents')}</span>
+                <span>fiche version {a.cadrageVersion}, {plural(a.documents.length, 'fichier importé', 'fichiers importés')}</span>
                 {a.status === 'failed' && <span>{analysisFailureMessage(a.errorCode)}</span>}
               </li>
             ))}

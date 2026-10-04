@@ -189,7 +189,7 @@ describe('AnalysisTab', () => {
     render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={() => {}} />);
     expect(await screen.findByRole('heading', { name: 'Analyses précédentes' })).toBeInTheDocument();
     expect(screen.getByText('Interrompue')).toBeInTheDocument();
-    expect(screen.getByText('fiche version 1, 2 documents')).toBeInTheDocument();
+    expect(screen.getByText('fiche version 1, 2 fichiers importés')).toBeInTheDocument();
     expect(screen.getByText(/redémarré pendant l'analyse/)).toBeInTheDocument();
   });
 });

@@ -5,7 +5,7 @@ import { EmptyState } from '../../../../shared/components/ui/EmptyState';
 import { useToast }   from '../../../../shared/lib/useToast';
 import { formatFull } from '../../../../shared/lib/formatDate';
 import { onboardingApi } from '../../api/onboardingApi';
-import { groupQuestions, isSupportedAudit, normalizeAudit, questionKind, type Audit } from '../../lib/audit';
+import { groupQuestions, isSupportedAudit, normalizeAudit, questionKind, documentsLine, type Audit } from '../../lib/audit';
 import { progress } from '../../lib/decisions';
 import { READING_AUDIT_SCHEMA, type Reading } from '../../lib/reading';
 import { useArbitration } from '../../hooks/useArbitration';
@@ -116,6 +116,7 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
   }
 
   const current = analyses.find(a => a.id === selected) ?? analyses[0];
+  const loadedAudit = loaded.state === 'ready' || loaded.state === 'reading' ? loaded.audit : null;
   const isLatest = current.id === analyses[0].id;
 
   return (
@@ -137,7 +138,7 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
       </div>
       <p className="obp-muted">
         {isLatest
-          ? `Fiche de cadrage version ${current.cadrageVersion}, ${current.documents.length} document${current.documents.length > 1 ? 's' : ''}.`
+          ? `Fiche de cadrage version ${current.cadrageVersion}, ${documentsLine(current.documents.length, loadedAudit)}.`
           : 'Audit d\'une analyse précédente, en lecture seule.'}
       </p>
 

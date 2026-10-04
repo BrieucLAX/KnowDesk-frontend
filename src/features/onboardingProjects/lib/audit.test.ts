@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  documentName, groupQuestions, isSupportedAudit, normalizeAudit, optionSources, proposedCases, proposedCondition, questionKind,
+  documentName, documentPath, documentsLine, fileName, groupQuestions, isSupportedAudit, normalizeAudit, optionSources, proposedCases, proposedCondition, questionKind,
   type Audit,
 } from './audit';
 import { discardReasonLabel, impactLabel, questionTypeLabel, sourceLocation } from './auditLabels';
@@ -98,6 +98,35 @@ describe('lecture de l\'audit', () => {
     });
     expect(documentName(audit, 'd1')).toBe('cgv_2026.pdf');
     expect(documentName(audit, 'inconnu')).toBe('inconnu');
+  });
+
+  it('un document tiré d\'une archive : son nom de fichier seul, le chemin complet à part', () => {
+    const audit = normalized({
+      ...MINIMAL,
+      inventory: [
+        { document_id: 'd1', path: 'base-notion/03-cotisations-tarification.md', format: 'md', size_bytes: 1, sha256: 'a', unit_count: 1 },
+        { document_id: 'd2', path: 'base-notion/faq/lisez-moi.md', format: 'md', size_bytes: 1, sha256: 'b', unit_count: 1 },
+        { document_id: 'd3', path: 'base-notion/tarifs/lisez-moi.md', format: 'md', size_bytes: 1, sha256: 'c', unit_count: 1 },
+      ],
+    });
+    expect(documentName(audit, 'd1')).toBe('03-cotisations-tarification.md');
+    expect(documentPath(audit, 'd1')).toBe('base-notion/03-cotisations-tarification.md');
+    // Deux fichiers de même nom dans des dossiers différents gardent leur chemin.
+    expect(documentName(audit, 'd2')).toBe('base-notion/faq/lisez-moi.md');
+    expect(fileName('C:\\export\\a.md')).toBe('a.md');
+    expect(fileName('a.md')).toBe('a.md');
+  });
+
+  it('documents d\'une analyse : ceux qu\'elle a lus, et les fichiers importés s\'ils diffèrent', () => {
+    const entry = (id: string, status: string) =>
+      ({ document_id: id, path: `x/${id}.md`, format: 'md', size_bytes: 1, sha256: id, unit_count: 1, status });
+    const archive = normalized({ ...MINIMAL, inventory: [entry('a', 'parsed'), entry('b', 'parsed'), entry('c', 'failed')] });
+    expect(documentsLine(1, archive)).toBe('2 documents lus (dans 1 fichier importé)');
+    expect(documentsLine(2, archive)).toBe('2 documents lus');
+    expect(documentsLine(3, normalized({ ...MINIMAL, inventory: [entry('a', 'parsed')] }))).toBe('1 document lu (dans 3 fichiers importés)');
+    // Audit en cours de chargement, ou sans inventaire : les fichiers importés.
+    expect(documentsLine(1, null)).toBe('1 fichier importé');
+    expect(documentsLine(2, normalized(MINIMAL))).toBe('2 fichiers importés');
   });
 
   it('extraits d\'une option, dans son ordre, sans les assertions introuvables', () => {

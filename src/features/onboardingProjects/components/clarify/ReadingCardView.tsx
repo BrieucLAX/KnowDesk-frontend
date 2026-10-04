@@ -1,16 +1,18 @@
 import React from 'react';
-import { documentName, type Audit } from '../../lib/audit';
+import type { Audit } from '../../lib/audit';
 import {
   isBlocking, isBriefingOnly, missingSide, NATURES, toQuotes, unverifiedReasonLabel, type ModelAnalysis, type Quote,
   type ReadingCard,
 } from '../../lib/reading';
+import { joinParagraphLines } from '../../lib/excerpt';
 import { AuditSource } from '../audit/AuditSource';
+import { AiFileName, DocNames } from '../audit/DocName';
 import { ExcerptText } from '../audit/ExcerptText';
 
 /**
  * Une citation vérifiée : passage d'un document (nom de fichier, emplacement, extrait verbatim ;
  * image à côté d'un extrait lu par vision), ou de la fiche de cadrage (sans son libellé quand le
- * côté s'intitule déjà « Votre fiche de cadrage »).
+ * côté s'intitule déjà « Votre fiche de cadrage »), ses lignes d'un même paragraphe rejointes.
  */
 export function ClarifyQuote({ audit, quote, imageShown = false, bare = false }: {
   audit: Audit; quote: Quote; imageShown?: boolean; bare?: boolean;
@@ -23,7 +25,7 @@ export function ClarifyQuote({ audit, quote, imageShown = false, bare = false }:
             <span className="obp-audit-source__doc">Votre fiche de cadrage</span>
           </figcaption>
         )}
-        <blockquote className="obp-audit-source__excerpt"><ExcerptText excerpt={quote.excerpt} /></blockquote>
+        <blockquote className="obp-audit-source__excerpt"><ExcerptText excerpt={joinParagraphLines(quote.excerpt)} /></blockquote>
       </figure>
     );
   }
@@ -72,7 +74,6 @@ interface ReadingCardViewProps {
  * l'IA, à part. Une carte qui compare deux côtés dont l'un n'a pas été retrouvé le dit.
  */
 export function ReadingCardView({ audit, card, title, position }: ReadingCardViewProps) {
-  const name = (id: string) => documentName(audit, id);
   const blocking = isBlocking(card);
   const nonBlockingVision = NATURES[card.nature].blocking && !blocking;
   const missing = missingSide(card);
@@ -89,7 +90,7 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
 
       <p className="obp-clarify-docs">
         <span className="obp-muted">Documents : </span>
-        {card.documentIds.map(name).join(', ')}
+        <DocNames audit={audit} ids={card.documentIds} />
       </p>
 
       <div className={`obp-clarify-sides${card.sides.length > 1 || missing ? ' obp-clarify-sides--two' : ''}`}>
@@ -118,7 +119,7 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
             </p>
             {refused.map((u, i) => (
               <p key={i} className="obp-clarify-unverified">
-                Texte rendu par l'IA ({[u.document, u.location].filter(Boolean).join(', ')}, {unverifiedReasonLabel(u.reason)}),
+                Texte rendu par l'IA ({u.document && <><AiFileName path={u.document} />, </>}{u.location && `${u.location}, `}{unverifiedReasonLabel(u.reason)}),
                 qui n'est pas une citation : {u.text}
               </p>
             ))}
