@@ -453,6 +453,13 @@
 .obp-clarify-answer__subtitle { margin: 0; font-size: 13px; color: var(--neutral-500); }
 .obp-clarify-answer__more { padding-left: 4px; }
 .obp-clarify-answer__chosen { margin: 0; font-size: 14px; font-weight: 600; color: var(--neutral-900); }
+/* « Je suis la recommandation de l'IA » : en premier, la recommandation lisible, puis ce que fera la réponse. */
+.obp-clarify-reco { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--neutral-200); }
+.obp-clarify-reco__text { margin: 0; padding: 8px 12px; border-left: 3px solid var(--brand-200); background: var(--brand-50); font-size: 14px; line-height: 1.5; color: var(--neutral-900); white-space: pre-wrap; }
+.obp-clarify-reco__outcome { padding: 10px 12px; border-radius: var(--radius-md); background: var(--neutral-50); border: 1px solid var(--neutral-200); font-size: 14px; }
+.obp-clarify-reco__outcome p { margin: 0; }
+.obp-clarify-reco__outcome p + p { margin-top: 4px; }
+.obp-clarify-reco__outcome-title { font-weight: 600; color: var(--neutral-900); }
 
 .obp-clarify-unverified { margin: 0; font-size: 13px; color: var(--neutral-500); overflow-wrap: anywhere; }
 .obp-clarify-counts { margin: 0; padding-left: 20px; font-size: 13px; color: var(--neutral-700); }

@@ -5,8 +5,9 @@ import { TextArea } from '../TextArea';
 import { namedLabel, type DocNaming } from '../../lib/audit';
 import type { Decision } from '../../lib/decisions';
 import {
-  ANSWERS, describeCardAnswer, isBriefingOnly, missingSide, NATURES, sideDocuments, sidesQuestion, substantiveAnswers,
-  toQuotes, TYPED_ANSWERS, type CardAction, type ReadingCard, type TypedAnswer,
+  ANSWERS, describeCardAnswer, FOLLOW_RECOMMENDATION_LABEL, isBriefingOnly, missingSide, NATURES, recommendationOutcome,
+  sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, TYPED_ANSWERS, type CardAction, type ReadingCard,
+  type TypedAnswer,
 } from '../../lib/reading';
 
 interface CardAnswersProps {
@@ -54,8 +55,9 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
   const [text,    setText]    = useState('');
   const [error,   setError]   = useState<string | null>(null);
   const [more,    setMore]    = useState(false);
+  const [following, setFollowing] = useState(false);
 
-  const reset = () => { setTyping(null); setText(''); setError(null); setEditing(false); };
+  const reset = () => { setTyping(null); setText(''); setError(null); setEditing(false); setFollowing(false); };
   const submit = async (action: CardAction) => { if (await onAnswer(action)) reset(); };
 
   if (!arbitrable) {
@@ -73,6 +75,32 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
           <Button variant="ghost" size="sm" disabled={busy} onClick={() => setEditing(true)}>Changer</Button>
         </div>
       </div>
+    );
+  }
+
+  if (following && card.recommendation) {
+    return (
+      <form className="obp-decision__form" onSubmit={e => {
+        e.preventDefault();
+        void submit({ type: 'follow_recommendation', precisions: text.trim() || null });
+      }}>
+        <p className="obp-clarify-answer__chosen">{FOLLOW_RECOMMENDATION_LABEL}</p>
+        <blockquote className="obp-clarify-reco__text">{card.recommendation.text}</blockquote>
+        <div className="obp-clarify-reco__outcome" role="note">
+          <p className="obp-clarify-reco__outcome-title">Ce que cela fera dans la base</p>
+          <p>{recommendationOutcome(card, docs.name)}</p>
+          <p className="obp-muted">
+            Le texte de la recommandation n'est jamais recopié tel quel dans la base : il guide sa rédaction.
+          </p>
+        </div>
+        <TextArea id={`obp-card-${card.id}-precision`} label="Ajouter une précision (facultatif)" value={text} rows={3}
+          maxLength={5000} onChange={e => setText(e.target.value)} />
+        <p className="obp-muted">Votre précision est enregistrée telle quelle, avec votre nom et la date ; elle prime sur la recommandation.</p>
+        <div className="obp-decision__actions">
+          <Button type="submit" variant="primary" size="sm" loading={busy}>Confirmer</Button>
+          <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={() => { setFollowing(false); setText(''); }}>Retour</Button>
+        </div>
+      </form>
     );
   }
 
@@ -115,6 +143,19 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
   return (
     <div className="obp-decision">
       {current && <CurrentAnswer card={card} current={current} docs={docs} />}
+
+      {card.recommendation && (
+        <div className="obp-clarify-reco" role="group" aria-label="Recommandation de l'IA">
+          <p className="obp-clarify-answer__subtitle">Recommandation de l'IA</p>
+          <blockquote className="obp-clarify-reco__text">{card.recommendation.text}</blockquote>
+          <div className="obp-decision__actions">
+            <Button variant="primary" size="sm" disabled={busy} onClick={() => { setText(''); setFollowing(true); }}>
+              {FOLLOW_RECOMMENDATION_LABEL}
+            </Button>
+          </div>
+          <p className="obp-clarify-answer__subtitle">Ou répondez vous-même :</p>
+        </div>
+      )}
 
       {sides.length > 0 && (
         <div className="obp-clarify-answer__group" role="group" aria-label="Retenir un côté">
