@@ -352,4 +352,102 @@ describe('À clarifier (audit 0.8.0)', () => {
     await screen.findByRole('heading', { name: /cartes à clarifier/ });
     expect(screen.getByText('Détails de l\'analyse').closest('details')!).toHaveTextContent('Tous les fichiers importés ont été lus.');
   });
+
+  describe('« Je suis la recommandation de l\'IA » (audit 0.9.0)', () => {
+    /** Le pilote 2 servi comme un audit 0.9.0 : une recommandation et son effet sur trois cartes. */
+    const response09 = (): AuditResponse => {
+      const r = structuredClone(RESPONSE_2);
+      r.schemaVersion = '0.9.0';
+      for (const c of r.reading!.cards) {
+        const effect = c.id === dated.id ? { type: 'accept_side' as const, side: 'B' as const }
+          : c.id === incomplete.id ? { type: 'complete' as const } : null;
+        c.recommendation = { text: c.analysis.proposal, effect, basis: 'lu par le pipeline' };
+      }
+      return r;
+    };
+
+    beforeEach(() => { vi.mocked(onboardingApi.getAudit).mockResolvedValue(response09()); });
+
+    it('l\'audit 0.9.0 est un audit à cartes ; la recommandation vient en premier, les autres réponses en dessous', async () => {
+      const card = await openSession();
+      expect(card).toBeInTheDocument();
+      const reco = screen.getByRole('group', { name: 'Recommandation de l\'IA' });
+      expect(reco).toHaveTextContent(dated.analysis.proposal.slice(0, 40));
+      const buttons = screen.getAllByRole('button');
+      const follow = screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' });
+      expect(buttons.indexOf(follow)).toBeLessThan(buttons.indexOf(screen.getByRole('button', { name: /^Retenir A/ })));
+      expect(screen.getByRole('group', { name: 'Répondre à la carte' })).toBeInTheDocument();
+    });
+
+    it('changement daté : la confirmation dit qu\'il sera retenu ; la précision est envoyée, la recommandation jamais', async () => {
+      vi.mocked(onboardingApi.answerCard).mockResolvedValue(answer(dated.id, {
+        type: 'follow_recommendation', recommendation: dated.analysis.proposal, effect: { type: 'accept_side', side: 'B' },
+        precisions: 'Seulement pour les souscriptions 2027.',
+      } as never));
+      await openSession();
+      fireEvent.click(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' }));
+      expect(screen.getByRole('note')).toHaveTextContent(
+        'Ce que cela fera dans la baseLe changement daté sera retenu : la base suivra le côté B (email-3-changement-tarifaire.docx).',
+      );
+      fireEvent.change(screen.getByLabelText('Ajouter une précision (facultatif)'), { target: { value: '  Seulement pour les souscriptions 2027. ' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Confirmer' }));
+      await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalledWith('p1', 'a1', {
+        cardId: dated.id, expectedCurrentId: null,
+        action: { type: 'follow_recommendation', precisions: 'Seulement pour les souscriptions 2027.' },
+      }));
+      expect(await screen.findByText(
+        'Recommandation de l\'IA suivie (changement daté retenu) — précision : « Seulement pour les souscriptions 2027. »',
+      )).toBeInTheDocument();
+    });
+
+    it('incomplet : « le passage sera complété » ; sans précision, null', async () => {
+      vi.mocked(onboardingApi.answerCard).mockResolvedValue(answer(incomplete.id, {
+        type: 'follow_recommendation', recommendation: incomplete.analysis.proposal, effect: { type: 'complete' }, precisions: null,
+      } as never));
+      await openSession();
+      goTo(incomplete.analysis.subject);
+      await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(incomplete) + 1} sur 9` });
+      fireEvent.click(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' }));
+      expect(screen.getByRole('note')).toHaveTextContent('Le passage sera complété dans la base, en suivant la recommandation.');
+      fireEvent.click(screen.getByRole('button', { name: 'Confirmer' }));
+      await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalledWith('p1', 'a1', {
+        cardId: incomplete.id, expectedCurrentId: null, action: { type: 'follow_recommendation', precisions: null },
+      }));
+      expect(await screen.findByText('Recommandation de l\'IA suivie (passage à compléter)')).toBeInTheDocument();
+    });
+
+    it('sans effet : la recommandation servira de consigne ; « Retour » ne répond rien', async () => {
+      const other = ordered2.find(c => c.id !== dated.id && c.id !== incomplete.id)!;
+      await openSession();
+      goTo(other.analysis.subject);
+      await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(other) + 1} sur 9` });
+      fireEvent.click(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' }));
+      expect(screen.getByRole('note')).toHaveTextContent('La recommandation servira de consigne de rédaction');
+      fireEvent.click(screen.getByRole('button', { name: 'Retour' }));
+      expect(onboardingApi.answerCard).not.toHaveBeenCalled();
+      expect(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeInTheDocument();
+    });
+
+    it('le libellé de la réponse dans l\'historique', async () => {
+      vi.mocked(onboardingApi.listDecisions).mockResolvedValue(state([answer(dated.id, {
+        type: 'follow_recommendation', recommendation: dated.analysis.proposal, effect: null, precisions: null,
+      } as never)]));
+      vi.mocked(onboardingApi.cardHistory).mockResolvedValue([answer(dated.id, {
+        type: 'follow_recommendation', recommendation: dated.analysis.proposal, effect: null, precisions: null,
+      } as never)]);
+      render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+      fireEvent.click(await screen.findByRole('button', { name: 'Reprendre' }));
+      const card = await screen.findByRole('article', { name: /^Carte \d+ sur 9$/ });
+      expect(card).toBeInTheDocument();
+      goTo(dated.analysis.subject);
+      fireEvent.click(await screen.findByText('Historique'));
+      const list = await screen.findByRole('list', { name: 'Historique de la carte' });
+      expect(list).toHaveTextContent('Recommandation de l\'IA suivie (consigne de rédaction)');
+    });
+  });
+
+  it('un back sans `recommendation` : aucun bouton « Je suis la recommandation de l\'IA »', async () => {
+    await openSession();
+    expect(screen.queryByRole('button', { name: 'Je suis la recommandation de l\'IA' })).not.toBeInTheDocument();
+  });
 });

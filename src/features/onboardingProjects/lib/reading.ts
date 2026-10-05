@@ -8,12 +8,16 @@
  *
  * L'analyse du modèle (raison, proposition) ne s'affiche que sous « Analyse proposée par l'IA » :
  * elle aide à répondre, elle n'entre jamais dans une réponse. Seul son sujet sert aussi de libellé
- * de repérage à la carte (cardTitle).
+ * de repérage à la carte (cardTitle). Exception voulue : « Je suis la recommandation de l'IA »
+ * (audit 0.9.0, et en consigne seule sur 0.8.0) fige la proposition dans la décision ; le back la
+ * recopie depuis l'audit, elle sert de consigne de rédaction et n'est jamais recopiée dans la base.
  */
 import { sourceRef, type Audit, type SourceRef } from './audit';
 import type { Decision } from './decisions';
 
-export const READING_AUDIT_SCHEMA = '0.8.0';
+/** Audits à cartes : 0.8.0, et 0.9.0 qui ajoute « Je suis la recommandation de l'IA ». */
+export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0'];
+export const isReadingAudit = (version: string): boolean => READING_AUDIT_SCHEMAS.includes(version);
 
 // ── Contrat (GET …/audit, champ `reading`) ────────────────────
 
@@ -33,6 +37,12 @@ export interface ModelAnalysis { subject: string; reason: string; proposal: stri
 
 export interface UnverifiedQuote { side: SideLabel; document: string; location: string; text: string; reason: string }
 
+/** L'effet de « Je suis la recommandation de l'IA », lu par le pipeline ; null : consigne seule. */
+export type RecommendedEffect = { type: 'accept_side'; side: SideLabel } | { type: 'complete' };
+
+/** La recommandation d'une carte, telle que le back la recopiera dans la décision. */
+export interface CardRecommendation { text: string; effect: RecommendedEffect | null; basis: string }
+
 export interface ReadingCard {
   id:               string;
   nature:           CardNature;
@@ -43,6 +53,8 @@ export interface ReadingCard {
   analysis:         ModelAnalysis;
   answers:          CardAnswerCode[];
   unverifiedQuotes: UnverifiedQuote[];
+  /** « Je suis la recommandation de l'IA » : absente d'un back plus ancien, null sans recommandation. */
+  recommendation?:  CardRecommendation | null;
 }
 
 export interface TemporaryNote {
@@ -189,6 +201,7 @@ export const cardTitle = (card: ReadingCard, position: number): string => card.a
 // ── Réponses (decision-0.8.0) ─────────────────────────────────
 
 export type CardAction =
+  | { type: 'follow_recommendation'; precisions: string | null }
   | { type: 'accept_side'; side: SideLabel }
   | { type: TypedAnswer; text: string }
   | { type: Exclude<CardAnswerCode, 'accept_side' | TypedAnswer> };
@@ -272,9 +285,41 @@ export function firstOpenCard(ordered: ReadingCard[], current: ReadonlyMap<strin
   return i === -1 ? 0 : i;
 }
 
+export const FOLLOW_RECOMMENDATION_LABEL = 'Je suis la recommandation de l\'IA';
+
+/**
+ * Ce que « Je suis la recommandation de l'IA » fera dans la base, en clair, selon l'effet que le
+ * pipeline a lu dans la recommandation.
+ */
+export function recommendationOutcome(card: ReadingCard, name: (documentId: string) => string): string {
+  const effect = card.recommendation?.effect ?? null;
+  if (effect?.type === 'accept_side') {
+    const side = card.sides.find(s => s.label === effect.side);
+    const docs = side ? sideDocuments(toQuotes(side.quotes), name) : [];
+    const where = docs.length > 0 ? ` (${docs.join(', ')})` : '';
+    return card.nature === 'dated_change'
+      ? `Le changement daté sera retenu : la base suivra le côté ${effect.side}${where}.`
+      : `Le côté ${effect.side}${where} sera retenu dans la base.`;
+  }
+  if (effect?.type === 'complete') return 'Le passage sera complété dans la base, en suivant la recommandation.';
+  return 'La recommandation servira de consigne de rédaction ; aucun passage n\'est tranché par cette réponse.';
+}
+
+const FOLLOWED_EFFECT: Record<string, string> = {
+  dated_change: 'changement daté retenu', complete: 'passage à compléter', none: 'consigne de rédaction',
+};
+
 /** La réponse en clair. Un texte saisi est cité entre guillemets ; l'auteur et la date s'affichent à côté. */
 export function describeCardAnswer(action: Decision['action'], card: ReadingCard | undefined, name: (documentId: string) => string): string {
-  const a = action as { type: string; side?: SideLabel; text?: string };
+  const a = action as { type: string; side?: SideLabel; text?: string; precisions?: string | null; effect?: RecommendedEffect | null };
+  if (a.type === 'follow_recommendation') {
+    const effect = a.effect ?? null;
+    const what = effect === null ? FOLLOWED_EFFECT.none
+      : effect.type === 'complete' ? FOLLOWED_EFFECT.complete
+      : card?.nature === 'dated_change' ? FOLLOWED_EFFECT.dated_change
+      : `côté ${effect.side} retenu`;
+    return `Recommandation de l'IA suivie (${what})${a.precisions ? ` — précision : « ${a.precisions} »` : ''}`;
+  }
   if (a.type === 'accept_side' && a.side) {
     const side = card?.sides.find(s => s.label === a.side);
     const quotes = side ? toQuotes(side.quotes) : [];

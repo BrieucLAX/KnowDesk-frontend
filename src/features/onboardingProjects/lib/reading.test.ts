@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
+  isReadingAudit, recommendationOutcome,
   missingSide, orderedCards, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
 import type { Audit } from './audit';
@@ -144,3 +145,38 @@ describe('fichiers non lus', () => {
     ]);
   });
 });
+
+describe('« Je suis la recommandation de l\'IA »', () => {
+  const name = (id: string) => `${id}.docx`;
+  const reco = (c: ReadingCard, effect: NonNullable<ReadingCard['recommendation']>['effect']): ReadingCard =>
+    ({ ...c, recommendation: { text: 'Mettre à jour.', effect, basis: 'x' } });
+
+  it('l\'audit 0.9.0 est un audit à cartes, comme 0.8.0', () => {
+    expect(isReadingAudit('0.8.0')).toBe(true);
+    expect(isReadingAudit('0.9.0')).toBe(true);
+    expect(isReadingAudit('0.7.0')).toBe(false);
+  });
+
+  it('ce que la réponse fera dans la base, selon l\'effet', () => {
+    const dated = card('c1', 'dated_change', 1, [{ label: 'A', quotes: [doc('fiche')] }, { label: 'B', quotes: [doc('email')] }]);
+    expect(recommendationOutcome(reco(dated, { type: 'accept_side', side: 'B' }), name))
+      .toBe('Le changement daté sera retenu : la base suivra le côté B (email.docx).');
+    const error = card('c2', 'probable_error', 1, [{ label: 'A', quotes: [doc('fiche')] }, { label: 'B', quotes: [doc('faq')] }]);
+    expect(recommendationOutcome(reco(error, { type: 'accept_side', side: 'A' }), name)).toBe('Le côté A (fiche.docx) sera retenu dans la base.');
+    expect(recommendationOutcome(reco(dated, { type: 'complete' }), name)).toBe('Le passage sera complété dans la base, en suivant la recommandation.');
+    expect(recommendationOutcome(reco(dated, null), name)).toMatch(/^La recommandation servira de consigne de rédaction/);
+  });
+
+  it('le libellé de la réponse, avec sa précision', () => {
+    const dated = card('c1', 'dated_change', 1);
+    const follow = (effect: unknown, precisions: string | null) =>
+      ({ type: 'follow_recommendation', recommendation: 'Mettre à jour.', effect, precisions }) as unknown as Decision['action'];
+    expect(describeCardAnswer(follow({ type: 'accept_side', side: 'B' }, null), dated, name)).toBe('Recommandation de l\'IA suivie (changement daté retenu)');
+    expect(describeCardAnswer(follow({ type: 'complete' }, 'Pour 2027.'), dated, name))
+      .toBe('Recommandation de l\'IA suivie (passage à compléter) — précision : « Pour 2027. »');
+    expect(describeCardAnswer(follow(null, null), dated, name)).toBe('Recommandation de l\'IA suivie (consigne de rédaction)');
+    expect(describeCardAnswer(follow({ type: 'accept_side', side: 'A' }, null), card('c2', 'probable_error', 1), name))
+      .toBe('Recommandation de l\'IA suivie (côté A retenu)');
+  });
+});
+

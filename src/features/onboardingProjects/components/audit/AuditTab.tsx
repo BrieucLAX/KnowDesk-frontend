@@ -7,7 +7,7 @@ import { formatFull } from '../../../../shared/lib/formatDate';
 import { onboardingApi } from '../../api/onboardingApi';
 import { groupQuestions, isSupportedAudit, normalizeAudit, questionKind, documentsLine, type Audit } from '../../lib/audit';
 import { progress } from '../../lib/decisions';
-import { READING_AUDIT_SCHEMA, type Reading } from '../../lib/reading';
+import { isReadingAudit, type Reading } from '../../lib/reading';
 import { useArbitration } from '../../hooks/useArbitration';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from './AuditSource';
@@ -73,7 +73,7 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
     onboardingApi.getAudit(project.id, selected)
       .then(res => {
         if (cancelled) return;
-        if (res.schemaVersion === READING_AUDIT_SCHEMA && res.reading) {
+        if (isReadingAudit(res.schemaVersion) && res.reading) {
           const inventory = normalizeAudit(res.audit);
           setLoaded(inventory
             ? { state: 'reading', audit: inventory, reading: res.reading, imageIds: new Set(res.imageIds) }
