@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  blockingCardsLeft, blockingLeftLabel, correctionFailureMessage, correctionStepStates, itemLabel, originLabel,
+  blockingCardsLeft, blockingLeftLabel, correctionFailureMessage, correctionStepStates, itemLabel, originLabel, outcomeLabel,
   reasonLabel, reviewProgressLabel, type Modification,
 } from './correction';
 import type { Decision } from './decisions';
@@ -70,6 +70,18 @@ describe('libellés', () => {
     expect(originLabel(m, new Map([['card_1', 'Grille 2027']]))).toBe('Votre réponse du 05/10, carte « Grille 2027 »');
     const followed = { ...m, origin: { ...m.origin, action_type: 'follow_recommendation', decided_at: '2026-10-04T09:00:00Z' } };
     expect(originLabel(followed, new Map())).toBe('Recommandation de l\'IA suivie (votre réponse du 04/10)');
+  });
+
+  it('une réponse « Autre » dont rien n\'est repris est réglée, visible avec sa raison', () => {
+    const base = {
+      id: 'M5', kind: 'expert_answer', instruction: 'x', section_keys: [], outcome: 'not_applicable',
+      reasons: ['votre réponse ne contenait pas de texte à intégrer dans la base'],
+      origin: { card_id: 'c', card_rank: 5, decision_id: 'd', action_type: 'other_answer', decided_at: '2026-10-07T09:00:00Z' },
+    } as Modification;
+    expect(outcomeLabel(base)).toBe('Réglée sans modification');
+    expect(reasonLabel(base.reasons![0], () => null)).toBe('Votre réponse ne contenait pas de texte à intégrer dans la base');
+    expect(outcomeLabel({ ...base, origin: { ...base.origin, action_type: 'follow_recommendation' } })).toBe('Non appliquée');
+    expect(outcomeLabel({ ...base, outcome: 'applied' })).toBe('Appliquée');
   });
 
   it('traduit une raison : la clé de section devient son titre, le code une phrase', () => {
