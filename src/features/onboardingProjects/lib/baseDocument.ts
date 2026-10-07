@@ -87,11 +87,28 @@ export function wordDiff(before: string, after: string): WordPart[] {
 export type Block =
   | { op: 'equal'; line: Line }
   | { op: 'insert' | 'delete'; line: Line; modificationId: string | null }
-  /** `rewritten` : plus de la moitié des mots changent ; on montre l'ancien barré, puis le nouveau. */
+  /**
+   * `rewritten` : plus de la moitié des mots changent, ou le sens s'inverse (une négation ou un
+   * symbole d'état qui change) ; on montre l'ancien barré, puis le nouveau.
+   */
   | { op: 'modify'; before: Line; after: Line; modificationId: string | null; rewritten: boolean };
 
 /** Au-delà, un paragraphe est réécrit : le mot à mot deviendrait illisible. */
 export const REWRITE_SHARE = 0.5;
+
+const NEGATION = /(?:^|[\s(«"'’])(non|ne|n['’]|pas|jamais|aucune?|sans)(?=[\s.,;:!?)»"]|$)/gi;
+const STATUS = /[⚠✅❌✔✓✗⛔]/gu;
+
+/**
+ * Le sens s'inverse : une négation apparaît ou disparaît, ou un symbole d'état change
+ * (« ⚠ FICHE NON ACTUALISÉE » devenu « ✅ FICHE ACTUALISÉE », Essai 5). Peu de mots changent, mais
+ * le mot à mot le cacherait.
+ */
+export function senseChanged(before: string, after: string): boolean {
+  const negations = (t: string) => (t.match(NEGATION) ?? []).map(x => x.trim().toLowerCase()).sort().join(' ');
+  const marks = (t: string) => (t.match(STATUS) ?? []).sort().join('');
+  return negations(before) !== negations(after) || marks(before) !== marks(after);
+}
 
 /** Part des mots qui changent entre deux textes (0 : identiques, 1 : rien en commun). */
 export function changedShare(before: string, after: string): number {
@@ -135,7 +152,8 @@ export function sectionBlocks(section: CorrectedSection): Block[] {
       const n = inserted.findIndex((x, idx) => !used.has(idx) && x.type === d.type);
       if (n === -1) { blocks.push({ op: 'delete', line: d, modificationId: owner(d.text, '') }); continue; }
       used.add(n);
-      const rewritten = changedShare(plainText(d), plainText(inserted[n])) > REWRITE_SHARE;
+      const [a, b] = [plainText(d), plainText(inserted[n])];
+      const rewritten = changedShare(a, b) > REWRITE_SHARE || senseChanged(a, b);
       blocks.push({ op: 'modify', before: d, after: inserted[n], modificationId: owner(d.text, inserted[n].text), rewritten });
     }
     inserted.forEach((x, idx) => {
