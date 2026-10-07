@@ -12,6 +12,7 @@ import { CadrageTab }   from './CadrageTab';
 import { AnalysisTab }  from './AnalysisTab';
 import { AuditTab }     from './audit/AuditTab';
 import { BaseTab }      from './base/BaseTab';
+import { CleanBaseView } from './base/CleanBaseView';
 import type { OnboardingProject } from '../types';
 import '../onboardingProjects.css';
 
@@ -29,12 +30,15 @@ const TABS = [
 interface OnboardingProjectPageProps {
   projectId:   string;
   tab:         ProjectTab;
+  /** Une version validée à afficher (version propre), à la place des onglets. */
+  validationId?: string | null;
   onTabChange: (tab: ProjectTab) => void;
+  onOpenValidation?: (validationId: string) => void;
   onBack:      () => void;
 }
 
 /** Un projet d'onboarding : ses documents, sa fiche de cadrage, ses analyses et leur audit. */
-export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: OnboardingProjectPageProps) {
+export function OnboardingProjectPage({ projectId, tab, validationId = null, onTabChange, onOpenValidation, onBack }: OnboardingProjectPageProps) {
   const toast = useToast();
   const [project,  setProject]  = useState<OnboardingProject | null>(null);
   const [missing,  setMissing]  = useState(false);
@@ -88,6 +92,15 @@ export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: O
     );
   }
 
+  // La version propre : un écran à part, une seule ligne en tête.
+  if (validationId) {
+    return (
+      <div className="obp-page">
+        <CleanBaseView projectId={projectId} validationId={validationId} onBack={() => onTabChange('base')} />
+      </div>
+    );
+  }
+
   return (
     <div className="obp-page">
       {back}
@@ -108,7 +121,9 @@ export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: O
         {tab === 'audit' && (
           <AuditTab project={project} onGoToAnalysis={() => onTabChange('analysis')} onOpenBase={() => onTabChange('base')} />
         )}
-        {tab === 'base' && <BaseTab project={project} onGoToClarify={() => onTabChange('audit')} />}
+        {tab === 'base' && (
+          <BaseTab project={project} onGoToClarify={() => onTabChange('audit')} onOpenValidation={onOpenValidation} />
+        )}
       </div>
 
       {pendingLeave && (
