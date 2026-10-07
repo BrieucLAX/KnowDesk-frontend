@@ -21,32 +21,47 @@ export function SaveStatus({ state }: { state: SaveState | undefined }) {
   );
 }
 
+/** Une section que la modification touche : son titre, et les lignes qu'elle y propose. */
+export interface FixSection { key: string; title: string; proposed: string }
+
 interface ReviewCardProps {
   /** Ancre de la carte, pour les renvois des sections suivantes. */
   anchor:     string;
   title:      string;
   /** Ce que dit la carte : origine, consigne, suite. */
   children:   React.ReactNode;
-  /** Accepter / Corriger / Refuser : une modification appliquée, ou une convention. */
+  /** Un avis : une modification appliquée, ou une convention. */
   withVerdict: boolean;
+  /** « Corriger » : une modification (une convention s'accepte ou se refuse). */
+  fixable:    boolean;
   /** Relecture de la dernière correction réussie ; sinon, lecture seule. */
   editable:   boolean;
   current:    Review | undefined;
   save:       SaveState | undefined;
-  /** Le texte proposé, en point de départ de « Corriger ». */
-  proposed:   string;
+  /** Les sections touchées, chacune avec son texte proposé, en point de départ de « Corriger ». */
+  sections:   FixSection[];
   onSave:     (draft: ReviewDraft) => void;
 }
 
+/** Les textes de « Corriger » au départ : ceux de l'avis, l'ancien texte unique dans la première section, sinon les lignes proposées. */
+function initialTexts(current: Review | undefined, sections: FixSection[]): Record<string, string> {
+  return Object.fromEntries(sections.map((s, i) => [
+    s.key,
+    current?.correctedTexts?.[s.key]
+      ?? (i === 0 && current?.correctedText ? current.correctedText : null)
+      ?? s.proposed,
+  ]));
+}
+
 /**
- * Une modification (ou une convention) et l'avis de l'expert : Accepter, Corriger (avec le texte
- * tel qu'il l'écrirait) ou Refuser, et un commentaire facultatif. Le verdict s'enregistre au clic,
- * les textes quand on quitte le champ.
+ * Une modification (ou une convention) et l'avis de l'expert : Accepter, Corriger (un texte par
+ * section touchée, tel qu'il l'écrirait) ou Refuser, et un commentaire facultatif. Une convention
+ * s'accepte ou se refuse. Le verdict s'enregistre au clic, les textes quand on quitte le champ.
  */
-export function ReviewCard({ anchor, title, children, withVerdict, editable, current, save, proposed, onSave }: ReviewCardProps) {
+export function ReviewCard({ anchor, title, children, withVerdict, fixable, editable, current, save, sections, onSave }: ReviewCardProps) {
   const id = useId();
   const [verdict, setVerdict] = useState<Verdict | null>(current?.verdict ?? null);
-  const [fixText, setFixText] = useState(current?.correctedText ?? proposed);
+  const [fixTexts, setFixTexts] = useState<Record<string, string>>(() => initialTexts(current, sections));
   const [comment, setComment] = useState(current?.comment ?? '');
 
   /** Le dernier avis envoyé d'ici : son retour ne doit pas effacer ce qui a été tapé depuis. */
@@ -57,23 +72,28 @@ export function ReviewCard({ anchor, title, children, withVerdict, editable, cur
     const mine = sent.current !== null && current !== undefined && current.verdict === sent.current.verdict;
     if (mine) return;
     setVerdict(current?.verdict ?? null);
-    setFixText(current?.correctedText ?? proposed);
+    setFixTexts(initialTexts(current, sections));
     setComment(current?.comment ?? '');
-  }, [current, proposed]);
+  }, [current, sections]);
 
   const send = (d: ReviewDraft) => { sent.current = d; onSave(d); };
+  const written = (texts: Record<string, string>) => Object.values(texts).some(t => t.trim());
 
   const draft = (patch: Partial<ReviewDraft>): ReviewDraft => ({
-    verdict, correctedText: verdict === 'fix' ? fixText : null, comment, ...patch,
+    verdict, correctedTexts: verdict === 'fix' ? fixTexts : null, comment, ...patch,
   });
 
   const choose = (v: Verdict) => {
     if (v === verdict) return;
     setVerdict(v);
     // « Corriger » sans texte attend qu'il soit écrit.
-    if (v === 'fix' && !fixText.trim()) return;
-    send(draft({ verdict: v, correctedText: v === 'fix' ? fixText : null }));
+    if (v === 'fix' && !written(fixTexts)) return;
+    send(draft({ verdict: v, correctedTexts: v === 'fix' ? fixTexts : null }));
   };
+
+  const verdicts = VERDICTS.filter(v => fixable || v.verdict !== 'fix');
+  // Un ancien « Corriger » sur une convention vaut refus.
+  const shown = !fixable && verdict === 'fix' ? 'refuse' : verdict;
 
   return (
     <article id={anchor} className={`obp-base-card${current?.verdict ? ' obp-base-card--done' : ''}`} aria-label={title}>
@@ -81,23 +101,25 @@ export function ReviewCard({ anchor, title, children, withVerdict, editable, cur
       {children}
 
       {editable && withVerdict && (
-        <div className="obp-base-verdicts" role="group" aria-label={`Votre avis sur ${title}`}>
-          {VERDICTS.map(v => (
-            <button key={v.verdict} type="button" aria-pressed={verdict === v.verdict}
+        <div className={`obp-base-verdicts${fixable ? '' : ' obp-base-verdicts--two'}`} role="group" aria-label={`Votre avis sur ${title}`}>
+          {verdicts.map(v => (
+            <button key={v.verdict} type="button" aria-pressed={shown === v.verdict}
               className={`obp-base-verdict obp-base-verdict--${v.verdict}`} onClick={() => choose(v.verdict)}>
               {v.label}
             </button>
           ))}
         </div>
       )}
-      {editable && verdict === 'fix' && (
-        <>
-          <label htmlFor={`${id}-fix`} className="obp-base-label">Le texte tel que vous l'écririez</label>
-          <textarea id={`${id}-fix`} className="obp-base-textarea" rows={5} value={fixText}
-            onChange={e => setFixText(e.target.value)}
-            onBlur={() => { if (fixText.trim()) send(draft({ correctedText: fixText })); }} />
-        </>
-      )}
+      {editable && fixable && verdict === 'fix' && sections.map(section => (
+        <React.Fragment key={section.key}>
+          <label htmlFor={`${id}-fix-${section.key}`} className="obp-base-label">
+            {sections.length > 1 ? `« ${section.title} » : le texte tel que vous l'écririez` : 'Le texte tel que vous l\'écririez'}
+          </label>
+          <textarea id={`${id}-fix-${section.key}`} className="obp-base-textarea" rows={5} value={fixTexts[section.key] ?? ''}
+            onChange={e => setFixTexts(t => ({ ...t, [section.key]: e.target.value }))}
+            onBlur={() => { if (written(fixTexts)) send(draft({ correctedTexts: fixTexts })); }} />
+        </React.Fragment>
+      ))}
       {editable && (
         <>
           <label htmlFor={`${id}-comment`} className="obp-base-label">Un commentaire ? (facultatif)</label>
@@ -110,8 +132,11 @@ export function ReviewCard({ anchor, title, children, withVerdict, editable, cur
 
       {!editable && current && (
         <div className="obp-base-card__readonly">
-          {current.verdict && <p><strong>Avis : {VERDICT_LABEL[current.verdict]}</strong></p>}
-          {current.correctedText && <p className="obp-base-quote">« {current.correctedText} »</p>}
+          {shown && <p><strong>Avis : {VERDICT_LABEL[shown]}</strong></p>}
+          {fixable && current.correctedText && <p className="obp-base-quote">« {current.correctedText} »</p>}
+          {fixable && Object.entries(current.correctedTexts ?? {}).map(([key, text]) => (
+            <p key={key} className="obp-base-quote">« {text} »</p>
+          ))}
           {current.comment && <p>Commentaire : {current.comment}</p>}
         </div>
       )}

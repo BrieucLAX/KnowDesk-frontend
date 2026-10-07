@@ -10,6 +10,7 @@ import {
 } from '../../lib/correction';
 import type { BaseReview } from '../../hooks/useBaseReview';
 import { BaseLines } from './BaseLines';
+import type { FixSection } from './ReviewCard';
 import { ReviewCard } from './ReviewCard';
 import { SectionCommentBox } from './SectionCommentBox';
 
@@ -36,14 +37,17 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
   const mods = useMemo(() => new Map(base.modifications.map(m => [m.id, m])), [base.modifications]);
   const conventions = base.conventions ?? [];
   /** Le texte proposé par chaque modification, toutes sections confondues. */
-  const proposed = useMemo(() => {
-    const out = new Map<string, string>();
+  /** Les sections que chaque modification touche, dans l'ordre du document, avec les lignes qu'elle y propose. */
+  const fixSections = useMemo(() => {
+    const out = new Map<string, FixSection[]>();
     for (const m of base.modifications) {
-      const lines = sheets.flatMap(s => s.sections).flatMap(s => proposedLines(s.blocks, m.id));
-      out.set(m.id, lines.join('\n\n'));
+      const keys = new Set(m.section_keys);
+      out.set(m.id, sheets.flatMap(s => s.sections).filter(s => keys.has(s.key)).map(s => ({
+        key: s.key, title: titles.get(s.key) ?? s.title, proposed: proposedLines(s.blocks, m.id).join('\n\n'),
+      })));
     }
     return out;
-  }, [base.modifications, sheets]);
+  }, [base.modifications, sheets, titles]);
 
   const { state } = review;
   if (state.status === 'loading') return <Skeleton className="obp-skeleton-block" />;
@@ -63,7 +67,8 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
       editable={editable}
       current={state.reviews.get(m.id)}
       save={review.saves.get(`item:${m.id}`)}
-      proposed={proposed.get(m.id) ?? ''}
+      fixable
+      sections={fixSections.get(m.id) ?? []}
       onSave={d => { void review.saveReview(m.id, d); }}
     >
       <p className="obp-base-card__origin">{originLabel(m, cardTitles)}</p>
@@ -82,7 +87,8 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
       editable={editable}
       current={state.reviews.get(c.id)}
       save={review.saves.get(`item:${c.id}`)}
-      proposed={c.rule}
+      fixable={false}
+      sections={[]}
       onSave={d => { void review.saveReview(c.id, d); }}
     >
       <p className="obp-base-card__what">{c.rule}</p>

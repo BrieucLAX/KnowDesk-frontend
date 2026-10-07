@@ -174,7 +174,7 @@ describe('Nouvelle base : relecture', () => {
 
     fireEvent.click(within(m1).getByRole('button', { name: 'Accepter' }));
     await waitFor(() => expect(onboardingApi.review).toHaveBeenCalledWith('p1', PILOTE.correctionId, {
-      itemId: 'M1', expectedCurrentId: null, verdict: 'accept', correctedText: null, comment: null,
+      itemId: 'M1', expectedCurrentId: null, verdict: 'accept', correctedText: null, correctedTexts: null, comment: null,
     }));
     expect(await screen.findByText('1 sur 6 relues')).toBeInTheDocument();
     expect(within(m1).getByRole('button', { name: 'Accepter' })).toHaveAttribute('aria-pressed', 'true');
@@ -183,23 +183,24 @@ describe('Nouvelle base : relecture', () => {
     fireEvent.change(comment, { target: { value: 'À confirmer.' } });
     fireEvent.blur(comment);
     await waitFor(() => expect(onboardingApi.review).toHaveBeenLastCalledWith('p1', PILOTE.correctionId, {
-      itemId: 'M1', expectedCurrentId: '00000000-0000-4000-8000-000000000001', verdict: 'accept', correctedText: null, comment: 'À confirmer.',
+      itemId: 'M1', expectedCurrentId: '00000000-0000-4000-8000-000000000001', verdict: 'accept', correctedText: null, correctedTexts: null, comment: 'À confirmer.',
     }));
     expect(await within(m1).findByText('Enregistré')).toBeInTheDocument();
   });
 
   it('« Corriger » part du texte proposé et l\'enregistre corrigé', async () => {
-    vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict, correctedText: body.correctedText }));
+    vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict, correctedTexts: body.correctedTexts }));
+    const m3Key = PILOTE.base.modifications.find(m => m.id === 'M3')!.section_keys[0];
     render(<BaseTab project={project} onGoToClarify={() => {}} />);
     const m3 = await screen.findByRole('article', { name: /^Modification 3/ });
     fireEvent.click(within(m3).getByRole('button', { name: 'Corriger' }));
     const field = within(m3).getByLabelText('Le texte tel que vous l\'écririez') as HTMLTextAreaElement;
     expect(field.value).toMatch(/1er octobre 2026/);
-    await waitFor(() => expect(onboardingApi.review).toHaveBeenCalledWith('p1', PILOTE.correctionId, expect.objectContaining({ itemId: 'M3', verdict: 'fix', correctedText: field.value.trim() })));
+    await waitFor(() => expect(onboardingApi.review).toHaveBeenCalledWith('p1', PILOTE.correctionId, expect.objectContaining({ itemId: 'M3', verdict: 'fix', correctedText: null, correctedTexts: { [m3Key]: field.value.trim() } })));
 
     fireEvent.change(field, { target: { value: 'Mon texte.' } });
     fireEvent.blur(field);
-    await waitFor(() => expect(onboardingApi.review).toHaveBeenLastCalledWith('p1', PILOTE.correctionId, expect.objectContaining({ verdict: 'fix', correctedText: 'Mon texte.' })));
+    await waitFor(() => expect(onboardingApi.review).toHaveBeenLastCalledWith('p1', PILOTE.correctionId, expect.objectContaining({ verdict: 'fix', correctedTexts: { [m3Key]: 'Mon texte.' } })));
   });
 
   it('commente une section inchangée, à sa place', async () => {

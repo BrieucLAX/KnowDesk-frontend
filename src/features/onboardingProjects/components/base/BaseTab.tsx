@@ -12,6 +12,7 @@ import type { OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from '../audit/AuditSource';
 import { BaseReviewView } from './BaseReviewView';
 import { CorrectionProgress } from './CorrectionProgress';
+import { ValidationPanel } from './ValidationPanel';
 
 /** Intervalle de relecture d'une préparation en cours. */
 export const CORRECTION_POLL_MS = 5000;
@@ -19,6 +20,8 @@ export const CORRECTION_POLL_MS = 5000;
 interface BaseTabProps {
   project:       OnboardingProject;
   onGoToClarify: () => void;
+  /** Ouvre la version propre d'une version validée. */
+  onOpenValidation?: (validationId: string) => void;
 }
 
 type Loaded = { state: 'loading' } | { state: 'none' } | { state: 'ready'; analysisId: string; corrections: OnboardingCorrection[] };
@@ -27,7 +30,7 @@ type Loaded = { state: 'loading' } | { state: 'none' } | { state: 'ready'; analy
  * Onglet « Nouvelle base » : la préparation en cours (étapes, avancement), puis la relecture de la
  * dernière base prête. Les bases précédentes de l'analyse se consultent, en lecture seule.
  */
-export function BaseTab({ project, onGoToClarify }: BaseTabProps) {
+export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabProps) {
   const toast = useToast();
   const [loaded,   setLoaded]   = useState<Loaded>({ state: 'loading' });
   const [selected, setSelected] = useState<string | null>(null);
@@ -141,6 +144,16 @@ export function BaseTab({ project, onGoToClarify }: BaseTabProps) {
           </p>
         ) : (
           <AuditImagesContext.Provider value={images}>
+            {review.state.status === 'ready' && onOpenValidation && (
+              <ValidationPanel
+                projectId={project.id}
+                correctionId={base.correctionId}
+                reviews={review.state.reviews}
+                toReview={review.state.toReview}
+                editable={base.reviewable}
+                onOpen={onOpenValidation}
+              />
+            )}
             <BaseReviewView base={base.base} cardTitles={titles} editable={base.reviewable} review={review} />
           </AuditImagesContext.Provider>
         )

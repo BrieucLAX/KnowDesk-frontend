@@ -88,7 +88,7 @@ type View =
   | { screen: 'learning-edit'; pathId: string }
   | { screen: 'learning-play'; moduleId: string }
   | { screen: 'onboarding' }
-  | { screen: 'onboarding-project'; projectId: string; tab: ProjectTab };
+  | { screen: 'onboarding-project'; projectId: string; tab: ProjectTab; validationId?: string };
 
 /** Suffixe d'URL de chaque onglet d'un projet d'onboarding. */
 const ONBOARDING_TAB_PATHS: Record<ProjectTab, string> = {
@@ -118,6 +118,9 @@ function pathToView(pathname: string, fallbackFrom: Screen): View | null {
   if (pathname === '/faqs')                       return { screen: 'faqs' };
   if (pathname === '/faqs/new')                   return { screen: 'faq-editor' };
   if (pathname === '/onboarding')                 return { screen: 'onboarding' };
+  // Version propre d'une base validée : un écran à part, sous l'onglet « Nouvelle base ».
+  const validatedMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)\/base\/validee\/([^/]+)$/);
+  if (validatedMatch) return { screen: 'onboarding-project', projectId: validatedMatch[1], tab: 'base', validationId: validatedMatch[2] };
   const onboardingMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)(?:\/(cadrage|analyse|audit|base))?$/);
   if (onboardingMatch) {
     const tab: ProjectTab = onboardingMatch[2] === 'cadrage' ? 'cadrage'
@@ -186,7 +189,9 @@ function viewToPath(view: View): string | null {
     case 'faq-editor':  return view.faqId ? `/faqs/${view.faqId}/edit` : '/faqs/new';
     case 'onboarding':  return '/onboarding';
     case 'onboarding-project':
-      return `/onboarding/projects/${view.projectId}${ONBOARDING_TAB_PATHS[view.tab]}`;
+      return view.validationId
+        ? `/onboarding/projects/${view.projectId}/base/validee/${view.validationId}`
+        : `/onboarding/projects/${view.projectId}${ONBOARDING_TAB_PATHS[view.tab]}`;
     default:            return null;
   }
 }
@@ -549,7 +554,9 @@ if (!isLoggedIn) {
   <OnboardingProjectPage
     projectId={shown.projectId}
     tab={shown.tab}
+    validationId={shown.validationId ?? null}
     onTabChange={tab => go({ screen: 'onboarding-project', projectId: shown.projectId, tab })}
+    onOpenValidation={validationId => go({ screen: 'onboarding-project', projectId: shown.projectId, tab: 'base', validationId })}
     onBack={() => go({ screen: 'onboarding' })}
   />
 )}

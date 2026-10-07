@@ -19,7 +19,21 @@ export type BaseReviewState =
   };
 
 /** Ce qu'un avis porte : envoyé en entier à chaque écriture, pour qu'un commentaire n'efface pas un verdict. */
-export interface ReviewDraft { verdict: Verdict | null; correctedText: string | null; comment: string | null }
+export interface ReviewDraft {
+  verdict:        Verdict | null;
+  /** « Corriger » : un texte par section touchée (clé de section → texte). */
+  correctedTexts: Record<string, string> | null;
+  comment:        string | null;
+}
+
+/** Les textes écrits, sans les champs vides ; null s'il n'en reste aucun. */
+function cleanTexts(texts: Record<string, string> | null): Record<string, string> | null {
+  const kept = Object.entries(texts ?? {}).map(([k, v]) => [k, v.trim()] as const).filter(([, v]) => v);
+  return kept.length > 0 ? Object.fromEntries(kept) : null;
+}
+
+const sameTexts = (a: Record<string, string> | null, b: Record<string, string> | null) =>
+  JSON.stringify(Object.entries(a ?? {}).sort()) === JSON.stringify(Object.entries(b ?? {}).sort());
 
 /** Codes après lesquels l'écran ne reflète plus le back : on relit tout. */
 const RELOAD_CODES = new Set(['REVIEW_CONFLICT', 'BASE_READ_ONLY']);
@@ -104,11 +118,13 @@ export function useBaseReview(projectId: string, correctionId: string | null) {
     if (correctionId === null) return;
     const current = reviews.current.get(itemId) ?? null;
     const body = {
-      verdict:       draft.verdict,
-      correctedText: draft.verdict === 'fix' ? clean(draft.correctedText) : null,
-      comment:       clean(draft.comment),
+      verdict:        draft.verdict,
+      correctedText:  null,
+      correctedTexts: draft.verdict === 'fix' ? cleanTexts(draft.correctedTexts) : null,
+      comment:        clean(draft.comment),
     };
-    if (current && current.verdict === body.verdict && current.correctedText === body.correctedText && current.comment === body.comment) return;
+    if (current && current.verdict === body.verdict && current.correctedText === null
+      && sameTexts(current.correctedTexts, body.correctedTexts) && current.comment === body.comment) return;
     if (body.verdict === null && body.comment === null) {
       if (!current) return;
       const res = await onboardingApi.cancelReview(projectId, correctionId, current.id);
@@ -116,7 +132,7 @@ export function useBaseReview(projectId: string, correctionId: string | null) {
       publish();
       return;
     }
-    if (body.verdict === 'fix' && body.correctedText === null) {
+    if (body.verdict === 'fix' && body.correctedTexts === null) {
       throw new Error('Écrivez le texte tel que vous le voulez avant d\'enregistrer « Corriger ».');
     }
     const saved = await onboardingApi.review(projectId, correctionId, { itemId, expectedCurrentId: current?.id ?? null, ...body });

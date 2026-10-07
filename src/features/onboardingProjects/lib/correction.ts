@@ -110,7 +110,10 @@ export interface Review {
   id:            string;
   itemId:        string;
   verdict:       Verdict | null;
+  /** « Corriger » d'avant la version propre : un seul texte. */
   correctedText: string | null;
+  /** « Corriger » : un texte par section touchée (clé de section → texte). */
+  correctedTexts?: Record<string, string> | null;
   comment:       string | null;
   supersedesId:  string | null;
   authorName:    string | null;
@@ -135,6 +138,26 @@ export interface SectionComment {
 }
 
 export interface ChainCancelResult<T> { cancelled: T; current: T | null }
+
+/** Une version validée de la nouvelle base (version propre), figée. */
+export interface ValidationSummary {
+  id:              string;
+  correctionId:    string;
+  version:         number;
+  validatedByName: string;
+  validatedAt:     string;
+  /** La plus récente : ses avis sont-ils encore les avis courants ? null pour les précédentes. */
+  upToDate:        boolean | null;
+}
+
+/** Une fiche de la version propre : son premier titre et son texte final, assemblés par le back. */
+export interface CleanSheet { documentId: string; path: string; title: string; markdown: string }
+
+export interface Validation extends ValidationSummary {
+  /** L'analyse dont les images sont servies. */
+  analysisId: string;
+  content:    { format: 1; sheets: CleanSheet[] };
+}
 
 export const isCorrectionActive = (c: Pick<OnboardingCorrection, 'status'>) => c.status === 'queued' || c.status === 'running';
 

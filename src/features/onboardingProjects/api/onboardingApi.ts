@@ -7,7 +7,8 @@ import type { AuditResponse } from '../lib/audit';
 import type { CardAction } from '../lib/reading';
 import type { CancelResult, Decision, DecisionAction, DecisionsState } from '../lib/decisions';
 import type {
-  BaseVersion, ChainCancelResult, CorrectionQuota, OnboardingCorrection, Review, ReviewsState, SectionComment, Verdict,
+  BaseVersion, ChainCancelResult, CorrectionQuota, OnboardingCorrection, Review, ReviewsState, SectionComment, Validation,
+  ValidationSummary, Verdict,
 } from '../lib/correction';
 
 const BASE = '/onboarding';
@@ -112,7 +113,8 @@ export const onboardingApi = {
     apiClient.get<ReviewsState>(`${BASE}/projects/${projectId}/corrections/${correctionId}/reviews`),
   /** 201 ; 409 REVIEW_CONFLICT si l'avis courant a changé, BASE_READ_ONLY sur une correction précédente. */
   review: (projectId: string, correctionId: string, body: {
-    itemId: string; expectedCurrentId: string | null; verdict: Verdict | null; correctedText: string | null; comment: string | null;
+    itemId: string; expectedCurrentId: string | null; verdict: Verdict | null; correctedText: string | null;
+    correctedTexts: Record<string, string> | null; comment: string | null;
   }) => apiClient.post<Review>(`${BASE}/projects/${projectId}/corrections/${correctionId}/reviews`, body),
   cancelReview: (projectId: string, correctionId: string, reviewId: string) =>
     apiClient.post<ChainCancelResult<Review>>(`${BASE}/projects/${projectId}/corrections/${correctionId}/reviews/${reviewId}/cancel`, {}),
@@ -120,6 +122,17 @@ export const onboardingApi = {
     apiClient.get<SectionComment[]>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-comments`),
   commentSection: (projectId: string, correctionId: string, body: { sectionKey: string; expectedCurrentId: string | null; comment: string }) =>
     apiClient.post<SectionComment>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-comments`, body),
+  /**
+   * Valide la nouvelle base : 201, nouvelle version ; 200, avis inchangés (la dernière).
+   * 409 REVIEWS_PENDING (un avis manque), BASE_READ_ONLY.
+   */
+  validateBase: (projectId: string, correctionId: string) =>
+    apiClient.post<ValidationSummary>(`${BASE}/projects/${projectId}/corrections/${correctionId}/validations`, {}),
+  /** Les versions validées, la plus récente d'abord. */
+  listValidations: (projectId: string, correctionId: string) =>
+    apiClient.get<ValidationSummary[]>(`${BASE}/projects/${projectId}/corrections/${correctionId}/validations`),
+  getValidation: (projectId: string, validationId: string) =>
+    apiClient.get<Validation>(`${BASE}/projects/${projectId}/validations/${validationId}`),
   cancelSectionComment: (projectId: string, correctionId: string, commentId: string) =>
     apiClient.post<ChainCancelResult<SectionComment>>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-comments/${commentId}/cancel`, {}),
 };
