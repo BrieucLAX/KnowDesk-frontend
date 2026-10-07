@@ -17,6 +17,8 @@ interface ClarifyViewProps {
   arbitration: Arbitration;
   /** Ouvre la session sur une carte (null : la première à traiter). */
   onOpen:      (cardId: string | null) => void;
+  /** « Préparer la nouvelle base » (dernière analyse seulement), sous le résumé. */
+  correction?: React.ReactNode;
 }
 
 const STATUS_CLASS = { open: 'todo', answered: 'decided', later: 'later' } as const;
@@ -29,7 +31,7 @@ const STATUS_CLASS = { open: 'todo', answered: 'decided', later: 'later' } as co
  * pas encore n'apparaît pas dans la vue d'ensemble, jamais comme « 0 » : seul le volet de
  * détails la mentionne, en clair.
  */
-export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyViewProps) {
+export function ClarifyView({ audit, reading, arbitration, onOpen, correction }: ClarifyViewProps) {
   const ordered = orderedCards(reading.cards);
   const groups = groupByNature(reading.cards);
   const docs = docNaming(audit);
@@ -73,6 +75,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen }: ClarifyView
             Audit d'une analyse précédente : ses réponses restent consultables, mais ne se modifient plus.
           </p>
         )}
+        {ready && arbitrable && correction}
       </section>
 
       {groups.map(g => (

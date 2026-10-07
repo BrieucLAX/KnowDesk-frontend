@@ -1,0 +1,95 @@
+{
+ "schemaVersion": "0.9.0",
+ "cards": [
+  {
+   "id": "card_09f84bf6d6d86fb2",
+   "nature": "dated_change",
+   "rank": 1,
+   "analysis": {
+    "subject": "Nouvelle grille tarifaire applicable au 01/01/2027 pour les contrats individuels",
+    "reason": "La grille tarifaire du chapitre 3 de la base de connaissance est obsolète depuis le 04/09/2026 (date de l'email) et sera remplacée par une nouvelle grille applicable au 01/01/2027. Les montants indiqués dans la base de connaissance ne doivent plus être utilisés pour les adhésions ou les réponses aux adhérents.",
+    "proposal": "Mettre à jour le chapitre 3 de la base de connaissance avec la nouvelle grille tarifaire jointe à l'email-3, en précisant que ces tarifs s'appliquent à compter du 01/01/2027. Ajouter une note temporaire indiquant que les tarifs 2024 ne sont plus valables et que les nouveaux tarifs seront intégrés dans GESTOR à partir du 15/12/2026. Jusqu'à cette date, se référer à l'email-3 pour toute communication tarifaire."
+   }
+  },
+  {
+   "id": "card_bc5b94ab3e7ecb13",
+   "nature": "dated_change",
+   "rank": 2,
+   "analysis": {
+    "subject": "Procédure temporaire de secours pendant la maintenance GESTOR du 28 au 29/09/2026",
+    "reason": "La procédure standard de vérification des droits tiers payant dans GESTOR (chapitre 5) ne sera pas applicable pendant la maintenance du 28 au 29/09/2026. Une procédure de secours temporaire est mise en place pour cette période, mais elle n'est pas documentée dans la base de connaissance.",
+    "proposal": "Ajouter une note temporaire dans le chapitre 5 de la base de connaissance, visible jusqu'au 30/09/2026, indiquant : \"Du 28/09/2026 20h00 au 29/09/2026 06h00, GESTOR sera inaccessible. Pour toute vérification des droits tiers payant pendant cette période, consulter le fichier extrait 'Droits_TP_export_13092026.xlsx' sur le lecteur partagé \\alviva\\partages\\prestations\\secours-maintenance. En cas de doute, ne pas refuser le tiers payant et demander à l'adhérent d'avancer les frais.\""
+   }
+  },
+  {
+   "id": "card_b86f78340ed9425d",
+   "nature": "dated_change",
+   "rank": 3,
+   "analysis": {
+    "subject": "Nouvelle procédure de traitement des incidents de tiers payant en période pilote du 01/10 au 30/11/2026",
+    "reason": "La procédure de traitement des incidents de tiers payant décrite dans la base de connaissance (chapitre 5.3) est modifiée temporairement pour une période pilote du 01/10 au 30/11/2026. La nouvelle procédure n'est pas documentée dans la base de connaissance et ne s'applique que pour les pharmacies pendant cette période.",
+    "proposal": "Ajouter une note dans le chapitre 5.3 de la base de connaissance, visible jusqu'au 30/11/2026, indiquant : \"Du 01/10/2026 au 30/11/2026, une nouvelle procédure pilote s'applique pour les incidents de tiers payant en pharmacie : utiliser le statut 'Incident TP — Priorité Flux' dans GESTOR pour déclencher une notification automatique à la cellule Flux. Pour les professionnels du réseau Alviva Santé, la procédure standard reste applicable.\""
+   }
+  },
+  {
+   "id": "card_daebae8612239ef8",
+   "nature": "incomplete_or_outdated",
+   "rank": 4,
+   "analysis": {
+    "subject": "Service de téléconsultation médicale non documenté dans la base de connaissance",
+    "reason": "Le brief annonce le lancement d'un service de téléconsultation médicale pour le 01/03/2027, mais ce service n'est pas documenté dans la base de connaissance. Le sommaire ne mentionne aucun chapitre dédié à cette nouvelle activité, ce qui pourrait entraîner des lacunes dans la formation des équipes et des réponses inadéquates aux adhérents.",
+    "proposal": "Créer un nouveau chapitre dans la base de connaissance dédié à la téléconsultation médicale, intégrant les informations du brief : éligibilité, fonctionnement, exclusions, et impact opérationnel pour chaque direction. Ce chapitre devra être finalisé avant la formation des équipes en février 2027 et publié au plus tard le 01/03/2027."
+   }
+  },
+  {
+   "id": "card_4baa25418908e465",
+   "nature": "incomplete_or_outdated",
+   "rank": 5,
+   "analysis": {
+    "subject": "Chapitre 3 sur les cotisations et tarification marqué comme non actualisé",
+    "reason": "Le chapitre 3 de la base de connaissance est explicitement marqué comme non actualisé depuis juin 2024, et l'email-3 confirme que les tarifs ne doivent plus être utilisés. Cependant, la structure de la grille (zones, tranches d'âge) reste valable et utile pour comprendre le système de tarification.",
+    "proposal": "Mettre à jour le chapitre 3 en supprimant les montants obsolètes et en ajoutant une note claire : \"Les montants indiqués dans cette fiche sont obsolètes depuis le 04/09/2026. Se référer à la dernière communication tarifaire de la Direction Commerciale pour les tarifs applicables. La structure de la grille (zones, tranches d'âge) reste valable pour comprendre le système de tarification.\""
+   }
+  },
+  {
+   "id": "card_15936b88e7a5fbe7",
+   "nature": "probable_error",
+   "rank": 6,
+   "analysis": {
+    "subject": "Incohérence sur le tarif de la formule CONFORT pour la tranche 18-29 ans en Zone 1",
+    "reason": "L'email-3 mentionne un tarif de 35,80 € pour la formule CONFORT en 2024, mais la grille du chapitre 3 indique 45,80 € pour la même formule et tranche d'âge. Cette incohérence peut provenir d'une erreur de frappe dans l'email ou d'une confusion avec une autre formule.",
+    "proposal": "Vérifier auprès de la Direction Commerciale le tarif exact de la formule CONFORT pour la tranche 18-29 ans en Zone 1 en 2024. Corriger l'email-3 ou le chapitre 3 en conséquence pour éviter toute confusion lors de la mise à jour de la grille tarifaire 2027."
+   }
+  },
+  {
+   "id": "card_4bd41a5e9e6de0ca",
+   "nature": "incomplete_or_outdated",
+   "rank": 8,
+   "analysis": {
+    "subject": "FAQ transverse non mise à jour concernant la gratuité des cotisations pour les enfants",
+    "reason": "La FAQ indique que la gratuité de cotisation pour les enfants est liée à des offres promotionnelles ponctuelles, mais ne précise pas si une telle offre est en cours. Cette information est incomplète et pourrait induire en erreur les gestionnaires ou les adhérents.",
+    "proposal": "Mettre à jour la FAQ pour préciser si une offre promotionnelle de gratuité pour les enfants est en cours. Si ce n'est pas le cas, reformuler la réponse : \"La cotisation des enfants n'est pas gratuite par défaut. Certaines offres promotionnelles ponctuelles peuvent prévoir une gratuité à partir du 3e enfant rattaché. Vérifier auprès de la Direction Commerciale si une telle offre est en cours avant de communiquer ce principe.\""
+   }
+  },
+  {
+   "id": "card_14bc06f652d38416",
+   "nature": "incomplete_or_outdated",
+   "rank": 9,
+   "analysis": {
+    "subject": "Absence de mention des contrats TNS dans la procédure de résiliation infra-annuelle",
+    "reason": "La procédure de résiliation infra-annuelle (chapitre 7) ne mentionne pas explicitement que les contrats TNS ne sont pas concernés par cette possibilité, en raison de leur caractère non résiliable en cours d'année. Cela pourrait entraîner des erreurs de traitement pour les gestionnaires.",
+    "proposal": "Ajouter une note dans le chapitre 7.1 et 7.3 précisant : \"La résiliation infra-annuelle ne s'applique pas aux contrats TNS (loi Madelin), qui ne sont pas résiliables en cours d'année sauf motif légal de résiliation anticipée.\""
+   }
+  },
+  {
+   "id": "card_f22e491e78c02f46",
+   "nature": "incomplete_or_outdated",
+   "rank": 10,
+   "analysis": {
+    "subject": "Absence de mention du service de téléconsultation dans les outils internes (GESTOR)",
+    "reason": "Le chapitre 11 sur les outils internes (GESTOR) ne mentionne pas l'ajout prévu d'un nouvel écran dédié à l'historique des téléconsultations, qui sera opérationnel à partir du 01/03/2027. Cela pourrait entraîner une méconnaissance de cette fonctionnalité par les gestionnaires.",
+    "proposal": "Ajouter une note dans le chapitre 11.2 indiquant : \"À compter du 01/03/2027, un nouvel onglet 'Historique téléconsultations' sera disponible dans GESTOR pour consulter les téléconsultations réalisées par les adhérents. Cet écran sera en lecture seule et accessible aux gestionnaires Prestations et Relation Adhérents.\""
+   }
+  }
+ ]
+}

@@ -16,10 +16,13 @@ import { ArbitrationSession } from './ArbitrationSession';
 import { CurrentDecision } from './DecisionActions';
 import { ClarifyView } from '../clarify/ClarifyView';
 import { ClarifySession } from '../clarify/ClarifySession';
+import { CorrectionEntry } from '../base/CorrectionEntry';
 
 interface AuditTabProps {
   project:        OnboardingProject;
   onGoToAnalysis: () => void;
+  /** Ouvre l'onglet « Nouvelle base ». */
+  onOpenBase?:    () => void;
 }
 
 type Loaded =
@@ -28,7 +31,7 @@ type Loaded =
   | { state: 'unsupported'; schemaVersion: string }
   | { state: 'ready'; audit: Audit; imageIds: ReadonlySet<string> }
   /** Audit 0.8.0 : `audit` n'en garde que l'inventaire (noms de fichier), les cartes sont dans `reading`. */
-  | { state: 'reading'; audit: Audit; reading: Reading; imageIds: ReadonlySet<string> };
+  | { state: 'reading'; audit: Audit; reading: Reading; imageIds: ReadonlySet<string>; schemaVersion: string };
 
 /**
  * Onglet « À clarifier » (F3, F-C'). Affiche l'audit de la dernière analyse
@@ -37,7 +40,7 @@ type Loaded =
  * 0.8.0 (lecture globale) montre ses cartes ; un audit 0.6.0 ou 0.7.0, ses
  * questions, comme avant.
  */
-export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
+export function AuditTab({ project, onGoToAnalysis, onOpenBase }: AuditTabProps) {
   const toast = useToast();
   const [analyses, setAnalyses] = useState<OnboardingAnalysis[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
@@ -76,7 +79,7 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
         if (isReadingAudit(res.schemaVersion) && res.reading) {
           const inventory = normalizeAudit(res.audit);
           setLoaded(inventory
-            ? { state: 'reading', audit: inventory, reading: res.reading, imageIds: new Set(res.imageIds) }
+            ? { state: 'reading', audit: inventory, reading: res.reading, imageIds: new Set(res.imageIds), schemaVersion: res.schemaVersion }
             : { state: 'unsupported', schemaVersion: res.schemaVersion });
           return;
         }
@@ -163,7 +166,22 @@ export function AuditTab({ project, onGoToAnalysis }: AuditTabProps) {
               onExit={() => setClarify(undefined)}
             />
           ) : (
-            <ClarifyView audit={loaded.audit} reading={loaded.reading} arbitration={arbitration} onOpen={setClarify} />
+            <ClarifyView
+              audit={loaded.audit}
+              reading={loaded.reading}
+              arbitration={arbitration}
+              onOpen={setClarify}
+              correction={isLatest && onOpenBase && arbitration.state.status === 'ready' && (
+                <CorrectionEntry
+                  projectId={project.id}
+                  analysisId={current.id}
+                  schemaVersion={loaded.schemaVersion}
+                  cards={loaded.reading.cards}
+                  current={arbitration.state.current}
+                  onOpenBase={onOpenBase}
+                />
+              )}
+            />
           )}
         </AuditImagesContext.Provider>
       )}

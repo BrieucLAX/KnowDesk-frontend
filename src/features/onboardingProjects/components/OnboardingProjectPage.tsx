@@ -11,10 +11,11 @@ import { DocumentsTab } from './DocumentsTab';
 import { CadrageTab }   from './CadrageTab';
 import { AnalysisTab }  from './AnalysisTab';
 import { AuditTab }     from './audit/AuditTab';
+import { BaseTab }      from './base/BaseTab';
 import type { OnboardingProject } from '../types';
 import '../onboardingProjects.css';
 
-export type ProjectTab = 'documents' | 'cadrage' | 'analysis' | 'audit';
+export type ProjectTab = 'documents' | 'cadrage' | 'analysis' | 'audit' | 'base';
 
 const TABS = [
   { id: 'documents', label: 'Documents' },
@@ -22,6 +23,7 @@ const TABS = [
   { id: 'analysis',  label: 'Analyse' },
   // L'URL reste `audit` ; l'onglet montre l'audit de chaque analyse réussie, quelle que soit sa version.
   { id: 'audit',     label: 'À clarifier' },
+  { id: 'base',      label: 'Nouvelle base' },
 ] as const;
 
 interface OnboardingProjectPageProps {
@@ -103,7 +105,10 @@ export function OnboardingProjectPage({ projectId, tab, onTabChange, onBack }: O
         {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
         {tab === 'cadrage' && <CadrageTab project={project} onSaved={reload} onDirtyChange={setCadrageDirty} />}
         {tab === 'analysis' && <AnalysisTab project={project} onChanged={reload} onOpenAudit={() => onTabChange('audit')} />}
-        {tab === 'audit' && <AuditTab project={project} onGoToAnalysis={() => onTabChange('analysis')} />}
+        {tab === 'audit' && (
+          <AuditTab project={project} onGoToAnalysis={() => onTabChange('analysis')} onOpenBase={() => onTabChange('base')} />
+        )}
+        {tab === 'base' && <BaseTab project={project} onGoToClarify={() => onTabChange('audit')} />}
       </div>
 
       {pendingLeave && (

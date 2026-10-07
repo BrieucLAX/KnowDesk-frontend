@@ -6,6 +6,9 @@ import type {
 import type { AuditResponse } from '../lib/audit';
 import type { CardAction } from '../lib/reading';
 import type { CancelResult, Decision, DecisionAction, DecisionsState } from '../lib/decisions';
+import type {
+  BaseVersion, ChainCancelResult, CorrectionQuota, OnboardingCorrection, Review, ReviewsState, SectionComment, Verdict,
+} from '../lib/correction';
 
 const BASE = '/onboarding';
 
@@ -86,4 +89,37 @@ export const onboardingApi = {
   /** Annule la décision courante d'une question ou d'une carte (Q1). */
   cancelDecision: (projectId: string, analysisId: string, decisionId: string) =>
     apiClient.post<CancelResult>(`${BASE}/projects/${projectId}/analyses/${analysisId}/decisions/${decisionId}/cancel`, {}),
+  /** Toutes les images conservées de l'analyse (citées par l'audit ou non), sans leurs octets. */
+  listAuditImages: (projectId: string, analysisId: string) =>
+    apiClient.get<Array<{ imageId: string }>>(`${BASE}/projects/${projectId}/analyses/${analysisId}/images`),
+
+  // ── Correction de la base (plan-correction-produit.md, lot 3) ──
+  /**
+   * 202 : la correction part en file. Refus : CARDS_PENDING, CORRECTION_IN_PROGRESS,
+   * ANALYSIS_IN_PROGRESS, ANALYSIS_NOT_LATEST, CORRECTION_QUOTA_EXCEEDED, AUDIT_NOT_CORRECTABLE.
+   */
+  launchCorrection: (projectId: string, analysisId: string) =>
+    apiClient.post<OnboardingCorrection>(`${BASE}/projects/${projectId}/analyses/${analysisId}/corrections`, {}),
+  /** Les corrections de l'analyse, la plus récente d'abord ; le quota de l'organisation en meta. */
+  listCorrections: (projectId: string, analysisId: string) =>
+    apiClient.getWithMeta<OnboardingCorrection[], { quota: CorrectionQuota }>(`${BASE}/projects/${projectId}/analyses/${analysisId}/corrections`),
+  getCorrection: (projectId: string, correctionId: string) =>
+    apiClient.get<OnboardingCorrection>(`${BASE}/projects/${projectId}/corrections/${correctionId}`),
+  /** La base corrigée (correction 0.1.0) ; 404 avant la réussite. */
+  getBase: (projectId: string, correctionId: string) =>
+    apiClient.get<BaseVersion>(`${BASE}/projects/${projectId}/corrections/${correctionId}/base`),
+  listReviews: (projectId: string, correctionId: string) =>
+    apiClient.get<ReviewsState>(`${BASE}/projects/${projectId}/corrections/${correctionId}/reviews`),
+  /** 201 ; 409 REVIEW_CONFLICT si l'avis courant a changé, BASE_READ_ONLY sur une correction précédente. */
+  review: (projectId: string, correctionId: string, body: {
+    itemId: string; expectedCurrentId: string | null; verdict: Verdict | null; correctedText: string | null; comment: string | null;
+  }) => apiClient.post<Review>(`${BASE}/projects/${projectId}/corrections/${correctionId}/reviews`, body),
+  cancelReview: (projectId: string, correctionId: string, reviewId: string) =>
+    apiClient.post<ChainCancelResult<Review>>(`${BASE}/projects/${projectId}/corrections/${correctionId}/reviews/${reviewId}/cancel`, {}),
+  listSectionComments: (projectId: string, correctionId: string) =>
+    apiClient.get<SectionComment[]>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-comments`),
+  commentSection: (projectId: string, correctionId: string, body: { sectionKey: string; expectedCurrentId: string | null; comment: string }) =>
+    apiClient.post<SectionComment>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-comments`, body),
+  cancelSectionComment: (projectId: string, correctionId: string, commentId: string) =>
+    apiClient.post<ChainCancelResult<SectionComment>>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-comments/${commentId}/cancel`, {}),
 };
