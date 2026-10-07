@@ -21,6 +21,13 @@ const ERROR_MESSAGES: Record<string, string> = {
   // Arbitrage de l'audit (F3, B-F3b).
   DECISION_CONFLICT:     'Cette question a été modifiée entre-temps.',
   AUDIT_READ_ONLY:       'Cet audit est celui d\'une analyse précédente : il se consulte, mais ne s\'arbitre plus.',
+  // Correction de la base (plan-correction-produit.md, lot 3). CARDS_PENDING et
+  // CORRECTION_QUOTA_EXCEEDED gardent le message du back, qui donne le nombre.
+  REVIEW_CONFLICT:        'Cet avis a été modifié entre-temps : la relecture a été rechargée.',
+  BASE_READ_ONLY:         'Cette base est celle d\'une préparation précédente : elle se consulte, mais ne se relit plus.',
+  CORRECTION_IN_PROGRESS: 'Une nouvelle base est déjà en préparation pour ce projet.',
+  ANALYSIS_NOT_LATEST:    'La nouvelle base se prépare sur la dernière analyse du projet.',
+  AUDIT_NOT_CORRECTABLE:  'Cet audit vient d\'une version précédente de l\'analyse : relancez une analyse pour préparer la nouvelle base.',
 };
 
 export function getErrorMessage(err: unknown): string {

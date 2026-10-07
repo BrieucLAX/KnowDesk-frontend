@@ -1,0 +1,1506 @@
+{
+ "correctionId": "10b1c5a3-b76a-4575-9d49-26776e0ee6fe",
+ "schemaVersion": "0.1.0",
+ "base": {
+  "run": {
+   "calls": 11,
+   "model": "mistral-large-2512",
+   "cost_usd": 0.016985,
+   "prompt_id": "redaction_correction",
+   "prompt_version": 1,
+   "pipeline_commit": "unknown",
+   "duration_seconds": 69.006
+  },
+  "sheets": [
+   {
+    "markdown": "",
+    "sections": [
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_00_sommaire_md_81dd1a4c:0",
+      "changes": [],
+      "heading_path": [
+       "00-sommaire.md"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "![Logo Alviva Mutuelle](image:img_f71a4c3878ce1c4e)\n",
+      "corrected_markdown": "![Logo Alviva Mutuelle](image:img_f71a4c3878ce1c4e)\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_00_sommaire_md_81dd1a4c:1",
+      "changes": [],
+      "heading_path": [
+       "Base de connaissance interne — Alviva Mutuelle"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "# Base de connaissance interne — Alviva Mutuelle\n\n**Périmètre :** Gestion des adhérents particuliers et entreprises, contrats santé et prévoyance individuelle et collective. **Public :** Conseillers relation adhérents, gestionnaires back-office, conseillers commerciaux, service réclamations. **Dernière refonte générale :** 03/2025 — *certaines fiches n'ont pas été mises à jour depuis et peuvent contenir des informations obsolètes (tarifs, process). Voir les notes « À vérifier » en tête de fiche le cas échéant.*\n",
+      "corrected_markdown": "# Base de connaissance interne — Alviva Mutuelle\n\n**Périmètre :** Gestion des adhérents particuliers et entreprises, contrats santé et prévoyance individuelle et collective. **Public :** Conseillers relation adhérents, gestionnaires back-office, conseillers commerciaux, service réclamations. **Dernière refonte générale :** 03/2025 — *certaines fiches n'ont pas été mises à jour depuis et peuvent contenir des informations obsolètes (tarifs, process). Voir les notes « À vérifier » en tête de fiche le cas échéant.*\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_00_sommaire_md_81dd1a4c:2",
+      "changes": [
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "| 10 | Téléconsultation médicale | **À créer — lancement le 01/03/2027** |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M4"
+       },
+       {
+        "kept": true,
+        "kind": "modify",
+        "after": "| 11 | Relations avec les professionnels de santé et réseaux de soins | 07/2024 |",
+        "before": "| 10 | Relations avec les professionnels de santé et réseaux de soins | 07/2024 |",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M4"
+       },
+       {
+        "kept": true,
+        "kind": "modify",
+        "after": "| 12 | Outils internes de gestion (SI) | 05/2024 |",
+        "before": "| 11 | Outils internes de gestion (SI) | 05/2024 |",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M4"
+       },
+       {
+        "kept": true,
+        "kind": "modify",
+        "after": "| 13 | Lutte contre la fraude et contrôle médical | 04/2024 |",
+        "before": "| 12 | Lutte contre la fraude et contrôle médical | 04/2024 |",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M4"
+       },
+       {
+        "kept": true,
+        "kind": "modify",
+        "after": "| 14 | Glossaire et acronymes métier | 03/2025 |",
+        "before": "| 13 | Glossaire et acronymes métier | 03/2025 |",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M4"
+       }
+      ],
+      "heading_path": [
+       "Base de connaissance interne — Alviva Mutuelle",
+       "Sommaire"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M4"
+      ],
+      "original_markdown": "## Sommaire\n\n| N° | Chapitre | Dernière modification |\n|---|---|---|\n| 1 | Présentation d'Alviva Mutuelle et de l'offre | 11/2024 |\n| 2 | Adhésion et souscription | 03/2025 |\n| 3 | Cotisations et tarification | **06/2024 — non actualisé** |\n| 4 | Remboursements santé | 01/2025 |\n| 5 | Tiers payant | 09/2024 |\n| 6 | Réclamations et litiges | 02/2025 |\n| 7 | Résiliation de contrat | 03/2025 |\n| 8 | Prévoyance — Arrêt de travail et invalidité | 08/2024 |\n| 9 | Portail assuré & application mobile | 12/2024 |\n| 10 | Relations avec les professionnels de santé et réseaux de soins | 07/2024 |\n| 11 | Outils internes de gestion (SI) | 05/2024 |\n| 12 | Lutte contre la fraude et contrôle médical | 04/2024 |\n| 13 | Glossaire et acronymes métier | 03/2025 |\n",
+      "corrected_markdown": "## Sommaire\n\n| N° | Chapitre | Dernière modification |\n|---|---|---|\n| 1 | Présentation d'Alviva Mutuelle et de l'offre | 11/2024 |\n| 2 | Adhésion et souscription | 03/2025 |\n| 3 | Cotisations et tarification | **06/2024 — non actualisé** |\n| 4 | Remboursements santé | 01/2025 |\n| 5 | Tiers payant | 09/2024 |\n| 6 | Réclamations et litiges | 02/2025 |\n| 7 | Résiliation de contrat | 03/2025 |\n| 8 | Prévoyance — Arrêt de travail et invalidité | 08/2024 |\n| 9 | Portail assuré & application mobile | 12/2024 |\n| 10 | Téléconsultation médicale | **À créer — lancement le 01/03/2027** |\n| 11 | Relations avec les professionnels de santé et réseaux de soins | 07/2024 |\n| 12 | Outils internes de gestion (SI) | 05/2024 |\n| 13 | Lutte contre la fraude et contrôle médical | 04/2024 |\n| 14 | Glossaire et acronymes métier | 03/2025 |\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_00_sommaire_md_81dd1a4c:3",
+      "changes": [],
+      "heading_path": [
+       "Base de connaissance interne — Alviva Mutuelle",
+       "Comment utiliser cette base"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## Comment utiliser cette base\n\n- Chaque fiche commence par un **encart de synthèse** (à qui s'adresser, en combien de temps, quels documents).\n- Les **arbres de décision** (images) permettent de traiter les cas les plus fréquents sans relire toute la fiche.\n- Les **captures d'écran** proviennent de l'outil de gestion interne **GESTOR** et de l'espace assuré. Les données affichées sont fictives (jeu de test).\n- Un bandeau **⚠ À vérifier / en cours de mise à jour** signale un contenu potentiellement dépassé — en cas de doute, se référer en priorité aux communications internes (notes de service, emails Direction des Opérations) qui prévalent toujours sur la base de connaissance écrite.\n- Les fiches sont classées par processus métier, pas par outil : une même situation (ex. un refus de tiers payant) peut renvoyer vers plusieurs chapitres.\n",
+      "corrected_markdown": "## Comment utiliser cette base\n\n- Chaque fiche commence par un **encart de synthèse** (à qui s'adresser, en combien de temps, quels documents).\n- Les **arbres de décision** (images) permettent de traiter les cas les plus fréquents sans relire toute la fiche.\n- Les **captures d'écran** proviennent de l'outil de gestion interne **GESTOR** et de l'espace assuré. Les données affichées sont fictives (jeu de test).\n- Un bandeau **⚠ À vérifier / en cours de mise à jour** signale un contenu potentiellement dépassé — en cas de doute, se référer en priorité aux communications internes (notes de service, emails Direction des Opérations) qui prévalent toujours sur la base de connaissance écrite.\n- Les fiches sont classées par processus métier, pas par outil : une même situation (ex. un refus de tiers payant) peut renvoyer vers plusieurs chapitres.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_00_sommaire_md_81dd1a4c:4",
+      "changes": [],
+      "heading_path": [
+       "Base de connaissance interne — Alviva Mutuelle",
+       "Historique des principales évolutions"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## Historique des principales évolutions\n\n- **03/2025** : refonte du parcours d'adhésion en ligne, mise à jour des fiches résiliation suite au renforcement de la réglementation sur la résiliation infra-annuelle.\n- **01/2025** : refonte du circuit de remboursement suite au changement d'éditeur du moteur de calcul (passage de l'outil historique « MutAssur » à **GESTOR**).\n- **09/2024** : intégration du réseau de soins « Alviva Santé » (opticiens et dentistes partenaires).\n- **06/2024** : dernière mise à jour connue de la grille tarifaire — **à considérer comme non fiable**, une nouvelle grille a été communiquée par ailleurs (voir emails Direction Commerciale).\n",
+      "corrected_markdown": "## Historique des principales évolutions\n\n- **03/2025** : refonte du parcours d'adhésion en ligne, mise à jour des fiches résiliation suite au renforcement de la réglementation sur la résiliation infra-annuelle.\n- **01/2025** : refonte du circuit de remboursement suite au changement d'éditeur du moteur de calcul (passage de l'outil historique « MutAssur » à **GESTOR**).\n- **09/2024** : intégration du réseau de soins « Alviva Santé » (opticiens et dentistes partenaires).\n- **06/2024** : dernière mise à jour connue de la grille tarifaire — **à considérer comme non fiable**, une nouvelle grille a été communiquée par ailleurs (voir emails Direction Commerciale).\n"
+     }
+    ],
+    "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_00_sommaire_md_81dd1a4c",
+    "document_path": "00-sommaire.md"
+   },
+   {
+    "markdown": "",
+    "sections": [
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:0",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "# Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre\n",
+      "corrected_markdown": "# Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:1",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+       "1.1 Notre organisation"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 1.1 Notre organisation\n\nAlviva Mutuelle est une mutuelle régie par le Livre II du Code de la mutualité. Elle propose des contrats de complémentaire santé et de prévoyance à destination :\n\n- des **particuliers** (adhésion individuelle, avec ou sans ayants droit) ;\n- des **entreprises** (contrats collectifs obligatoires ou facultatifs, dans le cadre de la généralisation de la complémentaire santé d'entreprise) ;\n- des **travailleurs non-salariés (TNS)** via une offre dédiée éligible à la loi Madelin.\n\nLa mutuelle s'appuie sur trois grandes directions opérationnelles avec lesquelles les gestionnaires interagissent au quotidien :\n\n- **Direction des Adhésions et de la Gestion des Contrats** : souscription, avenants, résiliations, gestion des cotisations.\n- **Direction des Prestations** : remboursements, tiers payant, contrôle médical.\n- **Direction de la Relation Adhérents** : accueil téléphonique, réclamations, médiation, portail assuré.\n",
+      "corrected_markdown": "## 1.1 Notre organisation\n\nAlviva Mutuelle est une mutuelle régie par le Livre II du Code de la mutualité. Elle propose des contrats de complémentaire santé et de prévoyance à destination :\n\n- des **particuliers** (adhésion individuelle, avec ou sans ayants droit) ;\n- des **entreprises** (contrats collectifs obligatoires ou facultatifs, dans le cadre de la généralisation de la complémentaire santé d'entreprise) ;\n- des **travailleurs non-salariés (TNS)** via une offre dédiée éligible à la loi Madelin.\n\nLa mutuelle s'appuie sur trois grandes directions opérationnelles avec lesquelles les gestionnaires interagissent au quotidien :\n\n- **Direction des Adhésions et de la Gestion des Contrats** : souscription, avenants, résiliations, gestion des cotisations.\n- **Direction des Prestations** : remboursements, tiers payant, contrôle médical.\n- **Direction de la Relation Adhérents** : accueil téléphonique, réclamations, médiation, portail assuré.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:2",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+       "1.1 Notre organisation",
+       "Fiche pratique — Qui contacter ?"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Fiche pratique — Qui contacter ?\n\n| Sujet | Interlocuteur interne | Délai de réponse cible |\n|---|---|---|\n| Nouvelle adhésion / devis | Conseiller commercial | 48h |\n| Question sur un remboursement | Gestionnaire Prestations | 5 jours ouvrés |\n| Incident de tiers payant | Cellule Tiers Payant | 48h ouvrées |\n| Réclamation formelle | Service Relation Adhérents (niveau 1) | 10 jours ouvrés |\n| Question juridique / contentieux | Direction Juridique | Sur sollicitation du responsable d'équipe |\n",
+      "corrected_markdown": "### Fiche pratique — Qui contacter ?\n\n| Sujet | Interlocuteur interne | Délai de réponse cible |\n|---|---|---|\n| Nouvelle adhésion / devis | Conseiller commercial | 48h |\n| Question sur un remboursement | Gestionnaire Prestations | 5 jours ouvrés |\n| Incident de tiers payant | Cellule Tiers Payant | 48h ouvrées |\n| Réclamation formelle | Service Relation Adhérents (niveau 1) | 10 jours ouvrés |\n| Question juridique / contentieux | Direction Juridique | Sur sollicitation du responsable d'équipe |\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:3",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+       "1.2 Les gammes de contrats santé individuels"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 1.2 Les gammes de contrats santé individuels\n\nAlviva Mutuelle commercialise trois formules santé individuelles, positionnées du niveau de garantie le plus mesuré au plus complet. Ces formules sont mentionnées dans l'ensemble des fiches du chapitre 2 (Adhésion) et du chapitre 4 (Remboursements) : il est important de connaître leur logique générale avant de traiter un dossier.\n",
+      "corrected_markdown": "## 1.2 Les gammes de contrats santé individuels\n\nAlviva Mutuelle commercialise trois formules santé individuelles, positionnées du niveau de garantie le plus mesuré au plus complet. Ces formules sont mentionnées dans l'ensemble des fiches du chapitre 2 (Adhésion) et du chapitre 4 (Remboursements) : il est important de connaître leur logique générale avant de traiter un dossier.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:4",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+       "1.2 Les gammes de contrats santé individuels",
+       "Formule ESSENTIELLE"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Formule ESSENTIELLE\n\nPensée pour les adhérents recherchant une couverture de base à cotisation maîtrisée. Elle couvre le ticket modérateur sur les soins courants (consultations, pharmacie, analyses) et propose un forfait limité en optique et dentaire.\n\n- Hospitalisation : remboursement du forfait journalier + 100% du tarif de convention.\n- Optique : forfait de 100 € tous les 2 ans (monture + verres).\n- Dentaire : 125% de la base de remboursement de la Sécurité sociale sur les soins, pas de prise en charge sur les prothèses hors 100% Santé.\n",
+      "corrected_markdown": "### Formule ESSENTIELLE\n\nPensée pour les adhérents recherchant une couverture de base à cotisation maîtrisée. Elle couvre le ticket modérateur sur les soins courants (consultations, pharmacie, analyses) et propose un forfait limité en optique et dentaire.\n\n- Hospitalisation : remboursement du forfait journalier + 100% du tarif de convention.\n- Optique : forfait de 100 € tous les 2 ans (monture + verres).\n- Dentaire : 125% de la base de remboursement de la Sécurité sociale sur les soins, pas de prise en charge sur les prothèses hors 100% Santé.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:5",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+       "1.2 Les gammes de contrats santé individuels",
+       "Formule CONFORT"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Formule CONFORT\n\nFormule la plus souscrite du portefeuille (environ 60% des adhérents individuels). Elle ajoute une prise en charge renforcée sur l'optique, le dentaire prothétique et une chambre particulière en hospitalisation.\n\n- Hospitalisation : forfait journalier + 100% tarif de convention + chambre particulière (forfait de 45 €/jour, 90 jours max/an).\n- Optique : forfait de 250 € par an, majoré à 400 € pour les corrections complexes.\n- Dentaire : 200% de la base de remboursement sur les soins et prothèses (hors 100% Santé, pris en charge intégralement par ailleurs).\n",
+      "corrected_markdown": "### Formule CONFORT\n\nFormule la plus souscrite du portefeuille (environ 60% des adhérents individuels). Elle ajoute une prise en charge renforcée sur l'optique, le dentaire prothétique et une chambre particulière en hospitalisation.\n\n- Hospitalisation : forfait journalier + 100% tarif de convention + chambre particulière (forfait de 45 €/jour, 90 jours max/an).\n- Optique : forfait de 250 € par an, majoré à 400 € pour les corrections complexes.\n- Dentaire : 200% de la base de remboursement sur les soins et prothèses (hors 100% Santé, pris en charge intégralement par ailleurs).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:6",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+       "1.2 Les gammes de contrats santé individuels",
+       "Formule SÉRÉNITÉ+"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Formule SÉRÉNITÉ+\n\nFormule haut de gamme, avec des plafonds élevés sur tous les postes et une prise en charge de médecines douces.\n\n- Hospitalisation : chambre particulière sans limitation de durée, forfait naissance de 300 €.\n- Optique : forfait de 500 € par an.\n- Dentaire : 300% de la base de remboursement, implantologie prise en charge à hauteur de 500 €/implant (2 implants/an).\n- Médecines douces (ostéopathie, acupuncture, diététicien) : forfait de 200 €/an.\n\n**⚠ À vérifier** — Les montants de cotisation associés à ces formules figurent historiquement au chapitre 3 mais **ne sont plus fiables** (dernière mise à jour 06/2024). Se référer systématiquement à la dernière communication tarifaire de la Direction Commerciale avant de donner un montant à un prospect ou adhérent.\n",
+      "corrected_markdown": "### Formule SÉRÉNITÉ+\n\nFormule haut de gamme, avec des plafonds élevés sur tous les postes et une prise en charge de médecines douces.\n\n- Hospitalisation : chambre particulière sans limitation de durée, forfait naissance de 300 €.\n- Optique : forfait de 500 € par an.\n- Dentaire : 300% de la base de remboursement, implantologie prise en charge à hauteur de 500 €/implant (2 implants/an).\n- Médecines douces (ostéopathie, acupuncture, diététicien) : forfait de 200 €/an.\n\n**⚠ À vérifier** — Les montants de cotisation associés à ces formules figurent historiquement au chapitre 3 mais **ne sont plus fiables** (dernière mise à jour 06/2024). Se référer systématiquement à la dernière communication tarifaire de la Direction Commerciale avant de donner un montant à un prospect ou adhérent.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:7",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+       "1.3 L'offre collective entreprise"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 1.3 L'offre collective entreprise\n\nLes contrats collectifs sont souscrits par l'employeur pour l'ensemble ou une catégorie objective de salariés. Deux régimes existent :\n\n- **Régime obligatoire** : l'ensemble des salariés de la catégorie visée est affilié, sauf cas de dispense légale (CDD court, temps partiel, ayant droit déjà couvert par un contrat collectif du conjoint, etc.).\n- **Régime facultatif** (surcomplémentaire) : les salariés choisissent d'adhérer en complément du régime obligatoire, avec une cotisation à leur charge intégrale ou partagée.\n\nLes gestionnaires du service Adhésions Entreprises traitent :\n\n- les demandes d'affiliation et de radiation de salariés ;\n- la portabilité des droits (maintien de la couverture santé et prévoyance pendant 12 mois maximum pour un salarié quittant l'entreprise et bénéficiant de l'assurance chômage, financée par mutualisation, sans contrepartie de cotisation) ;\n- les dispenses d'affiliation, qui doivent être formalisées par écrit et conservées 10 ans par l'employeur.\n",
+      "corrected_markdown": "## 1.3 L'offre collective entreprise\n\nLes contrats collectifs sont souscrits par l'employeur pour l'ensemble ou une catégorie objective de salariés. Deux régimes existent :\n\n- **Régime obligatoire** : l'ensemble des salariés de la catégorie visée est affilié, sauf cas de dispense légale (CDD court, temps partiel, ayant droit déjà couvert par un contrat collectif du conjoint, etc.).\n- **Régime facultatif** (surcomplémentaire) : les salariés choisissent d'adhérer en complément du régime obligatoire, avec une cotisation à leur charge intégrale ou partagée.\n\nLes gestionnaires du service Adhésions Entreprises traitent :\n\n- les demandes d'affiliation et de radiation de salariés ;\n- la portabilité des droits (maintien de la couverture santé et prévoyance pendant 12 mois maximum pour un salarié quittant l'entreprise et bénéficiant de l'assurance chômage, financée par mutualisation, sans contrepartie de cotisation) ;\n- les dispenses d'affiliation, qui doivent être formalisées par écrit et conservées 10 ans par l'employeur.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:8",
+      "changes": [
+       {
+        "kept": true,
+        "kind": "modify",
+        "after": "L'offre TNS permet aux travailleurs non-salariés de déduire leurs cotisations de leur revenu professionnel imposable, sous certaines conditions (contrat non résiliable en cours d'année *sauf motifs légaux de résiliation anticipée identiques à ceux des contrats individuels classiques – voir chapitre 7.2*, garanties minimales, absence de sélection médicale renforcée). Elle est distribuée par les mêmes conseillers commerciaux que l'offre individuelle classique, avec un cadre contractuel spécifique (voir modèle de contrat TNS-2023 dans l'outil documentaire).",
+        "before": "L'offre TNS permet aux travailleurs non-salariés de déduire leurs cotisations de leur revenu professionnel imposable, sous certaines conditions (contrat non résiliable en cours d'année, garanties minimales, absence de sélection médicale renforcée). Elle est distribuée par les mêmes conseillers commerciaux que l'offre individuelle classique, avec un cadre contractuel spécifique (voir modèle de contrat TNS-2023 dans l'outil documentaire).",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M6"
+       }
+      ],
+      "heading_path": [
+       "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+       "1.4 Offre TNS (loi Madelin)"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M6"
+      ],
+      "original_markdown": "## 1.4 Offre TNS (loi Madelin)\n\nL'offre TNS permet aux travailleurs non-salariés de déduire leurs cotisations de leur revenu professionnel imposable, sous certaines conditions (contrat non résiliable en cours d'année, garanties minimales, absence de sélection médicale renforcée). Elle est distribuée par les mêmes conseillers commerciaux que l'offre individuelle classique, avec un cadre contractuel spécifique (voir modèle de contrat TNS-2023 dans l'outil documentaire).\n",
+      "corrected_markdown": "## 1.4 Offre TNS (loi Madelin)\n\nL'offre TNS permet aux travailleurs non-salariés de déduire leurs cotisations de leur revenu professionnel imposable, sous certaines conditions (contrat non résiliable en cours d'année *sauf motifs légaux de résiliation anticipée identiques à ceux des contrats individuels classiques – voir chapitre 7.2*, garanties minimales, absence de sélection médicale renforcée). Elle est distribuée par les mêmes conseillers commerciaux que l'offre individuelle classique, avec un cadre contractuel spécifique (voir modèle de contrat TNS-2023 dans l'outil documentaire).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:9",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+       "1.5 Ce qu'il faut retenir pour orienter un contact entrant"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 1.5 Ce qu'il faut retenir pour orienter un contact entrant\n\n1. Identifier d'abord si l'interlocuteur est un **particulier**, un **salarié couvert par un contrat collectif** ou un **employeur**.\n2. Vérifier la formule souscrite (visible dans GESTOR, onglet « Fiche adhérent », voir capture d'écran au chapitre 11).\n3. Ne jamais communiquer un tarif sans vérifier la dernière grille en vigueur (voir chapitre 3, section « ⚠ »).\n4. En cas de doute sur la nature d'un contrat (individuel / collectif / TNS), consulter le numéro de contrat : les contrats collectifs commencent par le préfixe **COL-**, les contrats individuels par **AL-**, les contrats TNS par **TNS-**.\n",
+      "corrected_markdown": "## 1.5 Ce qu'il faut retenir pour orienter un contact entrant\n\n1. Identifier d'abord si l'interlocuteur est un **particulier**, un **salarié couvert par un contrat collectif** ou un **employeur**.\n2. Vérifier la formule souscrite (visible dans GESTOR, onglet « Fiche adhérent », voir capture d'écran au chapitre 11).\n3. Ne jamais communiquer un tarif sans vérifier la dernière grille en vigueur (voir chapitre 3, section « ⚠ »).\n4. En cas de doute sur la nature d'un contrat (individuel / collectif / TNS), consulter le numéro de contrat : les contrats collectifs commencent par le préfixe **COL-**, les contrats individuels par **AL-**, les contrats TNS par **TNS-**.\n"
+     }
+    ],
+    "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789",
+    "document_path": "01-presentation-offre.md"
+   },
+   {
+    "markdown": "",
+    "sections": [
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:0",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "# Chapitre 3 — Cotisations et tarification\n\n**⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024.** Les montants ci-dessous servent de référence pour comprendre la **structure** de la grille tarifaire (zones, tranches d'âge, coefficients), mais **ne doivent pas être communiqués tels quels à un adhérent ou un prospect**. Une révision tarifaire a eu lieu depuis — se référer à la dernière note tarifaire transmise par la Direction Commerciale avant toute communication de montant.\n",
+      "corrected_markdown": "# Chapitre 3 — Cotisations et tarification\n\n**⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024.** Les montants ci-dessous servent de référence pour comprendre la **structure** de la grille tarifaire (zones, tranches d'âge, coefficients), mais **ne doivent pas être communiqués tels quels à un adhérent ou un prospect**. Une révision tarifaire a eu lieu depuis — se référer à la dernière note tarifaire transmise par la Direction Commerciale avant toute communication de montant.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:1",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.1 Principe général de la tarification"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 3.1 Principe général de la tarification\n\nLa cotisation individuelle dépend de trois facteurs :\n\n1. **La formule** (ESSENTIELLE, CONFORT, SÉRÉNITÉ+).\n2. **L'âge de l'adhérent** au 1er janvier de l'année en cours (tarification par tranches quinquennales).\n3. **La zone géographique** de résidence (3 zones tarifaires selon le département, liées au coût moyen des soins constaté).\n\nLa cotisation des ayants droit est calculée selon les mêmes règles, appliquées individuellement, puis additionnées pour obtenir la cotisation familiale totale.\n",
+      "corrected_markdown": "## 3.1 Principe général de la tarification\n\nLa cotisation individuelle dépend de trois facteurs :\n\n1. **La formule** (ESSENTIELLE, CONFORT, SÉRÉNITÉ+).\n2. **L'âge de l'adhérent** au 1er janvier de l'année en cours (tarification par tranches quinquennales).\n3. **La zone géographique** de résidence (3 zones tarifaires selon le département, liées au coût moyen des soins constaté).\n\nLa cotisation des ayants droit est calculée selon les mêmes règles, appliquées individuellement, puis additionnées pour obtenir la cotisation familiale totale.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:2",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)\n",
+      "corrected_markdown": "## 3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:3",
+      "changes": [
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "À partir du 1ᵉʳ janvier 2027, pour les nouvelles souscriptions :",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M1"
+       },
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": "duplicate_or_move",
+        "modification_id": null
+       },
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "|---|---|---|---|",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": "duplicate_or_move",
+        "modification_id": null
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "| 18-29 ans |  | 47,80 € |  |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M1"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "| 30-39 ans |  |  |  |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M1"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "| 40-49 ans |  | 66,60 € |  |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M1"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "| 50-59 ans |  |  |  |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M1"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "| 60-69 ans |  |  | 137,60 € |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M1"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "| 70 ans et + |  |  |  |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": null,
+        "modification_id": "M1"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "Pour les souscriptions avant le 1ᵉʳ janvier 2027 :",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M1"
+       }
+      ],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
+       "Zone 1 (Île-de-France et grandes métropoles)"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M1"
+      ],
+      "original_markdown": "### Zone 1 (Île-de-France et grandes métropoles)\n\n| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |\n| 30-39 ans | 38,40 € | 54,90 € | 73,50 € |\n| 40-49 ans | 44,70 € | 63,90 € | 85,60 € |\n| 50-59 ans | 55,20 € | 78,90 € | 105,80 € |\n| 60-69 ans | 68,90 € | 98,40 € | 131,90 € |\n| 70 ans et + | 82,30 € | 117,60 € | 157,60 € |\n",
+      "corrected_markdown": "### Zone 1 (Île-de-France et grandes métropoles)\n\nÀ partir du 1ᵉʳ janvier 2027, pour les nouvelles souscriptions :\n\n| 18-29 ans |  | 47,80 € |  |\n| 30-39 ans |  |  |  |\n| 40-49 ans |  | 66,60 € |  |\n| 50-59 ans |  |  |  |\n| 60-69 ans |  |  | 137,60 € |\n| 70 ans et + |  |  |  |\n\nPour les souscriptions avant le 1ᵉʳ janvier 2027 :\n\n| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |\n| 30-39 ans | 38,40 € | 54,90 € | 73,50 € |\n| 40-49 ans | 44,70 € | 63,90 € | 85,60 € |\n| 50-59 ans | 55,20 € | 78,90 € | 105,80 € |\n| 60-69 ans | 68,90 € | 98,40 € | 131,90 € |\n| 70 ans et + | 82,30 € | 117,60 € | 157,60 € |\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:4",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
+       "Zone 2 (villes moyennes)"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Zone 2 (villes moyennes)\n\n| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 29,40 € | 41,90 € | 56,10 € |\n| 30-39 ans | 35,20 € | 50,30 € | 67,30 € |\n| 40-49 ans | 41,00 € | 58,50 € | 78,40 € |\n| 50-59 ans | 50,60 € | 72,30 € | 96,90 € |\n| 60-69 ans | 63,10 € | 90,10 € | 120,80 € |\n| 70 ans et + | 75,40 € | 107,70 € | 144,40 € |\n",
+      "corrected_markdown": "### Zone 2 (villes moyennes)\n\n| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 29,40 € | 41,90 € | 56,10 € |\n| 30-39 ans | 35,20 € | 50,30 € | 67,30 € |\n| 40-49 ans | 41,00 € | 58,50 € | 78,40 € |\n| 50-59 ans | 50,60 € | 72,30 € | 96,90 € |\n| 60-69 ans | 63,10 € | 90,10 € | 120,80 € |\n| 70 ans et + | 75,40 € | 107,70 € | 144,40 € |\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5",
+      "changes": [
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "À partir du 1er janvier 2027, pour les nouvelles souscriptions :",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": "introduction_without_content",
+        "modification_id": null
+       },
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": "duplicate_or_move",
+        "modification_id": null
+       },
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "|---|---|---|---|",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": "duplicate_or_move",
+        "modification_id": null
+       },
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": "duplicate_or_move",
+        "modification_id": null
+       },
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "| 30-39 ans | 38,40 € | 54,90 € | 73,50 € |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": "duplicate_or_move",
+        "modification_id": null
+       },
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "| 40-49 ans | 44,70 € | 63,90 € | 85,60 € |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": "duplicate_or_move",
+        "modification_id": null
+       },
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "| 50-59 ans | 55,20 € | 78,90 € | 105,80 € |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": "duplicate_or_move",
+        "modification_id": null
+       },
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "| 60-69 ans | 68,90 € | 98,40 € | 131,90 € |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": "duplicate_or_move",
+        "modification_id": null
+       },
+       {
+        "kept": false,
+        "kind": "insert",
+        "after": "| 70 ans et + | 82,30 € | 117,60 € | 157,60 € |",
+        "before": "",
+        "line_kind": "table_row",
+        "undo_reason": "duplicate_or_move",
+        "modification_id": null
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "Pour les souscriptions avant le 1er janvier 2027 :",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M1"
+       }
+      ],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
+       "Zone 3 (zones rurales)"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M1"
+      ],
+      "original_markdown": "### Zone 3 (zones rurales)\n\n| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 26,80 € | 38,20 € | 51,20 € |\n| 30-39 ans | 32,10 € | 45,80 € | 61,30 € |\n| 40-49 ans | 37,40 € | 53,40 € | 71,50 € |\n| 50-59 ans | 46,10 € | 65,90 € | 88,30 € |\n| 60-69 ans | 57,50 € | 82,10 € | 110,10 € |\n| 70 ans et + | 68,70 € | 98,20 € | 131,60 € |\n\nCes grilles sont revues annuellement en Conseil d'Administration et communiquées aux réseaux commerciaux courant décembre pour application au 1er janvier. **Toute revalorisation intermédiaire en cours d'année fait l'objet d'une communication spécifique** qui prévaut sur la présente fiche jusqu'à sa mise à jour officielle.\n",
+      "corrected_markdown": "### Zone 3 (zones rurales)\n\nPour les souscriptions avant le 1er janvier 2027 :\n\n| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 26,80 € | 38,20 € | 51,20 € |\n| 30-39 ans | 32,10 € | 45,80 € | 61,30 € |\n| 40-49 ans | 37,40 € | 53,40 € | 71,50 € |\n| 50-59 ans | 46,10 € | 65,90 € | 88,30 € |\n| 60-69 ans | 57,50 € | 82,10 € | 110,10 € |\n| 70 ans et + | 68,70 € | 98,20 € | 131,60 € |\n\nCes grilles sont revues annuellement en Conseil d'Administration et communiquées aux réseaux commerciaux courant décembre pour application au 1er janvier. **Toute revalorisation intermédiaire en cours d'année fait l'objet d'une communication spécifique** qui prévaut sur la présente fiche jusqu'à sa mise à jour officielle.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:6",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.3 Modalités de paiement"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 3.3 Modalités de paiement\n\n- Prélèvement mensuel (par défaut), le 5 ou le 15 du mois au choix de l'adhérent.\n- Prélèvement trimestriel ou annuel possible sur demande, avec une remise de 2% en cas de paiement annuel.\n- Moyens de paiement acceptés : uniquement le prélèvement SEPA pour les cotisations récurrentes (pas de carte bancaire récurrente, pas de chèque pour les échéances mensuelles).\n",
+      "corrected_markdown": "## 3.3 Modalités de paiement\n\n- Prélèvement mensuel (par défaut), le 5 ou le 15 du mois au choix de l'adhérent.\n- Prélèvement trimestriel ou annuel possible sur demande, avec une remise de 2% en cas de paiement annuel.\n- Moyens de paiement acceptés : uniquement le prélèvement SEPA pour les cotisations récurrentes (pas de carte bancaire récurrente, pas de chèque pour les échéances mensuelles).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:7",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.4 Gestion des impayés"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 3.4 Gestion des impayés\n",
+      "corrected_markdown": "## 3.4 Gestion des impayés\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:8",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.4 Gestion des impayés",
+       "Étape 1 — Premier rejet de prélèvement"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Étape 1 — Premier rejet de prélèvement\n\nUn email et un SMS automatiques sont envoyés à l'adhérent sous 48h, l'invitant à régulariser sous 15 jours via l'espace assuré ou par virement.\n",
+      "corrected_markdown": "### Étape 1 — Premier rejet de prélèvement\n\nUn email et un SMS automatiques sont envoyés à l'adhérent sous 48h, l'invitant à régulariser sous 15 jours via l'espace assuré ou par virement.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:9",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.4 Gestion des impayés",
+       "Étape 2 — Deuxième rejet consécutif"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Étape 2 — Deuxième rejet consécutif\n\nUne mise en demeure est envoyée par courrier recommandé avec accusé de réception, rappelant les conséquences en cas de non-paiement (suspension puis résiliation du contrat, conformément à l'article L. 221-8 du Code de la mutualité).\n",
+      "corrected_markdown": "### Étape 2 — Deuxième rejet consécutif\n\nUne mise en demeure est envoyée par courrier recommandé avec accusé de réception, rappelant les conséquences en cas de non-paiement (suspension puis résiliation du contrat, conformément à l'article L. 221-8 du Code de la mutualité).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:10",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.4 Gestion des impayés",
+       "Étape 3 — Absence de régularisation sous 40 jours après mise en demeure"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Étape 3 — Absence de régularisation sous 40 jours après mise en demeure\n\nLe contrat est résilié pour non-paiement. Les garanties cessent à la date de résiliation. La cotisation restant due jusqu'à cette date reste exigible et peut faire l'objet d'une procédure de recouvrement.\n",
+      "corrected_markdown": "### Étape 3 — Absence de régularisation sous 40 jours après mise en demeure\n\nLe contrat est résilié pour non-paiement. Les garanties cessent à la date de résiliation. La cotisation restant due jusqu'à cette date reste exigible et peut faire l'objet d'une procédure de recouvrement.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:11",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.4 Gestion des impayés",
+       "Arbre décisionnel simplifié — Impayé"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Arbre décisionnel simplifié — Impayé\n\n1. 1er rejet → relance automatique (pas d'action gestionnaire requise).\n2. 2e rejet → vérifier que la mise en demeure a bien été déclenchée automatiquement par GESTOR (contrôle hebdomadaire, cf. procédure interne « Contrôle MED »).\n3. Adhérent qui appelle suite à une mise en demeure → proposer un paiement en une fois par virement ou carte bancaire (à titre exceptionnel, un paiement CB ponctuel est possible pour lever une mise en demeure, contrairement aux échéances courantes).\n4. Après résiliation pour impayé → toute nouvelle adhésion nécessite une validation du responsable d'équipe (risque d'impayé récurrent).\n",
+      "corrected_markdown": "### Arbre décisionnel simplifié — Impayé\n\n1. 1er rejet → relance automatique (pas d'action gestionnaire requise).\n2. 2e rejet → vérifier que la mise en demeure a bien été déclenchée automatiquement par GESTOR (contrôle hebdomadaire, cf. procédure interne « Contrôle MED »).\n3. Adhérent qui appelle suite à une mise en demeure → proposer un paiement en une fois par virement ou carte bancaire (à titre exceptionnel, un paiement CB ponctuel est possible pour lever une mise en demeure, contrairement aux échéances courantes).\n4. Après résiliation pour impayé → toute nouvelle adhésion nécessite une validation du responsable d'équipe (risque d'impayé récurrent).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:12",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 3 — Cotisations et tarification",
+       "3.5 Cotisations des contrats collectifs"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 3.5 Cotisations des contrats collectifs\n\nLe financement des contrats collectifs obligatoires suit une répartition légale minimale de 50% employeur / 50% salarié, souvent améliorée par accord d'entreprise ou de branche. Le taux exact figure dans la convention de gestion propre à chaque entreprise cliente, disponible dans GESTOR (onglet « Contrats entreprises » > « Conditions particulières »).\n",
+      "corrected_markdown": "## 3.5 Cotisations des contrats collectifs\n\nLe financement des contrats collectifs obligatoires suit une répartition légale minimale de 50% employeur / 50% salarié, souvent améliorée par accord d'entreprise ou de branche. Le taux exact figure dans la convention de gestion propre à chaque entreprise cliente, disponible dans GESTOR (onglet « Contrats entreprises » > « Conditions particulières »).\n"
+     }
+    ],
+    "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7",
+    "document_path": "03-cotisations-tarification.md"
+   },
+   {
+    "markdown": "",
+    "sections": [
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:0",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 5 — Tiers payant"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "# Chapitre 5 — Tiers payant\n",
+      "corrected_markdown": "# Chapitre 5 — Tiers payant\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:1",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 5 — Tiers payant",
+       "5.1 Synthèse"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 5.1 Synthèse\n\n|  |  |\n|---|---|\n| **Définition** | Dispense d'avance de frais pour l'adhérent : le professionnel de santé est réglé directement par Alviva Mutuelle |\n| **Outil** | GESTOR — module « Tiers Payant » |\n| **Délai de résolution d'un incident** | 48h ouvrées |\n",
+      "corrected_markdown": "## 5.1 Synthèse\n\n|  |  |\n|---|---|\n| **Définition** | Dispense d'avance de frais pour l'adhérent : le professionnel de santé est réglé directement par Alviva Mutuelle |\n| **Outil** | GESTOR — module « Tiers Payant » |\n| **Délai de résolution d'un incident** | 48h ouvrées |\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:2",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 5 — Tiers payant",
+       "5.2 Fonctionnement général"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 5.2 Fonctionnement général\n\nLa carte de tiers payant, éditée automatiquement à la prise d'effet du contrat (délai de 5 jours ouvrés), permet à l'adhérent de ne pas avancer la part complémentaire lors d'un acte chez un professionnel de santé équipé. Elle fonctionne pour :\n\n- les pharmacies (quasi-totalité du réseau officinal français) ;\n- les professionnels de santé conventionnés avec le réseau **Alviva Santé** (opticiens et dentistes partenaires, voir chapitre 10) ;\n- certains laboratoires d'analyses et centres de radiologie.\n",
+      "corrected_markdown": "## 5.2 Fonctionnement général\n\nLa carte de tiers payant, éditée automatiquement à la prise d'effet du contrat (délai de 5 jours ouvrés), permet à l'adhérent de ne pas avancer la part complémentaire lors d'un acte chez un professionnel de santé équipé. Elle fonctionne pour :\n\n- les pharmacies (quasi-totalité du réseau officinal français) ;\n- les professionnels de santé conventionnés avec le réseau **Alviva Santé** (opticiens et dentistes partenaires, voir chapitre 10) ;\n- certains laboratoires d'analyses et centres de radiologie.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:3",
+      "changes": [
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "À partir du dimanche 28 septembre 2026 à 20h00 et jusqu'à la remise en service officielle de GESTOR (confirmée par un message sur le canal interne #dsi-incidents), ce module sera indisponible en raison d'une maintenance technique. Pendant cette période, appliquer la procédure temporaire suivante :",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M2"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- Consulter le fichier extrait « Droits_TP_export_13092026.xlsx » déposé sur le lecteur partagé \\\\alviva\\partages\\prestations\\secours-maintenance (photographie des droits arrêtée au 27/09 à 18h00).",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M2"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- En cas de doute sur un dossier, ne pas refuser un tiers payant sur la seule base de ce fichier : demander à l'adhérent d'avancer les frais à titre exceptionnel et l'informer d'un remboursement accéléré sous 48h dès le retour à la normale.",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M2"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- Ne traiter aucune validation de remboursement ou d'adhésion pendant la coupure : mettre les dossiers en file d'attente.",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M2"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- Le numéro de la cellule Flux (poste 4021) reste joignable pour les blocages bloquants (ex. hospitalisation en cours).",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M2"
+       }
+      ],
+      "heading_path": [
+       "Chapitre 5 — Tiers payant",
+       "5.2 Fonctionnement général",
+       "Vérifier les droits d'un adhérent"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M2"
+      ],
+      "original_markdown": "### Vérifier les droits d'un adhérent\n\n![Capture d'écran - outil de vérification des droits tiers payant](image:img_d97afb9e14c854c7)\n\nCe module doit être utilisé **avant** de trancher un litige de refus de tiers payant : il affiche en temps réel (sous réserve de synchronisation nocturne) l'état des droits, le plafond restant sur les postes soumis à plafond annuel (optique notamment), et les alertes de flux.\n",
+      "corrected_markdown": "### Vérifier les droits d'un adhérent\n\n![Capture d'écran - outil de vérification des droits tiers payant](image:img_d97afb9e14c854c7)\n\nCe module doit être utilisé **avant** de trancher un litige de refus de tiers payant : il affiche en temps réel (sous réserve de synchronisation nocturne) l'état des droits, le plafond restant sur les postes soumis à plafond annuel (optique notamment), et les alertes de flux.\n\nÀ partir du dimanche 28 septembre 2026 à 20h00 et jusqu'à la remise en service officielle de GESTOR (confirmée par un message sur le canal interne #dsi-incidents), ce module sera indisponible en raison d'une maintenance technique. Pendant cette période, appliquer la procédure temporaire suivante :\n\n- Consulter le fichier extrait « Droits_TP_export_13092026.xlsx » déposé sur le lecteur partagé \\\\alviva\\partages\\prestations\\secours-maintenance (photographie des droits arrêtée au 27/09 à 18h00).\n- En cas de doute sur un dossier, ne pas refuser un tiers payant sur la seule base de ce fichier : demander à l'adhérent d'avancer les frais à titre exceptionnel et l'informer d'un remboursement accéléré sous 48h dès le retour à la normale.\n- Ne traiter aucune validation de remboursement ou d'adhésion pendant la coupure : mettre les dossiers en file d'attente.\n- Le numéro de la cellule Flux (poste 4021) reste joignable pour les blocages bloquants (ex. hospitalisation en cours).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:4",
+      "changes": [
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "**À partir du 28 septembre 2026 à 20h00 jusqu'au 29 septembre 2026 à 06h00, pendant la maintenance de GESTOR :** Pour les vérifications urgentes de droits tiers payant pendant cette période ou au cours de la journée du 29 septembre (le temps que les données se resynchronisent), appliquer la procédure de secours suivante :",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M2"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- Consulter le fichier extrait « Droits_TP_export_13092026.xlsx » déposé sur le lecteur partagé \\\\alviva\\partages\\prestations\\secours-maintenance (photographie des droits arrêtée au 27/09 à 18h00).",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M2"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- En cas de doute sur un dossier, ne pas refuser un tiers payant sur la seule base de ce fichier : demander à l'adhérent d'avancer les frais à titre exceptionnel et l'informer d'un remboursement accéléré sous 48h dès le retour à la normale.",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M2"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- Ne traiter aucune validation de remboursement ou d'adhésion pendant la coupure : mettre les dossiers en file d'attente.",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M2"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- Le numéro de la cellule Flux (poste 4021) reste joignable en cas de blocage bloquant pour un adhérent (ex. hospitalisation en cours).",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M2"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "**À partir du 1er octobre 2026 jusqu'au 30 novembre 2026, pour les pharmacies uniquement :**",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M3"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- Vérifier dans l'outil GESTOR (onglet \"Droits Tiers Payant\") si les droits sont ouverts à la date de l'acte.",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M3"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- En cas de droits fermés → vérifier la cotisation.",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M3"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- En cas de droits ouverts mais refus technique → sélectionner « Incident TP — Priorité Flux » dans GESTOR (module Tiers Payant).",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M3"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- Ce statut déclenche automatiquement une notification à la cellule Flux, sans action de transfert manuelle.",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M3"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- Un accusé de traitement est envoyé automatiquement à l'adhérent par SMS dans les 15 minutes, l'informant du délai de résolution (48h ouvrées).",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M3"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "- Un tableau de suivi en temps réel est accessible (onglet « Suivi Flux » de GESTOR).",
+        "before": "",
+        "line_kind": "list_item",
+        "undo_reason": null,
+        "modification_id": "M3"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "Pour les professionnels du réseau Alviva Santé (hors pharmacies) et en dehors des périodes mentionnées ci-dessus :",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M3"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "*Modification demandée pour l'arbre de décision : conserver la partie de droite sur les médecins et le paramédical, mais adapter la partie sur les pharmacies avec les étapes suivantes :* *1) Vérifier dans l'outil GESTOR (onglet « Droits Tiers Payant ») si les droits sont ouverts à la date de l'acte* *2a) Droits fermés → vérifier la cotisation* *2b) Droits ouverts mais refus technique → sélectionner « Incident TP — Priorité Flux » dans GESTOR (module Tiers Payant)* *3b) Déclenchement automatique d'une notification à la cellule Flux, sans action de transfert manuelle* *4b) Un accusé de traitement est envoyé automatiquement à l'adhérent par SMS dans les 15 minutes, l'informant du délai de résolution* *5b) Le délai cible reste 48h ouvrées, mais un tableau de suivi en temps réel est accessible (onglet « Suivi Flux » de GESTOR)*",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M3"
+       },
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "Dans tous les cas (hors période de maintenance) : tracer l'incident dans GESTOR (motif « Incident Tiers Payant » ou « Incident TP — Priorité Flux » selon le cas) et informer l'adhérent du délai de résolution (48h ouvrées).",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M3"
+       }
+      ],
+      "heading_path": [
+       "Chapitre 5 — Tiers payant",
+       "5.3 Traiter un refus de tiers payant"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M2",
+       "M3"
+      ],
+      "original_markdown": "## 5.3 Traiter un refus de tiers payant\n\nUn refus de tiers payant peut avoir plusieurs origines : droits fermés (impayé, contrat résilié), plafond annuel atteint, professionnel non équipé, ou incident technique de flux. Il ne faut jamais présumer la cause sans vérification.\n\n![Arbre de décision - refus de tiers payant](image:img_9d517478bad6ba9c)\n",
+      "corrected_markdown": "## 5.3 Traiter un refus de tiers payant\n\nUn refus de tiers payant peut avoir plusieurs origines : droits fermés (impayé, contrat résilié), plafond annuel atteint, professionnel non équipé, ou incident technique de flux. Il ne faut jamais présumer la cause sans vérification.\n\n**À partir du 28 septembre 2026 à 20h00 jusqu'au 29 septembre 2026 à 06h00, pendant la maintenance de GESTOR :** Pour les vérifications urgentes de droits tiers payant pendant cette période ou au cours de la journée du 29 septembre (le temps que les données se resynchronisent), appliquer la procédure de secours suivante :\n\n- Consulter le fichier extrait « Droits_TP_export_13092026.xlsx » déposé sur le lecteur partagé \\\\alviva\\partages\\prestations\\secours-maintenance (photographie des droits arrêtée au 27/09 à 18h00).\n- En cas de doute sur un dossier, ne pas refuser un tiers payant sur la seule base de ce fichier : demander à l'adhérent d'avancer les frais à titre exceptionnel et l'informer d'un remboursement accéléré sous 48h dès le retour à la normale.\n- Ne traiter aucune validation de remboursement ou d'adhésion pendant la coupure : mettre les dossiers en file d'attente.\n- Le numéro de la cellule Flux (poste 4021) reste joignable en cas de blocage bloquant pour un adhérent (ex. hospitalisation en cours).\n\n**À partir du 1er octobre 2026 jusqu'au 30 novembre 2026, pour les pharmacies uniquement :**\n\n- Vérifier dans l'outil GESTOR (onglet \"Droits Tiers Payant\") si les droits sont ouverts à la date de l'acte.\n- En cas de droits fermés → vérifier la cotisation.\n- En cas de droits ouverts mais refus technique → sélectionner « Incident TP — Priorité Flux » dans GESTOR (module Tiers Payant).\n- Ce statut déclenche automatiquement une notification à la cellule Flux, sans action de transfert manuelle.\n- Un accusé de traitement est envoyé automatiquement à l'adhérent par SMS dans les 15 minutes, l'informant du délai de résolution (48h ouvrées).\n- Un tableau de suivi en temps réel est accessible (onglet « Suivi Flux » de GESTOR).\n\nPour les professionnels du réseau Alviva Santé (hors pharmacies) et en dehors des périodes mentionnées ci-dessus :\n\n![Arbre de décision - refus de tiers payant](image:img_9d517478bad6ba9c)\n\n*Modification demandée pour l'arbre de décision : conserver la partie de droite sur les médecins et le paramédical, mais adapter la partie sur les pharmacies avec les étapes suivantes :* *1) Vérifier dans l'outil GESTOR (onglet « Droits Tiers Payant ») si les droits sont ouverts à la date de l'acte* *2a) Droits fermés → vérifier la cotisation* *2b) Droits ouverts mais refus technique → sélectionner « Incident TP — Priorité Flux » dans GESTOR (module Tiers Payant)* *3b) Déclenchement automatique d'une notification à la cellule Flux, sans action de transfert manuelle* *4b) Un accusé de traitement est envoyé automatiquement à l'adhérent par SMS dans les 15 minutes, l'informant du délai de résolution* *5b) Le délai cible reste 48h ouvrées, mais un tableau de suivi en temps réel est accessible (onglet « Suivi Flux » de GESTOR)*\n\nDans tous les cas (hors période de maintenance) : tracer l'incident dans GESTOR (motif « Incident Tiers Payant » ou « Incident TP — Priorité Flux » selon le cas) et informer l'adhérent du délai de résolution (48h ouvrées).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:5",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 5 — Tiers payant",
+       "5.3 Traiter un refus de tiers payant",
+       "Bon réflexe en cas d'appel d'un adhérent suite à un refus en pharmacie"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Bon réflexe en cas d'appel d'un adhérent suite à un refus en pharmacie\n\n1. Vérifier immédiatement les droits dans GESTOR (capture ci-dessus).\n2. Si les droits sont ouverts mais le refus persiste : il s'agit très probablement d'un incident technique de flux carte Vitale / NOEMIE — rassurer l'adhérent, lui indiquer qu'il peut avancer les frais à titre exceptionnel et transmettre son ticket de caisse pour un remboursement accéléré sous 48h, **et** ouvrir un ticket incident à la cellule Flux.\n3. Si les droits sont fermés pour impayé : orienter vers le chapitre 3.4 (gestion des impayés) — ne pas promettre de rétablissement immédiat sans régularisation effective.\n",
+      "corrected_markdown": "### Bon réflexe en cas d'appel d'un adhérent suite à un refus en pharmacie\n\n1. Vérifier immédiatement les droits dans GESTOR (capture ci-dessus).\n2. Si les droits sont ouverts mais le refus persiste : il s'agit très probablement d'un incident technique de flux carte Vitale / NOEMIE — rassurer l'adhérent, lui indiquer qu'il peut avancer les frais à titre exceptionnel et transmettre son ticket de caisse pour un remboursement accéléré sous 48h, **et** ouvrir un ticket incident à la cellule Flux.\n3. Si les droits sont fermés pour impayé : orienter vers le chapitre 3.4 (gestion des impayés) — ne pas promettre de rétablissement immédiat sans régularisation effective.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:6",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 5 — Tiers payant",
+       "5.4 Carte de tiers payant — cas de perte ou de renouvellement"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 5.4 Carte de tiers payant — cas de perte ou de renouvellement\n\n- **Perte ou vol** : réédition possible directement depuis l'espace assuré (téléchargement immédiat d'une version numérique) ou sur demande au service adhérents pour une carte physique (délai 5 jours ouvrés).\n- **Renouvellement automatique** : la carte est rééditée automatiquement en cas de changement de formule ou d'ajout d'un ayant droit.\n- **Carte non reconnue par un pharmacien** : vérifier que la carte présentée n'est pas une ancienne version (les cartes émises avant 09/2024, avant l'intégration du réseau Alviva Santé, ne portent pas le nouveau logo réseau et peuvent nécessiter une vérification téléphonique par le pharmacien — cela reste normal et n'indique pas un problème de droits).\n",
+      "corrected_markdown": "## 5.4 Carte de tiers payant — cas de perte ou de renouvellement\n\n- **Perte ou vol** : réédition possible directement depuis l'espace assuré (téléchargement immédiat d'une version numérique) ou sur demande au service adhérents pour une carte physique (délai 5 jours ouvrés).\n- **Renouvellement automatique** : la carte est rééditée automatiquement en cas de changement de formule ou d'ajout d'un ayant droit.\n- **Carte non reconnue par un pharmacien** : vérifier que la carte présentée n'est pas une ancienne version (les cartes émises avant 09/2024, avant l'intégration du réseau Alviva Santé, ne portent pas le nouveau logo réseau et peuvent nécessiter une vérification téléphonique par le pharmacien — cela reste normal et n'indique pas un problème de droits).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:7",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 5 — Tiers payant",
+       "5.5 Tiers payant et professionnels non conventionnés"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 5.5 Tiers payant et professionnels non conventionnés\n\nLorsqu'un professionnel de santé n'est pas équipé pour pratiquer le tiers payant complémentaire (cas de nombreux spécialistes en ville), l'adhérent avance l'intégralité des frais et se fait rembourser selon le circuit classique (chapitre 4). Il ne s'agit pas d'un dysfonctionnement mais d'un choix du professionnel de santé, à expliquer clairement pour éviter toute réclamation infondée.\n",
+      "corrected_markdown": "## 5.5 Tiers payant et professionnels non conventionnés\n\nLorsqu'un professionnel de santé n'est pas équipé pour pratiquer le tiers payant complémentaire (cas de nombreux spécialistes en ville), l'adhérent avance l'intégralité des frais et se fait rembourser selon le circuit classique (chapitre 4). Il ne s'agit pas d'un dysfonctionnement mais d'un choix du professionnel de santé, à expliquer clairement pour éviter toute réclamation infondée.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:8",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 5 — Tiers payant",
+       "5.6 Plafonds soumis à suivi particulier"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 5.6 Plafonds soumis à suivi particulier\n\nCertains postes de garantie sont plafonnés annuellement (optique en particulier). Le module de vérification des droits affiche le solde disponible en temps réel. Il est important d'informer l'adhérent de ce solde **avant** un acte engageant (par exemple avant l'achat d'une nouvelle paire de lunettes), pour éviter les mauvaises surprises et les réclamations a posteriori.\n",
+      "corrected_markdown": "## 5.6 Plafonds soumis à suivi particulier\n\nCertains postes de garantie sont plafonnés annuellement (optique en particulier). Le module de vérification des droits affiche le solde disponible en temps réel. Il est important d'informer l'adhérent de ce solde **avant** un acte engageant (par exemple avant l'achat d'une nouvelle paire de lunettes), pour éviter les mauvaises surprises et les réclamations a posteriori.\n"
+     }
+    ],
+    "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324",
+    "document_path": "05-tiers-payant.md"
+   },
+   {
+    "markdown": "",
+    "sections": [
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:0",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 7 — Résiliation de contrat"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "# Chapitre 7 — Résiliation de contrat\n",
+      "corrected_markdown": "# Chapitre 7 — Résiliation de contrat\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:1",
+      "changes": [
+       {
+        "kept": true,
+        "kind": "modify",
+        "after": "Depuis la loi du 14 juillet 2019, les adhérents individuels et les travailleurs non-salariés (TNS) peuvent résilier leur contrat de complémentaire santé à tout moment, sans frais ni pénalités, dès lors que le contrat a plus d'un an d'ancienneté (résiliation dite « infra-annuelle »). Avant cette échéance d'un an, la résiliation n'est possible qu'à l'échéance annuelle (avec préavis de 2 mois) ou pour un motif légal de résiliation anticipée (voir chapitre 7.2 pour les détails).",
+        "before": "Depuis la loi du 14 juillet 2019, les adhérents individuels peuvent résilier leur contrat de complémentaire santé à tout moment, sans frais ni pénalités, dès lors que le contrat a plus d'un an d'ancienneté (résiliation dite « infra-annuelle »). Avant cette échéance d'un an, la résiliation n'est possible qu'à l'échéance annuelle (avec préavis de 2 mois) ou pour un motif légal de résiliation anticipée.",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M6"
+       }
+      ],
+      "heading_path": [
+       "Chapitre 7 — Résiliation de contrat",
+       "7.1 Cadre légal"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M6"
+      ],
+      "original_markdown": "## 7.1 Cadre légal\n\nDepuis la loi du 14 juillet 2019, les adhérents individuels peuvent résilier leur contrat de complémentaire santé à tout moment, sans frais ni pénalités, dès lors que le contrat a plus d'un an d'ancienneté (résiliation dite « infra-annuelle »). Avant cette échéance d'un an, la résiliation n'est possible qu'à l'échéance annuelle (avec préavis de 2 mois) ou pour un motif légal de résiliation anticipée.\n",
+      "corrected_markdown": "## 7.1 Cadre légal\n\nDepuis la loi du 14 juillet 2019, les adhérents individuels et les travailleurs non-salariés (TNS) peuvent résilier leur contrat de complémentaire santé à tout moment, sans frais ni pénalités, dès lors que le contrat a plus d'un an d'ancienneté (résiliation dite « infra-annuelle »). Avant cette échéance d'un an, la résiliation n'est possible qu'à l'échéance annuelle (avec préavis de 2 mois) ou pour un motif légal de résiliation anticipée (voir chapitre 7.2 pour les détails).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:2",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 7 — Résiliation de contrat",
+       "7.1 Cadre légal",
+       "Arbre de décision — Éligibilité à la résiliation"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Arbre de décision — Éligibilité à la résiliation\n\n![Arbre de décision - éligibilité résiliation](image:img_44de745ac5f30f99)\n",
+      "corrected_markdown": "### Arbre de décision — Éligibilité à la résiliation\n\n![Arbre de décision - éligibilité résiliation](image:img_44de745ac5f30f99)\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:3",
+      "changes": [
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "*Pour les travailleurs non-salariés (TNS) : les motifs légaux de résiliation anticipée sont identiques à ceux des contrats individuels classiques.*",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M6"
+       }
+      ],
+      "heading_path": [
+       "Chapitre 7 — Résiliation de contrat",
+       "7.2 Motifs légaux de résiliation anticipée (contrat de moins d'un an)"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M6"
+      ],
+      "original_markdown": "## 7.2 Motifs légaux de résiliation anticipée (contrat de moins d'un an)\n\n- Mariage, PACS ou concubinage notoire.\n- Naissance ou adoption.\n- Divorce ou séparation.\n- Changement de domicile modifiant significativement le risque couvert.\n- Cessation ou changement d'activité professionnelle.\n- Retraite professionnelle.\n- Souscription à un contrat collectif obligatoire (nouvel emploi).\n\nChaque motif doit être justifié par un document officiel daté de moins de 3 mois. La résiliation prend effet un mois après la réception du courrier ou de la demande dans l'espace assuré, sauf disposition contraire.\n",
+      "corrected_markdown": "## 7.2 Motifs légaux de résiliation anticipée (contrat de moins d'un an)\n\n- Mariage, PACS ou concubinage notoire.\n- Naissance ou adoption.\n- Divorce ou séparation.\n- Changement de domicile modifiant significativement le risque couvert.\n- Cessation ou changement d'activité professionnelle.\n- Retraite professionnelle.\n- Souscription à un contrat collectif obligatoire (nouvel emploi).\n\n*Pour les travailleurs non-salariés (TNS) : les motifs légaux de résiliation anticipée sont identiques à ceux des contrats individuels classiques.*\n\nChaque motif doit être justifié par un document officiel daté de moins de 3 mois. La résiliation prend effet un mois après la réception du courrier ou de la demande dans l'espace assuré, sauf disposition contraire.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:4",
+      "changes": [
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "*Note : Les motifs légaux de résiliation anticipée pour les contrats TNS sont les mêmes que pour les contrats individuels classiques (voir chapitre 7.2 pour plus de détails).*",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M6"
+       }
+      ],
+      "heading_path": [
+       "Chapitre 7 — Résiliation de contrat",
+       "7.3 Modalités pratiques de résiliation infra-annuelle (contrat de plus d'un an)"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M6"
+      ],
+      "original_markdown": "## 7.3 Modalités pratiques de résiliation infra-annuelle (contrat de plus d'un an)\n\nDepuis le renforcement réglementaire de 2020 (généralisation de la résiliation en 3 clics pour les contrats souscrits en ligne, et simplification pour les autres canaux), l'adhérent peut résilier :\n\n- directement depuis son espace assuré (rubrique « Résilier mon contrat ») ;\n- par courrier ou email adressé au service Adhésions ;\n- par mandat donné à sa nouvelle mutuelle, qui se charge des démarches de résiliation pour son compte.\n\nLa résiliation prend effet un mois après réception de la demande, sauf si l'adhérent demande une date ultérieure.\n",
+      "corrected_markdown": "## 7.3 Modalités pratiques de résiliation infra-annuelle (contrat de plus d'un an)\n\nDepuis le renforcement réglementaire de 2020 (généralisation de la résiliation en 3 clics pour les contrats souscrits en ligne, et simplification pour les autres canaux), l'adhérent peut résilier :\n\n- directement depuis son espace assuré (rubrique « Résilier mon contrat ») ;\n- par courrier ou email adressé au service Adhésions ;\n- par mandat donné à sa nouvelle mutuelle, qui se charge des démarches de résiliation pour son compte.\n\n*Note : Les motifs légaux de résiliation anticipée pour les contrats TNS sont les mêmes que pour les contrats individuels classiques (voir chapitre 7.2 pour plus de détails).*\n\nLa résiliation prend effet un mois après réception de la demande, sauf si l'adhérent demande une date ultérieure.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:5",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 7 — Résiliation de contrat",
+       "7.4 Résiliation pour non-paiement"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 7.4 Résiliation pour non-paiement\n\nVoir chapitre 3.4 pour le déroulé complet de la procédure d'impayé aboutissant à une résiliation pour non-paiement. Ce type de résiliation ne donne pas lieu à un préavis classique : elle intervient 40 jours après la mise en demeure restée sans effet.\n",
+      "corrected_markdown": "## 7.4 Résiliation pour non-paiement\n\nVoir chapitre 3.4 pour le déroulé complet de la procédure d'impayé aboutissant à une résiliation pour non-paiement. Ce type de résiliation ne donne pas lieu à un préavis classique : elle intervient 40 jours après la mise en demeure restée sans effet.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:6",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 7 — Résiliation de contrat",
+       "7.5 Décès de l'adhérent"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 7.5 Décès de l'adhérent\n\nEn cas de décès de l'adhérent principal, le contrat prend fin de plein droit à la date du décès (article L. 221-17 du Code de la mutualité). Les ayants droit couverts au titre du même contrat disposent d'un délai de 6 mois pour souscrire un nouveau contrat individuel sans questionnaire de santé ni délai de carence, sur présentation de l'acte de décès.\n",
+      "corrected_markdown": "## 7.5 Décès de l'adhérent\n\nEn cas de décès de l'adhérent principal, le contrat prend fin de plein droit à la date du décès (article L. 221-17 du Code de la mutualité). Les ayants droit couverts au titre du même contrat disposent d'un délai de 6 mois pour souscrire un nouveau contrat individuel sans questionnaire de santé ni délai de carence, sur présentation de l'acte de décès.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:7",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 7 — Résiliation de contrat",
+       "7.6 Ce qui doit systématiquement être vérifié avant de valider une résiliation"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 7.6 Ce qui doit systématiquement être vérifié avant de valider une résiliation\n\n1. L'ancienneté réelle du contrat dans GESTOR (attention aux avenants qui ne remettent pas à zéro l'ancienneté du contrat initial).\n2. L'absence de sinistre en cours nécessitant une régularisation avant clôture.\n3. Le mode de résiliation demandé (résiliation classique vs mandat donné à une autre mutuelle — dans ce second cas, ne pas dupliquer la démarche).\n4. Le calcul du trop-perçu de cotisation éventuel à rembourser (prorata temporis).\n",
+      "corrected_markdown": "## 7.6 Ce qui doit systématiquement être vérifié avant de valider une résiliation\n\n1. L'ancienneté réelle du contrat dans GESTOR (attention aux avenants qui ne remettent pas à zéro l'ancienneté du contrat initial).\n2. L'absence de sinistre en cours nécessitant une régularisation avant clôture.\n3. Le mode de résiliation demandé (résiliation classique vs mandat donné à une autre mutuelle — dans ce second cas, ne pas dupliquer la démarche).\n4. Le calcul du trop-perçu de cotisation éventuel à rembourser (prorata temporis).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:8",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 7 — Résiliation de contrat",
+       "7.7 Documents à adresser à l'adhérent après résiliation"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 7.7 Documents à adresser à l'adhérent après résiliation\n\n- Accusé de réception de la demande de résiliation.\n- Attestation de résiliation, mentionnant la date de fin de garanties (document indispensable pour l'adhésion à une nouvelle mutuelle sans délai de carence).\n- Solde de tout compte en cas de trop-perçu ou de reste dû.\n",
+      "corrected_markdown": "## 7.7 Documents à adresser à l'adhérent après résiliation\n\n- Accusé de réception de la demande de résiliation.\n- Attestation de résiliation, mentionnant la date de fin de garanties (document indispensable pour l'adhésion à une nouvelle mutuelle sans délai de carence).\n- Solde de tout compte en cas de trop-perçu ou de reste dû.\n"
+     }
+    ],
+    "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954",
+    "document_path": "07-resiliation.md"
+   },
+   {
+    "markdown": "",
+    "sections": [
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5:0",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 11 — Outils internes de gestion (SI)"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "# Chapitre 11 — Outils internes de gestion (SI)\n",
+      "corrected_markdown": "# Chapitre 11 — Outils internes de gestion (SI)\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5:1",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 11 — Outils internes de gestion (SI)",
+       "11.1 GESTOR, l'outil de gestion principal"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 11.1 GESTOR, l'outil de gestion principal\n\nGESTOR est l'outil de gestion interne utilisé par l'ensemble des services opérationnels d'Alviva Mutuelle depuis janvier 2025 (remplaçant l'ancien outil MutAssur). Il centralise :\n\n- la fiche adhérent et l'ensemble de son historique contractuel ;\n- les cotisations et le suivi des impayés ;\n- les remboursements et le circuit de flux NOEMIE ;\n- le module de vérification des droits tiers payant ;\n- les dossiers de réclamations ;\n- la documentation contractuelle générée automatiquement (attestations, échéanciers).\n",
+      "corrected_markdown": "## 11.1 GESTOR, l'outil de gestion principal\n\nGESTOR est l'outil de gestion interne utilisé par l'ensemble des services opérationnels d'Alviva Mutuelle depuis janvier 2025 (remplaçant l'ancien outil MutAssur). Il centralise :\n\n- la fiche adhérent et l'ensemble de son historique contractuel ;\n- les cotisations et le suivi des impayés ;\n- les remboursements et le circuit de flux NOEMIE ;\n- le module de vérification des droits tiers payant ;\n- les dossiers de réclamations ;\n- la documentation contractuelle générée automatiquement (attestations, échéanciers).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5:2",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 11 — Outils internes de gestion (SI)",
+       "11.1 GESTOR, l'outil de gestion principal",
+       "Capture d'écran — Fiche adhérent"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "### Capture d'écran — Fiche adhérent\n\n![Capture d'écran - fiche adhérent dans GESTOR](image:img_56b213eda08f191e)\n\nCette vue est le point d'entrée de la quasi-totalité des traitements de dossier. Elle regroupe l'identité de l'adhérent, le statut du contrat, la formule souscrite, les informations de cotisation et l'historique des derniers remboursements.\n",
+      "corrected_markdown": "### Capture d'écran — Fiche adhérent\n\n![Capture d'écran - fiche adhérent dans GESTOR](image:img_56b213eda08f191e)\n\nCette vue est le point d'entrée de la quasi-totalité des traitements de dossier. Elle regroupe l'identité de l'adhérent, le statut du contrat, la formule souscrite, les informations de cotisation et l'historique des derniers remboursements.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5:3",
+      "changes": [
+       {
+        "kept": true,
+        "kind": "insert",
+        "after": "À compter du 01/03/2027, un nouvel onglet **Historique téléconsultations** sera disponible dans GESTOR pour consulter les téléconsultations réalisées par les adhérents. Cet écran sera en lecture seule et accessible aux gestionnaires Prestations et Relation Adhérents.",
+        "before": "",
+        "line_kind": "paragraph",
+        "undo_reason": null,
+        "modification_id": "M7"
+       }
+      ],
+      "heading_path": [
+       "Chapitre 11 — Outils internes de gestion (SI)",
+       "11.2 Menu principal et navigation"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M7"
+      ],
+      "original_markdown": "## 11.2 Menu principal et navigation\n\n| Onglet | Usage principal |\n|---|---|\n| Tableau de bord | Vue synthétique de l'activité du jour (dossiers en attente, alertes) |\n| Rechercher un adhérent | Recherche par nom, numéro de contrat, ou numéro de Sécurité sociale |\n| Fiche adhérent | Vue à 360° de l'adhérent sélectionné |\n| Cotisations | Historique des prélèvements, gestion des impayés |\n| Remboursements | Historique et saisie manuelle des actes |\n| Tiers payant | Vérification des droits, historique des incidents |\n| Réclamations | Création et suivi des dossiers de réclamation |\n| Documents | Génération et consultation des documents contractuels |\n| Paramètres | Gestion des accès utilisateurs (droits selon profil) |\n",
+      "corrected_markdown": "## 11.2 Menu principal et navigation\n\n| Onglet | Usage principal |\n|---|---|\n| Tableau de bord | Vue synthétique de l'activité du jour (dossiers en attente, alertes) |\n| Rechercher un adhérent | Recherche par nom, numéro de contrat, ou numéro de Sécurité sociale |\n| Fiche adhérent | Vue à 360° de l'adhérent sélectionné |\n| Cotisations | Historique des prélèvements, gestion des impayés |\n| Remboursements | Historique et saisie manuelle des actes |\n| Tiers payant | Vérification des droits, historique des incidents |\n| Réclamations | Création et suivi des dossiers de réclamation |\n| Documents | Génération et consultation des documents contractuels |\n| Paramètres | Gestion des accès utilisateurs (droits selon profil) |\n\nÀ compter du 01/03/2027, un nouvel onglet **Historique téléconsultations** sera disponible dans GESTOR pour consulter les téléconsultations réalisées par les adhérents. Cet écran sera en lecture seule et accessible aux gestionnaires Prestations et Relation Adhérents.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5:4",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 11 — Outils internes de gestion (SI)",
+       "11.3 Statuts de dossier normalisés"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 11.3 Statuts de dossier normalisés\n\nPour assurer une lecture homogène entre équipes, chaque dossier (remboursement, réclamation, résiliation) porte un statut normalisé :\n\n- **Nouveau** : dossier créé, non encore pris en charge.\n- **En cours d'instruction** : pris en charge par un gestionnaire, en attente d'une action ou d'une pièce.\n- **En attente adhérent** : une pièce complémentaire a été demandée, le délai de traitement est suspendu.\n- **Validé** : traitement terminé favorablement.\n- **Refusé** : traitement terminé défavorablement, motif obligatoirement renseigné en commentaire.\n- **Clôturé** : dossier archivé, non modifiable sans réouverture explicite.\n",
+      "corrected_markdown": "## 11.3 Statuts de dossier normalisés\n\nPour assurer une lecture homogène entre équipes, chaque dossier (remboursement, réclamation, résiliation) porte un statut normalisé :\n\n- **Nouveau** : dossier créé, non encore pris en charge.\n- **En cours d'instruction** : pris en charge par un gestionnaire, en attente d'une action ou d'une pièce.\n- **En attente adhérent** : une pièce complémentaire a été demandée, le délai de traitement est suspendu.\n- **Validé** : traitement terminé favorablement.\n- **Refusé** : traitement terminé défavorablement, motif obligatoirement renseigné en commentaire.\n- **Clôturé** : dossier archivé, non modifiable sans réouverture explicite.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5:5",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 11 — Outils internes de gestion (SI)",
+       "11.4 Droits d'accès selon les profils"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 11.4 Droits d'accès selon les profils\n\n| Profil | Accès en lecture | Accès en modification |\n|---|---|---|\n| Conseiller commercial | Fiche adhérent, simulateur | Création d'adhésion, devis |\n| Gestionnaire Prestations | Fiche adhérent, remboursements, tiers payant | Saisie et validation de remboursements |\n| Gestionnaire Réclamations | Fiche adhérent, historique complet | Dossiers de réclamation uniquement |\n| Responsable d'équipe | Tout le périmètre de son équipe | Validation des gestes commerciaux, déblocages |\n| Administrateur SI | Tout | Paramétrage, gestion des comptes utilisateurs |\n",
+      "corrected_markdown": "## 11.4 Droits d'accès selon les profils\n\n| Profil | Accès en lecture | Accès en modification |\n|---|---|---|\n| Conseiller commercial | Fiche adhérent, simulateur | Création d'adhésion, devis |\n| Gestionnaire Prestations | Fiche adhérent, remboursements, tiers payant | Saisie et validation de remboursements |\n| Gestionnaire Réclamations | Fiche adhérent, historique complet | Dossiers de réclamation uniquement |\n| Responsable d'équipe | Tout le périmètre de son équipe | Validation des gestes commerciaux, déblocages |\n| Administrateur SI | Tout | Paramétrage, gestion des comptes utilisateurs |\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5:6",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 11 — Outils internes de gestion (SI)",
+       "11.5 Bonnes pratiques de saisie"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 11.5 Bonnes pratiques de saisie\n\n- Toujours enregistrer un commentaire daté et motivé lors d'un changement de statut manuel, en particulier pour un refus.\n- Ne jamais dupliquer un dossier existant : utiliser la fonction « Rattacher à un dossier existant » plutôt que d'en créer un nouveau, pour préserver la continuité de traçabilité.\n- Vérifier la formule et la date d'effet du contrat avant toute validation de remboursement (rappel du chapitre 4.7).\n",
+      "corrected_markdown": "## 11.5 Bonnes pratiques de saisie\n\n- Toujours enregistrer un commentaire daté et motivé lors d'un changement de statut manuel, en particulier pour un refus.\n- Ne jamais dupliquer un dossier existant : utiliser la fonction « Rattacher à un dossier existant » plutôt que d'en créer un nouveau, pour préserver la continuité de traçabilité.\n- Vérifier la formule et la date d'effet du contrat avant toute validation de remboursement (rappel du chapitre 4.7).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5:7",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 11 — Outils internes de gestion (SI)",
+       "11.6 Interruptions de service planifiées"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## 11.6 Interruptions de service planifiées\n\nDes fenêtres de maintenance technique sont régulièrement programmées sur GESTOR (mises à jour, montées de version). Pendant ces interruptions, les gestionnaires ne peuvent généralement plus accéder à l'outil ; il est important de suivre les communications spécifiques de la Direction des Systèmes d'Information annonçant ces créneaux, qui priment sur le planning habituel indiqué dans cette fiche.\n",
+      "corrected_markdown": "## 11.6 Interruptions de service planifiées\n\nDes fenêtres de maintenance technique sont régulièrement programmées sur GESTOR (mises à jour, montées de version). Pendant ces interruptions, les gestionnaires ne peuvent généralement plus accéder à l'outil ; il est important de suivre les communications spécifiques de la Direction des Systèmes d'Information annonçant ces créneaux, qui priment sur le planning habituel indiqué dans cette fiche.\n"
+     }
+    ],
+    "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5",
+    "document_path": "11-outils-internes-si.md"
+   },
+   {
+    "markdown": "",
+    "sections": [
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243:0",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 14 — FAQ transverse"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "# Chapitre 14 — FAQ transverse\n\nCette FAQ regroupe les questions les plus fréquemment posées par les adhérents ou remontées par les équipes, organisées par thématique, avec renvoi vers la fiche détaillée correspondante.\n",
+      "corrected_markdown": "# Chapitre 14 — FAQ transverse\n\nCette FAQ regroupe les questions les plus fréquemment posées par les adhérents ou remontées par les équipes, organisées par thématique, avec renvoi vers la fiche détaillée correspondante.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243:1",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 14 — FAQ transverse",
+       "Adhésion"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## Adhésion\n\n**Un prospect peut-il adhérer sans questionnaire de santé ?** Oui, sur les contrats individuels standards Alviva Mutuelle, aucun questionnaire de santé n'est requis, quelle que soit la formule. C'est un principe commercial constant de la gamme (voir chapitre 2).\n\n**Peut-on adhérer en cours de mois ?** Oui, mais la prise d'effet standard reste le 1er du mois suivant sauf demande explicite de prise d'effet différée ou situation particulière (nouveau-né, sortie de contrat collectif).\n\n**Un étudiant de 24 ans peut-il rester rattaché au contrat de ses parents ?** Oui, jusqu'à 26 ans s'il poursuit des études, sur présentation d'un justificatif de scolarité renouvelé chaque année universitaire (chapitre 2.4).\n\n**Que faire si l'adhérent ne peut pas fournir d'attestation de radiation ?** Le délai de carence standard s'applique par défaut. Il est possible de la demander a posteriori si elle est fournie dans les 3 mois suivant la prise d'effet, avec effet rétroactif sur les garanties concernées.\n\n**Un contrat TNS peut-il être résilié en cours d'année ?** Non, sauf motif légal de résiliation anticipée. Le cadre fiscal Madelin impose que le contrat ne soit pas résiliable à la seule initiative de l'adhérent en cours d'année (chapitre 1.4).\n",
+      "corrected_markdown": "## Adhésion\n\n**Un prospect peut-il adhérer sans questionnaire de santé ?** Oui, sur les contrats individuels standards Alviva Mutuelle, aucun questionnaire de santé n'est requis, quelle que soit la formule. C'est un principe commercial constant de la gamme (voir chapitre 2).\n\n**Peut-on adhérer en cours de mois ?** Oui, mais la prise d'effet standard reste le 1er du mois suivant sauf demande explicite de prise d'effet différée ou situation particulière (nouveau-né, sortie de contrat collectif).\n\n**Un étudiant de 24 ans peut-il rester rattaché au contrat de ses parents ?** Oui, jusqu'à 26 ans s'il poursuit des études, sur présentation d'un justificatif de scolarité renouvelé chaque année universitaire (chapitre 2.4).\n\n**Que faire si l'adhérent ne peut pas fournir d'attestation de radiation ?** Le délai de carence standard s'applique par défaut. Il est possible de la demander a posteriori si elle est fournie dans les 3 mois suivant la prise d'effet, avec effet rétroactif sur les garanties concernées.\n\n**Un contrat TNS peut-il être résilié en cours d'année ?** Non, sauf motif légal de résiliation anticipée. Le cadre fiscal Madelin impose que le contrat ne soit pas résiliable à la seule initiative de l'adhérent en cours d'année (chapitre 1.4).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243:2",
+      "changes": [
+       {
+        "kept": false,
+        "kind": "modify",
+        "after": "**Pourquoi la cotisation d'un enfant est-elle parfois gratuite ?** La cotisation des enfants n'est pas gratuite par défaut. Certaines offres promotionnelles ponctuelles peuvent prévoir une gratuité à partir du 3e enfant rattaché. Vérifier auprès de la Direction Commerciale si une telle offre est en cours avant de communiquer ce principe.",
+        "before": "**Pourquoi la cotisation d'un enfant est-elle parfois gratuite ?** Certaines offres promotionnelles ponctuelles prévoient la gratuité de cotisation à partir du 3e enfant rattaché. Vérifier l'existence d'une offre en cours avant d'appliquer ce principe par défaut, car il ne s'agit pas d'une règle permanente de la grille tarifaire.",
+        "line_kind": "paragraph",
+        "undo_reason": "not_decided",
+        "modification_id": null
+       }
+      ],
+      "heading_path": [
+       "Chapitre 14 — FAQ transverse",
+       "Cotisations"
+      ],
+      "convention_ids": [],
+      "modification_ids": [
+       "M5"
+      ],
+      "original_markdown": "## Cotisations\n\n**Pourquoi la cotisation d'un enfant est-elle parfois gratuite ?** Certaines offres promotionnelles ponctuelles prévoient la gratuité de cotisation à partir du 3e enfant rattaché. Vérifier l'existence d'une offre en cours avant d'appliquer ce principe par défaut, car il ne s'agit pas d'une règle permanente de la grille tarifaire.\n\n**Un adhérent peut-il payer sa cotisation par carte bancaire tous les mois ?** Non pour les échéances récurrentes (uniquement prélèvement SEPA), sauf cas exceptionnel de régularisation d'impayé (chapitre 3.4).\n\n**Peut-on étaler un impayé sur plusieurs mois ?** Un échelonnement exceptionnel peut être proposé par un responsable d'équipe, en dérogation à la procédure standard, notamment en cas de difficulté ponctuelle justifiée.\n\n**La cotisation change-t-elle automatiquement à un changement de tranche d'âge ?** Oui, le changement de tranche d'âge est calculé automatiquement par GESTOR au 1er janvier suivant l'anniversaire concerné, sans démarche à effectuer par l'adhérent.\n",
+      "corrected_markdown": "## Cotisations\n\n**Pourquoi la cotisation d'un enfant est-elle parfois gratuite ?** Certaines offres promotionnelles ponctuelles prévoient la gratuité de cotisation à partir du 3e enfant rattaché. Vérifier l'existence d'une offre en cours avant d'appliquer ce principe par défaut, car il ne s'agit pas d'une règle permanente de la grille tarifaire.\n\n**Un adhérent peut-il payer sa cotisation par carte bancaire tous les mois ?** Non pour les échéances récurrentes (uniquement prélèvement SEPA), sauf cas exceptionnel de régularisation d'impayé (chapitre 3.4).\n\n**Peut-on étaler un impayé sur plusieurs mois ?** Un échelonnement exceptionnel peut être proposé par un responsable d'équipe, en dérogation à la procédure standard, notamment en cas de difficulté ponctuelle justifiée.\n\n**La cotisation change-t-elle automatiquement à un changement de tranche d'âge ?** Oui, le changement de tranche d'âge est calculé automatiquement par GESTOR au 1er janvier suivant l'anniversaire concerné, sans démarche à effectuer par l'adhérent.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243:3",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 14 — FAQ transverse",
+       "Remboursements"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## Remboursements\n\n**Combien de temps pour être remboursé après un acte chez le médecin traitant ?** En flux électronique NOEMIE, le remboursement intervient généralement sous 2 à 5 jours ouvrés après réception du flux de la Sécurité sociale (chapitre 4.2).\n\n**Le remboursement dentaire prothétique est-il automatique après un devis validé ?** Non : le devis validé donne un accord de principe, mais le remboursement effectif nécessite la facture définitive après réalisation de l'acte (chapitre 4.7).\n\n**Un adhérent peut-il être remboursé sans passer par sa carte Vitale ?** Oui, via une feuille de soins papier, mais le délai est plus long (10 jours ouvrés) et la saisie est manuelle (chapitre 4.3).\n\n**Comment expliquer un écart entre le montant facturé et le montant remboursé par la Sécu ?** Il s'agit très souvent d'un dépassement d'honoraires (secteur 2) : la Sécurité sociale rembourse sur la base de remboursement (BR), qui peut être inférieure au montant réellement facturé. Alviva Mutuelle rembourse selon la formule sur cette même base, sauf garantie spécifique sur les dépassements.\n",
+      "corrected_markdown": "## Remboursements\n\n**Combien de temps pour être remboursé après un acte chez le médecin traitant ?** En flux électronique NOEMIE, le remboursement intervient généralement sous 2 à 5 jours ouvrés après réception du flux de la Sécurité sociale (chapitre 4.2).\n\n**Le remboursement dentaire prothétique est-il automatique après un devis validé ?** Non : le devis validé donne un accord de principe, mais le remboursement effectif nécessite la facture définitive après réalisation de l'acte (chapitre 4.7).\n\n**Un adhérent peut-il être remboursé sans passer par sa carte Vitale ?** Oui, via une feuille de soins papier, mais le délai est plus long (10 jours ouvrés) et la saisie est manuelle (chapitre 4.3).\n\n**Comment expliquer un écart entre le montant facturé et le montant remboursé par la Sécu ?** Il s'agit très souvent d'un dépassement d'honoraires (secteur 2) : la Sécurité sociale rembourse sur la base de remboursement (BR), qui peut être inférieure au montant réellement facturé. Alviva Mutuelle rembourse selon la formule sur cette même base, sauf garantie spécifique sur les dépassements.\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243:4",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 14 — FAQ transverse",
+       "Tiers payant"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## Tiers payant\n\n**Le tiers payant fonctionne-t-il à l'étranger ?** Non, jamais. Les soins réalisés à l'étranger suivent systématiquement le circuit classique avec avance de frais (chapitre 4.6).\n\n**Que faire si un adhérent perd sa carte de tiers payant physique à l'étranger ?** Le rassurer : la version numérique reste accessible depuis l'espace assuré ou l'application mobile, sans nécessité de carte physique pour la plupart des usages en France.\n\n**Un opticien hors réseau Alviva Santé peut-il quand même pratiquer le tiers payant ?** Oui, certains le font indépendamment du réseau partenaire, mais sans les tarifs plafonnés négociés (chapitre 10.5).\n",
+      "corrected_markdown": "## Tiers payant\n\n**Le tiers payant fonctionne-t-il à l'étranger ?** Non, jamais. Les soins réalisés à l'étranger suivent systématiquement le circuit classique avec avance de frais (chapitre 4.6).\n\n**Que faire si un adhérent perd sa carte de tiers payant physique à l'étranger ?** Le rassurer : la version numérique reste accessible depuis l'espace assuré ou l'application mobile, sans nécessité de carte physique pour la plupart des usages en France.\n\n**Un opticien hors réseau Alviva Santé peut-il quand même pratiquer le tiers payant ?** Oui, certains le font indépendamment du réseau partenaire, mais sans les tarifs plafonnés négociés (chapitre 10.5).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243:5",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 14 — FAQ transverse",
+       "Réclamations et résiliation"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## Réclamations et résiliation\n\n**Un adhérent mécontent peut-il résilier immédiatement sans préavis ?** Uniquement si son contrat a plus d'un an d'ancienneté (résiliation infra-annuelle) ou s'il justifie d'un motif légal de résiliation anticipée (chapitre 7).\n\n**Une réclamation orale doit-elle être tracée comme une réclamation écrite ?** Oui, systématiquement, y compris si elle est résolue immédiatement au téléphone (chapitre 6.4).\n\n**Quel est le délai pour saisir le Médiateur de l'Assurance ?** Un an à compter de la réclamation écrite initiale auprès d'Alviva Mutuelle (chapitre 6.5).\n",
+      "corrected_markdown": "## Réclamations et résiliation\n\n**Un adhérent mécontent peut-il résilier immédiatement sans préavis ?** Uniquement si son contrat a plus d'un an d'ancienneté (résiliation infra-annuelle) ou s'il justifie d'un motif légal de résiliation anticipée (chapitre 7).\n\n**Une réclamation orale doit-elle être tracée comme une réclamation écrite ?** Oui, systématiquement, y compris si elle est résolue immédiatement au téléphone (chapitre 6.4).\n\n**Quel est le délai pour saisir le Médiateur de l'Assurance ?** Un an à compter de la réclamation écrite initiale auprès d'Alviva Mutuelle (chapitre 6.5).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243:6",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 14 — FAQ transverse",
+       "Prévoyance"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## Prévoyance\n\n**Un TNS bénéficie-t-il des mêmes indemnités journalières qu'un salarié ?** Non, les IJSS de la Sécurité sociale pour les TNS suivent un régime différent (souvent moins favorable), ce que la garantie prévoyance complémentaire vise justement à compenser (chapitre 8.2).\n\n**Le contrôle médical est-il systématique pour tout arrêt de travail ?** Non, il est généralement déclenché au-delà de 90 jours consécutifs ou sur signalement documenté (chapitre 8.6 et 12.4).\n",
+      "corrected_markdown": "## Prévoyance\n\n**Un TNS bénéficie-t-il des mêmes indemnités journalières qu'un salarié ?** Non, les IJSS de la Sécurité sociale pour les TNS suivent un régime différent (souvent moins favorable), ce que la garantie prévoyance complémentaire vise justement à compenser (chapitre 8.2).\n\n**Le contrôle médical est-il systématique pour tout arrêt de travail ?** Non, il est généralement déclenché au-delà de 90 jours consécutifs ou sur signalement documenté (chapitre 8.6 et 12.4).\n"
+     },
+     {
+      "key": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243:7",
+      "changes": [],
+      "heading_path": [
+       "Chapitre 14 — FAQ transverse",
+       "Outils et portail"
+      ],
+      "convention_ids": [],
+      "modification_ids": [],
+      "original_markdown": "## Outils et portail\n\n**L'identifiant de connexion à l'espace assuré est-il le numéro de contrat ?** Non, c'est l'adresse email déclarée (chapitre 9.4).\n\n**Peut-on consulter GESTOR pendant une fenêtre de maintenance planifiée ?** Généralement non ; se référer aux communications spécifiques de la Direction des Systèmes d'Information pour connaître les créneaux exacts (chapitre 11.6).\n",
+      "corrected_markdown": "## Outils et portail\n\n**L'identifiant de connexion à l'espace assuré est-il le numéro de contrat ?** Non, c'est l'adresse email déclarée (chapitre 9.4).\n\n**Peut-on consulter GESTOR pendant une fenêtre de maintenance planifiée ?** Généralement non ; se référer aux communications spécifiques de la Direction des Systèmes d'Information pour connaître les créneaux exacts (chapitre 11.6).\n"
+     }
+    ],
+    "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243",
+    "document_path": "14-faq-transverse.md"
+   }
+  ],
+  "pending": [
+   {
+    "card_id": "card_4baa25418908e465",
+    "card_rank": 5
+   },
+   {
+    "card_id": "card_15936b88e7a5fbe7",
+    "card_rank": 6
+   }
+  ],
+  "controls": {
+   "changes_kept": 39,
+   "changes_undone": 12,
+   "headings_and_images_identical": true,
+   "every_modification_has_an_outcome": true
+  },
+  "conventions": [],
+  "generated_at": "2026-10-07T09:26:11.064921Z",
+  "modifications": [
+   {
+    "id": "M1",
+    "kind": "expert_answer",
+    "origin": {
+     "card_id": "card_09f84bf6d6d86fb2",
+     "card_rank": 1,
+     "decided_at": "2026-10-07T09:18:37.201000Z",
+     "action_type": "other_answer",
+     "decision_id": "e774dabc-50b7-4785-8059-bf59e5168274"
+    },
+    "outcome": "applied",
+    "reasons": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:3: Les valeurs manquantes dans la grille 2027 (ESSENTIELLE et SÉRÉNITÉ+ pour 18-29 ans, toutes les formules pour 30-39 ans, 50-59 ans et 70 ans et +) ne sont pas fournies dans les sources disponibles. Impossible de les compléter sans la grille complète.",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:3: duplicate_or_move",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:3: duplicate_or_move",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5: introduction_without_content",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5: duplicate_or_move",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5: duplicate_or_move",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5: duplicate_or_move",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5: duplicate_or_move",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5: duplicate_or_move",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5: duplicate_or_move",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5: duplicate_or_move",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5: duplicate_or_move"
+    ],
+    "expert_text": "Pour les souscriptions à partir du 1er janvier 2027, il faut bien prendre la grille fournie dans l'e-mail 3. Pour des souscriptions avant le 1er janvier 2027, il faut continuer à appliquer la grille présente dans la base de co. J'aimerais que la grille présente dans l'e-mail 3 figure dans la base de co que nous sommes en train de construire mais je ne peux pas la mettre en pièce jointe.",
+    "instruction": "Appliquer la réponse de l'experte, qui fait foi.",
+    "section_keys": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:3",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7:5"
+    ],
+    "source_document_ids": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7",
+     "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11"
+    ]
+   },
+   {
+    "id": "M2",
+    "kind": "dated_change",
+    "origin": {
+     "card_id": "card_bc5b94ab3e7ecb13",
+     "card_rank": 2,
+     "decided_at": "2026-10-07T09:18:37.240000Z",
+     "action_type": "follow_recommendation",
+     "decision_id": "625571e3-e5fe-41ce-8e52-75e0d1bf2ad4"
+    },
+    "outcome": "applied",
+    "reasons": [],
+    "expert_text": null,
+    "instruction": "Changement daté confirmé : ce qu'annonce email-1-changement-temporaire-maintenance.docx s'applique, avec sa date d'effet et son périmètre tels que la source les écrit. Ce que dit la fiche reste écrit pour ce qui vaut en dehors de cette période ou de ce périmètre.",
+    "section_keys": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:3",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:4"
+    ],
+    "source_document_ids": [
+     "doc_pilote_corpus_zip_pilote_corpus_email_1_changement_temporaire_maintenance_docx_13a7318d"
+    ]
+   },
+   {
+    "id": "M3",
+    "kind": "expert_answer",
+    "origin": {
+     "card_id": "card_b86f78340ed9425d",
+     "card_rank": 3,
+     "decided_at": "2026-10-07T09:18:37.271000Z",
+     "action_type": "other_answer",
+     "decision_id": "35a8be2f-eb2a-410f-8c6d-bd532ee1cf96"
+    },
+    "outcome": "applied",
+    "reasons": [],
+    "expert_text": "Autre réponse : « Mettre à jour le chapitre 5.3 de la base de connaissance pour intégrer la procédure définie dans l'email 2. Il faut préciser que cette procédure ne s'applique que du 1er octobre 2026 au 30 novembre 2026 et qu'elle ne concerne que les pharmacies. Ajouter un schéma comme celui présent dans le chapitre 5.3 en conservant la partie de droite sur les médecins et le paramédical mais en modifiant la partie sur les pharmacies avec les étapes 1)Vérifier dans l'outil GESTOR (onglet « Droits Tiers Payant ») si les droits sont ouverts à la date de l'acte 2a)Droits fermés → vérifier la cotisation 2b)Droits ouverts mais refus technique → sélectionner « Incident TP — Priorité Flux » dans GESTOR (module Tiers Payant) 3b)déclenchement automatique d'une notification à la cellule Flux, sans action de transfert manuelle 4b)\tUn accusé de traitement est envoyé automatiquement à l'adhérent par SMS dans les 15 minutes, l'informant du délai de résolution. 5b)Le délai cible reste 48h ouvrées, mais un tableau de suivi en temps réel est accessible (onglet « Suivi Flux » de GESTOR).",
+    "instruction": "Appliquer la réponse de l'experte, qui fait foi.",
+    "section_keys": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324:4"
+    ],
+    "source_document_ids": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_05_tiers_payan_7e215324",
+     "doc_pilote_corpus_zip_pilote_corpus_email_2_changement_process_definitif_docx_453e99bc"
+    ]
+   },
+   {
+    "id": "M4",
+    "kind": "expert_answer",
+    "origin": {
+     "card_id": "card_daebae8612239ef8",
+     "card_rank": 4,
+     "decided_at": "2026-10-07T09:18:37.302000Z",
+     "action_type": "complete",
+     "decision_id": "e9ae9383-46ea-4066-a2f4-30e7b7837b0c"
+    },
+    "outcome": "applied",
+    "reasons": [],
+    "expert_text": "Créer un nouveau chapitre dans la base de connaissance dédié à la téléconsultation médicale, en intégrant les informations du brief (description du service, populations éligibles, fonctionnement, etc.). Préciser que le service sera lancé le 1er mars 2027 et qu'il est inclus dans toutes les formules sans surcoût. Mettre à jour le sommaire pour inclure ce nouveau chapitre et ajouter un renvoi vers le brief du 8 septembre 2026 pour référence.",
+    "instruction": "Appliquer la réponse de l'experte, qui fait foi.",
+    "section_keys": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_00_sommaire_md_81dd1a4c:2"
+    ],
+    "source_document_ids": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_00_sommaire_md_81dd1a4c",
+     "doc_pilote_corpus_zip_pilote_corpus_brief_nouvelle_activite_teleconsultation_pdf_dfc8eb6b"
+    ]
+   },
+   {
+    "id": "M5",
+    "kind": "complete",
+    "origin": {
+     "card_id": "card_4bd41a5e9e6de0ca",
+     "card_rank": 8,
+     "decided_at": "2026-10-07T09:18:37.364000Z",
+     "action_type": "follow_recommendation",
+     "decision_id": "222b3eb6-0987-48c2-b093-7d017fb4a90b"
+    },
+    "outcome": "not_applicable",
+    "reasons": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243:2: not_decided"
+    ],
+    "expert_text": null,
+    "instruction": "Mettre à jour la FAQ pour préciser si une offre promotionnelle de gratuité pour les enfants est en cours. Si ce n'est pas le cas, reformuler la réponse : \"La cotisation des enfants n'est pas gratuite par défaut. Certaines offres promotionnelles ponctuelles peuvent prévoir une gratuité à partir du 3e enfant rattaché. Vérifier auprès de la Direction Commerciale si une telle offre est en cours avant de communiquer ce principe.\"",
+    "section_keys": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243:2"
+    ],
+    "source_document_ids": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243"
+    ]
+   },
+   {
+    "id": "M6",
+    "kind": "expert_answer",
+    "origin": {
+     "card_id": "card_14bc06f652d38416",
+     "card_rank": 9,
+     "decided_at": "2026-10-07T09:18:37.415000Z",
+     "action_type": "complete",
+     "decision_id": "b76a1b87-8761-4b5b-89f2-953172b7827f"
+    },
+    "outcome": "applied",
+    "reasons": [],
+    "expert_text": "Mettre à jour la FAQ transverse pour préciser que les motifs légaux de résiliation anticipée pour les contrats TNS sont les mêmes que pour les contrats individuels classiques (voir chapitre 7.2). Ajouter un renvoi vers ce chapitre pour plus de détails.",
+    "instruction": "Appliquer la réponse de l'experte, qui fait foi.",
+    "section_keys": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789:8",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:1",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:4",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954:3"
+    ],
+    "source_document_ids": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_01_presentatio_b64fd789",
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_07_resiliation_5dae0954"
+    ]
+   },
+   {
+    "id": "M7",
+    "kind": "complete",
+    "origin": {
+     "card_id": "card_f22e491e78c02f46",
+     "card_rank": 10,
+     "decided_at": "2026-10-07T09:18:37.445000Z",
+     "action_type": "follow_recommendation",
+     "decision_id": "f268f115-875e-45fc-913e-4e15819a344f"
+    },
+    "outcome": "applied",
+    "reasons": [],
+    "expert_text": null,
+    "instruction": "Ajouter une note dans le chapitre 11.2 indiquant : \"À compter du 01/03/2027, un nouvel onglet 'Historique téléconsultations' sera disponible dans GESTOR pour consulter les téléconsultations réalisées par les adhérents. Cet écran sera en lecture seule et accessible aux gestionnaires Prestations et Relation Adhérents.\"",
+    "section_keys": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5:3"
+    ],
+    "source_document_ids": [
+     "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_11_outils_inte_3b94a0e5",
+     "doc_pilote_corpus_zip_pilote_corpus_brief_nouvelle_activite_teleconsultation_pdf_dfc8eb6b"
+    ]
+   }
+  ],
+  "schema_version": "0.1.0",
+  "audit_schema_version": "0.9.0"
+ },
+ "createdAt": "2026-10-07T09:26:18.610Z",
+ "reviewable": true
+}
