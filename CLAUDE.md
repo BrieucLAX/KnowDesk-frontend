@@ -1,5 +1,7 @@
 # KnowDesk — front
 
+Réponds toujours en français à l'utilisateur.
+
 ## Règle absolue
 
 **Vercel déploie `main` automatiquement en production.**
