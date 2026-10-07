@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  changedShare, imageOf, inlineParts, ownHeading, parseLines, proposedLines, rowCells, sectionBlocks, sectionTitle, sheetViews, wordDiff,
+  changedShare, imageOf, senseChanged, inlineParts, ownHeading, parseLines, proposedLines, rowCells, sectionBlocks, sectionTitle, sheetViews, wordDiff,
 } from './baseDocument';
 import type { BaseCorrection, CorrectedSection } from './correction';
 
@@ -64,6 +64,19 @@ describe('comparaison', () => {
     expect(block).toMatchObject({ op: 'modify', rewritten: true });
     const [light] = sectionBlocks(section({ original_markdown: 'Tarifs par tranches de 5 ans.', corrected_markdown: 'Tarifs par tranches de 10 ans.' }));
     expect(light).toMatchObject({ op: 'modify', rewritten: false });
+  });
+
+  it('un paragraphe dont le sens s\'inverse se montre en entier, même si peu de mots changent (Essai 5, avertissement du chapitre 3)', () => {
+    const warning = '**⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024.** Les montants ci-dessous servent de référence pour comprendre la **structure** de la grille tarifaire (zones, tranches d\'âge, coefficients), mais **ne doivent pas être communiqués tels quels à un adhérent ou un prospect**. Une révision tarifaire a eu lieu depuis — se référer à la dernière note tarifaire transmise par la Direction Commerciale avant toute communication de montant.';
+    const updated = warning.replace('⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024', '✅ FICHE ACTUALISÉE — dernière mise à jour 12/2026');
+    // Le taux est juste : environ 5 % des mots changent, sous le seuil.
+    expect(changedShare(warning.replace(/\*\*/g, ''), updated.replace(/\*\*/g, ''))).toBeLessThan(0.1);
+    expect(senseChanged(warning, updated)).toBe(true);
+    const [block] = sectionBlocks(section({ original_markdown: warning, corrected_markdown: updated }));
+    expect(block).toMatchObject({ op: 'modify', rewritten: true });
+    // Une valeur qui change sans que le sens s'inverse reste en mot à mot.
+    expect(senseChanged('Tarif : 45,80 €.', 'Tarif : 47,80 €.')).toBe(false);
+    expect(senseChanged('Le délai ne court pas.', 'Le délai court.')).toBe(true);
   });
 
   it('une section inchangée n\'a que des lignes égales', () => {

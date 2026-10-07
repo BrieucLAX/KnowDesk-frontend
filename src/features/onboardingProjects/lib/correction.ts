@@ -298,8 +298,13 @@ export function reasonLabels(raws: string[], sectionTitle: (key: string) => stri
   return [...new Set(raws.map(r => reasonLabel(r, sectionTitle)))];
 }
 
+/**
+ * La suite d'une modification. Une réponse « Autre » dont rien n'est repris règle sa carte : le
+ * pipeline la garde, non appliquée, avec sa raison, pour qu'elle se voie (2026-10-07).
+ */
 export function outcomeLabel(m: Modification): string {
-  return m.outcome === 'applied' ? 'Appliquée' : 'Non appliquée';
+  if (m.outcome === 'applied') return 'Appliquée';
+  return m.origin.action_type === 'other_answer' ? 'Réglée sans modification' : 'Non appliquée';
 }
 
 /** Progression de la relecture : « 3 sur 12 relues ». */
