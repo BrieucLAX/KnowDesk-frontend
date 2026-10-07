@@ -657,7 +657,7 @@
   body * { visibility: hidden; }
   .obp-clean, .obp-clean * { visibility: visible; }
   .obp-clean { position: absolute; left: 0; top: 0; width: 100%; max-width: none; gap: 12px; }
-  .obp-clean-noprint, .obp-clean-head .obp-link { display: none !important; }
+  .obp-clean-noprint { display: none !important; }
   .obp-clean-toc, .obp-clean-sheet { border: 0; padding: 0; background: none; }
   .obp-clean-toc a { color: inherit; }
   .obp-clean-sheet { break-before: page; }

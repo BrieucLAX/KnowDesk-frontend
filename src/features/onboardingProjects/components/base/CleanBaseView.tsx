@@ -78,7 +78,8 @@ export function CleanBaseView({ projectId, validationId, onBack }: CleanBaseView
       <article className="obp-clean">
         <header className="obp-clean-head">
           <p>
-            Validée par {validation.validatedByName} le {formatFull(validation.validatedAt)} · {back}
+            Validée par {validation.validatedByName} le {formatFull(validation.validatedAt)}
+            <span className="obp-clean-noprint"> · {back}</span>
           </p>
           <Button variant="secondary" size="sm" className="obp-clean-noprint" onClick={() => window.print()}>
             Imprimer / PDF
