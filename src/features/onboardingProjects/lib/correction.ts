@@ -281,29 +281,61 @@ const REASON_LABEL: Record<string, string> = {
  * contrôles ou une phrase du modèle ; une clé de section n'a pas d'espace, le découpage au premier
  * « : » est donc sûr. La clé devient le titre de la section ; un code inconnu, une phrase générique.
  */
-export function reasonLabel(raw: string, sectionTitle: (key: string) => string | null): string {
+function readReason(raw: string, sectionTitle: (key: string) => string | null) {
   const cut = raw.indexOf(': ');
   const key = cut > 0 ? raw.slice(0, cut) : '';
   // Une clé de section (jamais affichée, même inconnue de l'écran) : `^[A-Za-z0-9_.:-]+$`.
   const isKey = /^[A-Za-z0-9_.:-]+$/.test(key);
   const where = isKey ? sectionTitle(key) : null;
   const text = (isKey ? raw.slice(cut + 2) : raw).trim();
-  const said = /^[a-z_]+$/.test(text)
-    ? REASON_LABEL[text] ?? 'le texte proposé n\'a pas été repris'
-    : text;
-  return where ? `${where} : ${said}` : said.charAt(0).toUpperCase() + said.slice(1);
+  const code = /^[a-z_]+$/.test(text);
+  const said = code ? REASON_LABEL[text] ?? 'le texte proposé n\'a pas été repris' : text;
+  return { where, said, fromModel: !code };
 }
 
-export function reasonLabels(raws: string[], sectionTitle: (key: string) => string | null): string[] {
-  return [...new Set(raws.map(r => reasonLabel(r, sectionTitle)))];
+const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+export function reasonLabel(raw: string, sectionTitle: (key: string) => string | null): string {
+  const r = readReason(raw, sectionTitle);
+  return r.where ? `${r.where} : ${r.said}` : capital(r.said);
 }
+
+/** Une raison et le nombre de sections où elle vaut : le chemin de section n'est jamais répété. */
+export interface ReasonGroup { text: string; sections: number; fromModel: boolean }
+
+/** Raisons affichées d'emblée ; les autres se déplient. */
+export const SHOWN_REASONS = 3;
+
+/** Les raisons regroupées : une ligne par raison, avec le nombre de sections où elle vaut. */
+export function reasonGroups(raws: string[], sectionTitle: (key: string) => string | null): ReasonGroup[] {
+  const groups = new Map<string, { where: Set<string>; fromModel: boolean }>();
+  for (const raw of raws) {
+    const r = readReason(raw, sectionTitle);
+    const text = capital(r.said);
+    const g = groups.get(text) ?? { where: new Set<string>(), fromModel: r.fromModel };
+    g.where.add(r.where ?? '');
+    groups.set(text, g);
+  }
+  return [...groups.entries()].map(([text, g]) => ({ text, sections: g.where.size, fromModel: g.fromModel }));
+}
+
+/**
+ * Ce qui n'a pas pu être fait, en une phrase : celle de l'IA d'abord, qui dit le pourquoi (« la
+ * nouvelle grille 2027 n'est pas dans vos documents »), sinon la première raison.
+ */
+export function partialSummary(groups: ReasonGroup[]): ReasonGroup | null {
+  return groups.find(g => g.fromModel) ?? groups[0] ?? null;
+}
+
+/** La première phrase d'un texte, sans son point final. */
+export const firstSentence = (text: string): string => text.split(/(?<=[.!?])\s+/)[0].replace(/[.!?]+$/, '');
 
 /**
  * La suite d'une modification. Une réponse « Autre » dont rien n'est repris règle sa carte : le
  * pipeline la garde, non appliquée, avec sa raison, pour qu'elle se voie (2026-10-07).
  */
 export function outcomeLabel(m: Modification): string {
-  if (m.outcome === 'applied') return 'Appliquée';
+  if (m.outcome === 'applied') return (m.reasons ?? []).length > 0 ? 'Appliquée en partie' : 'Appliquée';
   return m.origin.action_type === 'other_answer' ? 'Réglée sans modification' : 'Non appliquée';
 }
 

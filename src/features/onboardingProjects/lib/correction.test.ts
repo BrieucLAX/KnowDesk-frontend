@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
-  blockingCardsLeft, blockingLeftLabel, correctionFailureMessage, correctionStepStates, itemLabel, originLabel, outcomeLabel,
+  blockingCardsLeft, blockingLeftLabel, correctionFailureMessage, correctionStepStates, firstSentence, itemLabel, originLabel, outcomeLabel,
+  partialSummary, reasonGroups,
   reasonLabel, reviewProgressLabel, type Modification,
 } from './correction';
 import type { Decision } from './decisions';
@@ -81,7 +82,26 @@ describe('libellés', () => {
     expect(outcomeLabel(base)).toBe('Réglée sans modification');
     expect(reasonLabel(base.reasons![0], () => null)).toBe('Votre réponse ne contenait pas de texte à intégrer dans la base');
     expect(outcomeLabel({ ...base, origin: { ...base.origin, action_type: 'follow_recommendation' } })).toBe('Non appliquée');
-    expect(outcomeLabel({ ...base, outcome: 'applied' })).toBe('Appliquée');
+    expect(outcomeLabel({ ...base, outcome: 'applied', reasons: [] })).toBe('Appliquée');
+    expect(outcomeLabel({ ...base, outcome: 'applied' })).toBe('Appliquée en partie');
+  });
+
+  it('regroupe les raisons identiques sans répéter le chemin de section (Essai 5, chapitre 3)', () => {
+    const title = (k: string) => ({ 'd:1': 'Chapitre 3 › Zone 1', 'd:2': 'Chapitre 3 › Zone 2', 'd:3': 'Chapitre 3 › Zone 3' }[k] ?? null);
+    const groups = reasonGroups([
+      'd:1: values_from_several_sources', 'd:2: values_from_several_sources', 'd:3: values_from_several_sources',
+      'd:1: La nouvelle grille 2027 n\'est pas dans vos documents. Seuls trois montants sont cités.',
+      'd:2: duplicate_or_move',
+    ], title);
+    expect(groups).toEqual([
+      { text: 'Le texte proposé mélangeait des chiffres de documents différents ; il n\'a pas été repris', sections: 3, fromModel: false },
+      { text: 'La nouvelle grille 2027 n\'est pas dans vos documents. Seuls trois montants sont cités.', sections: 1, fromModel: true },
+      { text: 'Le texte proposé répétait un passage déjà présent dans la fiche ; il n\'a pas été repris', sections: 1, fromModel: false },
+    ]);
+    expect(groups.map(g => g.text).join(' ')).not.toMatch(/Chapitre 3 ›/);
+    // En une phrase, ce qui n'a pas pu être fait : celle de l'IA d'abord.
+    expect(firstSentence(partialSummary(groups)!.text)).toBe('La nouvelle grille 2027 n\'est pas dans vos documents');
+    expect(partialSummary([])).toBeNull();
   });
 
   it('traduit une raison : la clé de section devient son titre, le code une phrase', () => {

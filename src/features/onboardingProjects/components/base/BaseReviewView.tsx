@@ -4,7 +4,8 @@ import {
   modificationPlacement, ownHeading, proposedLines, sectionTitleIndex, sheetViews, type SectionView, type SheetView,
 } from '../../lib/baseDocument';
 import {
-  itemLabel, kindLabel, originLabel, outcomeLabel, reasonLabels, reviewProgressLabel,
+  firstSentence, itemLabel, kindLabel, originLabel, outcomeLabel, partialSummary, reasonGroups, reviewProgressLabel,
+  SHOWN_REASONS, type ReasonGroup,
   type BaseCorrection, type Convention, type Modification,
 } from '../../lib/correction';
 import type { BaseReview } from '../../hooks/useBaseReview';
@@ -68,15 +69,7 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
       <p className="obp-base-card__origin">{originLabel(m, cardTitles)}</p>
       <p className="obp-base-card__what">{m.instruction}</p>
       {m.expert_text && m.expert_text.trim() && <p className="obp-base-quote">« {m.expert_text.trim()} »</p>}
-      <div className={`obp-base-card__outcome${m.outcome === 'applied' ? '' : ' obp-base-card__outcome--na'}`}>
-        <p>
-          <strong>{outcomeLabel(m)}</strong>
-          {(m.reasons ?? []).length > 0 && (m.outcome === 'applied' ? ' ; ce qui n\'a pas été repris :' : ' :')}
-        </p>
-        {(m.reasons ?? []).length > 0 && (
-          <ul>{reasonLabels(m.reasons ?? [], sectionTitle).map(r => <li key={r}>{r}</li>)}</ul>
-        )}
-      </div>
+      <Outcome label={outcomeLabel(m)} applied={m.outcome === 'applied'} groups={reasonGroups(m.reasons ?? [], sectionTitle)} />
     </ReviewCard>
   );
 
@@ -208,6 +201,37 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
           {sheet.sections.map(s => section(sheet, s))}
         </section>
       ))}
+    </div>
+  );
+}
+
+const reasonLine = (g: ReasonGroup) => `${g.text}${g.sections > 1 ? ` (dans ${g.sections} sections)` : ''}`;
+
+/**
+ * La suite d'une modification. Appliquée en partie : ce qui n'a pas pu être fait en une phrase,
+ * puis ce qui n'a pas été repris, regroupé, trois lignes au plus, le reste repliable.
+ */
+function Outcome({ label, applied, groups }: { label: string; applied: boolean; groups: ReasonGroup[] }) {
+  const summary = applied ? partialSummary(groups) : null;
+  const rest = summary ? groups.filter(g => g !== summary) : groups;
+  return (
+    <div className={`obp-base-card__outcome${applied ? '' : ' obp-base-card__outcome--na'}`}>
+      <p>
+        <strong>{label}</strong>
+        {summary && ` : ${firstSentence(summary.text).charAt(0).toLowerCase()}${firstSentence(summary.text).slice(1)}.`}
+      </p>
+      {rest.length > 0 && (
+        <>
+          <p className="obp-base-card__reasons-head">{applied ? 'Ce qui n\'a pas été repris :' : 'Pourquoi :'}</p>
+          <ul>{rest.slice(0, SHOWN_REASONS).map(g => <li key={g.text}>{reasonLine(g)}</li>)}</ul>
+          {rest.length > SHOWN_REASONS && (
+            <details className="obp-base-card__more">
+              <summary>Voir {rest.length - SHOWN_REASONS > 1 ? `les ${rest.length - SHOWN_REASONS} autres raisons` : 'l\'autre raison'}</summary>
+              <ul>{rest.slice(SHOWN_REASONS).map(g => <li key={g.text}>{reasonLine(g)}</li>)}</ul>
+            </details>
+          )}
+        </>
+      )}
     </div>
   );
 }
