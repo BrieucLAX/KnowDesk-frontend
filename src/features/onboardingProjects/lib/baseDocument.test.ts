@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  imageOf, inlineParts, parseLines, proposedLines, rowCells, sectionBlocks, sectionTitle, sheetViews, wordDiff,
+  changedShare, imageOf, inlineParts, ownHeading, parseLines, proposedLines, rowCells, sectionBlocks, sectionTitle, sheetViews, wordDiff,
 } from './baseDocument';
 import type { BaseCorrection, CorrectedSection } from './correction';
 
@@ -55,6 +55,17 @@ describe('comparaison', () => {
     expect(proposedLines(blocks, 'M2')).toEqual(['Nouveau paragraphe.']);
   });
 
+  it('un paragraphe réécrit à plus de moitié se montre en entier, ancien puis nouveau (Essai 5, chapitre 3)', () => {
+    expect(changedShare('Tarifs par tranches de 5 ans.', 'Tarifs par tranches de 10 ans.')).toBeLessThan(0.5);
+    const old = 'La cotisation dépend de l\'âge, calculé au 1er janvier, et de la zone géographique du domicile.';
+    const rewritten = 'Pour les souscriptions à partir du 1er janvier 2027, appliquer la grille fournie par la Direction Commerciale.';
+    expect(changedShare(old, rewritten)).toBeGreaterThan(0.5);
+    const [block] = sectionBlocks(section({ original_markdown: old, corrected_markdown: rewritten }));
+    expect(block).toMatchObject({ op: 'modify', rewritten: true });
+    const [light] = sectionBlocks(section({ original_markdown: 'Tarifs par tranches de 5 ans.', corrected_markdown: 'Tarifs par tranches de 10 ans.' }));
+    expect(light).toMatchObject({ op: 'modify', rewritten: false });
+  });
+
   it('une section inchangée n\'a que des lignes égales', () => {
     const blocks = sectionBlocks(section({ original_markdown: 'A\n\nB', corrected_markdown: 'A\n\nB' }));
     expect(blocks.every(b => b.op === 'equal')).toBe(true);
@@ -62,9 +73,29 @@ describe('comparaison', () => {
 });
 
 describe('mise en page', () => {
-  it('titre une section par son chemin, sans le titre de la fiche', () => {
+  it('titre une section par son chemin, sans le titre de la fiche ni un nom de fichier', () => {
     expect(sectionTitle({ heading_path: ['## Chapitre 3', '3.2 **Tranches**'] }, 'Chapitre 3')).toBe('3.2 Tranches');
     expect(sectionTitle({ heading_path: ['Chapitre 3'] }, 'Chapitre 3')).toBe('Chapitre 3');
+    expect(sectionTitle({ heading_path: ['00-sommaire.md'] }, 'Base de connaissance')).toBe('Base de connaissance');
+  });
+
+  it('titre une fiche par son premier titre, jamais par son nom de fichier (Essai 5, sommaire)', () => {
+    const base: BaseCorrection = {
+      schema_version: '0.1.0',
+      sheets: [{
+        document_id: 'doc_0', document_path: 'notion/00-sommaire.md', markdown: '',
+        sections: [
+          section({ key: 'doc_0:0', heading_path: ['00-sommaire.md'], original_markdown: '![Logo](image:img_1)', corrected_markdown: '![Logo](image:img_1)' }),
+          section({ key: 'doc_0:1', heading_path: ['Base de connaissance interne'], original_markdown: '# Base de connaissance interne\n\nTexte.', corrected_markdown: '# Base de connaissance interne\n\nTexte.' }),
+        ],
+      }],
+      modifications: [],
+    };
+    const [sheet] = sheetViews(base);
+    expect(sheet.title).toBe('Base de connaissance interne');
+    expect(sheet.sections.map(s => s.title)).toEqual(['Base de connaissance interne', 'Base de connaissance interne']);
+    expect(ownHeading(sheet.sections[1].blocks)).toBe(true);
+    expect(ownHeading(sheet.sections[0].blocks)).toBe(false);
   });
 
   it('range les modifications dans leurs sections, conventions comprises', () => {

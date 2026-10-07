@@ -88,7 +88,7 @@ describe('Nouvelle base : relecture', () => {
     // Une modification non appliquée : sa raison en clair, pas de verdict.
     const m5 = cardOf(/^Modification 5/);
     expect(m5).toHaveTextContent('Non appliquée');
-    expect(m5).toHaveTextContent('Chapitre 14 — FAQ transverse › Cotisations : un changement que vos réponses ne demandaient pas a été annulé');
+    expect(m5).toHaveTextContent('Chapitre 14 — FAQ transverse › Cotisations : le texte proposé allait au-delà de votre demande ; la fiche est restée telle quelle');
     expect(within(m5).queryByRole('button', { name: 'Accepter' })).not.toBeInTheDocument();
 
     // Les sections inchangées repliées à leur place ; ajouts et retraits marqués.
@@ -98,6 +98,42 @@ describe('Nouvelle base : relecture', () => {
     expect(screen.getByText(/^Informations en attente, sans modification de la base : Chapitre 3 sur les cotisations/)).toBeInTheDocument();
 
     expect(container.textContent).not.toMatch(TECHNICAL);
+  });
+
+  it('titre chaque fiche par son premier titre, et chaque section une seule fois (Essai 5)', async () => {
+    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByText('0 sur 6 relues');
+    const chapters = [...container.querySelectorAll('.obp-base-chapter__title')].map(h => h.textContent);
+    expect(chapters[0]).toBe('Base de connaissance interne — Alviva Mutuelle');
+    expect(chapters).not.toContain('00-sommaire.md');
+    // Une section ouverte : son titre une fois, dans le texte ; repliée : dans le résumé seulement.
+    for (const s of container.querySelectorAll('.obp-base-section')) {
+      const own = s.querySelector('summary .obp-base-section__title, h3.obp-base-section__title')?.textContent ?? '';
+      const heads = [...s.querySelectorAll('.obp-base-h')].map(h => h.textContent);
+      if (own) expect(heads).not.toContain(own);
+    }
+  });
+
+  it('un paragraphe réécrit à plus de moitié : l\'ancien barré en entier, puis le nouveau', async () => {
+    const old = 'La cotisation dépend de l\'âge, calculé au 1er janvier, et de la zone géographique du domicile.';
+    const rewritten = 'Pour les souscriptions à partir du 1er janvier 2027, appliquer la grille fournie par la Direction Commerciale.';
+    const sheet = PILOTE.base.sheets[1];
+    const target = sheet.sections[1];
+    const edited: BaseVersion = {
+      ...PILOTE,
+      base: {
+        ...PILOTE.base,
+        sheets: [{ ...sheet, sections: [{ ...target, original_markdown: old, corrected_markdown: rewritten, changes: [], modification_ids: ['M1'] }] }],
+      },
+    };
+    mockBase(edited);
+    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByText('0 sur 6 relues');
+    const removed = container.querySelector('.obp-base-change--delete');
+    const added = container.querySelector('.obp-base-change--insert');
+    expect(removed).toHaveTextContent(old);
+    expect(added).toHaveTextContent(rewritten);
+    expect(container.querySelector('.obp-base-change--modify')).toBeNull();
   });
 
   it('enregistre un verdict dès le clic, puis un commentaire sans perdre le verdict', async () => {

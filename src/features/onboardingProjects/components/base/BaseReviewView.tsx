@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import {
-  modificationPlacement, proposedLines, sectionTitleIndex, sheetViews, type SectionView, type SheetView,
+  modificationPlacement, ownHeading, proposedLines, sectionTitleIndex, sheetViews, type SectionView, type SheetView,
 } from '../../lib/baseDocument';
 import {
   itemLabel, kindLabel, originLabel, outcomeLabel, reasonLabels, reviewProgressLabel,
@@ -120,14 +120,15 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
             <span className="obp-muted"> · inchangée</span>
             {state.comments.has(s.key) && <span className="obp-base-chip">commentée</span>}
           </summary>
-          <BaseLines blocks={s.blocks} />
+          {/* Le titre est dans le résumé : il ne se répète pas dans le texte. */}
+          <BaseLines blocks={ownHeading(s.blocks) ? s.blocks.slice(1) : s.blocks} />
           {comment}
         </details>
       );
     }
     return (
       <section key={s.key} className="obp-base-section obp-base-section--open" aria-label={s.title}>
-        {s.title !== sheet.title && <h3 className="obp-base-section__title">{s.title}</h3>}
+        {!ownHeading(s.blocks) && s.title !== sheet.title && <h3 className="obp-base-section__title">{s.title}</h3>}
         <div className="obp-base-grid">
           <BaseLines blocks={s.blocks} />
           <div className="obp-base-side">

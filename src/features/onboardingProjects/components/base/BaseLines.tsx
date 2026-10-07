@@ -57,6 +57,15 @@ function LineBlock({ block }: { block: Block }) {
     if (block.line.type === 'image') return <BaseImage line={block.line} />;
     return <LineShell line={block.line}><InlineText text={stripMarks(block.line)} /></LineShell>;
   }
+  if (block.op === 'modify' && block.rewritten) {
+    // Réécrit à plus de moitié : l'ancien paragraphe barré en entier, puis le nouveau.
+    return (
+      <>
+        <LineBlock block={{ op: 'delete', line: block.before, modificationId: null }} />
+        <LineBlock block={{ op: 'insert', line: block.after, modificationId: block.modificationId }} />
+      </>
+    );
+  }
   if (block.op === 'modify') {
     return (
       <div className="obp-base-change obp-base-change--modify">
