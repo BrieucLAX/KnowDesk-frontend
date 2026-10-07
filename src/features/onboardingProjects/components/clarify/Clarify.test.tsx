@@ -78,6 +78,16 @@ describe('À clarifier (audit 0.8.0)', () => {
   });
   afterEach(() => { vi.restoreAllMocks(); });
 
+  it('une carte bloquante qui repose sur une lecture d\'image bloque, comme le back le compte (Essai 5, pharmacies)', async () => {
+    const pharmacies = reading2.cards.find(c => c.rank === 2)!;
+    await openSession();
+    goTo(pharmacies.analysis.subject);
+    const article = await screen.findByRole('article', { name: new RegExp(`^Carte ${ordered2.indexOf(pharmacies) + 1} sur`) });
+    expect(within(article).getByText('Bloque la publication')).toBeInTheDocument();
+    expect(within(article).getByText('Lecture d\'image à confirmer')).toBeInTheDocument();
+    expect(article).not.toHaveTextContent('Ne bloque pas');
+  });
+
   it('annonce le nombre de cartes et les regroupe par nature ; une détection absente ne se montre que dans les détails, en clair', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
     expect(await screen.findByRole('heading', { name: '9 cartes à clarifier' })).toBeInTheDocument();
@@ -422,7 +432,7 @@ describe('À clarifier (audit 0.8.0)', () => {
       goTo(other.analysis.subject);
       await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(other) + 1} sur 9` });
       fireEvent.click(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' }));
-      expect(screen.getByRole('note')).toHaveTextContent('La recommandation servira de consigne de rédaction');
+      expect(screen.getByRole('note')).toHaveTextContent('Consigne seule : rien n\'est ajouté ni tranché dans la base');
       fireEvent.click(screen.getByRole('button', { name: 'Retour' }));
       expect(onboardingApi.answerCard).not.toHaveBeenCalled();
       expect(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeInTheDocument();
@@ -442,7 +452,7 @@ describe('À clarifier (audit 0.8.0)', () => {
       goTo(dated.analysis.subject);
       fireEvent.click(await screen.findByText('Historique'));
       const list = await screen.findByRole('list', { name: 'Historique de la carte' });
-      expect(list).toHaveTextContent('Recommandation de l\'IA suivie (consigne de rédaction)');
+      expect(list).toHaveTextContent('Recommandation de l\'IA suivie (consigne seule)');
     });
   });
 

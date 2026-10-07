@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
-  isReadingAudit, recommendationOutcome,
+  isReadingAudit, readsImageOnly, recommendationOutcome,
   missingSide, orderedCards, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
 import type { Audit } from './audit';
@@ -44,11 +44,14 @@ describe('reading', () => {
     expect(firstOpenCard(orderedCards(cards), current)).toBe(1);
   });
 
-  it('bloque la publication, sauf incomplet ou périmé, ou un côté qui ne repose que sur une lecture d\'image', () => {
+  it('bloque selon sa nature seule, comme le back : une lecture d\'image à confirmer ne l\'exempte pas', () => {
     expect(isBlocking(card('c', 'contradiction', 1))).toBe(true);
     expect(isBlocking(card('i', 'incomplete_or_outdated', 1))).toBe(false);
-    expect(isBlocking(card('v', 'contradiction', 1, [{ label: 'A', quotes: [vision('d1')] }, { label: 'B', quotes: [doc('d2')] }]))).toBe(false);
-    expect(isBlocking(card('m', 'contradiction', 1, [{ label: 'A', quotes: [vision('d1'), doc('d1')] }, { label: 'B', quotes: [doc('d2')] }]))).toBe(true);
+    // Essai 5 : changement daté (pharmacies) dont un côté ne repose que sur une image.
+    const vision1 = card('v', 'dated_change', 1, [{ label: 'A', quotes: [vision('d1')] }, { label: 'B', quotes: [doc('d2')] }]);
+    expect(isBlocking(vision1)).toBe(true);
+    expect(readsImageOnly(vision1)).toBe(true);
+    expect(readsImageOnly(card('m', 'contradiction', 1, [{ label: 'A', quotes: [vision('d1'), doc('d1')] }, { label: 'B', quotes: [doc('d2')] }]))).toBe(false);
   });
 
   it('réponses de fond hors côtés, « Autre réponse », « Plus tard » et menu secondaire', () => {
@@ -98,14 +101,13 @@ describe('reading', () => {
     const none = new Map<string, Decision>();
     expect(describeSummary(clarifySummary(all, none), true)).toEqual([
       '5 cartes : 1 contradiction, 2 changements datés, 1 erreur probable et 1 incomplet ou périmé.',
-      '3 bloquent la publication tant qu\'elles n\'ont pas de réponse, dont 3 encore à traiter.',
-      '1 ne bloque pas encore : lecture d\'image à confirmer.',
+      '4 bloquent la publication tant qu\'elles n\'ont pas de réponse, dont 4 encore à traiter.',
     ]);
     const some = new Map([['c1', decision('c1', { type: 'same_meaning' })], ['d1', decision('d1', { type: 'later' })]]);
-    expect(describeSummary(clarifySummary(all, some), true)[1]).toBe('3 bloquent la publication tant qu\'elles n\'ont pas de réponse, dont 2 encore à traiter.');
-    expect(describeSummary(clarifySummary(all, some), false)[1]).toBe('3 bloquent la publication tant qu\'elles n\'ont pas de réponse.');
-    const done = new Map(['c1', 'd1', 'd2'].map(id => [id, decision(id, { type: 'same_meaning' })]));
-    expect(describeSummary(clarifySummary(all, done), true)[1]).toBe('Les 3 cartes qui bloquaient la publication ont toutes une réponse.');
+    expect(describeSummary(clarifySummary(all, some), true)[1]).toBe('4 bloquent la publication tant qu\'elles n\'ont pas de réponse, dont 3 encore à traiter.');
+    expect(describeSummary(clarifySummary(all, some), false)[1]).toBe('4 bloquent la publication tant qu\'elles n\'ont pas de réponse.');
+    const done = new Map(['c1', 'd1', 'd2', 'v'].map(id => [id, decision(id, { type: 'same_meaning' })]));
+    expect(describeSummary(clarifySummary(all, done), true)[1]).toBe('Les 4 cartes qui bloquaient la publication ont toutes une réponse.');
     expect(describeSummary(clarifySummary([card('c', 'contradiction', 1)], none), true)).toEqual([
       '1 carte : 1 contradiction.', '1 bloque la publication tant qu\'elle n\'a pas de réponse, dont 1 encore à traiter.',
     ]);
@@ -164,7 +166,7 @@ describe('« Je suis la recommandation de l\'IA »', () => {
     const error = card('c2', 'probable_error', 1, [{ label: 'A', quotes: [doc('fiche')] }, { label: 'B', quotes: [doc('faq')] }]);
     expect(recommendationOutcome(reco(error, { type: 'accept_side', side: 'A' }), name)).toBe('Le côté A (fiche.docx) sera retenu dans la base.');
     expect(recommendationOutcome(reco(dated, { type: 'complete' }), name)).toBe('Le passage sera complété dans la base, en suivant la recommandation.');
-    expect(recommendationOutcome(reco(dated, null), name)).toMatch(/^La recommandation servira de consigne de rédaction/);
+    expect(recommendationOutcome(reco(dated, null), name)).toMatch(/^Consigne seule : rien n'est ajouté ni tranché/);
   });
 
   it('le libellé de la réponse, avec sa précision', () => {
@@ -174,7 +176,7 @@ describe('« Je suis la recommandation de l\'IA »', () => {
     expect(describeCardAnswer(follow({ type: 'accept_side', side: 'B' }, null), dated, name)).toBe('Recommandation de l\'IA suivie (changement daté retenu)');
     expect(describeCardAnswer(follow({ type: 'complete' }, 'Pour 2027.'), dated, name))
       .toBe('Recommandation de l\'IA suivie (passage à compléter) — précision : « Pour 2027. »');
-    expect(describeCardAnswer(follow(null, null), dated, name)).toBe('Recommandation de l\'IA suivie (consigne de rédaction)');
+    expect(describeCardAnswer(follow(null, null), dated, name)).toBe('Recommandation de l\'IA suivie (consigne seule)');
     expect(describeCardAnswer(follow({ type: 'accept_side', side: 'A' }, null), card('c2', 'probable_error', 1), name))
       .toBe('Recommandation de l\'IA suivie (côté A retenu)');
   });

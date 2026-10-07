@@ -130,12 +130,17 @@ const MODEL_NATURES: Readonly<Record<string, string>> = {
 export const modelNatureLabel = (n: string): string => MODEL_NATURES[n] ?? natureLabel(n);
 
 /**
- * Une carte bloque la publication tant qu'elle n'est pas tranchée, sauf si un de ses côtés ne
- * repose que sur une lecture d'image : elle ne bloque pas tant qu'un humain ne l'a pas confirmée.
+ * Une carte bloque tant qu'elle n'est pas tranchée selon sa nature seule (contradiction,
+ * changement daté, erreur probable) : la règle du back, qui refuse de préparer la nouvelle base
+ * tant qu'une telle carte reste ouverte (aligné le 2026-10-07, premier essai en production).
  */
 export function isBlocking(card: ReadingCard): boolean {
-  if (!NATURES[card.nature].blocking) return false;
-  return !card.sides.some(s => {
+  return NATURES[card.nature].blocking;
+}
+
+/** Un côté de la carte ne repose que sur une lecture d'image, à confirmer : une mention, pas une exemption. */
+export function readsImageOnly(card: ReadingCard): boolean {
+  return card.sides.some(s => {
     const quotes = toQuotes(s.quotes);
     return quotes.length > 0 && quotes.every(isVision);
   });
@@ -240,8 +245,7 @@ export function cardProgress(cards: ReadingCard[], current: ReadonlyMap<string, 
 
 /**
  * Résumé de la vue d'ensemble : cartes par nature, dans l'ordre d'affichage ; celles qui bloquent
- * la publication (isBlocking), dont celles encore à traiter (« Plus tard » compris) ; et celles
- * d'une nature bloquante qui ne bloquent pas, faute de lecture d'image confirmée.
+ * la publication (isBlocking), dont celles encore à traiter (« Plus tard » compris).
  */
 export function clarifySummary(cards: ReadingCard[], current: ReadonlyMap<string, Decision>) {
   const blocking = cards.filter(isBlocking);
@@ -250,7 +254,6 @@ export function clarifySummary(cards: ReadingCard[], current: ReadonlyMap<string
     byNature:       groupByNature(cards).map(g => ({ nature: g.nature, count: g.cards.length })),
     blocking:       blocking.length,
     blockingOpen:   blocking.filter(c => cardStatus(current.get(c.id)) !== 'answered').length,
-    visionPending:  cards.filter(c => NATURES[c.nature].blocking && !isBlocking(c)).length,
   };
 }
 
@@ -272,9 +275,6 @@ export function describeSummary(s: ReturnType<typeof clarifySummary>, withStatus
       ? `${s.blocking} bloquent la publication tant qu'elles n'ont pas de réponse`
       : '1 bloque la publication tant qu\'elle n\'a pas de réponse';
     lines.push(withStatus ? `${head}, dont ${s.blockingOpen} encore à traiter.` : `${head}.`);
-  }
-  if (s.visionPending > 0) {
-    lines.push(`${s.visionPending} ${s.visionPending > 1 ? 'ne bloquent pas encore' : 'ne bloque pas encore'} : lecture d'image à confirmer.`);
   }
   return lines;
 }
@@ -302,11 +302,11 @@ export function recommendationOutcome(card: ReadingCard, name: (documentId: stri
       : `Le côté ${effect.side}${where} sera retenu dans la base.`;
   }
   if (effect?.type === 'complete') return 'Le passage sera complété dans la base, en suivant la recommandation.';
-  return 'La recommandation servira de consigne de rédaction ; aucun passage n\'est tranché par cette réponse.';
+  return 'Consigne seule : rien n\'est ajouté ni tranché dans la base par cette réponse ; la recommandation sert de consigne.';
 }
 
 const FOLLOWED_EFFECT: Record<string, string> = {
-  dated_change: 'changement daté retenu', complete: 'passage à compléter', none: 'consigne de rédaction',
+  dated_change: 'changement daté retenu', complete: 'passage à compléter', none: 'consigne seule',
 };
 
 /** La réponse en clair. Un texte saisi est cité entre guillemets ; l'auteur et la date s'affichent à côté. */

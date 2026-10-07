@@ -259,18 +259,21 @@ export function originLabel(m: Modification, titles: ReadonlyMap<string, string>
   return title ? `${head}, carte « ${title} »` : head;
 }
 
-/** Ce que disent les contrôles, à la place de leur code (correction-0.1.0, `UndoReason`). */
+/**
+ * Ce que disent les contrôles, à la place de leur code (correction-0.1.0, `UndoReason`), en
+ * langage clair : ce que proposait le texte de l'IA, et ce qu'il est devenu.
+ */
 const REASON_LABEL: Record<string, string> = {
-  not_decided:                  'un changement que vos réponses ne demandaient pas a été annulé',
-  deletion_not_decided:         'une suppression que vos réponses ne demandaient pas a été annulée',
-  heading_or_image_changed:     'un titre ou une image aurait changé : le changement a été annulé',
-  qualifier_lost:               'une précision (date, périmètre, condition) aurait disparu : le changement a été annulé',
-  value_without_source:         'une valeur absente de vos documents a été écartée',
-  values_from_several_sources:  'des valeurs venues de plusieurs documents ont été écartées',
-  duplicate_or_move:            'un doublon ou un déplacement de texte a été annulé',
-  introduction_without_content: 'une introduction sans contenu a été retirée',
-  invalid_output:               'l\'IA n\'a pas rendu de texte exploitable pour cette section',
-  no_change_kept:               'aucun changement n\'a été retenu',
+  not_decided:                  'le texte proposé allait au-delà de votre demande ; la fiche est restée telle quelle',
+  deletion_not_decided:         'le texte proposé supprimait un passage que vous n\'aviez pas demandé de retirer ; il est resté en place',
+  heading_or_image_changed:     'le texte proposé changeait un titre ou une image ; ils sont restés tels quels',
+  qualifier_lost:               'le texte proposé perdait une précision (date, formule, période) ; il n\'a pas été repris',
+  value_without_source:         'le texte proposé contenait un chiffre ou une date absents de vos documents ; il n\'a pas été repris',
+  values_from_several_sources:  'le texte proposé mélangeait des chiffres de documents différents ; il n\'a pas été repris',
+  duplicate_or_move:            'le texte proposé répétait un passage déjà présent dans la fiche ; il n\'a pas été repris',
+  introduction_without_content: 'le texte proposé annonçait une liste sans la donner ; il n\'a pas été repris',
+  invalid_output:               'l\'IA n\'a pas rendu de texte utilisable pour cette section',
+  no_change_kept:               'aucun texte proposé n\'a pu être repris',
 };
 
 /**
@@ -286,7 +289,7 @@ export function reasonLabel(raw: string, sectionTitle: (key: string) => string |
   const where = isKey ? sectionTitle(key) : null;
   const text = (isKey ? raw.slice(cut + 2) : raw).trim();
   const said = /^[a-z_]+$/.test(text)
-    ? REASON_LABEL[text] ?? 'un changement a été annulé par les contrôles'
+    ? REASON_LABEL[text] ?? 'le texte proposé n\'a pas été repris'
     : text;
   return where ? `${where} : ${said}` : said.charAt(0).toUpperCase() + said.slice(1);
 }

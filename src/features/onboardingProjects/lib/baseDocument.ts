@@ -87,7 +87,20 @@ export function wordDiff(before: string, after: string): WordPart[] {
 export type Block =
   | { op: 'equal'; line: Line }
   | { op: 'insert' | 'delete'; line: Line; modificationId: string | null }
-  | { op: 'modify'; before: Line; after: Line; modificationId: string | null };
+  /** `rewritten` : plus de la moitié des mots changent ; on montre l'ancien barré, puis le nouveau. */
+  | { op: 'modify'; before: Line; after: Line; modificationId: string | null; rewritten: boolean };
+
+/** Au-delà, un paragraphe est réécrit : le mot à mot deviendrait illisible. */
+export const REWRITE_SHARE = 0.5;
+
+/** Part des mots qui changent entre deux textes (0 : identiques, 1 : rien en commun). */
+export function changedShare(before: string, after: string): number {
+  const count = (t: string) => t.split(/\s+/).filter(Boolean).length;
+  const longest = Math.max(count(before), count(after));
+  if (longest === 0) return 0;
+  const kept = wordDiff(before, after).filter(p => p.op === 'equal').reduce((n, p) => n + count(p.text), 0);
+  return 1 - kept / longest;
+}
 
 /**
  * Les lignes de la section, dans l'ordre : inchangées, ajoutées, retirées, ou modifiées (une ligne
@@ -122,7 +135,8 @@ export function sectionBlocks(section: CorrectedSection): Block[] {
       const n = inserted.findIndex((x, idx) => !used.has(idx) && x.type === d.type);
       if (n === -1) { blocks.push({ op: 'delete', line: d, modificationId: owner(d.text, '') }); continue; }
       used.add(n);
-      blocks.push({ op: 'modify', before: d, after: inserted[n], modificationId: owner(d.text, inserted[n].text) });
+      const rewritten = changedShare(plainText(d), plainText(inserted[n])) > REWRITE_SHARE;
+      blocks.push({ op: 'modify', before: d, after: inserted[n], modificationId: owner(d.text, inserted[n].text), rewritten });
     }
     inserted.forEach((x, idx) => {
       if (!used.has(idx)) blocks.push({ op: 'insert', line: x, modificationId: owner('', x.text) });
@@ -147,6 +161,11 @@ function changeOwner(section: CorrectedSection): (before: string, after: string)
 }
 
 export const isChanged = (blocks: Block[]) => blocks.some(b => b.op !== 'equal');
+
+/** La section commence par son propre titre, inchangé : il suffit de l'afficher une fois. */
+export function ownHeading(blocks: Block[]): boolean {
+  return blocks[0]?.op === 'equal' && blocks[0].line.type === 'heading';
+}
 
 /** Le texte proposé par une modification dans une section : ses lignes ajoutées ou modifiées. */
 export function proposedLines(blocks: Block[], modificationId: string): string[] {
@@ -173,8 +192,11 @@ export interface SheetView { documentId: string; title: string; fileName: string
 
 const stripHashes = (s: string) => s.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim();
 
+/** Un chemin de titres qui n'est que le nom du fichier (une section avant le premier titre). */
+const isFileName = (s: string) => /\.(md|docx|pdf|pptx|txt)$/i.test(s.trim());
+
 export function sectionTitle(section: Pick<CorrectedSection, 'heading_path'>, sheetTitle: string): string {
-  const path = section.heading_path.map(stripHashes).filter(Boolean);
+  const path = section.heading_path.map(stripHashes).filter(p => p && !isFileName(p));
   const rest = path[0] === sheetTitle ? path.slice(1) : path;
   return rest.length > 0 ? rest.join(' › ') : sheetTitle;
 }
@@ -190,7 +212,12 @@ export function sheetViews(base: BaseCorrection): SheetView[] {
   }
   return base.sheets.map(sheet => {
     const fileName = sheet.document_path.split('/').pop() || sheet.document_path;
-    const title = stripHashes(sheet.sections[0]?.heading_path[0] ?? '') || fileName;
+    // Le titre d'une fiche : son premier titre, jamais son nom de fichier.
+    const firstHeading = sheet.sections
+      .flatMap(s => parseLines(s.original_markdown))
+      .find(l => l.type === 'heading');
+    const firstPath = sheet.sections.map(s => stripHashes(s.heading_path[0] ?? '')).find(p => p && !isFileName(p));
+    const title = (firstHeading ? stripHashes(firstHeading.text) : '') || firstPath || fileName;
     return {
       documentId: sheet.document_id,
       title,

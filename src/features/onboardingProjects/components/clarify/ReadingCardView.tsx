@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Audit } from '../../lib/audit';
 import {
-  isBlocking, isBriefingOnly, missingSide, NATURES, toQuotes, unverifiedReasonLabel, type ModelAnalysis, type Quote,
+  isBlocking, isBriefingOnly, readsImageOnly, missingSide, NATURES, toQuotes, unverifiedReasonLabel, type ModelAnalysis, type Quote,
   type ReadingCard,
 } from '../../lib/reading';
 import { joinParagraphLines } from '../../lib/excerpt';
@@ -75,7 +75,7 @@ interface ReadingCardViewProps {
  */
 export function ReadingCardView({ audit, card, title, position }: ReadingCardViewProps) {
   const blocking = isBlocking(card);
-  const nonBlockingVision = NATURES[card.nature].blocking && !blocking;
+  const imageOnly = readsImageOnly(card);
   const missing = missingSide(card);
   const refused = missing ? card.unverifiedQuotes.filter(u => u.side === missing) : [];
   return (
@@ -85,7 +85,7 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
         <h4 className="obp-audit-card__title">{title}</h4>
         <span className={`obp-audit-tag obp-clarify-nature obp-clarify-nature--${card.nature}`}>{NATURES[card.nature].label}</span>
         {blocking && <span className="obp-audit-tag obp-audit-tag--high">Bloque la publication</span>}
-        {nonBlockingVision && <span className="obp-audit-tag">Ne bloque pas : lecture d'image à confirmer</span>}
+        {imageOnly && <span className="obp-audit-tag">Lecture d'image à confirmer</span>}
       </header>
 
       <p className="obp-clarify-docs">

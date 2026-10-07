@@ -75,10 +75,25 @@ describe('libellés', () => {
   it('traduit une raison : la clé de section devient son titre, le code une phrase', () => {
     const title = (k: string) => (k === 'doc_1:3' ? 'Chapitre 3 › 3.2 Tranches' : null);
     expect(reasonLabel('doc_1:3: qualifier_lost', title)).toBe(
-      'Chapitre 3 › 3.2 Tranches : une précision (date, périmètre, condition) aurait disparu : le changement a été annulé',
+      'Chapitre 3 › 3.2 Tranches : le texte proposé perdait une précision (date, formule, période) ; il n\'a pas été repris',
     );
     expect(reasonLabel('doc_1:3: La fiche ne parle pas de ce tarif.', title)).toBe('Chapitre 3 › 3.2 Tranches : La fiche ne parle pas de ce tarif.');
-    expect(reasonLabel('no_change_kept', title)).toBe('Aucun changement n\'a été retenu');
+    expect(reasonLabel('no_change_kept', title)).toBe('Aucun texte proposé n\'a pu être repris');
     expect(reasonLabel('doc_9:1: un_code_futur', title)).not.toMatch(/doc_9|un_code_futur/);
+  });
+
+  it('dit les raisons en langage clair, sans formule de contrôle (Essai 5)', () => {
+    const codes = ['not_decided', 'deletion_not_decided', 'heading_or_image_changed', 'qualifier_lost', 'value_without_source',
+      'values_from_several_sources', 'duplicate_or_move', 'introduction_without_content', 'invalid_output', 'no_change_kept'];
+    for (const code of codes) {
+      const said = reasonLabel(code, () => null);
+      expect(said).not.toMatch(/a été annulée?|vos réponses ne demandaient|_/);
+    }
+    expect(reasonLabel('doc_1:3: not_decided', () => 'Chapitre 14 › Cotisations')).toBe(
+      'Chapitre 14 › Cotisations : le texte proposé allait au-delà de votre demande ; la fiche est restée telle quelle',
+    );
+    // Une phrase rendue par le pipeline, déjà en clair : telle quelle.
+    const expired = 'Mesure temporaire du dimanche 28 septembre 2026 à 20h00 au lundi 29 septembre 2026 à 06h00, expirée à la date de préparation de la base (07/10/2026) : elle n\'est pas insérée.';
+    expect(reasonLabel(expired, () => null)).toBe(expired);
   });
 });
