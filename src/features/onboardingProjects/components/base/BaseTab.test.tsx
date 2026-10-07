@@ -88,7 +88,8 @@ describe('Nouvelle base : relecture', () => {
     // Une modification non appliquée : sa raison en clair, pas de verdict.
     const m5 = cardOf(/^Modification 5/);
     expect(m5).toHaveTextContent('Non appliquée');
-    expect(m5).toHaveTextContent('Chapitre 14 — FAQ transverse › Cotisations : le texte proposé allait au-delà de votre demande ; la fiche est restée telle quelle');
+    expect(m5).toHaveTextContent('Pourquoi :Le texte proposé allait au-delà de votre demande ; la fiche est restée telle quelle');
+    expect(m5).not.toHaveTextContent('Chapitre 14 — FAQ transverse › Cotisations :');
     expect(within(m5).queryByRole('button', { name: 'Accepter' })).not.toBeInTheDocument();
 
     // Les sections inchangées repliées à leur place ; ajouts et retraits marqués.
@@ -134,6 +135,34 @@ describe('Nouvelle base : relecture', () => {
     expect(removed).toHaveTextContent(old);
     expect(added).toHaveTextContent(rewritten);
     expect(container.querySelector('.obp-base-change--modify')).toBeNull();
+  });
+
+  it('une modification appliquée en partie le dit en une phrase ; trois raisons au plus, le reste repliable', async () => {
+    const [first, ...others] = PILOTE.base.modifications;
+    const key = PILOTE.base.sheets[1].sections[0].key;
+    const partial: BaseVersion = {
+      ...PILOTE,
+      base: {
+        ...PILOTE.base,
+        modifications: [{
+          ...first, outcome: 'applied',
+          reasons: [
+            `${key}: La nouvelle grille 2027 n'est pas dans vos documents. Seuls trois montants sont cités.`,
+            `${key}: values_from_several_sources`, `${key}: duplicate_or_move`, `${key}: not_decided`,
+            `${key}: value_without_source`, `${key}: qualifier_lost`, `${key}: duplicate_or_move`,
+          ],
+        }, ...others],
+      },
+    };
+    mockBase(partial);
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const card = await screen.findByRole('article', { name: /^Modification 1/ });
+    expect(card).toHaveTextContent('Appliquée en partie : la nouvelle grille 2027 n\'est pas dans vos documents.');
+    const outcome = card.querySelector('.obp-base-card__outcome')!;
+    expect(outcome.querySelectorAll(':scope > ul > li')).toHaveLength(3);
+    const more = within(outcome as HTMLElement).getByText('Voir les 2 autres raisons').closest('details')!;
+    expect(more.querySelectorAll('li')).toHaveLength(2);
+    expect(outcome.textContent).not.toMatch(/›/);
   });
 
   it('enregistre un verdict dès le clic, puis un commentaire sans perdre le verdict', async () => {

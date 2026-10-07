@@ -619,3 +619,5 @@
 .obp-base-save--error { color: var(--color-danger); }
 .obp-base-section-comment { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; max-width: 760px; }
 .obp-base-follow { margin: 0; font-size: 13px; color: var(--neutral-700); }
+.obp-base-card__reasons-head { margin-top: 4px !important; color: var(--neutral-500); }
+.obp-base-card__more > summary { cursor: pointer; color: var(--brand-600); font-size: 12px; }
