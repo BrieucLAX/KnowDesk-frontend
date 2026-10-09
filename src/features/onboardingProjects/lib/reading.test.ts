@@ -167,6 +167,8 @@ describe('« Je suis la recommandation de l\'IA »', () => {
     expect(recommendationOutcome(reco(error, { type: 'accept_side', side: 'A' }), name)).toBe('Le côté A (fiche.docx) sera retenu dans la base.');
     expect(recommendationOutcome(reco(dated, { type: 'complete' }), name)).toBe('Le passage sera complété dans la base, en suivant la recommandation.');
     expect(recommendationOutcome(reco(dated, null), name)).toMatch(/^Consigne seule : rien n'est ajouté ni tranché/);
+    const absent = { ...reco(dated, null), absentReferences: [{ documentId: 'email', excerpt: 'voir grille complète en pièce jointe' }] };
+    expect(recommendationOutcome(absent, name)).toBe('La base restera telle quelle, avec son avertissement : la source renvoie à un contenu absent de vos documents. Une précision de votre part s\'appliquera seule.');
   });
 
   it('le libellé de la réponse, avec sa précision', () => {

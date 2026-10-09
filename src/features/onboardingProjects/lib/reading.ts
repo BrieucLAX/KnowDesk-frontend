@@ -55,6 +55,11 @@ export interface ReadingCard {
   unverifiedQuotes: UnverifiedQuote[];
   /** « Je suis la recommandation de l'IA » : absente d'un back plus ancien, null sans recommandation. */
   recommendation?:  CardRecommendation | null;
+  /**
+   * Audit 0.10.0 : les citations qui renvoient à un contenu absent de vos documents (« voir grille
+   * complète en pièce jointe »), leur extrait mot pour mot ; absent d'un back plus ancien.
+   */
+  absentReferences?: Array<{ documentId: string; excerpt: string }>;
 }
 
 export interface TemporaryNote {
@@ -302,6 +307,9 @@ export function recommendationOutcome(card: ReadingCard, name: (documentId: stri
       : `Le côté ${effect.side}${where} sera retenu dans la base.`;
   }
   if (effect?.type === 'complete') return 'Le passage sera complété dans la base, en suivant la recommandation.';
+  if ((card.absentReferences ?? []).length > 0) {
+    return 'La base restera telle quelle, avec son avertissement : la source renvoie à un contenu absent de vos documents. Une précision de votre part s\'appliquera seule.';
+  }
   return 'Consigne seule : rien n\'est ajouté ni tranché dans la base par cette réponse ; la recommandation sert de consigne.';
 }
 
