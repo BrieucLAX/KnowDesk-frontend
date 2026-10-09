@@ -13,6 +13,7 @@ import { BaseLines } from './BaseLines';
 import type { FixSection } from './ReviewCard';
 import { ReviewCard } from './ReviewCard';
 import { SectionCommentBox } from './SectionCommentBox';
+import { SectionFixBox } from './SectionFixBox';
 
 interface BaseReviewViewProps {
   base:       BaseCorrection;
@@ -127,6 +128,16 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
         onSave={t => { void review.saveComment(s.key, t); }}
       />
     );
+    const fix = (
+      <SectionFixBox
+        title={s.title}
+        proposed={s.proposedMarkdown}
+        current={state.fixes.get(s.key)}
+        editable={editable}
+        save={review.saves.get(`fix:${s.key}`)}
+        onSave={t => { void review.saveSectionFix(s.key, t); }}
+      />
+    );
     const open = s.changed || s.modificationIds.length > 0 || s.conventionIds.length > 0;
     if (!open) {
       return (
@@ -135,9 +146,11 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
             <span className="obp-base-section__title">{s.title}</span>
             <span className="obp-muted"> · inchangée</span>
             {state.comments.has(s.key) && <span className="obp-base-chip">commentée</span>}
+            {state.fixes.has(s.key) && <span className="obp-base-chip">corrigée par vous</span>}
           </summary>
           {/* Le titre est dans le résumé : il ne se répète pas dans le texte. */}
           <BaseLines blocks={ownHeading(s.blocks) ? s.blocks.slice(1) : s.blocks} />
+          {fix}
           {comment}
         </details>
       );
@@ -166,6 +179,7 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
                 </p>
               ) : null;
             })}
+            {fix}
             {comment}
           </div>
         </div>

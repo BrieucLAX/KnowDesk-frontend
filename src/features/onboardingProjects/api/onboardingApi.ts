@@ -7,7 +7,7 @@ import type { AuditResponse } from '../lib/audit';
 import type { CardAction } from '../lib/reading';
 import type { CancelResult, Decision, DecisionAction, DecisionsState } from '../lib/decisions';
 import type {
-  BaseVersion, ChainCancelResult, CorrectionQuota, OnboardingCorrection, Review, ReviewsState, SectionComment, Validation,
+  BaseVersion, ChainCancelResult, CorrectionQuota, OnboardingCorrection, Review, ReviewsState, SectionComment, SectionFix, Validation,
   ValidationSummary, Verdict,
 } from '../lib/correction';
 
@@ -133,6 +133,13 @@ export const onboardingApi = {
     apiClient.get<ValidationSummary[]>(`${BASE}/projects/${projectId}/corrections/${correctionId}/validations`),
   getValidation: (projectId: string, validationId: string) =>
     apiClient.get<Validation>(`${BASE}/projects/${projectId}/validations/${validationId}`),
+  /** « Corriger » sur n'importe quelle section : le texte courant de chaque section corrigée. */
+  listSectionFixes: (projectId: string, correctionId: string) =>
+    apiClient.get<SectionFix[]>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-fixes`),
+  fixSection: (projectId: string, correctionId: string, body: { sectionKey: string; expectedCurrentId: string | null; correctedText: string }) =>
+    apiClient.post<SectionFix>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-fixes`, body),
+  cancelSectionFix: (projectId: string, correctionId: string, fixId: string) =>
+    apiClient.post<ChainCancelResult<SectionFix>>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-fixes/${fixId}/cancel`, {}),
   cancelSectionComment: (projectId: string, correctionId: string, commentId: string) =>
     apiClient.post<ChainCancelResult<SectionComment>>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-comments/${commentId}/cancel`, {}),
 };
