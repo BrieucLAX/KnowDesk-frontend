@@ -12,6 +12,10 @@ vi.mock('../../api/onboardingApi', () => ({
   },
 }));
 
+
+// Ces tests rendent la vraie base du pilote (16 fiches, une relecture par section) : en suite
+// complète, sous charge, 5 s ne suffisent pas toujours (déjà instable sur main, 2026-10-09).
+vi.setConfig({ testTimeout: 15_000 });
 import { onboardingApi } from '../../api/onboardingApi';
 import { ApiError } from '../../../../shared/lib/apiClient';
 import { BaseTab } from './BaseTab';

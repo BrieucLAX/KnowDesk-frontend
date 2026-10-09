@@ -12,6 +12,10 @@ vi.mock('../../api/onboardingApi', () => ({
   },
 }));
 
+
+// Ces tests rendent la vraie base du pilote (16 fiches, une relecture par section) : en suite
+// complète, sous charge, 5 s ne suffisent pas toujours (déjà instable sur main, 2026-10-09).
+vi.setConfig({ testTimeout: 15_000 });
 import { onboardingApi } from '../../api/onboardingApi';
 import { BaseTab } from './BaseTab';
 import { CleanBaseView } from './CleanBaseView';
@@ -107,7 +111,8 @@ describe('Relecture : valider la nouvelle base', () => {
     vi.mocked(onboardingApi.validateBase).mockResolvedValue(summary({ id: 'v9' }));
     const open = vi.fn();
     render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
-    fireEvent.click(await screen.findByRole('button', { name: 'Valider la nouvelle base' }));
+    // Par son texte : une requête par rôle parcourt toute la base du pilote, une section après l'autre.
+    fireEvent.click((await screen.findByText('Valider la nouvelle base')).closest('button')!);
     await waitFor(() => expect(open).toHaveBeenCalledWith('v9'));
     expect(onboardingApi.validateBase).toHaveBeenCalledWith('p1', PILOTE.correctionId);
   });
