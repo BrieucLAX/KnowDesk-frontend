@@ -203,7 +203,7 @@ describe('Nouvelle base : relecture', () => {
     await waitFor(() => expect(onboardingApi.review).toHaveBeenLastCalledWith('p1', PILOTE.correctionId, expect.objectContaining({ verdict: 'fix', correctedTexts: { [m3Key]: 'Mon texte.' } })));
   });
 
-  it('« Corriger » déplace un ajout : une section vidée garde son texte d\'origine et n\'est pas envoyée', async () => {
+  it('« Corriger » déplace un ajout : la phrase le dit, une section vidée garde son texte d\'origine et n\'est pas envoyée', async () => {
     vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict, correctedTexts: body.correctedTexts }));
     const [first, second] = PILOTE.base.modifications.find(m => m.id === 'M1')!.section_keys;
     render(<BaseTab project={project} onGoToClarify={() => {}} />);
