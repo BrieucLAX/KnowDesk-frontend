@@ -49,6 +49,24 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
     return out;
   }, [base.modifications, sheets, titles]);
 
+  /**
+   * Ce qu'une modification écrit, et elle seule : une section peut en porter plusieurs (« Base de
+   * co 2026 v3 » : la mesure expirée M3 à côté de la procédure pharmacies M2, en 5.2). Les lignes
+   * d'une autre modification ne s'affichent jamais comme les siennes.
+   */
+  const ownWriting = useMemo(() => {
+    const blocks = new Map(sheets.flatMap(sh => sh.sections).map(s => [s.key, s.blocks]));
+    const out = new Map<string, { writes: boolean; others: Array<{ id: string; title: string }> }>();
+    for (const m of base.modifications) {
+      const keys = m.section_keys.filter(k => blocks.has(k));
+      const writes = keys.some(k => proposedLines(blocks.get(k)!, m.id).length > 0);
+      const others = keys.flatMap(k => [...new Set(blocks.get(k)!.flatMap(b => (b.op !== 'equal' && b.modificationId && b.modificationId !== m.id ? [b.modificationId] : [])))]
+        .map(id => ({ id, title: titles.get(k) ?? '' })));
+      out.set(m.id, { writes, others });
+    }
+    return out;
+  }, [base.modifications, sheets, titles]);
+
   const { state } = review;
   if (state.status === 'loading') return <Skeleton className="obp-skeleton-block" />;
   if (state.status === 'error') return <p className="obp-muted">Les avis n'ont pas pu être chargés.</p>;
@@ -75,6 +93,7 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
       <p className="obp-base-card__what">{m.instruction}</p>
       {m.expert_text && m.expert_text.trim() && <p className="obp-base-quote">« {m.expert_text.trim()} »</p>}
       <Outcome label={outcomeLabel(m)} applied={m.outcome === 'applied'} groups={reasonGroups(m.reasons ?? [], sectionTitle)} />
+      <OwnWriting id={m.id} writing={ownWriting.get(m.id)} />
     </ReviewCard>
   );
 
@@ -208,6 +227,20 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
         </section>
       ))}
     </div>
+  );
+}
+
+/** Ce que la carte écrit dans la base, elle seule ; et, si elle n'écrit rien, d'où viennent les changements montrés à côté. */
+function OwnWriting({ id, writing }: { id: string; writing: { writes: boolean; others: Array<{ id: string; title: string }> } | undefined }) {
+  if (!writing) return null;
+  if (writing.writes) {
+    return <p className="obp-muted obp-base-card__own">Ses lignes sont marquées « {itemLabel(id)} » dans le texte.</p>;
+  }
+  return (
+    <p className="obp-muted obp-base-card__own">
+      Elle n'écrit rien dans la base.
+      {writing.others.map(o => ` Les changements de « ${o.title} » viennent de la ${itemLabel(o.id).toLowerCase()}.`).join('')}
+    </p>
   );
 }
 
