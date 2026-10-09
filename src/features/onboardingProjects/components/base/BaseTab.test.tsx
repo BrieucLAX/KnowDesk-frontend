@@ -101,6 +101,19 @@ describe('Nouvelle base : relecture', () => {
     expect(container.textContent).not.toMatch(TECHNICAL);
   });
 
+  it('base 0.2.0 : les cartes répondues qu\'aucune section ne porte sont à part, avec ce qu\'il faut faire', async () => {
+    const [first, second] = CARDS;
+    mockBase({ ...PILOTE, base: { ...PILOTE.base, schema_version: '0.2.0', pending: [
+      { card_id: first.id, card_rank: first.rank, reason: 'unanswered' },
+      { card_id: second.id, card_rank: second.rank, reason: 'no_section' },
+    ] } });
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    expect(await screen.findByText(/^Non répondues, sans modification de la base : /)).toBeInTheDocument();
+    expect(screen.getByText(/^Répondues, mais aucune section de la base ne les porte : /)).toBeInTheDocument();
+    expect(screen.getByText(/^Pour les ajouter, nommez la section dans une précision de votre réponse/)).toBeInTheDocument();
+    expect(screen.queryByText(/^Informations en attente/)).not.toBeInTheDocument();
+  });
+
   it('titre chaque fiche par son premier titre, et chaque section une seule fois (Essai 5)', async () => {
     const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
     await screen.findByText('0 sur 6 relues');

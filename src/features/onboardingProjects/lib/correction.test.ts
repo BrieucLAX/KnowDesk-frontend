@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   blockingCardsLeft, blockingLeftLabel, correctionFailureMessage, correctionStepStates, firstSentence, itemLabel, originLabel, outcomeLabel,
-  partialSummary, reasonGroups,
+  partialSummary, pendingSentences, reasonGroups,
   reasonLabel, reviewProgressLabel, type Modification,
 } from './correction';
 import type { Decision } from './decisions';
@@ -127,5 +127,38 @@ describe('libellés', () => {
     // Une phrase rendue par le pipeline, déjà en clair : telle quelle.
     const expired = 'Mesure temporaire du dimanche 28 septembre 2026 à 20h00 au lundi 29 septembre 2026 à 06h00, expirée à la date de préparation de la base (07/10/2026) : elle n\'est pas insérée.';
     expect(reasonLabel(expired, () => null)).toBe(expired);
+  });
+});
+
+describe('pendingSentences', () => {
+  const titles: Record<string, string> = {
+    card_4: 'Service de téléconsultation médicale', card_6: 'Délai de carence pour les téléconsultations',
+    card_7: 'Gestion des réclamations liées à la téléconsultation', card_8: 'Accès à l\'historique des téléconsultations dans GESTOR',
+  };
+  const title = (id: string) => titles[id];
+
+  it('base 0.1.0, sans raison : une phrase, comme avant', () => {
+    expect(pendingSentences([{ card_id: 'card_7', card_rank: 7 }], title))
+      .toEqual(['Informations en attente, sans modification de la base : Gestion des réclamations liées à la téléconsultation.']);
+    expect(pendingSentences([], title)).toEqual(['Aucune information en attente.']);
+  });
+
+  it('base 0.2.0 : non répondues à part des répondues qu\'aucune section ne porte, et ce qu\'il faut faire (Base de co 2026 v3)', () => {
+    const pending = [
+      { card_id: 'card_4', card_rank: 4, reason: 'no_section' as const },
+      { card_id: 'card_6', card_rank: 6, reason: 'no_section' as const },
+      { card_id: 'card_7', card_rank: 7, reason: 'unanswered' as const },
+      { card_id: 'card_8', card_rank: 8, reason: 'no_section' as const },
+    ];
+    expect(pendingSentences(pending, title)).toEqual([
+      'Non répondues, sans modification de la base : Gestion des réclamations liées à la téléconsultation.',
+      'Répondues, mais aucune section de la base ne les porte : Service de téléconsultation médicale ; Délai de carence pour les téléconsultations ; Accès à l\'historique des téléconsultations dans GESTOR.',
+      'Pour les ajouter, nommez la section dans une précision de votre réponse (par exemple « 2.3 »), puis relancez la préparation de la nouvelle base.',
+    ]);
+  });
+
+  it('une carte sans titre connu est comptée', () => {
+    expect(pendingSentences([{ card_id: 'x', card_rank: 1, reason: 'no_modification' }], title))
+      .toEqual(['Répondues, sans modification possible de la base : 1 information.']);
   });
 });
