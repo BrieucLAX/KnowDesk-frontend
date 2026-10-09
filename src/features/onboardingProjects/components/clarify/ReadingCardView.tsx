@@ -6,7 +6,7 @@ import {
 } from '../../lib/reading';
 import { joinParagraphLines } from '../../lib/excerpt';
 import { AuditSource } from '../audit/AuditSource';
-import { AiFileName, DocNames } from '../audit/DocName';
+import { AiFileName, DocName, DocNames } from '../audit/DocName';
 import { ExcerptText } from '../audit/ExcerptText';
 
 /**
@@ -55,6 +55,29 @@ export function ModelAnalysisBox({ analysis }: { analysis: ModelAnalysis }) {
         {analysis.reason && <div><dt>Pourquoi c'est à clarifier</dt><dd>{analysis.reason}</dd></div>}
         {analysis.proposal && <div><dt>Ce que l'IA propose</dt><dd>{analysis.proposal}</dd></div>}
       </dl>
+    </aside>
+  );
+}
+
+/**
+ * Une citation renvoie à un contenu que vos documents ne contiennent pas (audit 0.10.0, « Base de
+ * co 2026 v3 », carte 1 : « voir grille complète en pièce jointe ») : dit avant l'analyse de l'IA,
+ * qui proposerait sinon d'intégrer ce qu'elle n'a pas.
+ */
+export function AbsentContent({ audit, card }: { audit: Audit; card: ReadingCard }) {
+  const refs = card.absentReferences ?? [];
+  if (refs.length === 0) return null;
+  return (
+    <aside className="obp-clarify-absent" role="note" aria-label="Contenu absent de vos documents">
+      <p className="obp-clarify-absent__title">Contenu absent de vos documents</p>
+      {refs.map(r => (
+        <p key={`${r.documentId}:${r.excerpt}`}>
+          <DocName audit={audit} id={r.documentId} /> renvoie à un contenu qui n'a pas été importé : « {r.excerpt} ».
+        </p>
+      ))}
+      <p className="obp-muted">
+        Ce contenu ne peut pas entrer dans la base : suivre la recommandation garde l'existant, avec son avertissement.
+      </p>
     </aside>
   );
 }
@@ -127,6 +150,7 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
         )}
       </div>
 
+      <AbsentContent audit={audit} card={card} />
       <ModelAnalysisBox analysis={card.analysis} />
     </article>
   );

@@ -11,7 +11,7 @@ vi.mock('../../api/onboardingApi', () => ({
 
 import { onboardingApi } from '../../api/onboardingApi';
 import { AuditTab } from '../audit/AuditTab';
-import { ClarifyQuote } from './ReadingCardView';
+import { ClarifyQuote, ReadingCardView } from './ReadingCardView';
 import type { Audit, AuditResponse } from '../../lib/audit';
 import { orderedCards, unverifiedReasonLabel } from '../../lib/reading';
 import type { Decision, DecisionsState } from '../../lib/decisions';
@@ -165,6 +165,22 @@ describe('À clarifier (audit 0.8.0)', () => {
     const fiche = within(other).getByRole('region', { name: 'Votre fiche de cadrage' });
     expect(fiche).toHaveTextContent('Ce que vous avez écrit, pas un document de la base.');
     expect(within(other).queryByRole('region', { name: 'Côté B' })).not.toBeInTheDocument();
+  });
+
+  it('une citation qui renvoie à un contenu absent : le dire avant l\'analyse de l\'IA (audit 0.10.0, Base de co 2026 v3, carte 1)', () => {
+    const audit = RESPONSE_2.audit as unknown as Audit;
+    const card = { ...RESPONSE_2.reading!.cards[0] };
+    const documentId = card.documentIds[0];
+    const withRef = { ...card, absentReferences: [{ documentId, excerpt: 'voir grille complète en pièce jointe' }] };
+    const { container } = render(<ReadingCardView audit={audit} card={withRef} title="Grille" position="Carte 1 sur 1" />);
+    const note = screen.getByRole('note', { name: 'Contenu absent de vos documents' });
+    expect(note).toHaveTextContent('renvoie à un contenu qui n\'a pas été importé : « voir grille complète en pièce jointe ».');
+    expect(note).toHaveTextContent('suivre la recommandation garde l\'existant, avec son avertissement');
+    const order = [...container.querySelectorAll('.obp-clarify-absent, .obp-clarify-ai')].map(e => e.className);
+    expect(order).toEqual(['obp-clarify-absent', 'obp-clarify-ai']);
+
+    render(<ReadingCardView audit={audit} card={card} title="Sans renvoi" position="Carte 2 sur 2" />);
+    expect(screen.getAllByRole('note', { name: 'Contenu absent de vos documents' })).toHaveLength(1);
   });
 
   it('citation de la fiche de cadrage : les lignes d\'un même paragraphe rejointes à l\'affichage', () => {
