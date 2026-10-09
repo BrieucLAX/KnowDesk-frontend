@@ -8,9 +8,14 @@ vi.mock('../../api/onboardingApi', () => ({
     listCorrections: vi.fn(), launchCorrection: vi.fn(), getBase: vi.fn(),
     listReviews: vi.fn(), review: vi.fn(), cancelReview: vi.fn(),
     listSectionComments: vi.fn(), commentSection: vi.fn(), cancelSectionComment: vi.fn(),
+    listSectionFixes: vi.fn(), fixSection: vi.fn(), cancelSectionFix: vi.fn(),
   },
 }));
 
+
+// Ces tests rendent la vraie base du pilote (16 fiches, une relecture par section) : en suite
+// complète, sous charge, 5 s ne suffisent pas toujours (déjà instable sur main, 2026-10-09).
+vi.setConfig({ testTimeout: 15_000 });
 import { onboardingApi } from '../../api/onboardingApi';
 import { ApiError } from '../../../../shared/lib/apiClient';
 import { BaseTab } from './BaseTab';
@@ -62,6 +67,7 @@ function mockBase(base: BaseVersion = PILOTE, corrections: OnboardingCorrection[
   vi.mocked(onboardingApi.listAuditImages).mockResolvedValue([]);
   vi.mocked(onboardingApi.listReviews).mockResolvedValue({ reviews: [], counts: { reviewed: 0, toReview: 6 } });
   vi.mocked(onboardingApi.listSectionComments).mockResolvedValue([]);
+  vi.mocked(onboardingApi.listSectionFixes).mockResolvedValue([]);
 }
 
 describe('Nouvelle base : relecture', () => {
@@ -261,6 +267,39 @@ describe('Nouvelle base : relecture', () => {
       itemId: 'M1', verdict: 'fix', correctedTexts: { [second]: 'L\'ajout, à sa place.' },
     })));
     expect(Object.keys(vi.mocked(onboardingApi.review).mock.lastCall![2].correctedTexts!)).not.toContain(first);
+  });
+
+  it('« Corriger cette section » sur une section inchangée : part du texte proposé, l\'enregistre, puis revient au texte de la base', async () => {
+    const sheet = PILOTE.base.sheets.find(sh => sh.sections.some(x => !(x.modification_ids ?? []).length && !(x.convention_ids ?? []).length))!;
+    const target = sheet.sections.find(x => !(x.modification_ids ?? []).length && !(x.convention_ids ?? []).length)!;
+    const saved = { id: '00000000-0000-4000-8000-0000000000f1', sectionKey: target.key, correctedText: 'Mon texte de la section.', supersedesId: null, authorName: 'Camille Martin', createdAt: '2026-10-09T10:00:00Z', cancellation: null };
+    vi.mocked(onboardingApi.fixSection).mockResolvedValue(saved);
+    vi.mocked(onboardingApi.cancelSectionFix).mockResolvedValue({ cancelled: saved, current: null });
+    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByText('0 sur 6 relues');
+    const folded = [...container.querySelectorAll('details.obp-base-section--unchanged')]
+      .find(d => d.querySelector('textarea, button') && within(d as HTMLElement).queryByRole('button', { name: 'Corriger cette section' })) as HTMLElement;
+    fireEvent.click(within(folded).getByRole('button', { name: 'Corriger cette section' }));
+    const field = within(folded).getByLabelText(/le texte de la section tel que vous l'écririez/) as HTMLTextAreaElement;
+    expect(field.value.length).toBeGreaterThan(0);
+    fireEvent.change(field, { target: { value: 'Mon texte de la section.' } });
+    fireEvent.click(within(folded).getByRole('button', { name: 'Enregistrer ce texte' }));
+    await waitFor(() => expect(onboardingApi.fixSection).toHaveBeenCalledWith('p1', PILOTE.correctionId, expect.objectContaining({
+      expectedCurrentId: null, correctedText: 'Mon texte de la section.',
+    })));
+    expect(await within(folded).findByText('corrigée par vous')).toBeInTheDocument();
+    expect(within(folded).getByText(/il la remplace dans la version propre/)).toBeInTheDocument();
+
+    fireEvent.click(within(folded).getByRole('button', { name: 'Modifier votre texte de la section' }));
+    fireEvent.click(within(folded).getByRole('button', { name: 'Revenir au texte de la base' }));
+    await waitFor(() => expect(onboardingApi.cancelSectionFix).toHaveBeenCalledWith('p1', PILOTE.correctionId, saved.id));
+    await waitFor(() => expect(within(folded).queryByText('corrigée par vous')).not.toBeInTheDocument());
+  });
+
+  it('un back sans « Corriger cette section » (avant la migration 57) : la relecture se charge quand même', async () => {
+    vi.mocked(onboardingApi.listSectionFixes).mockRejectedValue(new ApiError('NOT_FOUND', 'Introuvable.', 404));
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    expect(await screen.findByText('0 sur 6 relues')).toBeInTheDocument();
   });
 
   it('commente une section inchangée, à sa place', async () => {

@@ -3,7 +3,7 @@ import { ApiError } from '../../../shared/lib/apiClient';
 import { getErrorMessage } from '../../../shared/lib/apiErrors';
 import { useToast } from '../../../shared/lib/useToast';
 import { onboardingApi } from '../api/onboardingApi';
-import type { Review, SectionComment, Verdict } from '../lib/correction';
+import type { Review, SectionComment, SectionFix, Verdict } from '../lib/correction';
 
 export type SaveState = 'saving' | 'saved' | 'error';
 
@@ -14,6 +14,8 @@ export type BaseReviewState =
     status:   'ready';
     reviews:  ReadonlyMap<string, Review>;
     comments: ReadonlyMap<string, SectionComment>;
+    /** « Corriger » sur n'importe quelle section : le texte courant de chaque section corrigée. */
+    fixes:    ReadonlyMap<string, SectionFix>;
     /** Éléments à relire (modifications appliquées et conventions), selon le back. */
     toReview: number;
   };
@@ -53,6 +55,7 @@ export function useBaseReview(projectId: string, correctionId: string | null) {
   const [saves, setSaves] = useState<ReadonlyMap<string, SaveState>>(new Map());
   const reviews  = useRef(new Map<string, Review>());
   const comments = useRef(new Map<string, SectionComment>());
+  const fixes    = useRef(new Map<string, SectionFix>());
   const queues   = useRef(new Map<string, Promise<unknown>>());
   const shown = useRef(correctionId);
   shown.current = correctionId;
@@ -62,6 +65,7 @@ export function useBaseReview(projectId: string, correctionId: string | null) {
       status:   'ready',
       reviews:  new Map(reviews.current),
       comments: new Map(comments.current),
+      fixes:    new Map(fixes.current),
       toReview: toReview ?? (s.status === 'ready' ? s.toReview : 0),
     }));
   }, []);
@@ -69,13 +73,16 @@ export function useBaseReview(projectId: string, correctionId: string | null) {
   const load = useCallback(async () => {
     if (correctionId === null) return;
     try {
-      const [r, c] = await Promise.all([
+      const [r, c, f] = await Promise.all([
         onboardingApi.listReviews(projectId, correctionId),
         onboardingApi.listSectionComments(projectId, correctionId),
+        // Un back qui ne connaît pas encore les textes de section (avant la migration 57) : sans eux.
+        Promise.resolve().then(() => onboardingApi.listSectionFixes(projectId, correctionId)).catch(() => [] as SectionFix[]),
       ]);
       if (shown.current !== correctionId) return;
       reviews.current = new Map(r.reviews.map(x => [x.itemId, x]));
       comments.current = new Map(c.map(x => [x.sectionKey, x]));
+      fixes.current = new Map(f.map(x => [x.sectionKey, x]));
       publish(r.counts.toReview);
     } catch (err) {
       if (shown.current !== correctionId) return;
@@ -89,6 +96,7 @@ export function useBaseReview(projectId: string, correctionId: string | null) {
     setSaves(new Map());
     reviews.current = new Map();
     comments.current = new Map();
+    fixes.current = new Map();
     void load();
   }, [load]);
 
@@ -157,7 +165,27 @@ export function useBaseReview(projectId: string, correctionId: string | null) {
     publish();
   }), [correctionId, enqueue, projectId, publish]);
 
-  return { state, saves, saveReview, saveComment, reload: load };
+  /**
+   * Enregistre le texte de l'expert pour une section entière ; null, le texte courant est retiré
+   * et la section revient à la base proposée. Gardé tel quel : ses retours à la ligne comptent.
+   */
+  const saveSectionFix = useCallback((sectionKey: string, text: string | null) => enqueue(`fix:${sectionKey}`, async () => {
+    if (correctionId === null) return;
+    const current = fixes.current.get(sectionKey) ?? null;
+    const correctedText = text !== null && text.trim() ? text : null;
+    if ((current?.correctedText ?? null) === correctedText) return;
+    if (correctedText === null) {
+      const res = await onboardingApi.cancelSectionFix(projectId, correctionId, current!.id);
+      if (res.current) fixes.current.set(sectionKey, res.current); else fixes.current.delete(sectionKey);
+    } else {
+      fixes.current.set(sectionKey, await onboardingApi.fixSection(projectId, correctionId, {
+        sectionKey, expectedCurrentId: current?.id ?? null, correctedText,
+      }));
+    }
+    publish();
+  }), [correctionId, enqueue, projectId, publish]);
+
+  return { state, saves, saveReview, saveComment, saveSectionFix, reload: load };
 }
 
 export type BaseReview = ReturnType<typeof useBaseReview>;

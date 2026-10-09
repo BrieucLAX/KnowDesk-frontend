@@ -204,6 +204,8 @@ export interface SectionView {
   changed:       boolean;
   modificationIds: string[];
   conventionIds:   string[];
+  /** Le texte proposé de la section, en Markdown : point de départ de « Corriger cette section ». */
+  proposedMarkdown: string;
 }
 
 export interface SheetView { documentId: string; title: string; fileName: string; sections: SectionView[] }
@@ -249,6 +251,7 @@ export function sheetViews(base: BaseCorrection): SheetView[] {
           changed:         isChanged(blocks),
           modificationIds: [...new Set([...(s.modification_ids ?? []), ...(modsBySection.get(s.key) ?? [])])],
           conventionIds:   [...new Set([...(s.convention_ids ?? []), ...(convsBySection.get(s.key) ?? [])])],
+          proposedMarkdown: s.corrected_markdown,
         };
       }),
     };

@@ -144,6 +144,17 @@ export interface SectionComment {
   cancellation: Cancellation | null;
 }
 
+/** « Corriger » sur n'importe quelle section (migration 57) : le texte de l'expert pour la section entière. */
+export interface SectionFix {
+  id:            string;
+  sectionKey:    string;
+  correctedText: string;
+  supersedesId:  string | null;
+  authorName:    string | null;
+  createdAt:     string;
+  cancellation:  Cancellation | null;
+}
+
 export interface ChainCancelResult<T> { cancelled: T; current: T | null }
 
 /** Une version validée de la nouvelle base (version propre), figée. */
