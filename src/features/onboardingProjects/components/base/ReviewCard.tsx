@@ -78,9 +78,15 @@ export function ReviewCard({ anchor, title, children, withVerdict, fixable, edit
 
   const send = (d: ReviewDraft) => { sent.current = d; onSave(d); };
   const written = (texts: Record<string, string>) => Object.values(texts).some(t => t.trim());
+  /**
+   * Les seules sections écrites : une section laissée vide garde son texte d'origine. C'est ainsi
+   * qu'un ajout se déplace d'une section à l'autre (« Base de co 2026 v3 », M2 écrite en 5.2 au
+   * lieu de 5.3) ; un texte vide serait d'ailleurs refusé par le back.
+   */
+  const filled = (texts: Record<string, string>) => Object.fromEntries(Object.entries(texts).filter(([, t]) => t.trim()));
 
   const draft = (patch: Partial<ReviewDraft>): ReviewDraft => ({
-    verdict, correctedTexts: verdict === 'fix' ? fixTexts : null, comment, ...patch,
+    verdict, correctedTexts: verdict === 'fix' ? filled(fixTexts) : null, comment, ...patch,
   });
 
   const choose = (v: Verdict) => {
@@ -88,7 +94,7 @@ export function ReviewCard({ anchor, title, children, withVerdict, fixable, edit
     setVerdict(v);
     // « Corriger » sans texte attend qu'il soit écrit.
     if (v === 'fix' && !written(fixTexts)) return;
-    send(draft({ verdict: v, correctedTexts: v === 'fix' ? fixTexts : null }));
+    send(draft({ verdict: v, correctedTexts: v === 'fix' ? filled(fixTexts) : null }));
   };
 
   const verdicts = VERDICTS.filter(v => fixable || v.verdict !== 'fix');
@@ -117,9 +123,14 @@ export function ReviewCard({ anchor, title, children, withVerdict, fixable, edit
           </label>
           <textarea id={`${id}-fix-${section.key}`} className="obp-base-textarea" rows={5} value={fixTexts[section.key] ?? ''}
             onChange={e => setFixTexts(t => ({ ...t, [section.key]: e.target.value }))}
-            onBlur={() => { if (written(fixTexts)) send(draft({ correctedTexts: fixTexts })); }} />
+            onBlur={() => { if (written(fixTexts)) send(draft({ correctedTexts: filled(fixTexts) })); }} />
         </React.Fragment>
       ))}
+      {editable && fixable && verdict === 'fix' && sections.length > 1 && (
+        <p className="obp-muted">
+          Une section laissée vide garde son texte d'origine : pour déplacer un ajout, videz-le ici et écrivez-le dans la section où il doit aller.
+        </p>
+      )}
       {editable && (
         <>
           <label htmlFor={`${id}-comment`} className="obp-base-label">Un commentaire ? (facultatif)</label>

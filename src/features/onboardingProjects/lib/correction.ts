@@ -295,7 +295,7 @@ const REASON_LABEL: Record<string, string> = {
   values_from_several_sources:  'le texte proposé mélangeait des chiffres de documents différents ; il n\'a pas été repris',
   duplicate_or_move:            'le texte proposé répétait un passage déjà présent dans la fiche ; il n\'a pas été repris',
   introduction_without_content: 'le texte proposé annonçait une liste sans la donner ; il n\'a pas été repris',
-  invalid_output:               'l\'IA n\'a pas rendu de texte utilisable pour cette section',
+  invalid_output:               'l\'IA n\'a pas rendu de texte utilisable pour cette section : la modification n\'y est pas appliquée ; relancez la préparation de la nouvelle base pour réessayer',
   no_change_kept:               'aucun texte proposé n\'a pu être repris',
 };
 

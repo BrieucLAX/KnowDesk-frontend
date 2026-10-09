@@ -203,6 +203,23 @@ describe('Nouvelle base : relecture', () => {
     await waitFor(() => expect(onboardingApi.review).toHaveBeenLastCalledWith('p1', PILOTE.correctionId, expect.objectContaining({ verdict: 'fix', correctedTexts: { [m3Key]: 'Mon texte.' } })));
   });
 
+  it('« Corriger » déplace un ajout : une section vidée garde son texte d\'origine et n\'est pas envoyée', async () => {
+    vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict, correctedTexts: body.correctedTexts }));
+    const [first, second] = PILOTE.base.modifications.find(m => m.id === 'M1')!.section_keys;
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const m1 = await screen.findByRole('article', { name: /^Modification 1/ });
+    fireEvent.click(within(m1).getByRole('button', { name: 'Corriger' }));
+    expect(within(m1).getByText(/Une section laissée vide garde son texte d'origine/)).toBeInTheDocument();
+    const [from, to] = within(m1).getAllByLabelText(/le texte tel que vous l'écririez/) as HTMLTextAreaElement[];
+    fireEvent.change(from, { target: { value: '' } });
+    fireEvent.change(to, { target: { value: 'L\'ajout, à sa place.' } });
+    fireEvent.blur(to);
+    await waitFor(() => expect(onboardingApi.review).toHaveBeenLastCalledWith('p1', PILOTE.correctionId, expect.objectContaining({
+      itemId: 'M1', verdict: 'fix', correctedTexts: { [second]: 'L\'ajout, à sa place.' },
+    })));
+    expect(Object.keys(vi.mocked(onboardingApi.review).mock.lastCall![2].correctedTexts!)).not.toContain(first);
+  });
+
   it('commente une section inchangée, à sa place', async () => {
     vi.mocked(onboardingApi.commentSection).mockImplementation(async (_p, _c, body) => ({
       id: 'c1', sectionKey: body.sectionKey, comment: body.comment, supersedesId: null, authorName: 'Camille Martin', createdAt: '', cancellation: null,
