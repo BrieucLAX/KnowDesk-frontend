@@ -83,12 +83,19 @@ export interface Modification {
 
 export interface Convention { id: string; rule: string; section_keys: string[] }
 
+/**
+ * Pourquoi une carte est en attente (base corrigée 0.2.0) : non répondue, ou répondue mais portée
+ * par aucune section de la base (`no_section`), ou sans modification possible.
+ */
+export type PendingReason = 'unanswered' | 'no_section' | 'no_modification';
+
 export interface BaseCorrection {
   schema_version: string;
   sheets:         CorrectedSheet[];
   modifications:  Modification[];
   conventions?:   Convention[];
-  pending?:       Array<{ card_id: string; card_rank: number }>;
+  /** 0.2.0 : chaque carte en attente dit pourquoi ; absente en 0.1.0. */
+  pending?:       Array<{ card_id: string; card_rank: number; reason?: PendingReason }>;
 }
 
 /** GET …/corrections/:id/base. */
@@ -365,4 +372,39 @@ export function outcomeLabel(m: Modification): string {
 /** Progression de la relecture : « 3 sur 12 relues ». */
 export function reviewProgressLabel(reviewed: number, total: number): string {
   return `${reviewed} sur ${total} ${total > 1 ? 'relues' : 'relue'}`;
+}
+
+/**
+ * Les informations en attente, en clair (« Base de co 2026 v3 », cartes 4, 6 et 8) : les cartes
+ * non répondues à part de celles qui sont répondues mais qu'aucune section de la base ne porte,
+ * avec ce qu'il faut faire pour les ajouter. Une base 0.1.0 ne dit pas pourquoi : une phrase.
+ */
+export function pendingSentences(
+  pending: NonNullable<BaseCorrection['pending']>,
+  cardTitle: (cardId: string) => string | undefined,
+): string[] {
+  if (pending.length === 0) return ['Aucune information en attente.'];
+  const titles = (list: typeof pending) => list.map(p => cardTitle(p.card_id)).filter((t): t is string => Boolean(t));
+  const count = (n: number) => `${n} ${n > 1 ? 'informations' : 'information'}`;
+  const named = (list: typeof pending, lead: string) => {
+    const t = titles(list);
+    return t.length > 0 ? `${lead} : ${t.join(' ; ')}.` : `${lead} : ${count(list.length)}.`;
+  };
+  if (pending.some(p => !p.reason)) {
+    const t = titles(pending);
+    return [t.length > 0
+      ? `Informations en attente, sans modification de la base : ${t.join(' ; ')}.`
+      : `${count(pending.length)} en attente, sans modification de la base.`];
+  }
+  const out: string[] = [];
+  const unanswered = pending.filter(p => p.reason === 'unanswered');
+  const noSection = pending.filter(p => p.reason === 'no_section');
+  const noChange = pending.filter(p => p.reason === 'no_modification');
+  if (unanswered.length > 0) out.push(named(unanswered, 'Non répondues, sans modification de la base'));
+  if (noSection.length > 0) {
+    out.push(named(noSection, 'Répondues, mais aucune section de la base ne les porte'));
+    out.push('Pour les ajouter, nommez la section dans une précision de votre réponse (par exemple « 2.3 »), puis relancez la préparation de la nouvelle base.');
+  }
+  if (noChange.length > 0) out.push(named(noChange, 'Répondues, sans modification possible de la base'));
+  return out;
 }

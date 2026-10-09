@@ -4,7 +4,7 @@ import {
   modificationPlacement, ownHeading, proposedLines, sectionTitleIndex, sheetViews, type SectionView, type SheetView,
 } from '../../lib/baseDocument';
 import {
-  firstSentence, itemLabel, kindLabel, originLabel, outcomeLabel, partialSummary, reasonGroups, reviewProgressLabel,
+  firstSentence, itemLabel, kindLabel, originLabel, outcomeLabel, partialSummary, pendingSentences, reasonGroups, reviewProgressLabel,
   SHOWN_REASONS, type ReasonGroup,
   type BaseCorrection, type Convention, type Modification,
 } from '../../lib/correction';
@@ -73,8 +73,6 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
 
   const reviewed = [...state.reviews.values()].filter(r => r.verdict !== null).length;
   const sectionTitle = (key: string) => titles.get(key) ?? null;
-  const pending = (base.pending ?? []).map(p => cardTitles.get(p.card_id)).filter((t): t is string => Boolean(t));
-  const pendingCount = (base.pending ?? []).length;
 
   const modificationCard = (m: Modification) => (
     <ReviewCard
@@ -180,13 +178,9 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
       <header className="obp-base-head">
         <div>
           <p className="obp-base-head__title">Les modifications apportées à votre base</p>
-          <p className="obp-muted">
-            {pendingCount === 0
-              ? 'Aucune information en attente.'
-              : pending.length > 0
-                ? `Informations en attente, sans modification de la base : ${pending.join(' ; ')}.`
-                : `${pendingCount} ${pendingCount > 1 ? 'informations' : 'information'} en attente, sans modification de la base.`}
-          </p>
+          {pendingSentences(base.pending ?? [], id => cardTitles.get(id)).map(text => (
+            <p key={text} className="obp-muted">{text}</p>
+          ))}
         </div>
         <p className="obp-base-head__progress" aria-live="polite">
           <strong>{reviewProgressLabel(reviewed, state.toReview)}</strong>
