@@ -78,7 +78,6 @@ export function ReviewCard({ anchor, title, children, withVerdict, fixable, edit
 
   const send = (d: ReviewDraft) => { sent.current = d; onSave(d); };
   const written = (texts: Record<string, string>) => Object.values(texts).some(t => t.trim());
-
   const draft = (patch: Partial<ReviewDraft>): ReviewDraft => ({
     verdict, correctedTexts: verdict === 'fix' ? fixTexts : null, comment, ...patch,
   });
@@ -120,6 +119,11 @@ export function ReviewCard({ anchor, title, children, withVerdict, fixable, edit
             onBlur={() => { if (written(fixTexts)) send(draft({ correctedTexts: fixTexts })); }} />
         </React.Fragment>
       ))}
+      {editable && fixable && verdict === 'fix' && sections.length > 1 && (
+        <p className="obp-muted">
+          Une section laissée vide garde son texte d'origine : pour déplacer un ajout, videz-le ici et écrivez-le dans la section où il doit aller.
+        </p>
+      )}
       {editable && (
         <>
           <label htmlFor={`${id}-comment`} className="obp-base-label">Un commentaire ? (facultatif)</label>
