@@ -165,6 +165,36 @@ describe('Nouvelle base : relecture', () => {
     expect(outcome.textContent).not.toMatch(/›/);
   });
 
+  it('une modification ne montre que ce qu\'elle écrit : une mesure expirée n\'emprunte pas les lignes d\'une autre (Base de co 2026 v3, M3)', async () => {
+    const sheet = PILOTE.base.sheets[1];
+    const key = sheet.sections[0].key;
+    const procedure = 'Du 1er octobre au 30 novembre 2026, pour les pharmacies uniquement : sélectionnez le statut « Incident TP — Priorité Flux ».';
+    const [, m2, m3] = PILOTE.base.modifications;
+    const shared: BaseVersion = {
+      ...PILOTE,
+      base: {
+        ...PILOTE.base,
+        sheets: [{ ...sheet, sections: [{
+          ...sheet.sections[0], key, original_markdown: '### Vérifier les droits d\'un adhérent\n',
+          corrected_markdown: `### Vérifier les droits d'un adhérent\n\n${procedure}\n`, modification_ids: ['M2'],
+          changes: [{ kind: 'insert', line_kind: 'paragraph', before: '', after: procedure, modification_id: 'M2', kept: true }],
+        }] }],
+        modifications: [
+          { ...m2, outcome: 'applied', reasons: [], section_keys: [key] },
+          { ...m3, expert_text: null, origin: { ...m3.origin, action_type: 'follow_recommendation' }, outcome: 'not_applicable', section_keys: [key], reasons: ['Mesure temporaire du dimanche 28 septembre 2026 à 20h00 au lundi 29 septembre 2026 à 06h00, expirée à la date de préparation de la base (08/10/2026) : elle n\'est pas insérée.'] },
+        ],
+      },
+    };
+    mockBase(shared);
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const expired = await screen.findByRole('article', { name: /^Modification 3/ });
+    expect(expired).toHaveTextContent('Non appliquée');
+    expect(expired).toHaveTextContent('Elle n\'écrit rien dans la base. Les changements de « ');
+    expect(expired).toHaveTextContent('viennent de la modification 2.');
+    expect(expired).not.toHaveTextContent('Incident TP');
+    expect(cardOf(/^Modification 2/)).toHaveTextContent('Ses lignes sont marquées « Modification 2 » dans le texte.');
+  });
+
   it('enregistre un verdict dès le clic, puis un commentaire sans perdre le verdict', async () => {
     vi.mocked(onboardingApi.review)
       .mockResolvedValueOnce(review('M1'))
