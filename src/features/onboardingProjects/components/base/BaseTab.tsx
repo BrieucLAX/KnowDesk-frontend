@@ -6,7 +6,7 @@ import { usePolling } from '../../../../shared/lib/usePolling';
 import { formatFull } from '../../../../shared/lib/formatDate';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { onboardingApi } from '../../api/onboardingApi';
-import { cardTitles, isCorrectionActive, type BaseVersion, type OnboardingCorrection } from '../../lib/correction';
+import { cardTitles, isCorrectionActive, SUPPORTED_CORRECTION_SCHEMAS, type BaseVersion, type OnboardingCorrection } from '../../lib/correction';
 import { useBaseReview } from '../../hooks/useBaseReview';
 import type { OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from '../audit/AuditSource';
@@ -138,7 +138,7 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabPro
       )}
       {shownId !== null && base === null && <Skeleton className="obp-skeleton-block" />}
       {base !== null && base.correctionId === shownId && (
-        base.schemaVersion !== '0.1.0' ? (
+        !SUPPORTED_CORRECTION_SCHEMAS.includes(base.schemaVersion) ? (
           <p className="obp-audit-unsupported" role="status">
             Cette base est dans un format que cette version de l'application ne sait pas afficher.
           </p>

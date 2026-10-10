@@ -1,0 +1,2015 @@
+{
+  "analysisId": "a1",
+  "schemaVersion": "0.10.0",
+  "audit": {
+    "schema_version": "0.10.0",
+    "generated_at": "2026-10-10T05:10:20.832218Z",
+    "reading_date": "2026-10-01",
+    "briefing_given": true,
+    "inventory": [
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_00_sommaire_docx_74baf1a6",
+        "path": "base-connaissance-mutuelle-notion/00-sommaire.docx",
+        "format": "docx",
+        "size_bytes": 43789,
+        "sha256": "90a3c6ac3679a4da506db5f0764122e4704c1009c93694e80fbf0f98fb248593",
+        "unit_count": 5,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_01_presentation_offre_docx_bfef828e",
+        "path": "base-connaissance-mutuelle-notion/01-presentation-offre.docx",
+        "format": "docx",
+        "size_bytes": 39679,
+        "sha256": "6885b5c3881907f238d4b972e8a363dcc89d3a308afecdf7770ded440ccae1c4",
+        "unit_count": 10,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_02_adhesion_souscription_docx_6d6bc1de",
+        "path": "base-connaissance-mutuelle-notion/02-adhesion-souscription.docx",
+        "format": "docx",
+        "size_bytes": 103690,
+        "sha256": "1e8367007f83512280bf4ab1aad5c2524d213794eb30dbfdac51e9b4069265f0",
+        "unit_count": 11,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+        "path": "base-connaissance-mutuelle-notion/03-cotisations-tarification.docx",
+        "format": "docx",
+        "size_bytes": 39297,
+        "sha256": "4016897d5e3da557a2ddb0ff1ecc45920c533a9212826ff2ee8c6160c9cf17d9",
+        "unit_count": 13,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_04_remboursements_sante_docx_86c53c91",
+        "path": "base-connaissance-mutuelle-notion/04-remboursements-sante.docx",
+        "format": "docx",
+        "size_bytes": 79184,
+        "sha256": "5926d698177e79f90921d6b20c10c68ca09aba54cce4013704aef2ff3d72b558",
+        "unit_count": 9,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+        "path": "base-connaissance-mutuelle-notion/05-tiers-payant.docx",
+        "format": "docx",
+        "size_bytes": 138728,
+        "sha256": "05ce162ee5d0cdb0cbc24e471d1e36a253ada2b217898357fc70ea698b1a6067",
+        "unit_count": 9,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+        "path": "base-connaissance-mutuelle-notion/06-reclamations-litiges.docx",
+        "format": "docx",
+        "size_bytes": 90766,
+        "sha256": "4c5ac755f96766a8bb294dfb3dae7cc31e415fba0ee2f36bbb4ee0bc91d3c41a",
+        "unit_count": 10,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_07_resiliation_docx_d58c0826",
+        "path": "base-connaissance-mutuelle-notion/07-resiliation.docx",
+        "format": "docx",
+        "size_bytes": 88280,
+        "sha256": "28c4e6dec1ed3ffb26024e9f2d786b53b81e80b3147a22838a6acb1a0ceb7197",
+        "unit_count": 9,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_08_prevoyance_incapacite_docx_16e591c7",
+        "path": "base-connaissance-mutuelle-notion/08-prevoyance-incapacite.docx",
+        "format": "docx",
+        "size_bytes": 38518,
+        "sha256": "7ff8ed9913cf473e6f41bb7beb2733e8e6f104f03ba5a51fa4d07889dd0e41c7",
+        "unit_count": 8,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_09_portail_assure_app_docx_e83c6ffd",
+        "path": "base-connaissance-mutuelle-notion/09-portail-assure-app.docx",
+        "format": "docx",
+        "size_bytes": 82771,
+        "sha256": "dbee79d7460691e1dda17874fb764d0bd8f0c44dc2c1db7cb555899896c25c9a",
+        "unit_count": 7,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_10_relations_professionnels_sante_docx_47f2f49a",
+        "path": "base-connaissance-mutuelle-notion/10-relations-professionnels-sante.docx",
+        "format": "docx",
+        "size_bytes": 37951,
+        "sha256": "fefe36554f014869ea94f5c872f241ade6b37d4c394d1c3c2b5112e8f1d7fe35",
+        "unit_count": 8,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_11_outils_internes_si_docx_a9ba8a5f",
+        "path": "base-connaissance-mutuelle-notion/11-outils-internes-si.docx",
+        "format": "docx",
+        "size_bytes": 107569,
+        "sha256": "4f4b6682c0b4ccea6b5e0f8bb695f084cd2059d5e2e13839320aa60dd351aff2",
+        "unit_count": 8,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_12_fraude_controle_docx_e49037c5",
+        "path": "base-connaissance-mutuelle-notion/12-fraude-controle.docx",
+        "format": "docx",
+        "size_bytes": 38303,
+        "sha256": "c97010fab4376d603efbb8a7c071198727874b32bb6d293c432206e90e857c08",
+        "unit_count": 8,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_13_glossaire_docx_9c2a4268",
+        "path": "base-connaissance-mutuelle-notion/13-glossaire.docx",
+        "format": "docx",
+        "size_bytes": 37966,
+        "sha256": "9680fc6b50379fb973f5277b83d4f7ccf13e5437de3bce103efa875f49a59c35",
+        "unit_count": 1,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_14_faq_transverse_docx_b1be64d4",
+        "path": "base-connaissance-mutuelle-notion/14-faq-transverse.docx",
+        "format": "docx",
+        "size_bytes": 39258,
+        "sha256": "351bc30b2c848baea697bcd686c6e9529aea08bdfc18884237fbdfbc80563960",
+        "unit_count": 8,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_base_connaissance_mutuelle_notion_15_cas_pratiques_docx_2a9e3667",
+        "path": "base-connaissance-mutuelle-notion/15-cas-pratiques.docx",
+        "format": "docx",
+        "size_bytes": 40589,
+        "sha256": "f4833eb9293aa54c848b7bb3d5d11a38d6840728a55f46b87047930cead3fc5b",
+        "unit_count": 11,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_brief_nouvelle_activite_teleconsultation_pdf_e905d5e7",
+        "path": "brief-nouvelle-activite-teleconsultation.pdf",
+        "format": "pdf",
+        "size_bytes": 15395,
+        "sha256": "be7822b612a19ef5554d5c7a301f1597276bddc25baa52b6e6a6f04ab3cfcb27",
+        "unit_count": 6,
+        "title": "Brief nouvelle activité — Téléconsultation médicale",
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_email_1_changement_temporaire_maintenance_docx_abe6efe6",
+        "path": "email-1-changement-temporaire-maintenance.docx",
+        "format": "docx",
+        "size_bytes": 19917,
+        "sha256": "1db3ebe93d37adedfa88138522c6aae4d6e838db61d8312341ec435998d10b94",
+        "unit_count": 1,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_email_2_changement_process_definitif_docx_00a20f9b",
+        "path": "email-2-changement-process-definitif.docx",
+        "format": "docx",
+        "size_bytes": 12252,
+        "sha256": "d43b2814d81f03e8a2abf641df6e0d97afbbfa8ddf7f02f92214389acf82b44f",
+        "unit_count": 1,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+        "path": "email-3-changement-tarifaire.docx",
+        "format": "docx",
+        "size_bytes": 20057,
+        "sha256": "91b6b25dadc52cfccc1c0408fa618b455f7e7ea7b93651292d4d7980e395ccde",
+        "unit_count": 1,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      },
+      {
+        "document_id": "doc_formation_traitement_reclamations_pptx_761e39af",
+        "path": "formation-traitement-reclamations.pptx",
+        "format": "pptx",
+        "size_bytes": 361636,
+        "sha256": "83ec4cdd8d88adfced36c18b1e98c4231da6a83ea6d69701f1049ea96d2f1238",
+        "unit_count": 14,
+        "title": "PptxGenJS Presentation",
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      }
+    ],
+    "cards": [
+      {
+        "id": "card_3b9517fd6e7b9b82",
+        "nature": "dated_change",
+        "rank": 1,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+          "doc_email_3_changement_tarifaire_docx_046acbac"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+                  "excerpt": "| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |\n| 30-39 ans | 38,40 € | 54,90 € | 73,50 € |\n| 40-49 ans | 44,70 € | 63,90 € | 85,60 € |\n| 50-59 ans | 55,20 € | 78,90 € | 105,80 € |\n| 60-69 ans | 68,90 € | 98,40 € | 131,90 € |\n| 70 ans et + | 82,30 € | 117,60 € | 157,60 € |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 3 — Cotisations et tarification",
+                    "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
+                    "Zone 1 (Île-de-France et grandes métropoles)"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+                  "excerpt": "⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024. Les montants ci-dessous servent de référence pour comprendre la structure de la grille tarifaire (zones, tranches d'âge, coefficients), mais ne doivent pas être communiqués tels quels à un adhérent ou un prospect. Une révision tarifaire a eu lieu depuis — se référer à la dernière note tarifaire transmise par la Direction Commerciale avant toute communication de montant.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 3 — Cotisations et tarification"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Le Conseil d'Administration du 28 août 2026 a validé la nouvelle grille tarifaire applicable à l'ensemble des contrats individuels (formules ESSENTIELLE, CONFORT, SÉRÉNITÉ+) à compter du 1er janvier 2027. [...] La grille actuellement documentée au chapitre 3 de la base de connaissance (« Cotisations et tarification ») date de juin 2024 et ne doit plus être communiquée à un adhérent ou prospect, y compris à titre indicatif, à compter de ce jour.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 4
+                },
+                "excerpt_realigned": false
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Exemples de nouveaux tarifs (Zone 1, à titre indicatif — voir grille complète en pièce jointe)\n\n- 18-29 ans, formule CONFORT : 47,80 € (contre 35,80 € en 2024).\n\n- 40-49 ans, formule CONFORT : 66,60 € (contre 63,90 € en 2024).\n\n- 60-69 ans, formule SÉRÉNITÉ+ : 137,60 € (contre 131,90 € en 2024).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 9
+                },
+                "excerpt_realigned": true
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Grille tarifaire des cotisations individuelles",
+          "reason": "La grille tarifaire du chapitre 3 de la base de connaissance est obsolète depuis juin 2024 et ne doit plus être utilisée pour communiquer des montants aux adhérents ou prospects. L'email du 4 septembre 2026 annonce une nouvelle grille tarifaire applicable au 1er janvier 2027, avec des montants significativement différents. Les deux documents coexistent temporairement, mais la base de connaissance n'a pas été mise à jour pour refléter ce changement.",
+          "proposal": "Mettre à jour immédiatement le chapitre 3 de la base de connaissance pour:\n1. Remplacer la grille tarifaire obsolète par la nouvelle grille tarifaire 2027, en précisant sa date d'entrée en vigueur (1er janvier 2027).\n2. Ajouter un avertissement clair indiquant que les montants de la grille 2024 ne doivent plus être utilisés pour toute communication à partir du 4 septembre 2026.\n3. Inclure un renvoi vers l'email du 4 septembre 2026 pour référence.\n4. Prévoir une communication spécifique pour les adhérents actuels concernant la revalorisation tarifaire, comme annoncé dans l'email."
+        },
+        "answers": [
+          "follow_recommendation",
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": [],
+        "recommended_effect": {
+          "action": null,
+          "basis": "la source renvoie à un contenu absent des documents importés (« voir grille complète en pièce jointe ») : l'existant reste, avec son avertissement"
+        },
+        "absent_references": [
+          {
+            "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+            "excerpt": "voir grille complète en pièce jointe"
+          }
+        ]
+      },
+      {
+        "id": "card_2da82553b8fe500a",
+        "nature": "dated_change",
+        "rank": 2,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+          "doc_email_2_changement_process_definitif_docx_00a20f9b"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+                  "excerpt": "Arbre de décision — Refus de tiers payant\nUn pharmacien ou professionnel de santé signale un refus de carte de tiers payant\nLe refus concerne-t-il un acte pharmacie ou un acte médical/paramédical ?\nPHARMACIE\nMÉDECIN / PARAMÉDICAL\nVérifier dans l'outil GESTOR (onglet 'Droits Tiers Payant') si les droits sont ouverts à la date de l'acte\nLe professionnel est-il conventionné avec le réseau de soins Alviva Santé ?\nDroits fermés → vérifier la cotisation Droits ouverts mais refus technique → vérifier le flux carte Vitale / NOEMIE et relancer sous 24h\nOUI → contacter la plateforme réseau au 0 800 XX XX XX (script dédié)\nNON → informer l'adhérent qu'il devra avancer les frais et transmettre sa feuille de soins pour remboursement classique",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_9d517478bad6ba9c",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 5 — Tiers payant",
+                    "5.3 Traiter un refus de tiers payant"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                },
+                "excerpt_realigned": true
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+                  "excerpt": "Dans tous les cas : tracer l'incident dans GESTOR (motif « Incident Tiers Payant ») et informer l'adhérent du délai de résolution (48h ouvrées)",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_9d517478bad6ba9c",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 5 — Tiers payant",
+                    "5.3 Traiter un refus de tiers payant"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_email_2_changement_process_definitif_docx_00a20f9b",
+                  "excerpt": "À compter du 1er octobre 2026, et à titre de période pilote sur deux mois, la procédure décrite au chapitre 5.3 de la base de connaissance (« Traiter un refus de tiers payant ») est complétée de la façon suivante :\n\n- Un nouveau statut « Incident TP — Priorité Flux » doit être sélectionné dans GESTOR (module Tiers Payant) dès qu'un incident technique de flux est identifié, à la place du statut générique « Incident Tiers Payant » utilisé jusqu'ici.\n\n- Ce nouveau statut déclenche automatiquement une notification à la cellule Flux, sans action de transfert manuelle du gestionnaire (suppression de l'étape d'appel téléphonique ou d'email à la cellule Flux).\n\n- Un accusé de traitement est envoyé automatiquement à l'adhérent par SMS dans les 15 minutes, l'informant du délai de résolution.\n\n- Le délai cible reste 48h ouvrées, mais un tableau de suivi en temps réel sera accessible à tous les gestionnaires (onglet « Suivi Flux » de GESTOR, en cours de déploiement).\n\nCalendrier\n\n- Du 1er octobre au 30 novembre 2026 : période pilote sur le périmètre des pharmacies uniquement. Les incidents concernant les professionnels du réseau Alviva Santé continuent de suivre la procédure actuelle du chapitre 5.3 pendant cette période.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 6
+                },
+                "excerpt_realigned": true
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Procédure de traitement des incidents de tiers payant",
+          "reason": "L'email du 7 septembre 2026 annonce une modification de la procédure de traitement des incidents de tiers payant pour les pharmacies, effective à partir du 1er octobre 2026. Cette nouvelle procédure remplace partiellement celle décrite dans la base de connaissance (chapitre 5.3), notamment en automatisant la notification à la cellule Flux et en introduisant un nouveau statut dans GESTOR. Les deux procédures coexistent temporairement, mais la base de connaissance n'a pas été mise à jour pour refléter ce changement.",
+          "proposal": "Mettre à jour le chapitre 5.3 de la base de connaissance pour:\n1. Ajouter une section spécifique sur la nouvelle procédure applicable aux pharmacies à partir du 1er octobre 2026, en précisant qu'il s'agit d'une période pilote jusqu'au 30 novembre 2026.\n2. Décrire le nouveau statut « Incident TP — Priorité Flux » et son fonctionnement.\n3. Préciser que la procédure actuelle reste valable pour les professionnels du réseau Alviva Santé pendant la période pilote.\n4. Inclure un renvoi vers l'email du 7 septembre 2026 pour référence.\n5. Prévoir une mise à jour définitive de la base de connaissance au 1er décembre 2026, date de généralisation prévue de la nouvelle procédure."
+        },
+        "answers": [
+          "follow_recommendation",
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": [],
+        "recommended_effect": {
+          "action": {
+            "type": "accept_side",
+            "side": "B"
+          },
+          "basis": "changement confirmé, côté B (le document daté) retenu ; date d'effet dans la citation"
+        },
+        "absent_references": []
+      },
+      {
+        "id": "card_3d2be6bfd03ec6c3",
+        "nature": "dated_change",
+        "rank": 3,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_11_outils_internes_si_docx_a9ba8a5f",
+          "doc_email_1_changement_temporaire_maintenance_docx_abe6efe6"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_11_outils_internes_si_docx_a9ba8a5f",
+                  "excerpt": "Des fenêtres de maintenance technique sont régulièrement programmées sur GESTOR (mises à jour, montées de version). Pendant ces interruptions, les gestionnaires ne peuvent généralement plus accéder à l'outil ; il est important de suivre les communications spécifiques de la Direction des Systèmes d'Information annonçant ces créneaux, qui priment sur le planning habituel indiqué dans cette fiche.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 11 — Outils internes de gestion (SI)",
+                    "11.6 Interruptions de service planifiées"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Disponibilité de GESTOR pendant la maintenance technique",
+          "reason": "L'email du 9 septembre 2026 annonce une interruption totale de GESTOR pendant une maintenance technique spécifique du 28 au 29 septembre 2026, avec une procédure de secours temporaire pour la vérification des droits tiers payant. La base de connaissance (chapitre 11.6) mentionne des interruptions de service planifiées, mais ne fournit pas de détails sur cette maintenance spécifique ni sur la procédure de secours à appliquer pendant cette période.",
+          "proposal": "Mettre à jour le chapitre 11.6 de la base de connaissance pour:\n1. Ajouter une section spécifique sur la maintenance technique du 28 au 29 septembre 2026, en précisant les heures d'interruption et l'inaccessibilité totale de GESTOR.\n2. Décrire la procédure de secours temporaire pour la vérification des droits tiers payant pendant cette maintenance, en incluant le chemin d'accès au fichier extrait et les consignes à suivre en cas de doute.\n3. Préciser que cette procédure est strictement limitée à la période d'intervention et ne doit pas être reconduite en dehors de ce créneau.\n4. Inclure un renvoi vers l'email du 9 septembre 2026 pour référence."
+        },
+        "answers": [
+          "follow_recommendation",
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": [
+          {
+            "side": "B",
+            "document": "email-1-changement-temporaire-maintenance.docx",
+            "location": "[début du document]",
+            "text": "Dans le cadre de la migration de l'infrastructure serveur de GESTOR vers notre nouvel hébergeur, une intervention technique majeure aura lieu du dimanche 28 septembre 2026 à 20h00 au lundi 29 septembre 2026 à 06h00. Pendant ce créneau, GESTOR sera totalement inaccessible, y compris en consultation.\n\nCe qui change pendant l'intervention\n\nLe module de vérification des droits tiers payant (chapitre 5 de la base de connaissance) ne sera pas disponible. Pour toute vérification urgente pendant la fenêtre de maintenance ou au cours de la journée du 29 septembre (le temps que les données se resynchronisent), merci d'appliquer la procédure de secours suivante, à titre EXCEPTIONNEL ET TEMPORAIRE :\n\n- Consulter le fichier extrait « Droits_TP_export_13092026.xlsx » déposé sur le lecteur partagé \\alviva\\partages\\prestations\\secours-maintenance (photographie des droits arrêtée au 27/09 à 18h00 — donc non garantie à 100% en cas de mouvement le 27 ou le 28/09).\n- En cas de doute sur un dossier, ne PAS refuser un tiers payant sur la seule base de ce fichier : demander à l'adhérent d'avancer les frais à titre exceptionnel et l'informer d'un remboursement accéléré sous 48h dès le retour à la normale.",
+            "reason": "punctuation_only"
+          }
+        ],
+        "recommended_effect": {
+          "action": null,
+          "basis": "changement daté : aucun côté seul ne porte une date d'effet"
+        },
+        "absent_references": []
+      },
+      {
+        "id": "card_67eb9d4f012116cd",
+        "nature": "incomplete_or_outdated",
+        "rank": 4,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_brief_nouvelle_activite_teleconsultation_pdf_e905d5e7"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_brief_nouvelle_activite_teleconsultation_pdf_e905d5e7",
+                  "excerpt": "1. Contexte et enjeux\n\nLe recours à la téléconsultation médicale s'est fortement développé ces dernières années et constitue désormais une attente courante des adhérents, en particulier dans les zones sous-dotées en offre médicale (déserts médicaux) et pour les demandes de premier recours ne nécessitant pas d'examen physique.\n\nPlusieurs mutuelles concurrentes proposent déjà ce service en marque blanche via des plateformes spécialisées. L'absence d'une offre équivalente chez Alviva Mutuelle constitue un point de différenciation défavorable identifié à plusieurs reprises lors des enquêtes de satisfaction annuelles et par le réseau commercial.\n\n## Objectifs du projet\n\n- Proposer un accès à la téléconsultation médicale illimité et sans avance de frais pour l'ensemble des adhérents, quelle que soit leur formule.\n\n- Réduire le recours aux urgences pour des motifs de faible gravité, en cohérence avec notre rôle d'accompagnement santé.\n\n- Renforcer l'attractivité commerciale de l'offre individuelle et collective face à la concurrence.\n\n- Constituer un nouveau point de contact numérique renforçant l'usage du portail et de l'application Alviva & Moi.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "pdf",
+                  "page": 2
+                },
+                "excerpt_realigned": true
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "briefing",
+                "excerpt": "- **Téléconsultation médicale** — activité réelle en préparation (lancement visé au 01/03/2027), documentée uniquement dans un brief d’activité : **absente des fiches officielles de la base**, à ne pas considérer comme un service actif tant que la date de lancement n’est pas atteinte.",
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Service de téléconsultation médicale",
+          "reason": "Le brief d'activité annonce le lancement d'un service de téléconsultation médicale pour le 1er mars 2027, mais ce service n'est pas encore actif et n'est pas documenté dans les fiches officielles de la base de connaissance. La fiche de cadrage précise explicitement que la téléconsultation ne doit pas être considérée comme un service actif tant que la date de lancement n'est pas atteinte. Cependant, le brief contient des informations détaillées sur le fonctionnement du service, les populations éligibles et les impacts opérationnels, qui devraient être intégrées à la base de connaissance avant le lancement.",
+          "proposal": "1. Créer un nouveau chapitre dans la base de connaissance dédié à la téléconsultation médicale, en intégrant les informations du brief d'activité, notamment:\n   - Description du service et du partenaire technique.\n   - Fonctionnement pour l'adhérent et ce que le service ne couvre pas.\n   - Populations éligibles et intégration aux garanties.\n   - Impacts opérationnels par direction.\n   - Questions fréquentes anticipées.\n2. Ajouter un avertissement clair indiquant que le service sera lancé le 1er mars 2027 et qu'il ne doit pas être considéré comme actif avant cette date.\n3. Prévoir une mise à jour de ce chapitre après le lancement pour intégrer les retours d'expérience et les ajustements éventuels.\n4. Inclure un renvoi vers le brief d'activité pour référence."
+        },
+        "answers": [
+          "follow_recommendation",
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": [
+          {
+            "side": "A",
+            "document": "brief-nouvelle-activite-teleconsultation.pdf",
+            "location": "[page 5]",
+            "text": "| Échéance | Jalon |\n|---|---|\n| Octobre 2026 | Finalisation de la convention avec DoctoLink Pro et des spécifications techniques d'intégration |\n| Novembre – Décembre 2026 | Développements techniques (SSO, écran GESTOR, application mobile) |\n| Janvier 2027 | Recette technique et fonctionnelle ; préparation des contenus de formation et de la base de connaissance |\n| Février 2027 | Formation des équipes Relation Adhérents et Prestations ; communication aux adhérents existants |\n| 1er mars 2027 | Lancement commercial officiel du service |",
+            "reason": "not_found"
+          }
+        ],
+        "recommended_effect": {
+          "action": {
+            "type": "complete"
+          },
+          "basis": "à compléter, la recommandation pour consigne"
+        },
+        "absent_references": []
+      },
+      {
+        "id": "card_73658fb899bf3866",
+        "nature": "probable_error",
+        "rank": 5,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_email_3_changement_tarifaire_docx_046acbac",
+          "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Exemples de nouveaux tarifs (Zone 1, à titre indicatif — voir grille complète en pièce jointe)\n\n- 18-29 ans, formule CONFORT : 47,80 € (contre 35,80 € en 2024).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 9
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+                  "excerpt": "| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 3 — Cotisations et tarification",
+                    "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
+                    "Zone 1 (Île-de-France et grandes métropoles)"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Montant de la cotisation pour la formule CONFORT (18-29 ans, Zone 1) dans l'email de changement tarifaire",
+          "reason": "L'email du 4 septembre 2026 mentionne un montant de 35,80 € pour la formule CONFORT (18-29 ans, Zone 1) en 2024, alors que la grille tarifaire du chapitre 3 de la base de connaissance indique 45,80 € pour la même formule et la même tranche d'âge. Cette incohérence suggère une erreur dans l'email, car le montant de 35,80 € ne correspond à aucune valeur de la grille tarifaire 2024.",
+          "proposal": "1. Vérifier auprès de la Direction Commerciale la valeur correcte du tarif 2024 pour la formule CONFORT (18-29 ans, Zone 1).\n2. Corriger l'email ou la grille tarifaire en conséquence pour éliminer cette incohérence.\n3. S'assurer que la nouvelle grille tarifaire 2027, une fois validée, ne contient pas d'erreurs similaires avant sa diffusion."
+        },
+        "answers": [
+          "follow_recommendation",
+          "accept_side",
+          "different_subjects",
+          "example_only",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": [],
+        "recommended_effect": {
+          "action": null,
+          "basis": "erreur probable : la recommandation ne désigne pas un côté par sa valeur"
+        },
+        "absent_references": [
+          {
+            "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+            "excerpt": "voir grille complète en pièce jointe"
+          }
+        ]
+      },
+      {
+        "id": "card_9c0d8b31f036c095",
+        "nature": "incomplete_or_outdated",
+        "rank": 6,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+          "doc_formation_traitement_reclamations_pptx_761e39af"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+                  "excerpt": "- un accusé de réception sous 10 jours ouvrés maximum ;\n\n- une réponse motivée sous 2 mois maximum à compter de la réception (délai cible interne : 10 jours ouvrés) ;",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 6 — Réclamations et litiges",
+                    "6.1 Définition et cadre réglementaire"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                },
+                "excerpt_realigned": true
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+                  "excerpt": "Réponse apportée sous 10 jours ouvrés maximum (délai réglementaire ACPR)",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_bd715e106dca1754",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 6 — Réclamations et litiges",
+                    "6.2 Les deux niveaux de traitement interne",
+                    "Arbre de décision — Traiter une réclamation"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_formation_traitement_reclamations_pptx_761e39af",
+                  "excerpt": "10 jours\n\nouvrés : délai cible interne de réponse motivée",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "pptx",
+                  "slide": 4
+                },
+                "excerpt_realigned": true
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Délai de traitement des réclamations dans la formation",
+          "reason": "La formation sur le traitement des réclamations mentionne un délai cible interne de 10 jours ouvrés pour apporter une réponse motivée à l'adhérent, ce qui est cohérent avec la base de connaissance. Cependant, la formation ne précise pas que ce délai est un objectif interne et que le délai réglementaire imposé par l'ACPR est de 2 mois. Cette omission pourrait induire en erreur les gestionnaires, qui pourraient considérer le délai de 10 jours comme une obligation réglementaire plutôt qu'un objectif de qualité de service.",
+          "proposal": "Mettre à jour la formation pour:\n1. Clarifier la distinction entre le délai cible interne (10 jours ouvrés) et le délai réglementaire imposé par l'ACPR (2 mois).\n2. Préciser que le délai de 10 jours est un objectif de qualité de service, mais que son dépassement ponctuel n'est pas une infraction réglementaire.\n3. Inclure un renvoi vers le chapitre 6.1 de la base de connaissance pour plus de détails sur le cadre réglementaire."
+        },
+        "answers": [
+          "follow_recommendation",
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": [
+          {
+            "side": "B",
+            "document": "formation-traitement-reclamations.pptx",
+            "location": "[diapositive 7]",
+            "text": "J+10\nRéponse\nRéponse motivée apportée à l'adhérent (délai cible)",
+            "reason": "not_found"
+          }
+        ],
+        "recommended_effect": {
+          "action": {
+            "type": "complete"
+          },
+          "basis": "à compléter, la recommandation pour consigne"
+        },
+        "absent_references": []
+      },
+      {
+        "id": "card_ae3a7df8ebc504bf",
+        "nature": "incomplete_or_outdated",
+        "rank": 7,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_13_glossaire_docx_9c2a4268",
+          "doc_base_connaissance_mutuelle_notion_10_relations_professionnels_sante_docx_47f2f49a"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_13_glossaire_docx_9c2a4268",
+                  "excerpt": "| **Réseau de soins Alviva Santé** | Réseau de professionnels de santé partenaires (opticiens, dentistes) avec tarifs plafonnés |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 13 — Glossaire et acronymes métier"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_10_relations_professionnels_sante_docx_47f2f49a",
+                  "excerpt": "- Tiers payant systématique, y compris sur la part complémentaire.\n\n- Tarifs plafonnés sur les équipements optiques (grille de plafonds par catégorie de verres/montures) et sur les prothèses dentaires hors 100% Santé.\n\n- Accompagnement du devis en direct par le professionnel, sans démarche à effectuer par l'adhérent (transmission automatique à Alviva Mutuelle).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 10 — Relations avec les professionnels de santé et réseaux de soins",
+                    "10.1 Le réseau Alviva Santé",
+                    "Avantages pour l'adhérent consultant un professionnel du réseau"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                },
+                "excerpt_realigned": true
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_10_relations_professionnels_sante_docx_47f2f49a",
+                  "excerpt": "Chaque professionnel conventionné signe une convention-cadre définissant :\n\n- les tarifs plafonds applicables ;\n\n- les modalités de facturation directe (flux dédié, hors NOEMIE classique, avec un délai de règlement à 15 jours) ;\n\n- la durée d'engagement (1 an renouvelable tacitement) et les conditions de résiliation de la convention.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 10 — Relations avec les professionnels de santé et réseaux de soins",
+                    "10.2 Convention avec les professionnels"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                },
+                "excerpt_realigned": true
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Définition du réseau de soins Alviva Santé dans le glossaire",
+          "reason": "La définition du réseau de soins Alviva Santé dans le glossaire est incomplète par rapport aux informations détaillées fournies dans le chapitre 10 de la base de connaissance. Le glossaire se limite à mentionner les opticiens et dentistes avec des tarifs plafonnés, sans préciser les autres avantages pour l'adhérent (tiers payant systématique, accompagnement des devis, modalités de facturation directe, etc.). Cette définition minimaliste peut induire en erreur les gestionnaires ou les adhérents qui consulteraient uniquement le glossaire.",
+          "proposal": "Mettre à jour la définition du réseau de soins Alviva Santé dans le glossaire pour:\n1. Inclure les principaux avantages pour l'adhérent (tiers payant systématique, tarifs plafonnés sur optique et dentaire, accompagnement des devis).\n2. Préciser que les professionnels conventionnés signent une convention-cadre définissant les tarifs plafonds et les modalités de facturation directe.\n3. Ajouter un renvoi vers le chapitre 10 pour plus de détails sur le fonctionnement du réseau."
+        },
+        "answers": [
+          "follow_recommendation",
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": [],
+        "recommended_effect": {
+          "action": {
+            "type": "complete"
+          },
+          "basis": "à compléter, la recommandation pour consigne"
+        },
+        "absent_references": []
+      },
+      {
+        "id": "card_c7b53fefcfd87741",
+        "nature": "incomplete_or_outdated",
+        "rank": 8,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_02_adhesion_souscription_docx_6d6bc1de",
+          "doc_base_connaissance_mutuelle_notion_01_presentation_offre_docx_bfef828e"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_02_adhesion_souscription_docx_6d6bc1de",
+                  "excerpt": "| Poste de garantie | Délai de carence standard | Délai si continuité de couverture prouvée | [...] | Optique | 3 mois | Aucun |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 2 — Adhésion et souscription",
+                    "2.3 Délai de carence"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 2
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_01_presentation_offre_docx_bfef828e",
+                  "excerpt": "- Optique : forfait de 500 € par an.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+                    "1.2 Les gammes de contrats santé individuels",
+                    "Formule SÉRÉNITÉ+"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 2
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Délai de carence pour les actes d'optique dans la formule SÉRÉNITÉ+",
+          "reason": "Le chapitre 2.3 de la base de connaissance indique un délai de carence standard de 3 mois pour les actes d'optique, applicable à toutes les formules individuelles. Cependant, la fiche de cadrage et le brief d'activité sur la téléconsultation soulignent que certains services ou garanties peuvent être inclus sans délai de carence, quelle que soit la formule. Bien que cela ne concerne pas directement l'optique, cette mention pourrait suggérer une exception non documentée pour la formule SÉRÉNITÉ+. Il est important de clarifier si le délai de carence s'applique uniformément à toutes les formules, y compris SÉRÉNITÉ+, pour éviter toute confusion.",
+          "proposal": "1. Vérifier auprès de la Direction des Adhésions et de la Direction Commerciale si le délai de carence pour les actes d'optique s'applique à la formule SÉRÉNITÉ+.\n2. Si le délai de carence s'applique uniformément, ajouter une précision dans le chapitre 2.3 pour indiquer que cette règle concerne toutes les formules individuelles, y compris SÉRÉNITÉ+.\n3. Si une exception existe pour la formule SÉRÉNITÉ+, la documenter explicitement dans le chapitre 2.3 et dans la présentation de la formule (chapitre 1.2)."
+        },
+        "answers": [
+          "follow_recommendation",
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": [],
+        "recommended_effect": {
+          "action": {
+            "type": "complete"
+          },
+          "basis": "à compléter, la recommandation pour consigne"
+        },
+        "absent_references": []
+      },
+      {
+        "id": "card_54409a964f7b7eeb",
+        "nature": "incomplete_or_outdated",
+        "rank": 9,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_base_connaissance_mutuelle_notion_07_resiliation_docx_d58c0826"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_07_resiliation_docx_d58c0826",
+                  "excerpt": "Arbre de décision — Éligibilité à la résiliation\nUn adhérent demande la résiliation de son contrat individuel\nLe contrat a-t-il plus de 12 mois ?\nOUI → Résiliation infra-annuelle possible à tout moment (loi du 14/07/2019)",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_44de745ac5f30f99",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 7 — Résiliation de contrat",
+                    "7.1 Cadre légal",
+                    "Arbre de décision — Éligibilité à la résiliation"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                },
+                "excerpt_realigned": true
+              },
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_07_resiliation_docx_d58c0826",
+                  "excerpt": "Depuis le renforcement réglementaire de 2020 (généralisation de la résiliation en 3 clics pour les contrats souscrits en ligne, et simplification pour les autres canaux), l'adhérent peut résilier :\n\n- directement depuis son espace assuré (rubrique « Résilier mon contrat ») ;\n\n- par courrier ou email adressé au service Adhésions ;\n\n- par mandat donné à sa nouvelle mutuelle, qui se charge des démarches de résiliation pour son compte.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 7 — Résiliation de contrat",
+                    "7.3 Modalités pratiques de résiliation infra-annuelle (contrat de plus d'un an)"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                },
+                "excerpt_realigned": true
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "briefing",
+                "excerpt": "| Travailleurs non salariés (TNS) | Offre dédiée éligible à la loi Madelin (déduction fiscale des cotisations). | **Contrat non résiliable en cours d’année** (contrainte du cadre fiscal Madelin) — contrairement aux particuliers, qui bénéficient eux de la résiliation infra-annuelle dès 1 an.",
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "model",
+          "subject": "Modalités de résiliation infra-annuelle pour les contrats TNS",
+          "reason": "Le chapitre 7 de la base de connaissance décrit la résiliation infra-annuelle comme applicable à tous les contrats individuels de plus d'un an, sans faire de distinction entre les particuliers et les TNS. Cependant, la fiche de cadrage précise explicitement que les contrats TNS ne sont pas résiliables en cours d'année en raison des contraintes du cadre fiscal Madelin. Cette omission dans la base de connaissance pourrait induire en erreur les gestionnaires, qui pourraient appliquer la procédure de résiliation infra-annuelle aux contrats TNS par erreur.",
+          "proposal": "Mettre à jour le chapitre 7 de la base de connaissance pour:\n1. Ajouter une section spécifique sur les modalités de résiliation des contrats TNS, en précisant qu'ils ne sont pas résiliables en cours d'année sauf motif légal de résiliation anticipée.\n2. Modifier l'arbre de décision sur l'éligibilité à la résiliation pour inclure une étape de vérification du type de contrat (individuel standard vs TNS).\n3. Ajouter un renvoi vers la fiche de cadrage et le chapitre 1.4 (Offre TNS) pour plus de détails sur les contraintes spécifiques aux contrats TNS."
+        },
+        "answers": [
+          "follow_recommendation",
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverified_quotes": [],
+        "recommended_effect": {
+          "action": {
+            "type": "complete"
+          },
+          "basis": "à compléter, la recommandation pour consigne"
+        },
+        "absent_references": []
+      }
+    ],
+    "temporary_notes": [],
+    "rejected_points": [],
+    "unverified_quotes": {
+      "punctuation_only": 1,
+      "not_found": 2
+    },
+    "unavailable_detections": [
+      "temporary_notes"
+    ],
+    "run": {
+      "model": "mistral-large-2512",
+      "prompt_id": "lecture_globale",
+      "prompt_version": 1,
+      "estimated_tokens": 43046,
+      "prompt_tokens": 34994,
+      "completion_tokens": 7494,
+      "cost_usd": 0.028738,
+      "duration_seconds": 0.005,
+      "pipeline_commit": null
+    }
+  },
+  "imageIds": [
+    "img_44de745ac5f30f99",
+    "img_9d517478bad6ba9c",
+    "img_bd715e106dca1754"
+  ],
+  "cards": null,
+  "conflictsAwaitingReading": null,
+  "extractionNotes": null,
+  "reading": {
+    "readingDate": "2026-10-01",
+    "briefingGiven": true,
+    "cards": [
+      {
+        "id": "card_3b9517fd6e7b9b82",
+        "nature": "dated_change",
+        "rank": 1,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+          "doc_email_3_changement_tarifaire_docx_046acbac"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+                  "excerpt": "| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |\n| 30-39 ans | 38,40 € | 54,90 € | 73,50 € |\n| 40-49 ans | 44,70 € | 63,90 € | 85,60 € |\n| 50-59 ans | 55,20 € | 78,90 € | 105,80 € |\n| 60-69 ans | 68,90 € | 98,40 € | 131,90 € |\n| 70 ans et + | 82,30 € | 117,60 € | 157,60 € |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 3 — Cotisations et tarification",
+                    "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
+                    "Zone 1 (Île-de-France et grandes métropoles)"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 0
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+                  "excerpt": "⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024. Les montants ci-dessous servent de référence pour comprendre la structure de la grille tarifaire (zones, tranches d'âge, coefficients), mais ne doivent pas être communiqués tels quels à un adhérent ou un prospect. Une révision tarifaire a eu lieu depuis — se référer à la dernière note tarifaire transmise par la Direction Commerciale avant toute communication de montant.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 3 — Cotisations et tarification"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Le Conseil d'Administration du 28 août 2026 a validé la nouvelle grille tarifaire applicable à l'ensemble des contrats individuels (formules ESSENTIELLE, CONFORT, SÉRÉNITÉ+) à compter du 1er janvier 2027. [...] La grille actuellement documentée au chapitre 3 de la base de connaissance (« Cotisations et tarification ») date de juin 2024 et ne doit plus être communiquée à un adhérent ou prospect, y compris à titre indicatif, à compter de ce jour.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 4
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Exemples de nouveaux tarifs (Zone 1, à titre indicatif — voir grille complète en pièce jointe)\n\n- 18-29 ans, formule CONFORT : 47,80 € (contre 35,80 € en 2024).\n\n- 40-49 ans, formule CONFORT : 66,60 € (contre 63,90 € en 2024).\n\n- 60-69 ans, formule SÉRÉNITÉ+ : 137,60 € (contre 131,90 € en 2024).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 9
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Grille tarifaire des cotisations individuelles",
+          "reason": "La grille tarifaire du chapitre 3 de la base de connaissance est obsolète depuis juin 2024 et ne doit plus être utilisée pour communiquer des montants aux adhérents ou prospects. L'email du 4 septembre 2026 annonce une nouvelle grille tarifaire applicable au 1er janvier 2027, avec des montants significativement différents. Les deux documents coexistent temporairement, mais la base de connaissance n'a pas été mise à jour pour refléter ce changement.",
+          "proposal": "Mettre à jour immédiatement le chapitre 3 de la base de connaissance pour:\n1. Remplacer la grille tarifaire obsolète par la nouvelle grille tarifaire 2027, en précisant sa date d'entrée en vigueur (1er janvier 2027).\n2. Ajouter un avertissement clair indiquant que les montants de la grille 2024 ne doivent plus être utilisés pour toute communication à partir du 4 septembre 2026.\n3. Inclure un renvoi vers l'email du 4 septembre 2026 pour référence.\n4. Prévoir une communication spécifique pour les adhérents actuels concernant la revalorisation tarifaire, comme annoncé dans l'email."
+        },
+        "answers": [
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": [],
+        "recommendation": {
+          "text": "Mettre à jour immédiatement le chapitre 3 de la base de connaissance pour:\n1. Remplacer la grille tarifaire obsolète par la nouvelle grille tarifaire 2027, en précisant sa date d'entrée en vigueur (1er janvier 2027).\n2. Ajouter un avertissement clair indiquant que les montants de la grille 2024 ne doivent plus être utilisés pour toute communication à partir du 4 septembre 2026.\n3. Inclure un renvoi vers l'email du 4 septembre 2026 pour référence.\n4. Prévoir une communication spécifique pour les adhérents actuels concernant la revalorisation tarifaire, comme annoncé dans l'email.",
+          "effect": null,
+          "basis": "la source renvoie à un contenu absent des documents importés (« voir grille complète en pièce jointe ») : l'existant reste, avec son avertissement"
+        },
+        "absentReferences": [
+          {
+            "documentId": "doc_email_3_changement_tarifaire_docx_046acbac",
+            "excerpt": "voir grille complète en pièce jointe"
+          }
+        ]
+      },
+      {
+        "id": "card_2da82553b8fe500a",
+        "nature": "dated_change",
+        "rank": 2,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+          "doc_email_2_changement_process_definitif_docx_00a20f9b"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+                  "excerpt": "Arbre de décision — Refus de tiers payant\nUn pharmacien ou professionnel de santé signale un refus de carte de tiers payant\nLe refus concerne-t-il un acte pharmacie ou un acte médical/paramédical ?\nPHARMACIE\nMÉDECIN / PARAMÉDICAL\nVérifier dans l'outil GESTOR (onglet 'Droits Tiers Payant') si les droits sont ouverts à la date de l'acte\nLe professionnel est-il conventionné avec le réseau de soins Alviva Santé ?\nDroits fermés → vérifier la cotisation Droits ouverts mais refus technique → vérifier le flux carte Vitale / NOEMIE et relancer sous 24h\nOUI → contacter la plateforme réseau au 0 800 XX XX XX (script dédié)\nNON → informer l'adhérent qu'il devra avancer les frais et transmettre sa feuille de soins pour remboursement classique",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_9d517478bad6ba9c",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 5 — Tiers payant",
+                    "5.3 Traiter un refus de tiers payant"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_05_tiers_payant_docx_05277597",
+                  "excerpt": "Dans tous les cas : tracer l'incident dans GESTOR (motif « Incident Tiers Payant ») et informer l'adhérent du délai de résolution (48h ouvrées)",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_9d517478bad6ba9c",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 5 — Tiers payant",
+                    "5.3 Traiter un refus de tiers payant"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_email_2_changement_process_definitif_docx_00a20f9b",
+                  "excerpt": "À compter du 1er octobre 2026, et à titre de période pilote sur deux mois, la procédure décrite au chapitre 5.3 de la base de connaissance (« Traiter un refus de tiers payant ») est complétée de la façon suivante :\n\n- Un nouveau statut « Incident TP — Priorité Flux » doit être sélectionné dans GESTOR (module Tiers Payant) dès qu'un incident technique de flux est identifié, à la place du statut générique « Incident Tiers Payant » utilisé jusqu'ici.\n\n- Ce nouveau statut déclenche automatiquement une notification à la cellule Flux, sans action de transfert manuelle du gestionnaire (suppression de l'étape d'appel téléphonique ou d'email à la cellule Flux).\n\n- Un accusé de traitement est envoyé automatiquement à l'adhérent par SMS dans les 15 minutes, l'informant du délai de résolution.\n\n- Le délai cible reste 48h ouvrées, mais un tableau de suivi en temps réel sera accessible à tous les gestionnaires (onglet « Suivi Flux » de GESTOR, en cours de déploiement).\n\nCalendrier\n\n- Du 1er octobre au 30 novembre 2026 : période pilote sur le périmètre des pharmacies uniquement. Les incidents concernant les professionnels du réseau Alviva Santé continuent de suivre la procédure actuelle du chapitre 5.3 pendant cette période.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 6
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Procédure de traitement des incidents de tiers payant",
+          "reason": "L'email du 7 septembre 2026 annonce une modification de la procédure de traitement des incidents de tiers payant pour les pharmacies, effective à partir du 1er octobre 2026. Cette nouvelle procédure remplace partiellement celle décrite dans la base de connaissance (chapitre 5.3), notamment en automatisant la notification à la cellule Flux et en introduisant un nouveau statut dans GESTOR. Les deux procédures coexistent temporairement, mais la base de connaissance n'a pas été mise à jour pour refléter ce changement.",
+          "proposal": "Mettre à jour le chapitre 5.3 de la base de connaissance pour:\n1. Ajouter une section spécifique sur la nouvelle procédure applicable aux pharmacies à partir du 1er octobre 2026, en précisant qu'il s'agit d'une période pilote jusqu'au 30 novembre 2026.\n2. Décrire le nouveau statut « Incident TP — Priorité Flux » et son fonctionnement.\n3. Préciser que la procédure actuelle reste valable pour les professionnels du réseau Alviva Santé pendant la période pilote.\n4. Inclure un renvoi vers l'email du 7 septembre 2026 pour référence.\n5. Prévoir une mise à jour définitive de la base de connaissance au 1er décembre 2026, date de généralisation prévue de la nouvelle procédure."
+        },
+        "answers": [
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": [],
+        "recommendation": {
+          "text": "Mettre à jour le chapitre 5.3 de la base de connaissance pour:\n1. Ajouter une section spécifique sur la nouvelle procédure applicable aux pharmacies à partir du 1er octobre 2026, en précisant qu'il s'agit d'une période pilote jusqu'au 30 novembre 2026.\n2. Décrire le nouveau statut « Incident TP — Priorité Flux » et son fonctionnement.\n3. Préciser que la procédure actuelle reste valable pour les professionnels du réseau Alviva Santé pendant la période pilote.\n4. Inclure un renvoi vers l'email du 7 septembre 2026 pour référence.\n5. Prévoir une mise à jour définitive de la base de connaissance au 1er décembre 2026, date de généralisation prévue de la nouvelle procédure.",
+          "effect": {
+            "type": "accept_side",
+            "side": "B"
+          },
+          "basis": "changement confirmé, côté B (le document daté) retenu ; date d'effet dans la citation"
+        },
+        "absentReferences": []
+      },
+      {
+        "id": "card_3d2be6bfd03ec6c3",
+        "nature": "dated_change",
+        "rank": 3,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_11_outils_internes_si_docx_a9ba8a5f",
+          "doc_email_1_changement_temporaire_maintenance_docx_abe6efe6"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_11_outils_internes_si_docx_a9ba8a5f",
+                  "excerpt": "Des fenêtres de maintenance technique sont régulièrement programmées sur GESTOR (mises à jour, montées de version). Pendant ces interruptions, les gestionnaires ne peuvent généralement plus accéder à l'outil ; il est important de suivre les communications spécifiques de la Direction des Systèmes d'Information annonçant ces créneaux, qui priment sur le planning habituel indiqué dans cette fiche.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 11 — Outils internes de gestion (SI)",
+                    "11.6 Interruptions de service planifiées"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Disponibilité de GESTOR pendant la maintenance technique",
+          "reason": "L'email du 9 septembre 2026 annonce une interruption totale de GESTOR pendant une maintenance technique spécifique du 28 au 29 septembre 2026, avec une procédure de secours temporaire pour la vérification des droits tiers payant. La base de connaissance (chapitre 11.6) mentionne des interruptions de service planifiées, mais ne fournit pas de détails sur cette maintenance spécifique ni sur la procédure de secours à appliquer pendant cette période.",
+          "proposal": "Mettre à jour le chapitre 11.6 de la base de connaissance pour:\n1. Ajouter une section spécifique sur la maintenance technique du 28 au 29 septembre 2026, en précisant les heures d'interruption et l'inaccessibilité totale de GESTOR.\n2. Décrire la procédure de secours temporaire pour la vérification des droits tiers payant pendant cette maintenance, en incluant le chemin d'accès au fichier extrait et les consignes à suivre en cas de doute.\n3. Préciser que cette procédure est strictement limitée à la période d'intervention et ne doit pas être reconduite en dehors de ce créneau.\n4. Inclure un renvoi vers l'email du 9 septembre 2026 pour référence."
+        },
+        "answers": [
+          "accept_side",
+          "adjust",
+          "same_meaning",
+          "different_subjects",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": [
+          {
+            "side": "B",
+            "document": "email-1-changement-temporaire-maintenance.docx",
+            "location": "[début du document]",
+            "text": "Dans le cadre de la migration de l'infrastructure serveur de GESTOR vers notre nouvel hébergeur, une intervention technique majeure aura lieu du dimanche 28 septembre 2026 à 20h00 au lundi 29 septembre 2026 à 06h00. Pendant ce créneau, GESTOR sera totalement inaccessible, y compris en consultation.\n\nCe qui change pendant l'intervention\n\nLe module de vérification des droits tiers payant (chapitre 5 de la base de connaissance) ne sera pas disponible. Pour toute vérification urgente pendant la fenêtre de maintenance ou au cours de la journée du 29 septembre (le temps que les données se resynchronisent), merci d'appliquer la procédure de secours suivante, à titre EXCEPTIONNEL ET TEMPORAIRE :\n\n- Consulter le fichier extrait « Droits_TP_export_13092026.xlsx » déposé sur le lecteur partagé \\alviva\\partages\\prestations\\secours-maintenance (photographie des droits arrêtée au 27/09 à 18h00 — donc non garantie à 100% en cas de mouvement le 27 ou le 28/09).\n- En cas de doute sur un dossier, ne PAS refuser un tiers payant sur la seule base de ce fichier : demander à l'adhérent d'avancer les frais à titre exceptionnel et l'informer d'un remboursement accéléré sous 48h dès le retour à la normale.",
+            "reason": "punctuation_only"
+          }
+        ],
+        "recommendation": {
+          "text": "Mettre à jour le chapitre 11.6 de la base de connaissance pour:\n1. Ajouter une section spécifique sur la maintenance technique du 28 au 29 septembre 2026, en précisant les heures d'interruption et l'inaccessibilité totale de GESTOR.\n2. Décrire la procédure de secours temporaire pour la vérification des droits tiers payant pendant cette maintenance, en incluant le chemin d'accès au fichier extrait et les consignes à suivre en cas de doute.\n3. Préciser que cette procédure est strictement limitée à la période d'intervention et ne doit pas être reconduite en dehors de ce créneau.\n4. Inclure un renvoi vers l'email du 9 septembre 2026 pour référence.",
+          "effect": null,
+          "basis": "changement daté : aucun côté seul ne porte une date d'effet"
+        },
+        "absentReferences": []
+      },
+      {
+        "id": "card_67eb9d4f012116cd",
+        "nature": "incomplete_or_outdated",
+        "rank": 4,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_brief_nouvelle_activite_teleconsultation_pdf_e905d5e7"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_brief_nouvelle_activite_teleconsultation_pdf_e905d5e7",
+                  "excerpt": "1. Contexte et enjeux\n\nLe recours à la téléconsultation médicale s'est fortement développé ces dernières années et constitue désormais une attente courante des adhérents, en particulier dans les zones sous-dotées en offre médicale (déserts médicaux) et pour les demandes de premier recours ne nécessitant pas d'examen physique.\n\nPlusieurs mutuelles concurrentes proposent déjà ce service en marque blanche via des plateformes spécialisées. L'absence d'une offre équivalente chez Alviva Mutuelle constitue un point de différenciation défavorable identifié à plusieurs reprises lors des enquêtes de satisfaction annuelles et par le réseau commercial.\n\n## Objectifs du projet\n\n- Proposer un accès à la téléconsultation médicale illimité et sans avance de frais pour l'ensemble des adhérents, quelle que soit leur formule.\n\n- Réduire le recours aux urgences pour des motifs de faible gravité, en cohérence avec notre rôle d'accompagnement santé.\n\n- Renforcer l'attractivité commerciale de l'offre individuelle et collective face à la concurrence.\n\n- Constituer un nouveau point de contact numérique renforçant l'usage du portail et de l'application Alviva & Moi.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "pdf",
+                  "page": 2
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "briefing",
+                "excerptRealigned": false,
+                "excerpt": "- **Téléconsultation médicale** — activité réelle en préparation (lancement visé au 01/03/2027), documentée uniquement dans un brief d’activité : **absente des fiches officielles de la base**, à ne pas considérer comme un service actif tant que la date de lancement n’est pas atteinte."
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Service de téléconsultation médicale",
+          "reason": "Le brief d'activité annonce le lancement d'un service de téléconsultation médicale pour le 1er mars 2027, mais ce service n'est pas encore actif et n'est pas documenté dans les fiches officielles de la base de connaissance. La fiche de cadrage précise explicitement que la téléconsultation ne doit pas être considérée comme un service actif tant que la date de lancement n'est pas atteinte. Cependant, le brief contient des informations détaillées sur le fonctionnement du service, les populations éligibles et les impacts opérationnels, qui devraient être intégrées à la base de connaissance avant le lancement.",
+          "proposal": "1. Créer un nouveau chapitre dans la base de connaissance dédié à la téléconsultation médicale, en intégrant les informations du brief d'activité, notamment:\n   - Description du service et du partenaire technique.\n   - Fonctionnement pour l'adhérent et ce que le service ne couvre pas.\n   - Populations éligibles et intégration aux garanties.\n   - Impacts opérationnels par direction.\n   - Questions fréquentes anticipées.\n2. Ajouter un avertissement clair indiquant que le service sera lancé le 1er mars 2027 et qu'il ne doit pas être considéré comme actif avant cette date.\n3. Prévoir une mise à jour de ce chapitre après le lancement pour intégrer les retours d'expérience et les ajustements éventuels.\n4. Inclure un renvoi vers le brief d'activité pour référence."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": [
+          {
+            "side": "A",
+            "document": "brief-nouvelle-activite-teleconsultation.pdf",
+            "location": "[page 5]",
+            "text": "| Échéance | Jalon |\n|---|---|\n| Octobre 2026 | Finalisation de la convention avec DoctoLink Pro et des spécifications techniques d'intégration |\n| Novembre – Décembre 2026 | Développements techniques (SSO, écran GESTOR, application mobile) |\n| Janvier 2027 | Recette technique et fonctionnelle ; préparation des contenus de formation et de la base de connaissance |\n| Février 2027 | Formation des équipes Relation Adhérents et Prestations ; communication aux adhérents existants |\n| 1er mars 2027 | Lancement commercial officiel du service |",
+            "reason": "not_found"
+          }
+        ],
+        "recommendation": {
+          "text": "1. Créer un nouveau chapitre dans la base de connaissance dédié à la téléconsultation médicale, en intégrant les informations du brief d'activité, notamment:\n   - Description du service et du partenaire technique.\n   - Fonctionnement pour l'adhérent et ce que le service ne couvre pas.\n   - Populations éligibles et intégration aux garanties.\n   - Impacts opérationnels par direction.\n   - Questions fréquentes anticipées.\n2. Ajouter un avertissement clair indiquant que le service sera lancé le 1er mars 2027 et qu'il ne doit pas être considéré comme actif avant cette date.\n3. Prévoir une mise à jour de ce chapitre après le lancement pour intégrer les retours d'expérience et les ajustements éventuels.\n4. Inclure un renvoi vers le brief d'activité pour référence.",
+          "effect": {
+            "type": "complete"
+          },
+          "basis": "à compléter, la recommandation pour consigne"
+        },
+        "absentReferences": []
+      },
+      {
+        "id": "card_73658fb899bf3866",
+        "nature": "probable_error",
+        "rank": 5,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_email_3_changement_tarifaire_docx_046acbac",
+          "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_email_3_changement_tarifaire_docx_046acbac",
+                  "excerpt": "Exemples de nouveaux tarifs (Zone 1, à titre indicatif — voir grille complète en pièce jointe)\n\n- 18-29 ans, formule CONFORT : 47,80 € (contre 35,80 € en 2024).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [],
+                  "block_kind": "paragraph",
+                  "block_index": 9
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_03_cotisations_tarification_docx_ad53d82c",
+                  "excerpt": "| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 3 — Cotisations et tarification",
+                    "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
+                    "Zone 1 (Île-de-France et grandes métropoles)"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 0
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Montant de la cotisation pour la formule CONFORT (18-29 ans, Zone 1) dans l'email de changement tarifaire",
+          "reason": "L'email du 4 septembre 2026 mentionne un montant de 35,80 € pour la formule CONFORT (18-29 ans, Zone 1) en 2024, alors que la grille tarifaire du chapitre 3 de la base de connaissance indique 45,80 € pour la même formule et la même tranche d'âge. Cette incohérence suggère une erreur dans l'email, car le montant de 35,80 € ne correspond à aucune valeur de la grille tarifaire 2024.",
+          "proposal": "1. Vérifier auprès de la Direction Commerciale la valeur correcte du tarif 2024 pour la formule CONFORT (18-29 ans, Zone 1).\n2. Corriger l'email ou la grille tarifaire en conséquence pour éliminer cette incohérence.\n3. S'assurer que la nouvelle grille tarifaire 2027, une fois validée, ne contient pas d'erreurs similaires avant sa diffusion."
+        },
+        "answers": [
+          "accept_side",
+          "different_subjects",
+          "example_only",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": [],
+        "recommendation": {
+          "text": "1. Vérifier auprès de la Direction Commerciale la valeur correcte du tarif 2024 pour la formule CONFORT (18-29 ans, Zone 1).\n2. Corriger l'email ou la grille tarifaire en conséquence pour éliminer cette incohérence.\n3. S'assurer que la nouvelle grille tarifaire 2027, une fois validée, ne contient pas d'erreurs similaires avant sa diffusion.",
+          "effect": null,
+          "basis": "erreur probable : la recommandation ne désigne pas un côté par sa valeur"
+        },
+        "absentReferences": [
+          {
+            "documentId": "doc_email_3_changement_tarifaire_docx_046acbac",
+            "excerpt": "voir grille complète en pièce jointe"
+          }
+        ]
+      },
+      {
+        "id": "card_9c0d8b31f036c095",
+        "nature": "incomplete_or_outdated",
+        "rank": 6,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+          "doc_formation_traitement_reclamations_pptx_761e39af"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+                  "excerpt": "- un accusé de réception sous 10 jours ouvrés maximum ;\n\n- une réponse motivée sous 2 mois maximum à compter de la réception (délai cible interne : 10 jours ouvrés) ;",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 6 — Réclamations et litiges",
+                    "6.1 Définition et cadre réglementaire"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 1
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_06_reclamations_litiges_docx_5ee36c3a",
+                  "excerpt": "Réponse apportée sous 10 jours ouvrés maximum (délai réglementaire ACPR)",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_bd715e106dca1754",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 6 — Réclamations et litiges",
+                    "6.2 Les deux niveaux de traitement interne",
+                    "Arbre de décision — Traiter une réclamation"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_formation_traitement_reclamations_pptx_761e39af",
+                  "excerpt": "10 jours\n\nouvrés : délai cible interne de réponse motivée",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "pptx",
+                  "slide": 4
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Délai de traitement des réclamations dans la formation",
+          "reason": "La formation sur le traitement des réclamations mentionne un délai cible interne de 10 jours ouvrés pour apporter une réponse motivée à l'adhérent, ce qui est cohérent avec la base de connaissance. Cependant, la formation ne précise pas que ce délai est un objectif interne et que le délai réglementaire imposé par l'ACPR est de 2 mois. Cette omission pourrait induire en erreur les gestionnaires, qui pourraient considérer le délai de 10 jours comme une obligation réglementaire plutôt qu'un objectif de qualité de service.",
+          "proposal": "Mettre à jour la formation pour:\n1. Clarifier la distinction entre le délai cible interne (10 jours ouvrés) et le délai réglementaire imposé par l'ACPR (2 mois).\n2. Préciser que le délai de 10 jours est un objectif de qualité de service, mais que son dépassement ponctuel n'est pas une infraction réglementaire.\n3. Inclure un renvoi vers le chapitre 6.1 de la base de connaissance pour plus de détails sur le cadre réglementaire."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": [
+          {
+            "side": "B",
+            "document": "formation-traitement-reclamations.pptx",
+            "location": "[diapositive 7]",
+            "text": "J+10\nRéponse\nRéponse motivée apportée à l'adhérent (délai cible)",
+            "reason": "not_found"
+          }
+        ],
+        "recommendation": {
+          "text": "Mettre à jour la formation pour:\n1. Clarifier la distinction entre le délai cible interne (10 jours ouvrés) et le délai réglementaire imposé par l'ACPR (2 mois).\n2. Préciser que le délai de 10 jours est un objectif de qualité de service, mais que son dépassement ponctuel n'est pas une infraction réglementaire.\n3. Inclure un renvoi vers le chapitre 6.1 de la base de connaissance pour plus de détails sur le cadre réglementaire.",
+          "effect": {
+            "type": "complete"
+          },
+          "basis": "à compléter, la recommandation pour consigne"
+        },
+        "absentReferences": []
+      },
+      {
+        "id": "card_ae3a7df8ebc504bf",
+        "nature": "incomplete_or_outdated",
+        "rank": 7,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_13_glossaire_docx_9c2a4268",
+          "doc_base_connaissance_mutuelle_notion_10_relations_professionnels_sante_docx_47f2f49a"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_13_glossaire_docx_9c2a4268",
+                  "excerpt": "| **Réseau de soins Alviva Santé** | Réseau de professionnels de santé partenaires (opticiens, dentistes) avec tarifs plafonnés |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 13 — Glossaire et acronymes métier"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 0
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_10_relations_professionnels_sante_docx_47f2f49a",
+                  "excerpt": "- Tiers payant systématique, y compris sur la part complémentaire.\n\n- Tarifs plafonnés sur les équipements optiques (grille de plafonds par catégorie de verres/montures) et sur les prothèses dentaires hors 100% Santé.\n\n- Accompagnement du devis en direct par le professionnel, sans démarche à effectuer par l'adhérent (transmission automatique à Alviva Mutuelle).",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 10 — Relations avec les professionnels de santé et réseaux de soins",
+                    "10.1 Le réseau Alviva Santé",
+                    "Avantages pour l'adhérent consultant un professionnel du réseau"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_10_relations_professionnels_sante_docx_47f2f49a",
+                  "excerpt": "Chaque professionnel conventionné signe une convention-cadre définissant :\n\n- les tarifs plafonds applicables ;\n\n- les modalités de facturation directe (flux dédié, hors NOEMIE classique, avec un délai de règlement à 15 jours) ;\n\n- la durée d'engagement (1 an renouvelable tacitement) et les conditions de résiliation de la convention.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 10 — Relations avec les professionnels de santé et réseaux de soins",
+                    "10.2 Convention avec les professionnels"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Définition du réseau de soins Alviva Santé dans le glossaire",
+          "reason": "La définition du réseau de soins Alviva Santé dans le glossaire est incomplète par rapport aux informations détaillées fournies dans le chapitre 10 de la base de connaissance. Le glossaire se limite à mentionner les opticiens et dentistes avec des tarifs plafonnés, sans préciser les autres avantages pour l'adhérent (tiers payant systématique, accompagnement des devis, modalités de facturation directe, etc.). Cette définition minimaliste peut induire en erreur les gestionnaires ou les adhérents qui consulteraient uniquement le glossaire.",
+          "proposal": "Mettre à jour la définition du réseau de soins Alviva Santé dans le glossaire pour:\n1. Inclure les principaux avantages pour l'adhérent (tiers payant systématique, tarifs plafonnés sur optique et dentaire, accompagnement des devis).\n2. Préciser que les professionnels conventionnés signent une convention-cadre définissant les tarifs plafonds et les modalités de facturation directe.\n3. Ajouter un renvoi vers le chapitre 10 pour plus de détails sur le fonctionnement du réseau."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": [],
+        "recommendation": {
+          "text": "Mettre à jour la définition du réseau de soins Alviva Santé dans le glossaire pour:\n1. Inclure les principaux avantages pour l'adhérent (tiers payant systématique, tarifs plafonnés sur optique et dentaire, accompagnement des devis).\n2. Préciser que les professionnels conventionnés signent une convention-cadre définissant les tarifs plafonds et les modalités de facturation directe.\n3. Ajouter un renvoi vers le chapitre 10 pour plus de détails sur le fonctionnement du réseau.",
+          "effect": {
+            "type": "complete"
+          },
+          "basis": "à compléter, la recommandation pour consigne"
+        },
+        "absentReferences": []
+      },
+      {
+        "id": "card_c7b53fefcfd87741",
+        "nature": "incomplete_or_outdated",
+        "rank": 8,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_02_adhesion_souscription_docx_6d6bc1de",
+          "doc_base_connaissance_mutuelle_notion_01_presentation_offre_docx_bfef828e"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_02_adhesion_souscription_docx_6d6bc1de",
+                  "excerpt": "| Poste de garantie | Délai de carence standard | Délai si continuité de couverture prouvée | [...] | Optique | 3 mois | Aucun |",
+                  "zone": "table",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 2 — Adhésion et souscription",
+                    "2.3 Délai de carence"
+                  ],
+                  "block_kind": "table",
+                  "block_index": 2
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_01_presentation_offre_docx_bfef828e",
+                  "excerpt": "- Optique : forfait de 500 € par an.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 1 — Présentation d'Alviva Mutuelle et de l'offre",
+                    "1.2 Les gammes de contrats santé individuels",
+                    "Formule SÉRÉNITÉ+"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 2
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Délai de carence pour les actes d'optique dans la formule SÉRÉNITÉ+",
+          "reason": "Le chapitre 2.3 de la base de connaissance indique un délai de carence standard de 3 mois pour les actes d'optique, applicable à toutes les formules individuelles. Cependant, la fiche de cadrage et le brief d'activité sur la téléconsultation soulignent que certains services ou garanties peuvent être inclus sans délai de carence, quelle que soit la formule. Bien que cela ne concerne pas directement l'optique, cette mention pourrait suggérer une exception non documentée pour la formule SÉRÉNITÉ+. Il est important de clarifier si le délai de carence s'applique uniformément à toutes les formules, y compris SÉRÉNITÉ+, pour éviter toute confusion.",
+          "proposal": "1. Vérifier auprès de la Direction des Adhésions et de la Direction Commerciale si le délai de carence pour les actes d'optique s'applique à la formule SÉRÉNITÉ+.\n2. Si le délai de carence s'applique uniformément, ajouter une précision dans le chapitre 2.3 pour indiquer que cette règle concerne toutes les formules individuelles, y compris SÉRÉNITÉ+.\n3. Si une exception existe pour la formule SÉRÉNITÉ+, la documenter explicitement dans le chapitre 2.3 et dans la présentation de la formule (chapitre 1.2)."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": [],
+        "recommendation": {
+          "text": "1. Vérifier auprès de la Direction des Adhésions et de la Direction Commerciale si le délai de carence pour les actes d'optique s'applique à la formule SÉRÉNITÉ+.\n2. Si le délai de carence s'applique uniformément, ajouter une précision dans le chapitre 2.3 pour indiquer que cette règle concerne toutes les formules individuelles, y compris SÉRÉNITÉ+.\n3. Si une exception existe pour la formule SÉRÉNITÉ+, la documenter explicitement dans le chapitre 2.3 et dans la présentation de la formule (chapitre 1.2).",
+          "effect": {
+            "type": "complete"
+          },
+          "basis": "à compléter, la recommandation pour consigne"
+        },
+        "absentReferences": []
+      },
+      {
+        "id": "card_54409a964f7b7eeb",
+        "nature": "incomplete_or_outdated",
+        "rank": 9,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_base_connaissance_mutuelle_notion_07_resiliation_docx_d58c0826"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_07_resiliation_docx_d58c0826",
+                  "excerpt": "Arbre de décision — Éligibilité à la résiliation\nUn adhérent demande la résiliation de son contrat individuel\nLe contrat a-t-il plus de 12 mois ?\nOUI → Résiliation infra-annuelle possible à tout moment (loi du 14/07/2019)",
+                  "zone": "image",
+                  "table_cell": null,
+                  "excerpt_origin": "vision_unverified",
+                  "image_id": "img_44de745ac5f30f99",
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 7 — Résiliation de contrat",
+                    "7.1 Cadre légal",
+                    "Arbre de décision — Éligibilité à la résiliation"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                }
+              },
+              {
+                "kind": "document",
+                "excerptRealigned": true,
+                "source": {
+                  "document_id": "doc_base_connaissance_mutuelle_notion_07_resiliation_docx_d58c0826",
+                  "excerpt": "Depuis le renforcement réglementaire de 2020 (généralisation de la résiliation en 3 clics pour les contrats souscrits en ligne, et simplification pour les autres canaux), l'adhérent peut résilier :\n\n- directement depuis son espace assuré (rubrique « Résilier mon contrat ») ;\n\n- par courrier ou email adressé au service Adhésions ;\n\n- par mandat donné à sa nouvelle mutuelle, qui se charge des démarches de résiliation pour son compte.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "docx",
+                  "heading_path": [
+                    "Chapitre 7 — Résiliation de contrat",
+                    "7.3 Modalités pratiques de résiliation infra-annuelle (contrat de plus d'un an)"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                }
+              }
+            ]
+          },
+          {
+            "label": "B",
+            "quotes": [
+              {
+                "kind": "briefing",
+                "excerptRealigned": false,
+                "excerpt": "| Travailleurs non salariés (TNS) | Offre dédiée éligible à la loi Madelin (déduction fiscale des cotisations). | **Contrat non résiliable en cours d’année** (contrainte du cadre fiscal Madelin) — contrairement aux particuliers, qui bénéficient eux de la résiliation infra-annuelle dès 1 an."
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Modalités de résiliation infra-annuelle pour les contrats TNS",
+          "reason": "Le chapitre 7 de la base de connaissance décrit la résiliation infra-annuelle comme applicable à tous les contrats individuels de plus d'un an, sans faire de distinction entre les particuliers et les TNS. Cependant, la fiche de cadrage précise explicitement que les contrats TNS ne sont pas résiliables en cours d'année en raison des contraintes du cadre fiscal Madelin. Cette omission dans la base de connaissance pourrait induire en erreur les gestionnaires, qui pourraient appliquer la procédure de résiliation infra-annuelle aux contrats TNS par erreur.",
+          "proposal": "Mettre à jour le chapitre 7 de la base de connaissance pour:\n1. Ajouter une section spécifique sur les modalités de résiliation des contrats TNS, en précisant qu'ils ne sont pas résiliables en cours d'année sauf motif légal de résiliation anticipée.\n2. Modifier l'arbre de décision sur l'éligibilité à la résiliation pour inclure une étape de vérification du type de contrat (individuel standard vs TNS).\n3. Ajouter un renvoi vers la fiche de cadrage et le chapitre 1.4 (Offre TNS) pour plus de détails sur les contraintes spécifiques aux contrats TNS."
+        },
+        "answers": [
+          "complete",
+          "remove",
+          "up_to_date",
+          "not_a_problem",
+          "other_answer",
+          "later",
+          "out_of_scope"
+        ],
+        "unverifiedQuotes": [],
+        "recommendation": {
+          "text": "Mettre à jour le chapitre 7 de la base de connaissance pour:\n1. Ajouter une section spécifique sur les modalités de résiliation des contrats TNS, en précisant qu'ils ne sont pas résiliables en cours d'année sauf motif légal de résiliation anticipée.\n2. Modifier l'arbre de décision sur l'éligibilité à la résiliation pour inclure une étape de vérification du type de contrat (individuel standard vs TNS).\n3. Ajouter un renvoi vers la fiche de cadrage et le chapitre 1.4 (Offre TNS) pour plus de détails sur les contraintes spécifiques aux contrats TNS.",
+          "effect": {
+            "type": "complete"
+          },
+          "basis": "à compléter, la recommandation pour consigne"
+        },
+        "absentReferences": []
+      }
+    ],
+    "temporaryNotes": [],
+    "rejectedPoints": [],
+    "unverifiedQuotes": {
+      "punctuation_only": 1,
+      "not_found": 2
+    },
+    "unavailableDetections": [
+      "temporary_notes"
+    ]
+  }
+}

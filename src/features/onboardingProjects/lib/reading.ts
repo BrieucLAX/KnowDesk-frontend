@@ -15,8 +15,11 @@
 import { sourceRef, type Audit, type SourceRef } from './audit';
 import type { Decision } from './decisions';
 
-/** Audits à cartes : 0.8.0, et 0.9.0 qui ajoute « Je suis la recommandation de l'IA ». */
-export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0'];
+/**
+ * Audits à cartes : 0.8.0, 0.9.0 qui ajoute « Je suis la recommandation de l'IA », et 0.10.0 qui
+ * ajoute les renvois vers un contenu absent. Même liste que `READING_AUDIT_SCHEMAS` du back.
+ */
+export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0'];
 export const isReadingAudit = (version: string): boolean => READING_AUDIT_SCHEMAS.includes(version);
 
 // ── Contrat (GET …/audit, champ `reading`) ────────────────────

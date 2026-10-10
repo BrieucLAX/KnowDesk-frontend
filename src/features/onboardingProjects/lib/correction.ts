@@ -34,8 +34,14 @@ export interface OnboardingCorrection {
 
 export interface CorrectionQuota { used: number; max: number }
 
-/** Audits que le back sait corriger (422 AUDIT_NOT_CORRECTABLE sinon). */
-export const CORRECTABLE_AUDIT_SCHEMAS: readonly string[] = ['0.9.0'];
+/** Audits que le back sait corriger (422 AUDIT_NOT_CORRECTABLE sinon) : `CORRECTABLE_AUDIT_SCHEMAS` du back. */
+export const CORRECTABLE_AUDIT_SCHEMAS: readonly string[] = ['0.9.0', '0.10.0'];
+
+/**
+ * Bases corrigées que l'écran sait afficher : `SUPPORTED_CORRECTION_SCHEMAS` du back. La 0.2.0
+ * ajoute la raison de chaque information en attente.
+ */
+export const SUPPORTED_CORRECTION_SCHEMAS: readonly string[] = ['0.1.0', '0.2.0'];
 
 // Base corrigée, correction.schema.json 0.1.0.
 

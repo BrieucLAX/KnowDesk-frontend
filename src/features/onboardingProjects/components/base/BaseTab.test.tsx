@@ -27,6 +27,7 @@ import type { ReadingCard } from '../../lib/reading';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import BASE_PILOTE from './fixtures/base-0.1.0-pilote.response.json';
 import CARDS_PILOTE from './fixtures/audit-0.9.0-pilote-cards.json';
+import BASE_PILOTE_02 from './fixtures/base-0.2.0-pilote.response.json';
 
 /**
  * Base corrigée par le service sur le pilote (lancée en local depuis « À clarifier », réponses de
@@ -109,7 +110,7 @@ describe('Nouvelle base : relecture', () => {
 
   it('base 0.2.0 : les cartes répondues qu\'aucune section ne porte sont à part, avec ce qu\'il faut faire', async () => {
     const [first, second] = CARDS;
-    mockBase({ ...PILOTE, base: { ...PILOTE.base, schema_version: '0.2.0', pending: [
+    mockBase({ ...PILOTE, schemaVersion: '0.2.0', base: { ...PILOTE.base, schema_version: '0.2.0', pending: [
       { card_id: first.id, card_rank: first.rank, reason: 'unanswered' },
       { card_id: second.id, card_rank: second.rank, reason: 'no_section' },
     ] } });
@@ -118,6 +119,22 @@ describe('Nouvelle base : relecture', () => {
     expect(screen.getByText(/^Répondues, mais aucune section de la base ne les porte : /)).toBeInTheDocument();
     expect(screen.getByText(/^Pour les ajouter, nommez la section dans une précision de votre réponse/)).toBeInTheDocument();
     expect(screen.queryByText(/^Informations en attente/)).not.toBeInTheDocument();
+  });
+
+  it('base 0.2.0 réelle (correction du pilote rejouée par le pipeline 30ce86e) : affichée, pas « format inconnu »', async () => {
+    const base = BASE_PILOTE_02 as unknown as BaseVersion;
+    mockBase(base, [correction({ id: base.correctionId })]);
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    expect(await screen.findByText('0 sur 6 relues')).toBeInTheDocument();
+    expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { level: 4 }).length).toBe(base.base.modifications.length + base.base.conventions.length);
+  });
+
+  it('base d\'une version inconnue : le dit, sans rien afficher d\'autre', async () => {
+    mockBase({ ...PILOTE, schemaVersion: '0.3.0' });
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    expect(await screen.findByText(/Cette base est dans un format que cette version de l'application ne sait pas afficher/)).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { level: 4 })).not.toBeInTheDocument();
   });
 
   it('titre chaque fiche par son premier titre, et chaque section une seule fois (Essai 5)', async () => {
@@ -400,6 +417,11 @@ describe('« À clarifier » : Préparer la nouvelle base', () => {
     entry(current);
     expect(await screen.findByText('Encore 2 cartes bloquantes à trancher avant de préparer la nouvelle base. « Plus tard » ne tranche pas une carte bloquante (1 sur 2).')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Préparer la nouvelle base' })).not.toBeInTheDocument();
+  });
+
+  it('audit 0.10.0 : « Préparer la nouvelle base » comme sur un 0.9.0', async () => {
+    entry(decided('accept_side'), vi.fn(), '0.10.0');
+    expect(await screen.findByRole('button', { name: 'Préparer la nouvelle base' })).toBeInTheDocument();
   });
 
   it('toutes tranchées : lance la préparation et ouvre l\'onglet', async () => {
