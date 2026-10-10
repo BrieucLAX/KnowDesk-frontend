@@ -18,6 +18,7 @@ import type { Decision, DecisionsState } from '../../lib/decisions';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import PILOTE_2 from './fixtures/audit-0.8.0-pilote-2.response.json';
 import PILOTE_3 from './fixtures/audit-0.8.0-pilote-3.response.json';
+import PILOTE_10 from './fixtures/audit-0.10.0-pilote-2.response.json';
 
 /**
  * Réponses de GET …/audit sur deux audits 0.8.0 rejoués par le pipeline (pilote, lectures 2 et 3),
@@ -475,5 +476,52 @@ describe('À clarifier (audit 0.8.0)', () => {
   it('un back sans `recommendation` : aucun bouton « Je suis la recommandation de l\'IA »', async () => {
     await openSession();
     expect(screen.queryByRole('button', { name: 'Je suis la recommandation de l\'IA' })).not.toBeInTheDocument();
+  });
+});
+
+/**
+ * Audit 0.10.0 du pilote (lecture 2 de la mesure du 2026-10-01) rejoué par le pipeline `30ce86e`,
+ * hors réseau, puis passé par la lecture du back (`readReading`) : la réponse de GET …/audit en
+ * production. Deux cartes y renvoient à « voir grille complète en pièce jointe ».
+ */
+const RESPONSE_10 = PILOTE_10 as unknown as AuditResponse;
+/** Le même audit en 0.9.0 : la 0.10.0 n'ajoute que les renvois vers un contenu absent. */
+const RESPONSE_09: AuditResponse = {
+  ...RESPONSE_10,
+  schemaVersion: '0.9.0',
+  audit: { ...(RESPONSE_10.audit as object), schema_version: '0.9.0' },
+  reading: { ...RESPONSE_10.reading!, cards: RESPONSE_10.reading!.cards.map(({ absentReferences: _, ...c }) => c) },
+};
+
+describe('À clarifier : versions d\'audit affichées (Base de co 2026 v4)', () => {
+  const absent = RESPONSE_10.reading!.cards.find(c => (c.absentReferences ?? []).length > 0)!;
+  const ordered = orderedCards(RESPONSE_10.reading!.cards);
+
+  beforeEach(() => {
+    vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
+    vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.getAuditImage).mockReset().mockResolvedValue(new Blob([new Uint8Array([1])], { type: 'image/png' }));
+    Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:image'), revokeObjectURL: vi.fn() });
+  });
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it('audit 0.10.0 réel : ses cartes s\'affichent, et la carte qui renvoie à une pièce jointe absente le dit', async () => {
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue(RESPONSE_10);
+    await openSession();
+    expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
+    goTo(absent.analysis.subject);
+    const card = await screen.findByRole('article', { name: new RegExp(`^Carte ${ordered.indexOf(absent) + 1} sur ${ordered.length}`) });
+    expect(within(card).getByRole('note', { name: 'Contenu absent de vos documents' }))
+      .toHaveTextContent('« voir grille complète en pièce jointe »');
+  });
+
+  it('audit 0.9.0 : toujours affiché, sans encadré', async () => {
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue(RESPONSE_09);
+    await openSession();
+    expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
+    goTo(absent.analysis.subject);
+    const card = await screen.findByRole('article', { name: new RegExp(`^Carte ${ordered.indexOf(absent) + 1} sur ${ordered.length}`) });
+    expect(within(card).queryByRole('note', { name: 'Contenu absent de vos documents' })).not.toBeInTheDocument();
   });
 });
