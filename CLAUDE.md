@@ -10,6 +10,7 @@ Réponds toujours en français à l'utilisateur.
 - Aucune fusion sans la validation explicite du propriétaire.
 - Il n'y a pas d'environnement de prévisualisation utilisable : `VITE_API_URL` n'est posée qu'en Production, et le back n'accepte ni l'origine `*.vercel.app` ni ses cookies. On teste en local, contre le back local.
 - Une fonctionnalité qui dépend d'une route du back n'est fusionnée qu'une fois cette route en production.
+- **Versions de contrat (règle du 2026-10-10).** Toute nouvelle version de contrat (audit, décision, correction) se déclare dans le pipeline, le back et le front, **dans la même série de PR**. Ici, deux choses à mettre à jour : `src/features/onboardingProjects/lib/contract-versions.json`, copie à l'identique du fichier du back (`src/modules/onboarding/contract-versions.json`), et les listes qui aiguillent l'affichage (`SUPPORTED_AUDIT_SCHEMAS`, `READING_AUDIT_SCHEMAS`, `CORRECTABLE_AUDIT_SCHEMAS`, `SUPPORTED_CORRECTION_SCHEMAS`). `contract-versions.test.ts` échoue si une version n'a pas son affichage. Il échoue aussi si la copie diffère de celle du back voisin (`../KnowDesk`), d'où l'intérêt de lancer `npm test` avec le back à jour. Un test d'une nouvelle version passe par l'écran qui aiguille (`AuditTab`, `BaseTab`), avec une réponse réelle du back. Origine : le rejeu « Base de co 2026 v4 », où l'audit 0.10.0 était refusé à l'écran (#30).
 
 ## Références
 
