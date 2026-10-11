@@ -15,6 +15,8 @@ import { BaseTab }      from './base/BaseTab';
 import { CleanBaseView } from './base/CleanBaseView';
 import type { OnboardingProject } from '../types';
 import '../onboardingProjects.css';
+import { useAuthStore } from '../../../store/authStore';
+import { CurrentUserContext } from './base/AuthorName';
 
 export type ProjectTab = 'documents' | 'cadrage' | 'analysis' | 'audit' | 'base';
 
@@ -46,6 +48,10 @@ export function OnboardingProjectPage({ projectId, tab, validationId = null, onT
   // Fiche de cadrage modifiée et non enregistrée : on confirme avant de quitter l'onglet.
   const [cadrageDirty, setCadrageDirty] = useState(false);
   const [pendingLeave, setPendingLeave] = useState<(() => void) | null>(null);
+  /** La carte à ouvrir dans « À clarifier », demandée depuis « Nouvelle base » ; oubliée hors de l'onglet. */
+  const [clarifyCard, setClarifyCard] = useState<string | undefined>(undefined);
+  const currentUserId = useAuthStore(s => s.session?.user.id ?? null);
+  useEffect(() => { if (tab !== 'audit') setClarifyCard(undefined); }, [tab]);
 
   const leave = (action: () => void) => {
     if (cadrageDirty) setPendingLeave(() => action);
@@ -114,17 +120,28 @@ export function OnboardingProjectPage({ projectId, tab, validationId = null, onT
         onChange={id => { if (id !== tab) leave(() => onTabChange(id)); }}
         ariaLabel="Sections du projet"
       />
+      <CurrentUserContext.Provider value={currentUserId}>
       <div className="obp-tab">
         {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
         {tab === 'cadrage' && <CadrageTab project={project} onSaved={reload} onDirtyChange={setCadrageDirty} />}
         {tab === 'analysis' && <AnalysisTab project={project} onChanged={reload} onOpenAudit={() => onTabChange('audit')} />}
         {tab === 'audit' && (
-          <AuditTab project={project} onGoToAnalysis={() => onTabChange('analysis')} onOpenBase={() => onTabChange('base')} />
+          <AuditTab
+            project={project}
+            onGoToAnalysis={() => onTabChange('analysis')}
+            onOpenBase={() => onTabChange('base')}
+            openCardId={clarifyCard}
+          />
         )}
         {tab === 'base' && (
-          <BaseTab project={project} onGoToClarify={() => onTabChange('audit')} onOpenValidation={onOpenValidation} />
+          <BaseTab
+            project={project}
+            onGoToClarify={cardId => { setClarifyCard(cardId); onTabChange('audit'); }}
+            onOpenValidation={onOpenValidation}
+          />
         )}
       </div>
+      </CurrentUserContext.Provider>
 
       {pendingLeave && (
         <ConfirmDialog

@@ -520,6 +520,13 @@ describe('À clarifier (audit 0.8.0)', () => {
     });
   });
 
+  it('point 12 du plan v4 : ouvert depuis « Nouvelle base » sur une carte, « À clarifier » s\'ouvre sur elle', async () => {
+    const target = ordered2[3];
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} openCardId={target.id} />);
+    const card = await screen.findByRole('article', { name: `Carte 4 sur ${ordered2.length}` });
+    expect(card).toHaveTextContent(target.analysis.subject);
+  });
+
   it('un back sans `recommendation` : aucun bouton « Je suis la recommandation de l\'IA »', async () => {
     await openSession();
     expect(screen.queryByRole('button', { name: 'Je suis la recommandation de l\'IA' })).not.toBeInTheDocument();

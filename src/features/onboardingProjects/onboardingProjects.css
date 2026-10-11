@@ -600,6 +600,13 @@
 .obp-base-card p { margin: 0; }
 .obp-base-card--done { border-color: var(--color-success); }
 .obp-base-card--pending { border-style: dashed; }
+.obp-base-validation--bottom { margin-top: 24px; }
+.obp-base-fixed { display: flex; flex-direction: column; gap: 6px; }
+.obp-base-fixed__proposed summary { cursor: pointer; font-size: 13px; color: var(--neutral-500); }
+.obp-base-answer { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.obp-base-answer__text { white-space: pre-wrap; }
+.obp-base-blocking { margin-top: 16px; }
+.obp-base-blocking ul { margin: 6px 0 0; padding-left: 20px; }
 .obp-base-card__title { margin: 0; font-size: 14px; color: var(--neutral-900); }
 .obp-base-card__origin { color: var(--brand-700); font-weight: 600; }
 .obp-base-card__outcome ul { margin: 4px 0 0; padding-left: 18px; }

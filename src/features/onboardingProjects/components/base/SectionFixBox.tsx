@@ -27,21 +27,16 @@ export function SectionFixBox({ title, proposed, current, editable, save, onSave
   const [text, setText] = useState(current?.correctedText ?? proposed);
   useEffect(() => { if (!open) setText(current?.correctedText ?? proposed); }, [current, proposed, open]);
 
-  if (!editable) {
-    return current ? (
-      <div className="obp-base-section-fix">
-        <p className="obp-base-label">Texte de la section écrit par vous, repris dans la version propre :</p>
-        <pre className="obp-base-section-fix__text">{current.correctedText}</pre>
-      </div>
-    ) : null;
-  }
+  // Le texte enregistré s'affiche à la place de la section (« Texte corrigé par … ») : ici, l'action seule.
+  if (!editable) return null;
   if (!open) {
     return (
       <div className="obp-base-section-fix">
-        {current && <p className="obp-muted">Vous avez écrit le texte de cette section : il la remplace dans la version propre.</p>}
+        {current && <p className="obp-muted">Ce texte remplace la section dans la version propre.</p>}
         <div className="obp-decision__actions">
-          <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
-            {current ? 'Modifier votre texte de la section' : 'Corriger cette section'}
+          {/* Un bouton, visible sur chaque section (plan v4, point 9 : le lien gris passait inaperçu). */}
+          <Button variant="secondary" size="sm" onClick={() => setOpen(true)}>
+            {current ? 'Modifier le texte corrigé' : 'Corriger cette section'}
           </Button>
         </div>
         <SaveStatus state={save} />

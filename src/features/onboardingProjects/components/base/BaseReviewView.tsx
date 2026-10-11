@@ -4,11 +4,15 @@ import {
   modificationPlacement, ownHeading, proposedLines, sectionTitleIndex, sheetViews, type SectionView, type SheetView,
 } from '../../lib/baseDocument';
 import {
-  chapterRequests, firstSentence, itemLabel, itemRank, kindLabel, NEW_CHAPTER_LABEL, originLabel, outcomeLabel, partialSummary,
+  chapterRequests, firstSentence, recordedAnswer, itemLabel, itemRank, kindLabel, NEW_CHAPTER_LABEL, originLabel, outcomeLabel, partialSummary,
   pendingSentences, reasonGroups, reviewProgressLabel, SHOWN_REASONS, type ReasonGroup,
-  type BaseCorrection, type Convention, type Modification,
+  type BaseCorrection, type Convention, type Modification, type SectionFix,
 } from '../../lib/correction';
 import type { BaseReview } from '../../hooks/useBaseReview';
+import type { Decision } from '../../lib/decisions';
+import { formatFull } from '../../../../shared/lib/formatDate';
+import { Button } from '../../../../shared/components/ui/Button';
+import { AuthorName } from './AuthorName';
 import { BaseLines } from './BaseLines';
 import type { FixSection } from './ReviewCard';
 import { ReviewCard } from './ReviewCard';
@@ -19,6 +23,8 @@ interface BaseReviewViewProps {
   base:       BaseCorrection;
   /** Titre de chaque carte de l'audit, pour dire d'où vient une modification. */
   cardTitles: ReadonlyMap<string, string>;
+  /** Réponse courante de chaque carte de l'analyse (par identifiant de carte) ; vide s'il manque. */
+  decisions?: ReadonlyMap<string, Decision>;
   editable:   boolean;
   review:     BaseReview;
 }
@@ -31,7 +37,7 @@ const anchorOf = (id: string) => `obp-base-${id.toLowerCase()}`;
  * inchangées repliées à leur place, un avis par modification et par convention, un commentaire
  * possible sur n'importe quelle section, et « n sur N relues » en tête.
  */
-export function BaseReviewView({ base, cardTitles, editable, review }: BaseReviewViewProps) {
+export function BaseReviewView({ base, cardTitles, decisions = new Map(), editable, review }: BaseReviewViewProps) {
   const sheets = useMemo(() => sheetViews(base), [base]);
   const titles = useMemo(() => sectionTitleIndex(sheets), [sheets]);
   const placement = useMemo(() => modificationPlacement(sheets, base.modifications), [sheets, base.modifications]);
@@ -103,6 +109,8 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
    */
   const chapterCard = (c: { id: string; cardId: string }) => {
     const title = cardTitles.get(c.cardId);
+    const answer = decisions.get(c.cardId);
+    const text = answer ? recordedAnswer(answer.action) : null;
     return (
       <article key={c.id} id={anchorOf(c.id)} className="obp-base-card obp-base-card--pending" aria-label={itemLabel(c.id)}>
         <h4 className="obp-base-card__title">{itemLabel(c.id)} — {NEW_CHAPTER_LABEL}</h4>
@@ -112,6 +120,7 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
           clarifier ». Pour en reprendre le contenu, utilisez « Corriger cette section » sur la section la plus proche et
           ajoutez-le au texte.
         </p>
+        {answer && text && <RecordedAnswer text={text} answer={answer} />}
       </article>
     );
   };
@@ -159,6 +168,8 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
       />
     );
     const open = s.changed || s.modificationIds.length > 0 || s.conventionIds.length > 0;
+    /** Le texte de section enregistré (« Corriger cette section ») : la section l'affiche, comme la version propre. */
+    const fixed = state.fixes.get(s.key);
     if (!open) {
       return (
         <details key={s.key} className="obp-base-section obp-base-section--unchanged">
@@ -166,10 +177,10 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
             <span className="obp-base-section__title">{s.title}</span>
             <span className="obp-muted"> · inchangée</span>
             {state.comments.has(s.key) && <span className="obp-base-chip">commentée</span>}
-            {state.fixes.has(s.key) && <span className="obp-base-chip">corrigée par vous</span>}
+            {fixed && <span className="obp-base-chip">corrigée</span>}
           </summary>
           {/* Le titre est dans le résumé : il ne se répète pas dans le texte. */}
-          <BaseLines blocks={ownHeading(s.blocks) ? s.blocks.slice(1) : s.blocks} />
+          {fixed ? <FixedText fix={fixed} blocks={s.blocks} /> : <BaseLines blocks={ownHeading(s.blocks) ? s.blocks.slice(1) : s.blocks} />}
           {fix}
           {comment}
         </details>
@@ -179,7 +190,7 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
       <section key={s.key} className="obp-base-section obp-base-section--open" aria-label={s.title}>
         {!ownHeading(s.blocks) && s.title !== sheet.title && <h3 className="obp-base-section__title">{s.title}</h3>}
         <div className="obp-base-grid">
-          <BaseLines blocks={s.blocks} />
+          {fixed ? <FixedText fix={fixed} blocks={s.blocks} /> : <BaseLines blocks={s.blocks} />}
           <div className="obp-base-side">
             {s.modificationIds.map(id => {
               const m = mods.get(id);
@@ -312,6 +323,44 @@ function Outcome({ label, applied, groups }: { label: string; applied: boolean; 
           )}
         </>
       )}
+    </div>
+  );
+}
+
+/**
+ * Une section corrigée (plan v4, point 8) : le texte enregistré, celui que la version propre
+ * reprend, et qui l'a écrit ; le texte proposé reste lisible, replié.
+ */
+function FixedText({ fix, blocks }: { fix: SectionFix; blocks: SectionView['blocks'] }) {
+  return (
+    <div className="obp-base-fixed">
+      <p className="obp-base-label">
+        Texte corrigé par <AuthorName name={fix.authorName ?? 'un membre de l\'équipe'} authorId={fix.authorId} />, le {formatFull(fix.createdAt)}
+      </p>
+      <pre className="obp-base-section-fix__text">{fix.correctedText}</pre>
+      <details className="obp-base-fixed__proposed">
+        <summary>Texte proposé par la préparation</summary>
+        <BaseLines blocks={blocks} />
+      </details>
+    </div>
+  );
+}
+
+/** La réponse enregistrée sur une carte en attente (plan v4, point 13) : son texte, qui l'a donnée et quand ; copiable. */
+function RecordedAnswer({ text, answer }: { text: string; answer: Decision }) {
+  const [copied, setCopied] = React.useState(false);
+  const copy = () => {
+    void navigator.clipboard?.writeText(text).then(() => setCopied(true), () => {});
+  };
+  return (
+    <div className="obp-base-answer">
+      <p className="obp-base-label">
+        Réponse enregistrée par <AuthorName name={answer.decidedBy.name} authorId={answer.decidedBy.id} />, le {formatFull(answer.decidedAt)} :
+      </p>
+      <blockquote className="obp-base-quote obp-base-answer__text">{text}</blockquote>
+      <div className="obp-decision__actions">
+        <Button variant="secondary" size="sm" onClick={copy}>{copied ? 'Copiée' : 'Copier la réponse'}</Button>
+      </div>
     </div>
   );
 }
