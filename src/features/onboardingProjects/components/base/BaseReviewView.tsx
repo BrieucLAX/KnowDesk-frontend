@@ -108,8 +108,9 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
         <h4 className="obp-base-card__title">{itemLabel(c.id)} — {NEW_CHAPTER_LABEL}</h4>
         {title && <p className="obp-base-card__origin">Carte « {title} »</p>}
         <p className="obp-muted">
-          Votre réponse demande un chapitre qui n'existe pas encore dans la base. La préparation ne crée pas de chapitre :
-          ajoutez-le dans vos documents, puis relancez l'analyse.
+          Votre réponse demande un chapitre qui n'existe pas encore dans la base : la préparation n'en crée pas. Votre
+          réponse reste enregistrée dans « À clarifier ». Pour ajouter ce contenu à cette base, utilisez « Corriger cette
+          section » sur la section où il doit figurer : votre texte y remplace la section dans la version finale.
         </p>
       </article>
     );

@@ -157,7 +157,9 @@ describe('Nouvelle base : relecture', () => {
     const unplaced = screen.getByRole('heading', { level: 2, name: 'Modifications sans emplacement dans la base' }).closest('section')!;
     expect(within(unplaced).getByRole('article', { name: 'Modification 4' })).toBe(m4);
     expect(screen.getByText(/^Répondues, mais elles demandent un chapitre qui n'existe pas encore dans la base : Service de téléconsultation/)).toBeInTheDocument();
-    expect(screen.getByText('La préparation ne crée pas de chapitre : ajoutez-le dans vos documents, puis relancez l\'analyse.')).toBeInTheDocument();
+    expect(screen.getByText('La préparation ne crée pas de chapitre. Pour en ajouter le contenu à cette base, utilisez « Corriger cette section » sur la section où il doit figurer. Relancer l\'analyse avec un document qui contient ce chapitre repart d\'un nouvel audit : vos réponses actuelles n\'y sont pas reportées.')).toBeInTheDocument();
+    expect(m4).toHaveTextContent('Votre réponse reste enregistrée dans « À clarifier ».');
+    expect(m4).toHaveTextContent('utilisez « Corriger cette section » sur la section où il doit figurer');
 
     // Les raisons de la 0.3.0, en clair : la note d'image mot pour mot, la note de travail.
     expect(container.textContent).toContain('L\'IA signale que l\'image ou le schéma ci-dessus devrait être mis à jour. Elle ne peut pas modifier une image : à vous de le faire si besoin.');

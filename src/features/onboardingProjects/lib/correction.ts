@@ -352,7 +352,7 @@ export const REASON_LABEL: Record<UndoReason | 'no_change_kept', string> = {
   invalid_output:               'l\'IA n\'a pas rendu de texte utilisable pour cette section : la modification n\'y est pas appliquée ; relancez la préparation de la nouvelle base pour réessayer',
   internal_wording:             'le texte proposé contenait une note de travail ; il n\'a pas été repris',
   image_note:                   'L\'IA signale que l\'image ou le schéma ci-dessus devrait être mis à jour. Elle ne peut pas modifier une image : à vous de le faire si besoin.',
-  table_of_contents_changed:    'le texte proposé modifiait le sommaire de la base ; il est resté tel quel',
+  table_of_contents_changed:    'Cette modification touchait le sommaire de la base : le sommaire n\'a pas été modifié.',
   no_change_kept:               'aucun texte proposé n\'a pu être repris',
 };
 
@@ -459,7 +459,7 @@ export function pendingSentences(
   const chapter = pending.filter(p => p.reason === 'new_chapter');
   if (chapter.length > 0) {
     out.push(named(chapter, 'Répondues, mais elles demandent un chapitre qui n\'existe pas encore dans la base'));
-    out.push('La préparation ne crée pas de chapitre : ajoutez-le dans vos documents, puis relancez l\'analyse.');
+    out.push('La préparation ne crée pas de chapitre. Pour en ajouter le contenu à cette base, utilisez « Corriger cette section » sur la section où il doit figurer. Relancer l\'analyse avec un document qui contient ce chapitre repart d\'un nouvel audit : vos réponses actuelles n\'y sont pas reportées.');
   }
   return out;
 }
