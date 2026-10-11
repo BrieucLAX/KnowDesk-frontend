@@ -5,7 +5,8 @@ import { TextArea } from '../TextArea';
 import { namedLabel, type DocNaming } from '../../lib/audit';
 import type { Decision } from '../../lib/decisions';
 import {
-  ANSWERS, describeCardAnswer, FOLLOW_RECOMMENDATION_LABEL, isBriefingOnly, missingSide, NATURES, recommendationOutcome,
+  ANSWERS, describeCardAnswer, FOLLOW_BLOCKED_REASON, FOLLOW_RECOMMENDATION_LABEL, FOLLOW_WARNING, followBlocked, followWarned,
+  isBriefingOnly, missingSide, NATURES, recommendationOutcome,
   sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, TYPED_ANSWERS, type CardAction, type ReadingCard,
   type TypedAnswer,
 } from '../../lib/reading';
@@ -149,10 +150,12 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
           <p className="obp-clarify-answer__subtitle">Recommandation de l'IA</p>
           <blockquote className="obp-clarify-reco__text">{card.recommendation.text}</blockquote>
           <div className="obp-decision__actions">
-            <Button variant="primary" size="sm" disabled={busy} onClick={() => { setText(''); setFollowing(true); }}>
+            <Button variant="primary" size="sm" disabled={busy || followBlocked(card)} onClick={() => { setText(''); setFollowing(true); }}>
               {FOLLOW_RECOMMENDATION_LABEL}
             </Button>
           </div>
+          {followBlocked(card) && <p className="obp-muted obp-clarify-reco__blocked">{FOLLOW_BLOCKED_REASON}</p>}
+          {followWarned(card) && <p className="obp-warning obp-clarify-reco__warning" role="note">{FOLLOW_WARNING}</p>}
           <p className="obp-clarify-answer__subtitle">Ou répondez vous-même :</p>
         </div>
       )}

@@ -28,6 +28,8 @@ import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import BASE_PILOTE from './fixtures/base-0.1.0-pilote.response.json';
 import CARDS_PILOTE from './fixtures/audit-0.9.0-pilote-cards.json';
 import BASE_PILOTE_02 from './fixtures/base-0.2.0-pilote.response.json';
+import BASE_PILOTE_03 from './fixtures/base-0.3.0-pilote.response.json';
+import CARDS_PILOTE_B9 from './fixtures/audit-pilote-b9a878c1-cards.json';
 
 /**
  * Base corrigée par le service sur le pilote (lancée en local depuis « À clarifier », réponses de
@@ -130,8 +132,41 @@ describe('Nouvelle base : relecture', () => {
     expect(screen.getAllByRole('heading', { level: 4 }).length).toBe(base.base.modifications.length + base.base.conventions.length);
   });
 
+  it('base 0.3.0 réelle (pilote, KnowDesk-pipeline#56) : M1 à M10 sans trou, M4 en attente à son rang, raisons en clair', async () => {
+    const base = BASE_PILOTE_03 as unknown as BaseVersion;
+    mockBase(base, [correction({ id: base.correctionId })]);
+    const cards = (CARDS_PILOTE_B9.cards as unknown as ReadingCard[]).map(c => ({
+      ...c, mergedRanks: [], documentIds: [], sides: [], answers: [], unverifiedQuotes: [],
+    }));
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue({ schemaVersion: '0.8.0', reading: { cards } } as unknown as AuditResponse);
+    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByText('0 sur 6 relues');
+    expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
+
+    // Le pipeline a réservé M4 à la carte qui demande un chapitre : aucune modification ne le porte.
+    expect(base.base.modifications.map(m => m.id)).not.toContain('M4');
+    // À l'écran, toutes les modifications de M1 à M10, sans trou ; M4 telle que transmise.
+    const numbers = screen.getAllByRole('heading', { level: 4 })
+      .map(h => /^Modification (\d+)\b/.exec(h.textContent ?? '')?.[1])
+      .filter((n): n is string => n !== undefined).map(Number).sort((a, b) => a - b);
+    expect(numbers).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    const m4 = screen.getByRole('article', { name: 'Modification 4' });
+    expect(within(m4).getByRole('heading', { level: 4 })).toHaveTextContent('Modification 4 — en attente : création de chapitre');
+    expect(m4).toHaveTextContent('Carte « Service de téléconsultation médicale »');
+    // À son rang, parmi les modifications sans emplacement dans la base.
+    const unplaced = screen.getByRole('heading', { level: 2, name: 'Modifications sans emplacement dans la base' }).closest('section')!;
+    expect(within(unplaced).getByRole('article', { name: 'Modification 4' })).toBe(m4);
+    expect(screen.getByText(/^Répondues, mais elles demandent un chapitre qui n'existe pas encore dans la base : Service de téléconsultation/)).toBeInTheDocument();
+    expect(screen.getByText('La préparation ne crée pas de chapitre : ajoutez-le dans vos documents, puis relancez l\'analyse.')).toBeInTheDocument();
+
+    // Les raisons de la 0.3.0, en clair : la note d'image mot pour mot, la note de travail.
+    expect(container.textContent).toContain('L\'IA signale que l\'image ou le schéma ci-dessus devrait être mis à jour. Elle ne peut pas modifier une image : à vous de le faire si besoin.');
+    expect(container.textContent).toContain('le texte proposé contenait une note de travail ; il n\'a pas été repris');
+    expect(container.textContent).not.toMatch(TECHNICAL);
+  });
+
   it('base d\'une version inconnue : le dit, sans rien afficher d\'autre', async () => {
-    mockBase({ ...PILOTE, schemaVersion: '0.3.0' });
+    mockBase({ ...PILOTE, schemaVersion: '0.4.0' });
     render(<BaseTab project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText(/Cette base est dans un format que cette version de l'application ne sait pas afficher/)).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 4 })).not.toBeInTheDocument();

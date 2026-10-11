@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "0.8.0",
+  "cards": [
+    {
+      "id": "card_623614d2d77a7e63",
+      "nature": "dated_change",
+      "rank": 1,
+      "analysis": {
+        "subject": "Grille tarifaire applicable aux contrats individuels",
+        "reason": "La grille tarifaire du chapitre 3 de la base de connaissance est obsolète depuis le 4 septembre 2026, date de l'email annonçant la nouvelle grille applicable au 1er janvier 2027. Les montants indiqués dans la base de connaissance ne doivent plus être utilisés pour toute communication à un adhérent ou prospect.",
+        "proposal": "Mettre à jour le chapitre 3 de la base de connaissance avec la nouvelle grille tarifaire applicable au 1er janvier 2027, en intégrant un avertissement clair indiquant que les montants sont valables à partir de cette date. Supprimer ou archiver l'ancienne grille de juin 2024 pour éviter toute confusion. Inclure un renvoi vers l'email du 4 septembre 2026 pour référence historique."
+      }
+    },
+    {
+      "id": "card_a269c3ae291bd869",
+      "nature": "dated_change",
+      "rank": 2,
+      "analysis": {
+        "subject": "Procédure de traitement des incidents de tiers payant",
+        "reason": "L'email du 7 septembre 2026 annonce une nouvelle procédure de traitement des incidents de tiers payant à partir du 1er octobre 2026, avec une période pilote jusqu'au 30 novembre 2026. La base de connaissance actuelle décrit une procédure obsolète à partir de cette date pour les pharmacies, et potentiellement pour tous les incidents à partir du 1er décembre 2026.",
+        "proposal": "Mettre à jour le chapitre 5.3 de la base de connaissance pour intégrer la nouvelle procédure à partir du 1er octobre 2026, en précisant que cette procédure s'applique d'abord aux pharmacies, puis à tous les incidents à partir du 1er décembre 2026. Conserver la procédure actuelle pour les professionnels du réseau Alviva Santé jusqu'au 30 novembre 2026. Ajouter un renvoi vers l'email du 7 septembre 2026 pour référence."
+      }
+    },
+    {
+      "id": "card_bbafa8eff0d54e6d",
+      "nature": "dated_change",
+      "rank": 3,
+      "analysis": {
+        "subject": "Procédure temporaire de vérification des droits tiers payant pendant la maintenance GESTOR",
+        "reason": "L'email du 9 septembre 2026 annonce une procédure temporaire de secours pour la vérification des droits tiers payant pendant la maintenance GESTOR du 28 au 29 septembre 2026. La base de connaissance ne mentionne pas cette procédure exceptionnelle, ce qui pourrait entraîner des refus de tiers payant injustifiés pendant cette période.",
+        "proposal": "Ajouter une note temporaire dans le chapitre 5.2 de la base de connaissance, valable uniquement du 28 au 29 septembre 2026, décrivant la procédure de secours et incluant un renvoi vers l'email du 9 septembre 2026. Supprimer cette note après le 29 septembre 2026 et rétablir la procédure standard."
+      }
+    },
+    {
+      "id": "card_00649dbfecf8134e",
+      "nature": "incomplete_or_outdated",
+      "rank": 4,
+      "analysis": {
+        "subject": "Service de téléconsultation médicale",
+        "reason": "Le brief du 8 septembre 2026 annonce le lancement d'un service de téléconsultation médicale pour le 1er mars 2027, mais ce service n'est pas mentionné dans la base de connaissance. Bien que le service ne soit pas encore actif, il est important d'anticiper sa documentation pour préparer les équipes et les adhérents.",
+        "proposal": "Créer un nouveau chapitre dans la base de connaissance dédié à la téléconsultation médicale, en intégrant les informations du brief (description du service, populations éligibles, fonctionnement, etc.). Préciser que le service sera lancé le 1er mars 2027 et qu'il est inclus dans toutes les formules sans surcoût. Mettre à jour le sommaire pour inclure ce nouveau chapitre et ajouter un renvoi vers le brief du 8 septembre 2026 pour référence."
+      }
+    },
+    {
+      "id": "card_8f137e9fa7962fc8",
+      "nature": "probable_error",
+      "rank": 5,
+      "analysis": {
+        "subject": "Montant du forfait optique pour la formule CONFORT en cas de correction complexe",
+        "reason": "La FAQ transverse mentionne un forfait optique de 350 € pour la formule CONFORT en cas de correction complexe, alors que le chapitre 1.2 indique un montant de 400 €. Cette incohérence peut entraîner des erreurs de communication auprès des adhérents et des prospects.",
+        "proposal": "Vérifier auprès de la Direction Commerciale ou de la Direction des Prestations quel est le montant correct du forfait optique pour la formule CONFORT en cas de correction complexe. Mettre à jour soit le chapitre 1.2, soit la FAQ transverse pour harmoniser les informations. Ajouter une note de clarification dans les deux documents pour éviter toute confusion future."
+      }
+    },
+    {
+      "id": "card_46e48cfd67aa7889",
+      "nature": "incomplete_or_outdated",
+      "rank": 6,
+      "analysis": {
+        "subject": "Délai de traitement des réclamations",
+        "reason": "La base de connaissance et la formation indiquent un délai cible interne de 10 jours ouvrés pour répondre à une réclamation, mais ni l'une ni l'autre ne précisent si ce délai s'applique au niveau 1 uniquement ou aux deux niveaux de traitement. De plus, la formation ne mentionne pas le délai réglementaire de 2 mois maximum imposé par l'ACPR.",
+        "proposal": "Clarifier dans le chapitre 6.1 de la base de connaissance que le délai cible de 10 jours ouvrés s'applique au niveau 1, et que le délai réglementaire de 2 mois maximum s'applique aux deux niveaux. Mettre à jour la formation pour inclure le délai réglementaire de 2 mois et préciser que le délai cible de 10 jours ouvrés concerne le niveau 1."
+      }
+    },
+    {
+      "id": "card_c139c0323e771b64",
+      "nature": "incomplete_or_outdated",
+      "rank": 7,
+      "analysis": {
+        "subject": "Délai de carence pour les actes d'optique et dentaire prothétique en cas de continuité de couverture",
+        "reason": "La FAQ transverse indique que la continuité de couverture supprime le délai de carence si le prospect a eu une couverture santé dans les 6 derniers mois, mais elle ne précise pas que cette continuité doit être prouvée par une attestation de radiation. Cette omission peut entraîner des malentendus avec les adhérents.",
+        "proposal": "Mettre à jour la FAQ transverse pour préciser que la continuité de couverture doit être prouvée par une attestation de radiation datée de moins de 3 mois avant la nouvelle prise d'effet. Ajouter un renvoi vers le chapitre 2.3 pour plus de détails."
+      }
+    },
+    {
+      "id": "card_fed90a2a03691832",
+      "nature": "incomplete_or_outdated",
+      "rank": 8,
+      "analysis": {
+        "subject": "Définition des tranches d'âge pour la tarification",
+        "reason": "Le chapitre 3.1 indique que la tarification se fait par tranches d'âge quinquennales, mais la grille tarifaire présente des tranches de 10 ans (50-59 ans, 60-69 ans). Cette incohérence peut prêter à confusion pour les gestionnaires et les adhérents.",
+        "proposal": "Clarifier dans le chapitre 3.1 que les tranches d'âge sont quinquennales pour les adhérents de moins de 50 ans, et décennales pour les adhérents de 50 ans et plus. Mettre à jour la grille tarifaire pour refléter cette précision, par exemple en ajoutant une note sous la grille."
+      }
+    },
+    {
+      "id": "card_b1a09afe17a55d3b",
+      "nature": "incomplete_or_outdated",
+      "rank": 9,
+      "analysis": {
+        "subject": "Définition des postes de garantie soumis à devis préalable",
+        "reason": "Le chapitre 4.5 mentionne que certains actes d'optique complexes nécessitent un devis préalable, mais il ne précise pas quels types d'actes d'optique sont concernés. Cette imprécision peut entraîner des refus de remboursement injustifiés ou des demandes de devis inutiles.",
+        "proposal": "Préciser dans le chapitre 4.5 quels types d'actes d'optique nécessitent un devis préalable (par exemple, les verres complexes ou les montures dépassant un certain montant). Ajouter un renvoi vers le chapitre 10 pour les professionnels du réseau Alviva Santé, qui peuvent soumettre directement les devis."
+      }
+    },
+    {
+      "id": "card_ca4d44679db36824",
+      "nature": "incomplete_or_outdated",
+      "rank": 10,
+      "analysis": {
+        "subject": "Conditions de résiliation infra-annuelle pour les contrats TNS",
+        "reason": "La FAQ transverse indique que les contrats TNS ne sont pas résiliables en cours d'année sauf motif légal de résiliation anticipée, mais elle ne précise pas quels sont ces motifs légaux. Cette omission peut entraîner des refus de résiliation injustifiés ou des résiliations non conformes.",
+        "proposal": "Mettre à jour la FAQ transverse pour préciser que les motifs légaux de résiliation anticipée pour les contrats TNS sont les mêmes que pour les contrats individuels classiques (voir chapitre 7.2). Ajouter un renvoi vers ce chapitre pour plus de détails."
+      }
+    }
+  ]
+}

@@ -468,6 +468,8 @@
 .obp-clarify-reco__outcome p { margin: 0; }
 .obp-clarify-reco__outcome p + p { margin-top: 4px; }
 .obp-clarify-reco__outcome-title { font-weight: 600; color: var(--neutral-900); }
+.obp-clarify-reco__warning { margin-top: 8px; }
+.obp-clarify-reco__blocked { margin: 4px 0 0; }
 
 .obp-clarify-unverified { margin: 0; font-size: 13px; color: var(--neutral-500); overflow-wrap: anywhere; }
 .obp-clarify-counts { margin: 0; padding-left: 20px; font-size: 13px; color: var(--neutral-700); }
@@ -597,6 +599,7 @@
 }
 .obp-base-card p { margin: 0; }
 .obp-base-card--done { border-color: var(--color-success); }
+.obp-base-card--pending { border-style: dashed; }
 .obp-base-card__title { margin: 0; font-size: 14px; color: var(--neutral-900); }
 .obp-base-card__origin { color: var(--brand-700); font-weight: 600; }
 .obp-base-card__outcome ul { margin: 4px 0 0; padding-left: 18px; }

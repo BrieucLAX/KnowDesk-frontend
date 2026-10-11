@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { SUPPORTED_AUDIT_SCHEMAS } from './audit';
-import { CORRECTABLE_AUDIT_SCHEMAS, SUPPORTED_CORRECTION_SCHEMAS } from './correction';
+import {
+  CORRECTABLE_AUDIT_SCHEMAS, PENDING_REASONS, REASON_LABEL, SUPPORTED_CORRECTION_SCHEMAS, UNDO_REASONS, type BaseCorrection,
+} from './correction';
+import BASE_PILOTE_03 from '../components/base/fixtures/base-0.3.0-pilote.response.json';
 import { READING_AUDIT_SCHEMAS } from './reading';
 import VERSIONS from './contract-versions.json';
 
@@ -17,6 +20,32 @@ import VERSIONS from './contract-versions.json';
 const BACK = Object.values(import.meta.glob<unknown>(
   '../../../../../KnowDesk/src/modules/onboarding/contract-versions.json', { eager: true, import: 'default' },
 ))[0];
+
+/** Les copies consignées des schémas de correction du back voisin ; absentes ailleurs. */
+const BACK_CORRECTIONS = import.meta.glob<unknown>(
+  '../../../../../KnowDesk/src/modules/onboarding/schemas/correction-*.schema.json', { eager: true, import: 'default' },
+);
+
+type Node = { properties?: Record<string, Node>; enum?: string[]; const?: string; anyOf?: Node[]; oneOf?: Node[] };
+
+/** Les valeurs (`enum`, `const`, y compris dans `anyOf` et `oneOf`) d'un nœud de schéma. */
+const valuesOf = (n: Node): string[] => [
+  ...(n.enum ?? []), ...(n.const ? [n.const] : []), ...[...(n.anyOf ?? []), ...(n.oneOf ?? [])].flatMap(valuesOf),
+];
+
+/** Les valeurs d'un champ, partout où il est déclaré, dans tous les schémas de correction du back. */
+function backValues(field: string): string[] {
+  const out = new Set<string>();
+  const walk = (n: unknown): void => {
+    if (Array.isArray(n)) { n.forEach(walk); return; }
+    if (n === null || typeof n !== 'object') return;
+    const prop = (n as Node).properties?.[field];
+    if (prop) valuesOf(prop).forEach(v => out.add(v));
+    Object.values(n).forEach(walk);
+  };
+  Object.values(BACK_CORRECTIONS).forEach(walk);
+  return [...out].sort();
+}
 
 describe('Versions de contrat acceptées par le back', () => {
   it('chaque audit accepté s\'affiche : les anciens en décisions, les autres en cartes', () => {
@@ -35,5 +64,32 @@ describe('Versions de contrat acceptées par le back', () => {
   // Sans le dépôt du back à côté de celui-ci, le test ne peut rien comparer : il est sauté.
   it.skipIf(BACK === undefined)('la copie est celle du back voisin (../KnowDesk)', () => {
     expect(VERSIONS).toEqual(BACK);
+  });
+});
+
+describe('Raisons de la base corrigée : listes fermées, un libellé par valeur', () => {
+  it('chaque raison d\'annulation a son libellé, jamais un code affiché', () => {
+    for (const r of UNDO_REASONS) expect(REASON_LABEL[r]).toMatch(/\S/);
+    expect(Object.keys(REASON_LABEL).sort()).toEqual([...UNDO_REASONS, 'no_change_kept'].sort());
+  });
+
+  it('la note d\'image se lit mot pour mot', () => {
+    expect(REASON_LABEL.image_note).toBe(
+      'L\'IA signale que l\'image ou le schéma ci-dessus devrait être mis à jour. Elle ne peut pas modifier une image : à vous de le faire si besoin.',
+    );
+  });
+
+  it('la base 0.3.0 réelle du pilote n\'emploie que des raisons connues de l\'écran', () => {
+    const base = (BASE_PILOTE_03 as unknown as { base: BaseCorrection }).base;
+    const used = base.sheets.flatMap(s => s.sections.flatMap(x => (x.changes ?? []).map(c => c.undo_reason)))
+      .filter((r): r is string => Boolean(r));
+    for (const r of used) expect(UNDO_REASONS).toContain(r);
+    for (const p of base.pending ?? []) expect(PENDING_REASONS).toContain(p.reason);
+  });
+
+  // Une raison que le contrat du back déclare et que l'écran ne connaît pas fait échouer ce test.
+  it.skipIf(Object.keys(BACK_CORRECTIONS).length === 0)('mêmes listes que les schémas consignés du back voisin (../KnowDesk)', () => {
+    expect(backValues('undo_reason')).toEqual([...UNDO_REASONS].sort());
+    expect(backValues('reason')).toEqual([...PENDING_REASONS].sort());
   });
 });

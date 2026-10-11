@@ -7,6 +7,7 @@
  * (identifiant de modification, de carte, de section, code de raison) ne sort de ce module vers
  * l'écran.
  */
+import VERSIONS from './contract-versions.json';
 import type { Decision } from './decisions';
 import { cardTitle, NATURES, orderedCards, type ReadingCard } from './reading';
 
@@ -34,14 +35,32 @@ export interface OnboardingCorrection {
 
 export interface CorrectionQuota { used: number; max: number }
 
-/** Audits que le back sait corriger (422 AUDIT_NOT_CORRECTABLE sinon) : `CORRECTABLE_AUDIT_SCHEMAS` du back. */
-export const CORRECTABLE_AUDIT_SCHEMAS: readonly string[] = ['0.9.0', '0.10.0'];
+/**
+ * Audits que le back sait corriger (422 AUDIT_NOT_CORRECTABLE sinon) : lus dans la copie de
+ * `contract-versions.json` du back, jamais écrits ici.
+ */
+export const CORRECTABLE_AUDIT_SCHEMAS: readonly string[] = VERSIONS.audits.correctable;
 
 /**
- * Bases corrigées que l'écran sait afficher : `SUPPORTED_CORRECTION_SCHEMAS` du back. La 0.2.0
- * ajoute la raison de chaque information en attente.
+ * Bases corrigées que l'écran sait afficher, lues dans la copie de `contract-versions.json` du
+ * back : 0.1.0 ; 0.2.0, qui ajoute la raison de chaque information en attente ; 0.3.0, qui ajoute
+ * les notes de travail et d'image, le sommaire et le chapitre à créer (avec son numéro réservé).
  */
-export const SUPPORTED_CORRECTION_SCHEMAS: readonly string[] = ['0.1.0', '0.2.0'];
+export const SUPPORTED_CORRECTION_SCHEMAS: readonly string[] = VERSIONS.corrections.accepted;
+
+/**
+ * Pourquoi une ligne proposée n'a pas été reprise (`undo_reason`, liste fermée du contrat) : 0.1.0
+ * et 0.2.0, puis 0.3.0 (`internal_wording`, `image_note`, `table_of_contents_changed`). Chacune a
+ * son libellé (`REASON_LABEL`) ; un test échoue si le contrat en déclare une que l'écran ne sait
+ * pas dire.
+ */
+export const UNDO_REASONS = [
+  'not_decided', 'deletion_not_decided', 'heading_or_image_changed', 'qualifier_lost',
+  'value_without_source', 'values_from_several_sources', 'duplicate_or_move',
+  'introduction_without_content', 'invalid_output',
+  'internal_wording', 'image_note', 'table_of_contents_changed',
+] as const;
+export type UndoReason = (typeof UNDO_REASONS)[number];
 
 // Base corrigée, correction.schema.json 0.1.0.
 
@@ -91,9 +110,20 @@ export interface Convention { id: string; rule: string; section_keys: string[] }
 
 /**
  * Pourquoi une carte est en attente (base corrigée 0.2.0) : non répondue, ou répondue mais portée
- * par aucune section de la base (`no_section`), ou sans modification possible.
+ * par aucune section de la base (`no_section`), ou sans modification possible ; 0.3.0 : sa
+ * recommandation demande de créer un chapitre (`new_chapter`), avec le numéro réservé à sa
+ * modification.
  */
-export type PendingReason = 'unanswered' | 'no_section' | 'no_modification';
+export const PENDING_REASONS = ['unanswered', 'no_section', 'no_modification', 'new_chapter'] as const;
+export type PendingReason = (typeof PENDING_REASONS)[number];
+
+export interface PendingInformation {
+  card_id:   string;
+  card_rank: number;
+  reason?:   PendingReason;
+  /** 0.3.0, `new_chapter` seulement : le numéro réservé (« M4 »), tel que le pipeline le donne. */
+  modification_id?: string;
+}
 
 export interface BaseCorrection {
   schema_version: string;
@@ -101,7 +131,7 @@ export interface BaseCorrection {
   modifications:  Modification[];
   conventions?:   Convention[];
   /** 0.2.0 : chaque carte en attente dit pourquoi ; absente en 0.1.0. */
-  pending?:       Array<{ card_id: string; card_rank: number; reason?: PendingReason }>;
+  pending?:       PendingInformation[];
 }
 
 /** GET …/corrections/:id/base. */
@@ -310,7 +340,7 @@ export function originLabel(m: Modification, titles: ReadonlyMap<string, string>
  * Ce que disent les contrôles, à la place de leur code (correction-0.1.0, `UndoReason`), en
  * langage clair : ce que proposait le texte de l'IA, et ce qu'il est devenu.
  */
-const REASON_LABEL: Record<string, string> = {
+export const REASON_LABEL: Record<UndoReason | 'no_change_kept', string> = {
   not_decided:                  'le texte proposé allait au-delà de votre demande ; la fiche est restée telle quelle',
   deletion_not_decided:         'le texte proposé supprimait un passage que vous n\'aviez pas demandé de retirer ; il est resté en place',
   heading_or_image_changed:     'le texte proposé changeait un titre ou une image ; ils sont restés tels quels',
@@ -320,6 +350,9 @@ const REASON_LABEL: Record<string, string> = {
   duplicate_or_move:            'le texte proposé répétait un passage déjà présent dans la fiche ; il n\'a pas été repris',
   introduction_without_content: 'le texte proposé annonçait une liste sans la donner ; il n\'a pas été repris',
   invalid_output:               'l\'IA n\'a pas rendu de texte utilisable pour cette section : la modification n\'y est pas appliquée ; relancez la préparation de la nouvelle base pour réessayer',
+  internal_wording:             'le texte proposé contenait une note de travail ; il n\'a pas été repris',
+  image_note:                   'L\'IA signale que l\'image ou le schéma ci-dessus devrait être mis à jour. Elle ne peut pas modifier une image : à vous de le faire si besoin.',
+  table_of_contents_changed:    'le texte proposé modifiait le sommaire de la base ; il est resté tel quel',
   no_change_kept:               'aucun texte proposé n\'a pu être repris',
 };
 
@@ -336,7 +369,7 @@ function readReason(raw: string, sectionTitle: (key: string) => string | null) {
   const where = isKey ? sectionTitle(key) : null;
   const text = (isKey ? raw.slice(cut + 2) : raw).trim();
   const code = /^[a-z_]+$/.test(text);
-  const said = code ? REASON_LABEL[text] ?? 'le texte proposé n\'a pas été repris' : text;
+  const said = code ? (REASON_LABEL as Record<string, string>)[text] ?? 'le texte proposé n\'a pas été repris' : text;
   return { where, said, fromModel: !code };
 }
 
@@ -423,5 +456,28 @@ export function pendingSentences(
     out.push('Pour les ajouter, nommez la section dans une précision de votre réponse (par exemple « 2.3 »), puis relancez la préparation de la nouvelle base.');
   }
   if (noChange.length > 0) out.push(named(noChange, 'Répondues, sans modification possible de la base'));
+  const chapter = pending.filter(p => p.reason === 'new_chapter');
+  if (chapter.length > 0) {
+    out.push(named(chapter, 'Répondues, mais elles demandent un chapitre qui n\'existe pas encore dans la base'));
+    out.push('La préparation ne crée pas de chapitre : ajoutez-le dans vos documents, puis relancez l\'analyse.');
+  }
   return out;
 }
+
+/** Libellé d'une modification restée en attente parce qu'elle demande un chapitre à créer. */
+export const NEW_CHAPTER_LABEL = 'en attente : création de chapitre';
+
+/**
+ * Les modifications en attente d'un chapitre à créer (0.3.0), avec le numéro que le pipeline leur
+ * a réservé, tel quel : l'écran ne calcule aucun numéro. Elles se relisent à leur rang, parmi les
+ * modifications sans emplacement dans la base.
+ */
+export function chapterRequests(pending: readonly PendingInformation[]): Array<{ id: string; cardId: string }> {
+  return pending.flatMap(p => (p.reason === 'new_chapter' && p.modification_id ? [{ id: p.modification_id, cardId: p.card_id }] : []));
+}
+
+/** Rang d'un numéro de modification (« M10 » après « M9 ») ; une convention ou un numéro inconnu après. */
+export const itemRank = (id: string): number => {
+  const m = /^M(\d+)$/.exec(id);
+  return m ? Number(m[1]) : Number.MAX_SAFE_INTEGER;
+};

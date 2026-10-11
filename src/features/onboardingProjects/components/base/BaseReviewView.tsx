@@ -4,8 +4,8 @@ import {
   modificationPlacement, ownHeading, proposedLines, sectionTitleIndex, sheetViews, type SectionView, type SheetView,
 } from '../../lib/baseDocument';
 import {
-  firstSentence, itemLabel, kindLabel, originLabel, outcomeLabel, partialSummary, pendingSentences, reasonGroups, reviewProgressLabel,
-  SHOWN_REASONS, type ReasonGroup,
+  chapterRequests, firstSentence, itemLabel, itemRank, kindLabel, NEW_CHAPTER_LABEL, originLabel, outcomeLabel, partialSummary,
+  pendingSentences, reasonGroups, reviewProgressLabel, SHOWN_REASONS, type ReasonGroup,
   type BaseCorrection, type Convention, type Modification,
 } from '../../lib/correction';
 import type { BaseReview } from '../../hooks/useBaseReview';
@@ -37,6 +37,7 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
   const placement = useMemo(() => modificationPlacement(sheets, base.modifications), [sheets, base.modifications]);
   const mods = useMemo(() => new Map(base.modifications.map(m => [m.id, m])), [base.modifications]);
   const conventions = base.conventions ?? [];
+  const chapters = useMemo(() => chapterRequests(base.pending ?? []), [base.pending]);
   /** Le texte proposé par chaque modification, toutes sections confondues. */
   /** Les sections que chaque modification touche, dans l'ordre du document, avec les lignes qu'elle y propose. */
   const fixSections = useMemo(() => {
@@ -95,6 +96,24 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
       <OwnWriting id={m.id} writing={ownWriting.get(m.id)} />
     </ReviewCard>
   );
+
+  /**
+   * Une modification en attente d'un chapitre à créer (0.3.0) : à son rang, avec le numéro que le
+   * pipeline lui a réservé ; rien à relire, elle n'écrit rien dans la base.
+   */
+  const chapterCard = (c: { id: string; cardId: string }) => {
+    const title = cardTitles.get(c.cardId);
+    return (
+      <article key={c.id} id={anchorOf(c.id)} className="obp-base-card obp-base-card--pending" aria-label={itemLabel(c.id)}>
+        <h4 className="obp-base-card__title">{itemLabel(c.id)} — {NEW_CHAPTER_LABEL}</h4>
+        {title && <p className="obp-base-card__origin">Carte « {title} »</p>}
+        <p className="obp-muted">
+          Votre réponse demande un chapitre qui n'existe pas encore dans la base. La préparation ne crée pas de chapitre :
+          ajoutez-le dans vos documents, puis relancez l'analyse.
+        </p>
+      </article>
+    );
+  };
 
   const conventionCard = (c: Convention) => (
     <ReviewCard
@@ -220,10 +239,15 @@ export function BaseReviewView({ base, cardTitles, editable, review }: BaseRevie
         </section>
       )}
 
-      {placement.unplaced.length > 0 && (
+      {(placement.unplaced.length > 0 || chapters.length > 0) && (
         <section className="obp-base-chapter" aria-labelledby="obp-base-unplaced">
           <h2 id="obp-base-unplaced" className="obp-base-chapter__title">Modifications sans emplacement dans la base</h2>
-          <div className="obp-base-side obp-base-side--wide">{placement.unplaced.map(modificationCard)}</div>
+          <div className="obp-base-side obp-base-side--wide">
+            {[
+              ...placement.unplaced.map(m => ({ id: m.id, node: modificationCard(m) })),
+              ...chapters.map(c => ({ id: c.id, node: chapterCard(c) })),
+            ].sort((a, b) => itemRank(a.id) - itemRank(b.id)).map(x => x.node)}
+          </div>
         </section>
       )}
 
@@ -252,6 +276,12 @@ function OwnWriting({ id, writing }: { id: string; writing: { writes: boolean; o
   );
 }
 
+/**
+ * Un libellé de l'écran écrit en phrases complètes (la note d'image) se lit tel quel, sous la
+ * suite de la modification ; les autres se lisent à sa suite, sans majuscule.
+ */
+const standsAlone = (g: ReasonGroup): boolean => !g.fromModel && /[.!?]$/.test(g.text);
+
 const reasonLine = (g: ReasonGroup) => `${g.text}${g.sections > 1 ? ` (dans ${g.sections} sections)` : ''}`;
 
 /**
@@ -265,8 +295,10 @@ function Outcome({ label, applied, groups }: { label: string; applied: boolean; 
     <div className={`obp-base-card__outcome${applied ? '' : ' obp-base-card__outcome--na'}`}>
       <p>
         <strong>{label}</strong>
-        {summary && ` : ${firstSentence(summary.text).charAt(0).toLowerCase()}${firstSentence(summary.text).slice(1)}.`}
+        {summary && !standsAlone(summary) && ` : ${firstSentence(summary.text).charAt(0).toLowerCase()}${firstSentence(summary.text).slice(1)}.`}
+        {summary && standsAlone(summary) && '.'}
       </p>
+      {summary && standsAlone(summary) && <p>{summary.text}</p>}
       {rest.length > 0 && (
         <>
           <p className="obp-base-card__reasons-head">{applied ? 'Ce qui n\'a pas été repris :' : 'Pourquoi :'}</p>
