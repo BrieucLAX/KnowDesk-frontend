@@ -459,7 +459,7 @@ export function pendingSentences(
   const chapter = pending.filter(p => p.reason === 'new_chapter');
   if (chapter.length > 0) {
     out.push(named(chapter, 'Répondues, mais elles demandent un chapitre qui n\'existe pas encore dans la base'));
-    out.push('La préparation ne crée pas de chapitre. Pour en ajouter le contenu à cette base, utilisez « Corriger cette section » sur la section où il doit figurer. Relancer l\'analyse avec un document qui contient ce chapitre repart d\'un nouvel audit : vos réponses actuelles n\'y sont pas reportées.');
+    out.push('La préparation ne crée pas de nouveau chapitre. Pour ajouter ce contenu, utilisez « Corriger cette section » sur la section la plus proche. Attention : relancer l\'analyse repart d\'un nouvel audit, et les réponses actuelles n\'y seraient pas reprises.');
   }
   return out;
 }
