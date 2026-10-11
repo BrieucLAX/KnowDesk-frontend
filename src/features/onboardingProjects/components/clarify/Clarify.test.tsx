@@ -455,6 +455,53 @@ describe('À clarifier (audit 0.8.0)', () => {
       expect(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeInTheDocument();
     });
 
+    /**
+     * Point 5 du plan v4 : la carte dont un passage n'a pas été retrouvé (côté B non vérifié), avec
+     * l'effet voulu pour sa recommandation.
+     */
+    const withEffect = async (effect: { type: 'accept_side'; side: 'A' | 'B' } | { type: 'complete' } | null) => {
+      const r = response09();
+      r.reading!.cards.find(c => c.id === oneSidedWithRefused.id)!.recommendation!.effect = effect;
+      vi.mocked(onboardingApi.getAudit).mockResolvedValue(r);
+      await openSession();
+      goTo(oneSidedWithRefused.analysis.subject);
+      await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(oneSidedWithRefused) + 1} sur 9` });
+      return screen.getByRole('group', { name: 'Recommandation de l\'IA' });
+    };
+    const BLOCKED = 'Le passage que retient cette recommandation n\'a pas pu être retrouvé dans vos documents : répondez vous-même ci-dessous.';
+    const WARNING = 'Un passage cité par l\'IA n\'a pas pu être retrouvé dans vos documents : la recommandation ne s\'appuie que sur les passages affichés.';
+
+    it('point 5 : le côté retenu n\'a aucune citation vérifiée → bouton désactivé, avec sa raison ; les autres réponses restent', async () => {
+      const reco = await withEffect({ type: 'accept_side', side: 'B' });
+      expect(within(reco).getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeDisabled();
+      expect(reco).toHaveTextContent(BLOCKED);
+      expect(within(reco).queryByRole('note')).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Oui, ce passage est juste' })).toBeEnabled();
+      expect(screen.getByRole('button', { name: 'Autre réponse' })).toBeEnabled();
+    });
+
+    it('point 5 : aucun côté retenu, un passage non retrouvé → bouton actif et bandeau', async () => {
+      const reco = await withEffect(null);
+      expect(within(reco).getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeEnabled();
+      expect(within(reco).getByRole('note')).toHaveTextContent(WARNING);
+      expect(reco).not.toHaveTextContent(BLOCKED);
+    });
+
+    it('point 5 : le côté retenu est vérifié, l\'autre passage non retrouvé → bouton actif et bandeau', async () => {
+      const reco = await withEffect({ type: 'accept_side', side: 'A' });
+      expect(within(reco).getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeEnabled();
+      expect(within(reco).getByRole('note')).toHaveTextContent(WARNING);
+    });
+
+    it('point 5 : toutes les citations vérifiées → ni bandeau, ni raison', async () => {
+      await openSession();
+      const reco = screen.getByRole('group', { name: 'Recommandation de l\'IA' });
+      expect(dated.unverifiedQuotes).toEqual([]);
+      expect(within(reco).getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeEnabled();
+      expect(within(reco).queryByRole('note')).not.toBeInTheDocument();
+      expect(reco).not.toHaveTextContent(BLOCKED);
+    });
+
     it('le libellé de la réponse dans l\'historique', async () => {
       vi.mocked(onboardingApi.listDecisions).mockResolvedValue(state([answer(dated.id, {
         type: 'follow_recommendation', recommendation: dated.analysis.proposal, effect: null, precisions: null,

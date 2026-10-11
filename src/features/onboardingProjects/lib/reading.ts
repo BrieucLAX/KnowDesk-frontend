@@ -296,6 +296,32 @@ export function firstOpenCard(ordered: ReadingCard[], current: ReadonlyMap<strin
 export const FOLLOW_RECOMMENDATION_LABEL = 'Je suis la recommandation de l\'IA';
 
 /**
+ * « Je suis la recommandation de l'IA » ne peut rien écrire quand le côté qu'elle retient n'a
+ * aucune citation vérifiée dans vos documents (plan-corrections-v4, point 5) : le bouton est
+ * désactivé, avec sa raison. Le pipeline laisse d'ailleurs une telle carte en attente.
+ */
+export function followBlocked(card: ReadingCard): boolean {
+  const effect = card.recommendation?.effect ?? null;
+  if (effect?.type !== 'accept_side') return false;
+  const side = card.sides.find(s => s.label === effect.side);
+  return !side || !toQuotes(side.quotes).some(q => q.kind === 'document');
+}
+
+export const FOLLOW_BLOCKED_REASON =
+  'Le passage que retient cette recommandation n\'a pas pu être retrouvé dans vos documents : répondez vous-même ci-dessous.';
+
+/**
+ * Un passage cité par l'IA n'a pas pu être retrouvé (citation non vérifiée), alors que la
+ * recommandation reste possible : elle retient un côté vérifié, ou n'en retient aucun. Un bandeau
+ * le signale à côté du bouton.
+ */
+export const followWarned = (card: ReadingCard): boolean =>
+  Boolean(card.recommendation) && card.unverifiedQuotes.length > 0 && !followBlocked(card);
+
+export const FOLLOW_WARNING =
+  'Un passage cité par l\'IA n\'a pas pu être retrouvé dans vos documents : la recommandation ne s\'appuie que sur les passages affichés.';
+
+/**
  * Ce que « Je suis la recommandation de l'IA » fera dans la base, en clair, selon l'effet que le
  * pipeline a lu dans la recommandation.
  */
