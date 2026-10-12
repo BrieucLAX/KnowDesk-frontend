@@ -23,6 +23,8 @@ interface AuditTabProps {
   onGoToAnalysis: () => void;
   /** Ouvre l'onglet « Nouvelle base ». */
   onOpenBase?:    () => void;
+  /** Ouvre « À clarifier » directement sur cette carte de la dernière analyse (depuis « Nouvelle base »). */
+  openCardId?:    string;
 }
 
 type Loaded =
@@ -40,7 +42,7 @@ type Loaded =
  * 0.8.0 (lecture globale) montre ses cartes ; un audit 0.6.0 ou 0.7.0, ses
  * questions, comme avant.
  */
-export function AuditTab({ project, onGoToAnalysis, onOpenBase }: AuditTabProps) {
+export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: AuditTabProps) {
   const toast = useToast();
   const [analyses, setAnalyses] = useState<OnboardingAnalysis[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
@@ -72,7 +74,8 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase }: AuditTabProps)
     let cancelled = false;
     setLoaded({ state: 'loading' });
     setSession(false);
-    setClarify(undefined);
+    // La carte demandée ne vaut que pour la dernière analyse, la seule qui s'arbitre.
+    setClarify(openCardId && selected === analyses?.[0]?.id ? openCardId : undefined);
     onboardingApi.getAudit(project.id, selected)
       .then(res => {
         if (cancelled) return;

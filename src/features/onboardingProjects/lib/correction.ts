@@ -160,6 +160,8 @@ export interface Review {
   comment:       string | null;
   supersedesId:  string | null;
   authorName:    string | null;
+  /** Absent d'un back antérieur au point 11 du plan v4. */
+  authorId?:     string | null;
   createdAt:     string;
   cancellation:  Cancellation | null;
 }
@@ -187,6 +189,8 @@ export interface SectionFix {
   correctedText: string;
   supersedesId:  string | null;
   authorName:    string | null;
+  /** Absent d'un back antérieur au point 11 du plan v4. */
+  authorId?:     string | null;
   createdAt:     string;
   cancellation:  Cancellation | null;
 }
@@ -198,11 +202,30 @@ export interface ValidationSummary {
   id:              string;
   correctionId:    string;
   version:         number;
+  /** Le nom relu dans le profil par le back : jamais une adresse, « un membre de l'équipe » s'il manque. */
   validatedByName: string;
+  /** Absent d'un back antérieur au point 11 du plan v4. */
+  validatedById?:  string | null;
   validatedAt:     string;
   /** La plus récente : ses avis sont-ils encore les avis courants ? null pour les précédentes. */
   upToDate:        boolean | null;
+  /** Ce qui a changé depuis (plan v4, point 10) ; absent d'un back plus ancien, null s'il n'est pas calculé. */
+  changed?:        { reviews: boolean; sectionTexts: boolean } | null;
 }
+
+/**
+ * Pourquoi revalider, selon ce qui a changé (plan v4, point 10). Sans cause connue (back plus
+ * ancien, ou `changed` nul), le libellé d'avant sert de repli.
+ */
+export function revalidationLabel(v: Pick<ValidationSummary, 'changed'>, validatedAt: string): string {
+  const what = v.changed?.reviews && v.changed.sectionTexts ? 'Vos avis et vos textes de section ont changé'
+    : v.changed?.sectionTexts ? 'Vos textes de section ont changé'
+    : 'Vos avis ont changé';
+  return `${what} depuis la version validée du ${validatedAt} : revalidez pour mettre à jour la version propre.`;
+}
+
+/** Le nom que le back donne à une personne sans prénom ni nom (KnowDesk#42). */
+export const UNNAMED = 'un membre de l\'équipe';
 
 /** Une fiche de la version propre : son premier titre et son texte final, assemblés par le back. */
 export interface CleanSheet { documentId: string; path: string; title: string; markdown: string }
@@ -462,6 +485,19 @@ export function pendingSentences(
     out.push('La préparation ne crée pas de nouveau chapitre. Pour ajouter ce contenu, utilisez « Corriger cette section » sur la section la plus proche. Attention : relancer l\'analyse repart d\'un nouvel audit, et les réponses actuelles n\'y seraient pas reprises.');
   }
   return out;
+}
+
+/**
+ * Le texte d'une réponse enregistrée, à recopier (plan v4, point 13) : ce qui a été saisi, ou, pour
+ * « Je suis la recommandation de l'IA », la recommandation suivie et la précision ; null pour une
+ * réponse sans texte.
+ */
+export function recordedAnswer(action: Decision['action']): string | null {
+  const a = action as { type: string; text?: string; recommendation?: string; precisions?: string | null };
+  if (a.type === 'follow_recommendation') {
+    return [a.recommendation?.trim(), a.precisions?.trim() && `Précision : ${a.precisions.trim()}`].filter(Boolean).join('\n\n') || null;
+  }
+  return a.text?.trim() || null;
 }
 
 /** Libellé d'une modification restée en attente parce qu'elle demande un chapitre à créer. */

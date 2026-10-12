@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
+import { AuthorName } from './AuthorName';
 import { formatFull } from '../../../../shared/lib/formatDate';
 import type { Review, Verdict } from '../../lib/correction';
 import type { ReviewDraft, SaveState } from '../../hooks/useBaseReview';
@@ -146,7 +147,7 @@ export function ReviewCard({ anchor, title, children, withVerdict, fixable, edit
       )}
       {current && (
         <p className="obp-muted obp-base-card__author">
-          {current.authorName ? `Avis de ${current.authorName}, le ` : 'Avis du '}{formatFull(current.createdAt)}
+          {current.authorName ? <>Avis de <AuthorName name={current.authorName} authorId={current.authorId} />, le </> : 'Avis du '}{formatFull(current.createdAt)}
         </p>
       )}
     </article>

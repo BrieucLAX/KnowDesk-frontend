@@ -7,6 +7,8 @@ import { formatFull } from '../../../../shared/lib/formatDate';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { onboardingApi } from '../../api/onboardingApi';
 import { cardTitles, isCorrectionActive, SUPPORTED_CORRECTION_SCHEMAS, type BaseVersion, type OnboardingCorrection } from '../../lib/correction';
+import type { Decision } from '../../lib/decisions';
+import { cardTitle, NATURES, orderedCards, type ReadingCard } from '../../lib/reading';
 import { useBaseReview } from '../../hooks/useBaseReview';
 import type { OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from '../audit/AuditSource';
@@ -19,12 +21,17 @@ export const CORRECTION_POLL_MS = 5000;
 
 interface BaseTabProps {
   project:       OnboardingProject;
-  onGoToClarify: () => void;
+  /** Ouvre « À clarifier », sur une carte si elle est donnée. */
+  onGoToClarify: (cardId?: string) => void;
   /** Ouvre la version propre d'une version validée. */
   onOpenValidation?: (validationId: string) => void;
 }
 
-type Loaded = { state: 'loading' } | { state: 'none' } | { state: 'ready'; analysisId: string; corrections: OnboardingCorrection[] };
+type Loaded =
+  | { state: 'loading' }
+  /** Aucune base : `analysisId`, la dernière analyse réussie s'il y en a une, dont les cartes bloquantes se nomment. */
+  | { state: 'none'; analysisId: string | null }
+  | { state: 'ready'; analysisId: string; corrections: OnboardingCorrection[] };
 
 /**
  * Onglet « Nouvelle base » : la préparation en cours (étapes, avancement), puis la relecture de la
@@ -43,13 +50,13 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabPro
   const refresh = useCallback(async () => {
     const { data: analyses } = await onboardingApi.listAnalyses(project.id);
     const latest = analyses.find(a => a.status === 'succeeded');
-    if (!latest) { setLoaded({ state: 'none' }); return; }
+    if (!latest) { setLoaded({ state: 'none', analysisId: null }); return; }
     const { data } = await onboardingApi.listCorrections(project.id, latest.id);
-    setLoaded(data.length === 0 ? { state: 'none' } : { state: 'ready', analysisId: latest.id, corrections: data });
+    setLoaded(data.length === 0 ? { state: 'none', analysisId: latest.id } : { state: 'ready', analysisId: latest.id, corrections: data });
   }, [project.id]);
 
   useEffect(() => {
-    refresh().catch(err => { setLoaded({ state: 'none' }); toast.error(getErrorMessage(err)); });
+    refresh().catch(err => { setLoaded({ state: 'none', analysisId: null }); toast.error(getErrorMessage(err)); });
   }, [refresh, toast]);
 
   const corrections = loaded.state === 'ready' ? loaded.corrections : [];
@@ -59,7 +66,9 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabPro
 
   // La dernière base prête, sauf choix d'une précédente.
   const shownId = selected !== null && succeeded.some(c => c.id === selected) ? selected : succeeded[0]?.id ?? null;
-  const analysisId = loaded.state === 'ready' ? loaded.analysisId : null;
+  const analysisId = loaded.state === 'loading' ? null : loaded.analysisId;
+  const [cards, setCards] = useState<ReadingCard[]>([]);
+  const [decisions, setDecisions] = useState<ReadonlyMap<string, Decision>>(new Map());
 
   useEffect(() => {
     if (shownId === null) { setBase(null); return; }
@@ -76,7 +85,11 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabPro
     if (analysisId === null) return;
     let cancelled = false;
     onboardingApi.getAudit(project.id, analysisId)
-      .then(res => { if (!cancelled && res.reading) setTitles(cardTitles(res.reading.cards)); })
+      .then(res => { if (!cancelled && res.reading) { setTitles(cardTitles(res.reading.cards)); setCards(res.reading.cards); } })
+      .catch(() => {});
+    // Les réponses courantes : cartes encore bloquantes (écran vide), réponse d'une carte en attente.
+    onboardingApi.listDecisions(project.id, analysisId)
+      .then(res => { if (!cancelled) setDecisions(new Map(res.decisions.map(d => [d.cardId ?? d.questionId, d]))); })
       .catch(() => {});
     onboardingApi.listAuditImages(project.id, analysisId)
       .then(list => { if (!cancelled) setImageIds(new Set(list.map(i => i.imageId))); })
@@ -90,6 +103,8 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabPro
   );
   const images = useMemo<AuditImages>(() => ({ available: imageIds, load: loadImage }), [imageIds, loadImage]);
   const review = useBaseReview(project.id, base?.correctionId ?? null);
+  /** Le bas de la relecture, où le panneau de validation reprend son bouton (plan v4, point 7). */
+  const [footer, setFooter] = useState<HTMLDivElement | null>(null);
 
   const retry = async () => {
     if (analysisId === null) return;
@@ -106,13 +121,37 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabPro
 
   if (loaded.state === 'loading') return <Skeleton className="obp-skeleton-block" />;
   if (loaded.state === 'none') {
+    // Les cartes qui bloquent encore la préparation, nommées, chacune ouvrable (plan v4, point 12).
+    const blocking = orderedCards(cards)
+      .map((c, i) => ({ card: c, title: cardTitle(c, i + 1) }))
+      .filter(({ card }) => {
+        const d = decisions.get(card.id);
+        return NATURES[card.nature].blocking && (!d || d.action.type === 'later');
+      });
     return (
-      <EmptyState
-        title="Aucune nouvelle base pour l'instant"
-        description="Elle se prépare depuis « À clarifier », une fois toutes les cartes bloquantes tranchées."
-        ctaLabel="Aller à « À clarifier »"
-        onCta={onGoToClarify}
-      />
+      <>
+        <EmptyState
+          title="Aucune nouvelle base pour l'instant"
+          description="Elle se prépare depuis « À clarifier », une fois toutes les cartes bloquantes tranchées."
+          ctaLabel="Aller à « À clarifier »"
+          onCta={() => onGoToClarify()}
+        />
+        {blocking.length > 0 && (
+          <section className="obp-base-blocking" aria-label="Cartes qui bloquent la préparation">
+            <p className="obp-base-blocking__head">
+              {blocking.length > 1 ? `${blocking.length} cartes bloquent encore la préparation :` : '1 carte bloque encore la préparation :'}
+            </p>
+            <ul>
+              {blocking.map(({ card, title }) => (
+                <li key={card.id}>
+                  <button type="button" className="obp-link" onClick={() => onGoToClarify(card.id)}>{title}</button>
+                  {decisions.get(card.id)?.action.type === 'later' && <span className="obp-muted"> · laissée « Plus tard »</span>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </>
     );
   }
 
@@ -149,12 +188,15 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabPro
                 projectId={project.id}
                 correctionId={base.correctionId}
                 reviews={review.state.reviews}
+                fixes={review.state.fixes}
                 toReview={review.state.toReview}
                 editable={base.reviewable}
                 onOpen={onOpenValidation}
+                footer={footer}
               />
             )}
-            <BaseReviewView base={base.base} cardTitles={titles} editable={base.reviewable} review={review} />
+            <BaseReviewView base={base.base} cardTitles={titles} decisions={decisions} editable={base.reviewable} review={review} />
+            <div ref={setFooter} />
           </AuditImagesContext.Provider>
         )
       )}

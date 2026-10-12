@@ -4,7 +4,8 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
 
 vi.mock('../../api/onboardingApi', () => ({
   onboardingApi: {
-    listAnalyses: vi.fn(), getAudit: vi.fn(), listAuditImages: vi.fn(), getAuditImage: vi.fn(),
+    listAnalyses: vi.fn(), getAudit: vi.fn(), listAuditImages: vi.fn(), getAuditImage: vi.fn(), listDecisions: vi.fn(),
+    listValidations: vi.fn(), validateBase: vi.fn(),
     listCorrections: vi.fn(), launchCorrection: vi.fn(), getBase: vi.fn(),
     listReviews: vi.fn(), review: vi.fn(), cancelReview: vi.fn(),
     listSectionComments: vi.fn(), commentSection: vi.fn(), cancelSectionComment: vi.fn(),
@@ -20,6 +21,7 @@ import { onboardingApi } from '../../api/onboardingApi';
 import { ApiError } from '../../../../shared/lib/apiClient';
 import { BaseTab } from './BaseTab';
 import { CorrectionEntry } from './CorrectionEntry';
+import { CurrentUserContext } from './AuthorName';
 import type { BaseVersion, OnboardingCorrection, Review } from '../../lib/correction';
 import type { Decision } from '../../lib/decisions';
 import type { AuditResponse } from '../../lib/audit';
@@ -68,6 +70,8 @@ function mockBase(base: BaseVersion = PILOTE, corrections: OnboardingCorrection[
   vi.mocked(onboardingApi.getBase).mockResolvedValue(base);
   vi.mocked(onboardingApi.getAudit).mockResolvedValue({ schemaVersion: '0.9.0', reading: { cards: CARDS } } as unknown as AuditResponse);
   vi.mocked(onboardingApi.listAuditImages).mockResolvedValue([]);
+  vi.mocked(onboardingApi.listValidations).mockResolvedValue([]);
+  vi.mocked(onboardingApi.listDecisions).mockResolvedValue({ decisions: [], counts: { decided: 0, later: 0, skipped: 0 }, arbitrable: true });
   vi.mocked(onboardingApi.listReviews).mockResolvedValue({ reviews: [], counts: { reviewed: 0, toReview: 6 } });
   vi.mocked(onboardingApi.listSectionComments).mockResolvedValue([]);
   vi.mocked(onboardingApi.listSectionFixes).mockResolvedValue([]);
@@ -164,6 +168,47 @@ describe('Nouvelle base : relecture', () => {
     expect(container.textContent).toContain('L\'IA signale que l\'image ou le schéma ci-dessus devrait être mis à jour. Elle ne peut pas modifier une image : à vous de le faire si besoin.');
     expect(container.textContent).toContain('le texte proposé contenait une note de travail ; il n\'a pas été repris');
     expect(container.textContent).not.toMatch(TECHNICAL);
+  });
+
+  it('point 13 : la carte en attente d\'un chapitre montre la réponse enregistrée, son auteur, sa date, et la copie', async () => {
+    const base = BASE_PILOTE_03 as unknown as BaseVersion;
+    mockBase(base, [correction({ id: base.correctionId })]);
+    const cards = (CARDS_PILOTE_B9.cards as unknown as ReadingCard[]).map(c => ({
+      ...c, mergedRanks: [], documentIds: [], sides: [], answers: [], unverifiedQuotes: [],
+    }));
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue({ schemaVersion: '0.8.0', reading: { cards } } as unknown as AuditResponse);
+    const [chapter] = base.base.pending!;
+    const recommendation = 'Créer un nouveau chapitre dans la base de connaissance dédié à la téléconsultation médicale.';
+    vi.mocked(onboardingApi.listDecisions).mockResolvedValue({
+      decisions: [{
+        id: 'd4', questionId: chapter.card_id, cardId: chapter.card_id, groupId: null, conflictIds: null, supersedesId: null,
+        action: { type: 'follow_recommendation', recommendation, effect: { type: 'complete' }, precisions: 'Lancement le 1er mars 2027.' },
+        decidedBy: { id: 'u-moi', name: 'un membre de l\'équipe' }, decidedAt: '2026-10-04T09:00:00Z', cancelledAt: null, cancelledBy: null,
+      }] as unknown as Decision[],
+      counts: { decided: 1, later: 0, skipped: 0 }, arbitrable: true,
+    });
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    render(<CurrentUserContext.Provider value="u-moi"><BaseTab project={project} onGoToClarify={() => {}} /></CurrentUserContext.Provider>);
+    const m4 = await screen.findByRole('article', { name: 'Modification 4' });
+    await waitFor(() => expect(m4).toHaveTextContent('Réponse enregistrée par un membre de l\'équipe'));
+    expect(m4).toHaveTextContent(/le \d{1,2} octobre 2026/);
+    expect(within(m4).getByRole('link', { name: 'Ajoutez votre nom à votre profil' })).toHaveAttribute('href', '/account');
+    const quote = m4.querySelector('.obp-base-answer__text')!;
+    expect(quote.textContent).toBe(`${recommendation}\n\nPrécision : Lancement le 1er mars 2027.`);
+    fireEvent.click(within(m4).getByRole('button', { name: 'Copier la réponse' }));
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(quote.textContent));
+    expect(await within(m4).findByRole('button', { name: 'Copiée' })).toBeInTheDocument();
+  });
+
+  it('point 9 : « Corriger cette section » est un bouton secondaire, sur chaque section, modifiée ou non', async () => {
+    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByText('0 sur 6 relues');
+    const sections = container.querySelectorAll('.obp-base-section');
+    const buttons = [...container.querySelectorAll('.obp-base-section-fix button')].filter(b => b.textContent === 'Corriger cette section');
+    expect(sections.length).toBeGreaterThan(1);
+    expect(buttons).toHaveLength(sections.length);
+    for (const b of buttons) expect(b.className).toMatch(/secondary/);
   });
 
   it('base d\'une version inconnue : le dit, sans rien afficher d\'autre', async () => {
@@ -340,13 +385,17 @@ describe('Nouvelle base : relecture', () => {
     await waitFor(() => expect(onboardingApi.fixSection).toHaveBeenCalledWith('p1', PILOTE.correctionId, expect.objectContaining({
       expectedCurrentId: null, correctedText: 'Mon texte de la section.',
     })));
-    expect(await within(folded).findByText('corrigée par vous')).toBeInTheDocument();
-    expect(within(folded).getByText(/il la remplace dans la version propre/)).toBeInTheDocument();
+    // Point 8 du plan v4 : la section affiche le texte enregistré, et qui l'a corrigée.
+    expect(await within(folded).findByText('corrigée')).toBeInTheDocument();
+    expect(within(folded).getByText(/^Texte corrigé par Camille Martin, le /)).toBeInTheDocument();
+    expect(folded.querySelector('.obp-base-fixed pre')!.textContent).toBe('Mon texte de la section.');
+    expect(within(folded).getByText('Ce texte remplace la section dans la version propre.')).toBeInTheDocument();
 
-    fireEvent.click(within(folded).getByRole('button', { name: 'Modifier votre texte de la section' }));
+    fireEvent.click(within(folded).getByRole('button', { name: 'Modifier le texte corrigé' }));
     fireEvent.click(within(folded).getByRole('button', { name: 'Revenir au texte de la base' }));
     await waitFor(() => expect(onboardingApi.cancelSectionFix).toHaveBeenCalledWith('p1', PILOTE.correctionId, saved.id));
-    await waitFor(() => expect(within(folded).queryByText('corrigée par vous')).not.toBeInTheDocument());
+    await waitFor(() => expect(within(folded).queryByText('corrigée')).not.toBeInTheDocument());
+    expect(within(folded).queryByText(/^Texte corrigé par/)).not.toBeInTheDocument();
   });
 
   it('un back sans « Corriger cette section » (avant la migration 57) : la relecture se charge quand même', async () => {
@@ -433,6 +482,29 @@ describe('Nouvelle base : préparation', () => {
     render(<BaseTab project={project} onGoToClarify={go} />);
     fireEvent.click(await screen.findByRole('button', { name: 'Aller à « À clarifier »' }));
     expect(go).toHaveBeenCalled();
+  });
+
+  it('point 12 : sans préparation, les cartes qui bloquent sont nommées, chacune ouvrable dans « À clarifier »', async () => {
+    mockBase(PILOTE, []);
+    const blocking = CARDS.filter(c => ['dated_change', 'contradiction', 'probable_error'].includes(c.nature));
+    const [answered, later, ...open] = blocking;
+    vi.mocked(onboardingApi.listDecisions).mockResolvedValue({
+      decisions: [
+        { id: 'd1', questionId: answered.id, cardId: answered.id, action: { type: 'out_of_scope' } },
+        { id: 'd2', questionId: later.id, cardId: later.id, action: { type: 'later' } },
+      ] as unknown as Decision[],
+      counts: { decided: 1, later: 1, skipped: 0 }, arbitrable: true,
+    });
+    const go = vi.fn();
+    render(<BaseTab project={project} onGoToClarify={go} />);
+    const list = await screen.findByRole('region', { name: 'Cartes qui bloquent la préparation' });
+    await waitFor(() => expect(within(list).getAllByRole('button')).toHaveLength(open.length + 1));
+    expect(list).toHaveTextContent(`${open.length + 1} cartes bloquent encore la préparation :`);
+    expect(list).not.toHaveTextContent(answered.analysis.subject);
+    const laterItem = within(list).getByRole('button', { name: later.analysis.subject }).closest('li')!;
+    expect(laterItem).toHaveTextContent('laissée « Plus tard »');
+    fireEvent.click(within(list).getByRole('button', { name: open[0].analysis.subject }));
+    expect(go).toHaveBeenCalledWith(open[0].id);
   });
 });
 
