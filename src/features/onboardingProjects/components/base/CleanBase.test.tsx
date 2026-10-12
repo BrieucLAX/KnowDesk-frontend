@@ -137,6 +137,28 @@ describe('Relecture : valider la nouvelle base', () => {
     await waitFor(() => expect(open).toHaveBeenCalledWith('v9'));
   });
 
+  it('point 7 : une validation lancée d\'un bouton désactive les deux, sans second envoi', async () => {
+    mockBase(PILOTE, applied.map(m => review(m.id)));
+    let done!: (v: ValidationSummary) => void;
+    vi.mocked(onboardingApi.validateBase).mockReturnValue(new Promise(r => { done = r; }));
+    const open = vi.fn();
+    render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
+    const phrase = await screen.findByText('Tous les avis sont donnés : validez pour obtenir la version finale.');
+    const bottom = within(phrase.closest('section') as HTMLElement).getByText('Valider la nouvelle base').closest('button')!;
+    const top = within(screen.getByRole('region', { name: 'Validation de la nouvelle base' }))
+      .getAllByRole('button').find(b => b !== bottom && b.textContent === 'Valider la nouvelle base')!;
+    // Deux clics dans le même tour, puis l'autre bouton.
+    fireEvent.click(bottom);
+    fireEvent.click(bottom);
+    await waitFor(() => expect(top).toBeDisabled());
+    expect(bottom).toBeDisabled();
+    fireEvent.click(top);
+    expect(onboardingApi.validateBase).toHaveBeenCalledTimes(1);
+    done(summary({ id: 'v9' }));
+    await waitFor(() => expect(open).toHaveBeenCalledWith('v9'));
+    expect(onboardingApi.validateBase).toHaveBeenCalledTimes(1);
+  });
+
   it('point 7 : un avis qui manque, ou une version à jour : rien en bas', async () => {
     mockBase(PILOTE, [review('M1')]);
     render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);

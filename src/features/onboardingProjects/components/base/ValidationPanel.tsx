@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '../../../../shared/components/ui/Button';
 import { useToast } from '../../../../shared/lib/useToast';
@@ -36,6 +36,8 @@ export function ValidationPanel({ projectId, correctionId, reviews, fixes, toRev
   const toast = useToast();
   const [validations, setValidations] = useState<ValidationSummary[] | null>(null);
   const [validating, setValidating] = useState(false);
+  /** Une validation en cours : les deux boutons (haut et bas) n'en lancent pas une seconde. */
+  const sending = useRef(false);
 
   const load = useCallback(async () => {
     setValidations(await onboardingApi.listValidations(projectId, correctionId));
@@ -48,6 +50,8 @@ export function ValidationPanel({ projectId, correctionId, reviews, fixes, toRev
   const latest = validations?.[0] ?? null;
 
   const validate = async () => {
+    if (sending.current) return;
+    sending.current = true;
     setValidating(true);
     try {
       const v = await onboardingApi.validateBase(projectId, correctionId);
@@ -56,6 +60,7 @@ export function ValidationPanel({ projectId, correctionId, reviews, fixes, toRev
       toast.error(getErrorMessage(err));
       void load().catch(() => {});
     } finally {
+      sending.current = false;
       setValidating(false);
     }
   };
