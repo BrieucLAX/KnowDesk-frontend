@@ -34,6 +34,8 @@
   --color-danger-border: #FAC5BF;
   --color-success:    #1A6B3C;
   --color-success-bg: #EDFAF3;
+  --color-warning:    #9A6700;
+  --color-warning-bg: #FFF4CC;
 
   /* Typography */
   --font-ui:    'DM Sans', sans-serif;

@@ -86,12 +86,13 @@ export function wordDiff(before: string, after: string): WordPart[] {
 
 export type Block =
   | { op: 'equal'; line: Line }
-  | { op: 'insert' | 'delete'; line: Line; modificationId: string | null }
+  /** `toVerify` (0.4.0) : les phrases « À vérifier » de la ligne ajoutée, mot pour mot. */
+  | { op: 'insert' | 'delete'; line: Line; modificationId: string | null; toVerify?: string[] }
   /**
    * `rewritten` : plus de la moitié des mots changent, ou le sens s'inverse (une négation ou un
    * symbole d'état qui change) ; on montre l'ancien barré, puis le nouveau.
    */
-  | { op: 'modify'; before: Line; after: Line; modificationId: string | null; rewritten: boolean };
+  | { op: 'modify'; before: Line; after: Line; modificationId: string | null; rewritten: boolean; toVerify?: string[] };
 
 /** Au-delà, un paragraphe est réécrit : le mot à mot deviendrait illisible. */
 export const REWRITE_SHARE = 0.5;
@@ -150,14 +151,14 @@ export function sectionBlocks(section: CorrectedSection): Block[] {
     const used = new Set<number>();
     for (const d of deleted) {
       const n = inserted.findIndex((x, idx) => !used.has(idx) && x.type === d.type);
-      if (n === -1) { blocks.push({ op: 'delete', line: d, modificationId: owner(d.text, '') }); continue; }
+      if (n === -1) { blocks.push({ op: 'delete', line: d, modificationId: owner(d.text, '').modificationId }); continue; }
       used.add(n);
       const [a, b] = [plainText(d), plainText(inserted[n])];
       const rewritten = changedShare(a, b) > REWRITE_SHARE || senseChanged(a, b);
-      blocks.push({ op: 'modify', before: d, after: inserted[n], modificationId: owner(d.text, inserted[n].text), rewritten });
+      blocks.push({ op: 'modify', before: d, after: inserted[n], ...owner(d.text, inserted[n].text), rewritten });
     }
     inserted.forEach((x, idx) => {
-      if (!used.has(idx)) blocks.push({ op: 'insert', line: x, modificationId: owner('', x.text) });
+      if (!used.has(idx)) blocks.push({ op: 'insert', line: x, ...owner('', x.text) });
     });
   }
   return blocks;
@@ -165,16 +166,18 @@ export function sectionBlocks(section: CorrectedSection): Block[] {
 
 /**
  * La modification qui couvre un changement : celle du changement gardé au même texte, sinon,
- * quand la section n'en porte qu'une, celle-là.
+ * quand la section n'en porte qu'une, celle-là ; et les phrases « À vérifier » (0.4.0) de ce
+ * changement, s'il en a.
  */
-function changeOwner(section: CorrectedSection): (before: string, after: string) => string | null {
+function changeOwner(section: CorrectedSection): (before: string, after: string) => { modificationId: string | null; toVerify?: string[] } {
   const kept = (section.changes ?? []).filter(c => c.kept && c.modification_id);
   const only = (section.modification_ids ?? []).length === 1 ? section.modification_ids![0] : null;
   return (before, after) => {
     const exact = kept.find(c => c.before === before && c.after === after)
       ?? (after ? kept.find(c => c.after === after) : undefined)
       ?? (before ? kept.find(c => c.before === before) : undefined);
-    return exact?.modification_id ?? only;
+    const passages = after && exact?.after === after ? exact.to_verify?.passages : undefined;
+    return { modificationId: exact?.modification_id ?? only, ...(passages?.length ? { toVerify: passages } : {}) };
   };
 }
 
@@ -208,7 +211,14 @@ export interface SectionView {
   proposedMarkdown: string;
 }
 
-export interface SheetView { documentId: string; title: string; fileName: string; sections: SectionView[] }
+export interface SheetView {
+  documentId: string;
+  title:      string;
+  fileName:   string;
+  sections:   SectionView[];
+  /** 0.4.0 : la modification qui crée ce chapitre ; null pour une fiche de la base. */
+  createdBy:  string | null;
+}
 
 const stripHashes = (s: string) => s.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim();
 
@@ -232,9 +242,10 @@ export function sheetViews(base: BaseCorrection): SheetView[] {
   }
   return base.sheets.map(sheet => {
     const fileName = sheet.document_path.split('/').pop() || sheet.document_path;
-    // Le titre d'une fiche : son premier titre, jamais son nom de fichier.
+    // Le titre d'une fiche : son premier titre, jamais son nom de fichier ; un chapitre créé n'a
+    // que son texte corrigé.
     const firstHeading = sheet.sections
-      .flatMap(s => parseLines(s.original_markdown))
+      .flatMap(s => parseLines(sheet.created_by ? s.corrected_markdown : s.original_markdown))
       .find(l => l.type === 'heading');
     const firstPath = sheet.sections.map(s => stripHashes(s.heading_path[0] ?? '')).find(p => p && !isFileName(p));
     const title = (firstHeading ? stripHashes(firstHeading.text) : '') || firstPath || fileName;
@@ -242,6 +253,7 @@ export function sheetViews(base: BaseCorrection): SheetView[] {
       documentId: sheet.document_id,
       title,
       fileName,
+      createdBy:  sheet.created_by ?? null,
       sections: sheet.sections.map(s => {
         const blocks = sectionBlocks(s);
         return {
@@ -328,4 +340,57 @@ export function rowCells(line: Line): string[] | null {
   const cells = inner.split('|').map(c => c.trim());
   if (cells.every(c => /^:?-{2,}:?$/.test(c))) return null;
   return cells;
+}
+
+// ── Phrases « À vérifier » (0.4.0) ────────────────────────────
+
+/**
+ * Où sont les phrases « À vérifier » dans le texte lisible d'une ligne (`plainText`) : chaque
+ * passage retrouvé, ses marques Markdown retirées comme celles de la ligne. Un passage que l'écran
+ * ne retrouve pas (découpage différent) marque toute la ligne : une phrase signalée n'est jamais
+ * perdue.
+ */
+export function verifyRanges(text: string, passages: readonly string[] | undefined, type: LineType): Array<[number, number]> {
+  if (!passages || passages.length === 0) return [];
+  const ranges: Array<[number, number]> = [];
+  for (const passage of passages) {
+    const p = plainText({ type, text: passage.trim() }).trim();
+    const at = p ? text.indexOf(p) : -1;
+    if (at === -1) return [[0, text.length]];
+    ranges.push([at, at + p.length]);
+  }
+  ranges.sort((a, b) => a[0] - b[0]);
+  const merged: Array<[number, number]> = [];
+  for (const r of ranges) {
+    const last = merged[merged.length - 1];
+    if (last && r[0] <= last[1]) last[1] = Math.max(last[1], r[1]);
+    else merged.push([r[0], r[1]]);
+  }
+  return merged;
+}
+
+/**
+ * Des morceaux de texte coupés aux bords des phrases « À vérifier » : chacun dit s'il en fait
+ * partie. `counts` : un morceau absent du texte lisible (un mot retiré) ne compte pas dans les
+ * positions et n'est jamais marqué.
+ */
+export function markVerify<T extends { text: string }>(
+  parts: readonly T[], ranges: ReadonlyArray<[number, number]>, counts: (p: T) => boolean = () => true,
+): Array<T & { verify: boolean }> {
+  if (ranges.length === 0) return parts.map(p => ({ ...p, verify: false }));
+  const out: Array<T & { verify: boolean }> = [];
+  let pos = 0;
+  for (const part of parts) {
+    if (!counts(part)) { out.push({ ...part, verify: false }); continue; }
+    const start = pos, end = pos + part.text.length;
+    const cuts = new Set([start, end]);
+    for (const [a, b] of ranges) { if (a > start && a < end) cuts.add(a); if (b > start && b < end) cuts.add(b); }
+    const bounds = [...cuts].sort((x, y) => x - y);
+    for (let i = 0; i < bounds.length - 1; i++) {
+      const [a, b] = [bounds[i], bounds[i + 1]];
+      out.push({ ...part, text: part.text.slice(a - start, b - start), verify: ranges.some(([x, y]) => a >= x && b <= y) });
+    }
+    pos = end;
+  }
+  return out;
 }

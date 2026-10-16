@@ -44,13 +44,15 @@ export const CORRECTABLE_AUDIT_SCHEMAS: readonly string[] = VERSIONS.audits.corr
 /**
  * Bases corrigées que l'écran sait afficher, lues dans la copie de `contract-versions.json` du
  * back : 0.1.0 ; 0.2.0, qui ajoute la raison de chaque information en attente ; 0.3.0, qui ajoute
- * les notes de travail et d'image, le sommaire et le chapitre à créer (avec son numéro réservé).
+ * les notes de travail et d'image, le sommaire et le chapitre à créer (avec son numéro réservé) ;
+ * 0.4.0, qui marque les phrases « À vérifier » et crée un chapitre à partir d'un document importé.
  */
 export const SUPPORTED_CORRECTION_SCHEMAS: readonly string[] = VERSIONS.corrections.accepted;
 
 /**
  * Pourquoi une ligne proposée n'a pas été reprise (`undo_reason`, liste fermée du contrat) : 0.1.0
- * et 0.2.0, puis 0.3.0 (`internal_wording`, `image_note`, `table_of_contents_changed`). Chacune a
+ * et 0.2.0, puis 0.3.0 (`internal_wording`, `image_note`, `table_of_contents_changed`), puis 0.4.0
+ * (`quote_not_verified` : un passage d'un chapitre créé introuvable dans son document). Chacune a
  * son libellé (`REASON_LABEL`) ; un test échoue si le contrat en déclare une que l'écran ne sait
  * pas dire.
  */
@@ -58,9 +60,19 @@ export const UNDO_REASONS = [
   'not_decided', 'deletion_not_decided', 'heading_or_image_changed', 'qualifier_lost',
   'value_without_source', 'values_from_several_sources', 'duplicate_or_move',
   'introduction_without_content', 'invalid_output',
-  'internal_wording', 'image_note', 'table_of_contents_changed',
+  'internal_wording', 'image_note', 'table_of_contents_changed', 'quote_not_verified',
 ] as const;
 export type UndoReason = (typeof UNDO_REASONS)[number];
+
+/**
+ * Pourquoi une ligne gardée est « À vérifier » (0.4.0, liste fermée du contrat) : seule la
+ * recommandation de l'IA en couvre les mots, ou une phrase est sous le seuil des citations. Ni
+ * l'une ni l'autre ne s'affiche : l'écran surligne les phrases et les compte.
+ */
+export const TO_VERIFY_REASONS = ['recommendation_only', 'sentence_below_quotes'] as const;
+
+/** Une ligne gardée à relire de près (0.4.0) : ses phrases, mot pour mot. */
+export interface ToVerify { reason: (typeof TO_VERIFY_REASONS)[number]; passages: string[] }
 
 // Base corrigée, correction.schema.json 0.1.0.
 
@@ -74,6 +86,10 @@ export interface LineChange {
   modification_id: string | null;
   kept:            boolean;
   undo_reason?:    string | null;
+  /** 0.4.0 : une ligne gardée à relire de près ; jamais retirée pour autant. */
+  to_verify?:      ToVerify | null;
+  /** 0.4.0 : `code` pour la ligne du sommaire d'un chapitre créé. */
+  written_by?:     'model' | 'code';
 }
 
 export interface CorrectedSection {
@@ -91,9 +107,21 @@ export interface CorrectedSheet {
   document_path: string;
   markdown:      string;
   sections:      CorrectedSection[];
+  /** 0.4.0 : la modification qui crée la fiche (un chapitre créé, sans texte d'origine). */
+  created_by?:   string | null;
 }
 
-export type ModificationKind = 'dated_change' | 'kept_side' | 'expert_answer' | 'complete' | 'remove';
+export type ModificationKind = 'dated_change' | 'kept_side' | 'expert_answer' | 'complete' | 'remove' | 'new_chapter';
+
+/** 0.4.0 : où le code a placé un chapitre créé. */
+export interface CreatedSheet {
+  document_id:     string;
+  document_path:   string;
+  chapter_number:  number | null;
+  title:           string;
+  toc_section_key?: string | null;
+  toc_line?:       string | null;
+}
 
 export interface Modification {
   id:          string;
@@ -104,6 +132,8 @@ export interface Modification {
   section_keys: string[];
   outcome:     'applied' | 'not_applicable';
   reasons?:    string[];
+  /** 0.4.0, `new_chapter` : le chapitre créé. */
+  created_sheet?: CreatedSheet | null;
 }
 
 export interface Convention { id: string; rule: string; section_keys: string[] }
@@ -112,7 +142,8 @@ export interface Convention { id: string; rule: string; section_keys: string[] }
  * Pourquoi une carte est en attente (base corrigée 0.2.0) : non répondue, ou répondue mais portée
  * par aucune section de la base (`no_section`), ou sans modification possible ; 0.3.0 : sa
  * recommandation demande de créer un chapitre (`new_chapter`), avec le numéro réservé à sa
- * modification.
+ * modification. En 0.4.0, `new_chapter` ne reste en attente que si aucun document importé ne porte
+ * le chapitre ; sinon, le chapitre est créé par une modification ordinaire.
  */
 export const PENDING_REASONS = ['unanswered', 'no_section', 'no_modification', 'new_chapter'] as const;
 export type PendingReason = (typeof PENDING_REASONS)[number];
@@ -322,6 +353,7 @@ export const KIND_LABEL: Record<ModificationKind, string> = {
   expert_answer: 'Votre réponse',
   complete:      'Complément',
   remove:        'Retrait',
+  new_chapter:   'Nouveau chapitre',
 };
 
 export const kindLabel = (k: string): string => KIND_LABEL[k as ModificationKind] ?? 'Modification';
@@ -376,6 +408,7 @@ export const REASON_LABEL: Record<UndoReason | 'no_change_kept', string> = {
   internal_wording:             'le texte proposé contenait une note de travail ; il n\'a pas été repris',
   image_note:                   'L\'IA signale que l\'image ou le schéma ci-dessus devrait être mis à jour. Elle ne peut pas modifier une image : à vous de le faire si besoin.',
   table_of_contents_changed:    'Cette modification touchait le sommaire de la base : le sommaire n\'a pas été modifié.',
+  quote_not_verified:           'le passage proposé pour le nouveau chapitre ne se retrouve pas dans le document importé ; il n\'a pas été repris',
   no_change_kept:               'aucun texte proposé n\'a pu être repris',
 };
 
@@ -455,6 +488,8 @@ export function reviewProgressLabel(reviewed: number, total: number): string {
 export function pendingSentences(
   pending: NonNullable<BaseCorrection['pending']>,
   cardTitle: (cardId: string) => string | undefined,
+  /** 0.4.0 et suivantes : la préparation crée un chapitre quand un document importé le porte. */
+  createsChapters = false,
 ): string[] {
   if (pending.length === 0) return ['Aucune information en attente.'];
   const titles = (list: typeof pending) => list.map(p => cardTitle(p.card_id)).filter((t): t is string => Boolean(t));
@@ -482,7 +517,10 @@ export function pendingSentences(
   const chapter = pending.filter(p => p.reason === 'new_chapter');
   if (chapter.length > 0) {
     out.push(named(chapter, 'Répondues, mais elles demandent un chapitre qui n\'existe pas encore dans la base'));
-    out.push('La préparation ne crée pas de nouveau chapitre. Pour ajouter ce contenu, utilisez « Corriger cette section » sur la section la plus proche. Attention : relancer l\'analyse repart d\'un nouvel audit, et les réponses actuelles n\'y seraient pas reprises.');
+    const why = createsChapters
+      ? 'Aucun document importé ne porte ce chapitre : la préparation ne l\'a pas créé.'
+      : 'La préparation ne crée pas de nouveau chapitre.';
+    out.push(`${why} Pour ajouter ce contenu, utilisez « Corriger cette section » sur la section la plus proche. Attention : relancer l'analyse repart d'un nouvel audit, et les réponses actuelles n'y seraient pas reprises.`);
   }
   return out;
 }
@@ -517,3 +555,26 @@ export const itemRank = (id: string): number => {
   const m = /^M(\d+)$/.exec(id);
   return m ? Number(m[1]) : Number.MAX_SAFE_INTEGER;
 };
+
+/** La préparation crée un chapitre à partir d'un document importé : base corrigée 0.4.0 et suivantes. */
+export const canCreateChapters = (schemaVersion: string): boolean => !['0.1.0', '0.2.0', '0.3.0'].includes(schemaVersion);
+
+/**
+ * Le nombre de phrases « À vérifier » de chaque modification (0.4.0) : les passages marqués de ses
+ * lignes gardées, toutes sections confondues.
+ */
+export function toVerifyCounts(base: Pick<BaseCorrection, 'sheets'>): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const sheet of base.sheets) {
+    for (const section of sheet.sections) {
+      for (const c of section.changes ?? []) {
+        if (!c.kept || !c.modification_id || !c.to_verify) continue;
+        out.set(c.modification_id, (out.get(c.modification_id) ?? 0) + c.to_verify.passages.length);
+      }
+    }
+  }
+  return out;
+}
+
+/** « 1 phrase à vérifier », « 2 phrases à vérifier ». */
+export const toVerifyLabel = (n: number): string => `${n} ${n > 1 ? 'phrases' : 'phrase'} à vérifier`;

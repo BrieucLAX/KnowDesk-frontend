@@ -31,6 +31,7 @@ import BASE_PILOTE from './fixtures/base-0.1.0-pilote.response.json';
 import CARDS_PILOTE from './fixtures/audit-0.9.0-pilote-cards.json';
 import BASE_PILOTE_02 from './fixtures/base-0.2.0-pilote.response.json';
 import BASE_PILOTE_03 from './fixtures/base-0.3.0-pilote.response.json';
+import BASE_BANC_04 from './fixtures/base-0.4.0-banc-v5-g1.response.json';
 import CARDS_PILOTE_B9 from './fixtures/audit-pilote-b9a878c1-cards.json';
 
 /**
@@ -201,6 +202,51 @@ describe('Nouvelle base : relecture', () => {
     expect(await within(m4).findByRole('button', { name: 'Copiée' })).toBeInTheDocument();
   });
 
+  it('base 0.4.0 (banc v5, G1, validée par le back) : phrases à vérifier comptées et surlignées, chapitre créé comme une modification ordinaire', async () => {
+    const base = BASE_BANC_04 as unknown as BaseVersion;
+    mockBase(base, [correction({ id: base.correctionId })]);
+    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByText('0 sur 6 relues');
+    expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
+
+    // Le chapitre créé : une modification ordinaire, avec ses trois boutons d'avis.
+    const m4 = cardOf(/^Modification 4/);
+    expect(within(m4).getByRole('heading', { level: 4 })).toHaveTextContent('Modification 4 · Nouveau chapitre');
+    for (const name of ['Accepter', 'Corriger', 'Refuser']) expect(within(m4).getByRole('button', { name })).toBeInTheDocument();
+    expect(m4).not.toHaveTextContent('en attente');
+    expect(screen.queryByRole('heading', { level: 2, name: 'Modifications sans emplacement dans la base' })).not.toBeInTheDocument();
+
+    // Le compteur, à côté des boutons d'avis : une phrase sous le seuil dans le chapitre (M4), la ligne A1 (M7).
+    const counter = (card: HTMLElement) => card.querySelector('.obp-base-verify-count');
+    expect(counter(m4)).toHaveTextContent(/^1 phrase à vérifier$/);
+    expect(counter(m4)!.nextElementSibling).toBe(within(m4).getByRole('group', { name: /^Votre avis sur/ }));
+    expect(counter(cardOf(/^Modification 7/))).toHaveTextContent(/^1 phrase à vérifier$/);
+    // Les autres modifications n'ont pas de compteur.
+    for (const id of ['1', '3', '8']) expect(counter(cardOf(new RegExp(`^Modification ${id} `)))).toBeNull();
+
+    // Les phrases surlignées dans le texte, mot pour mot, et elles seules.
+    const marked = [...container.querySelectorAll('.obp-base-doc mark.obp-base-verify')]
+      .map(m => [...m.childNodes].filter(n => !(n instanceof HTMLElement && n.classList.contains('sr-only'))).map(n => n.textContent).join(''))
+      .join('');
+    expect(marked).toContain('Dans 90 % des cas, le délai est inférieur à 30 minutes.');
+    expect(marked).toContain('une réponse motivée sous 2 mois maximum à compter de la réception (délai cible interne pour apporter une réponse motivée à l\'adhérent : 10 jours ouvrés) ;');
+    expect(marked).not.toContain('La mise en relation avec un médecin généraliste');
+    expect(container.querySelectorAll('.obp-base-doc .sr-only')).not.toHaveLength(0);
+    expect([...container.querySelectorAll('.obp-base-doc mark .sr-only')].map(n => n.textContent)).toEqual(['À vérifier : ', 'À vérifier : ']);
+    expect(container.querySelector('.obp-base-legend mark')).toHaveTextContent('Phrase à vérifier');
+
+    // Le chapitre, en dernière fiche, titré par son premier titre ; la ligne du sommaire marquée « Modification 4 ».
+    const chapters = [...container.querySelectorAll('.obp-base-chapter__title')].map(h => h.textContent);
+    expect(chapters[chapters.length - 1]).toBe('Chapitre 16 — Téléconsultation médicale');
+    expect(screen.getByText('Nouveau chapitre, créé par la modification 4 · 16-teleconsultation-medicale.md')).toBeInTheDocument();
+    const tocRow = [...container.querySelectorAll('tr.obp-base-row--insert')].find(r => r.textContent?.includes('Téléconsultation médicale'))!;
+    expect(tocRow).toHaveTextContent('16Téléconsultation médicale10/2026');
+    expect(tocRow).toHaveTextContent('Modification 4');
+    expect(screen.getAllByText((_, el) => el?.className === 'obp-base-follow' && /^Suite de la modification 4/.test(el.textContent ?? '')).length).toBe(1);
+
+    expect(container.textContent).not.toMatch(TECHNICAL);
+  });
+
   it('point 9 : « Corriger cette section » est un bouton secondaire, sur chaque section, modifiée ou non', async () => {
     const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
     await screen.findByText('0 sur 6 relues');
@@ -212,7 +258,7 @@ describe('Nouvelle base : relecture', () => {
   });
 
   it('base d\'une version inconnue : le dit, sans rien afficher d\'autre', async () => {
-    mockBase({ ...PILOTE, schemaVersion: '0.4.0' });
+    mockBase({ ...PILOTE, schemaVersion: '0.5.0' });
     render(<BaseTab project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText(/Cette base est dans un format que cette version de l'application ne sait pas afficher/)).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 4 })).not.toBeInTheDocument();

@@ -4,7 +4,7 @@ import {
   modificationPlacement, ownHeading, proposedLines, sectionTitleIndex, sheetViews, type SectionView, type SheetView,
 } from '../../lib/baseDocument';
 import {
-  chapterRequests, firstSentence, recordedAnswer, itemLabel, itemRank, kindLabel, NEW_CHAPTER_LABEL, originLabel, outcomeLabel, partialSummary,
+  canCreateChapters, chapterRequests, firstSentence, toVerifyCounts, recordedAnswer, itemLabel, itemRank, kindLabel, NEW_CHAPTER_LABEL, originLabel, outcomeLabel, partialSummary,
   pendingSentences, reasonGroups, reviewProgressLabel, SHOWN_REASONS, type ReasonGroup,
   type BaseCorrection, type Convention, type Modification, type SectionFix,
 } from '../../lib/correction';
@@ -44,6 +44,9 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
   const mods = useMemo(() => new Map(base.modifications.map(m => [m.id, m])), [base.modifications]);
   const conventions = base.conventions ?? [];
   const chapters = useMemo(() => chapterRequests(base.pending ?? []), [base.pending]);
+  /** 0.4.0 : les phrases « À vérifier » de chaque modification. */
+  const toVerify = useMemo(() => toVerifyCounts(base), [base]);
+  const createsChapters = canCreateChapters(base.schema_version);
   /** Le texte proposé par chaque modification, toutes sections confondues. */
   /** Les sections que chaque modification touche, dans l'ordre du document, avec les lignes qu'elle y propose. */
   const fixSections = useMemo(() => {
@@ -93,6 +96,7 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
       save={review.saves.get(`item:${m.id}`)}
       fixable
       sections={fixSections.get(m.id) ?? []}
+      toVerify={toVerify.get(m.id) ?? 0}
       onSave={d => { void review.saveReview(m.id, d); }}
     >
       <p className="obp-base-card__origin">{originLabel(m, cardTitles)}</p>
@@ -116,7 +120,8 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
         <h4 className="obp-base-card__title">{itemLabel(c.id)} — {NEW_CHAPTER_LABEL}</h4>
         {title && <p className="obp-base-card__origin">Carte « {title} »</p>}
         <p className="obp-muted">
-          Cette réponse demande un chapitre qui n'existe pas encore dans la base. Elle reste enregistrée dans « À
+          Cette réponse demande un chapitre qui n'existe pas encore dans la base
+          {createsChapters ? ', et aucun document importé ne le porte' : ''}. Elle reste enregistrée dans « À
           clarifier ». Pour en reprendre le contenu, utilisez « Corriger cette section » sur la section la plus proche et
           ajoutez-le au texte.
         </p>
@@ -223,7 +228,7 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
       <header className="obp-base-head">
         <div>
           <p className="obp-base-head__title">Les modifications apportées à votre base</p>
-          {pendingSentences(base.pending ?? [], id => cardTitles.get(id)).map(text => (
+          {pendingSentences(base.pending ?? [], id => cardTitles.get(id), createsChapters).map(text => (
             <p key={text} className="obp-muted">{text}</p>
           ))}
         </div>
@@ -236,6 +241,9 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
         Votre base est reprise telle quelle ; seules vos réponses dans « À clarifier » la modifient.{' '}
         <ins>texte ajouté</ins> <del>texte retiré</del>{' '}
         Les sections sans modification sont repliées à leur place : ouvrez-les pour les lire.
+        {toVerify.size > 0 && (
+          <>{' '}<mark className="obp-base-verify">Phrase à vérifier</mark> : ajoutée, mais vos documents ne la confirment pas mot pour mot.</>
+        )}
         Vous pouvez commenter n'importe quelle section.
       </p>
       {!editable && (
@@ -266,7 +274,9 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
       {sheets.map(sheet => (
         <section key={sheet.documentId} className="obp-base-chapter" aria-label={sheet.title}>
           <h2 className="obp-base-chapter__title">{sheet.title}</h2>
-          <p className="obp-muted obp-base-chapter__file">{sheet.fileName}</p>
+          <p className="obp-muted obp-base-chapter__file">
+            {sheet.createdBy ? `Nouveau chapitre, créé par la ${itemLabel(sheet.createdBy).toLowerCase()} · ${sheet.fileName}` : sheet.fileName}
+          </p>
           {sheet.sections.map(s => section(sheet, s))}
         </section>
       ))}
