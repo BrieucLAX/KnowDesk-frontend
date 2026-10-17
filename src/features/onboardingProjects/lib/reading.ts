@@ -90,6 +90,11 @@ export interface RejectedPoint {
   analysis:         ModelAnalysis;
   /** Audit 0.11.0, `measure_ended` : le jour où la mesure s'est terminée (AAAA-MM-JJ). */
   endedOn?:         string | null;
+  /**
+   * Audit 0.11.0 : ses citations vérifiées, au format de celles des cartes ; pour une mesure
+   * terminée, les passages de la mesure, montrés sous « Mesure terminée le … ».
+   */
+  verifiedQuotes?:  RawQuote[];
 }
 
 /**
@@ -380,7 +385,7 @@ export function cardAnswers(card: ReadingCard): CardAnswerCode[] {
 const CHECK_ANSWER_LABELS: Readonly<Partial<Record<CheckKind, Partial<Record<CardAnswerCode, { label: string; field?: string }>>>>> = {
   outdated_content:  {
     remove:     { label: 'Le retirer de la base' },
-    up_to_date: { label: 'Le garder' },
+    up_to_date: { label: 'Le garder, il est à jour' },
   },
   period_gap:        { complete: { label: 'Indiquer la règle de cette période', field: 'La règle qui s\'applique pendant cette période' } },
   date_without_year: { other_answer: { label: 'Indiquer la date complète', field: 'La date complète, avec son année' } },

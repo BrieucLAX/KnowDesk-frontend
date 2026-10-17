@@ -325,142 +325,6 @@
     ],
     "cards": [
       {
-        "id": "card_80dac97f4a649964",
-        "nature": "dated_change",
-        "rank": 1,
-        "merged_ranks": [],
-        "document_ids": [
-          "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7",
-          "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11"
-        ],
-        "sides": [
-          {
-            "label": "A",
-            "quotes": [
-              {
-                "kind": "document",
-                "source": {
-                  "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7",
-                  "excerpt": "| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |\n| 30-39 ans | 38,40 € | 54,90 € | 73,50 € |\n| 40-49 ans | 44,70 € | 63,90 € | 85,60 € |\n| 50-59 ans | 55,20 € | 78,90 € | 105,80 € |\n| 60-69 ans | 68,90 € | 98,40 € | 131,90 € |\n| 70 ans et + | 82,30 € | 117,60 € | 157,60 € |",
-                  "zone": "table",
-                  "table_cell": null,
-                  "excerpt_origin": "source_text",
-                  "image_id": null,
-                  "format": "md",
-                  "heading_path": [
-                    "Chapitre 3 — Cotisations et tarification",
-                    "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
-                    "Zone 1 (Île-de-France et grandes métropoles)"
-                  ],
-                  "block_kind": "table",
-                  "block_index": 0
-                },
-                "excerpt_realigned": false
-              },
-              {
-                "kind": "document",
-                "source": {
-                  "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7",
-                  "excerpt": "**⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024.**\nLes montants ci-dessous servent de référence pour comprendre la **structure** de la grille tarifaire (zones, tranches d'âge, coefficients), mais **ne doivent pas être communiqués tels quels à un adhérent ou un prospect**. Une révision tarifaire a eu lieu depuis — se référer à la dernière note tarifaire transmise par la Direction Commerciale avant toute communication de montant.",
-                  "zone": "text",
-                  "table_cell": null,
-                  "excerpt_origin": "source_text",
-                  "image_id": null,
-                  "format": "md",
-                  "heading_path": [
-                    "Chapitre 3 — Cotisations et tarification"
-                  ],
-                  "block_kind": "paragraph",
-                  "block_index": 0
-                },
-                "excerpt_realigned": false
-              }
-            ]
-          },
-          {
-            "label": "B",
-            "quotes": [
-              {
-                "kind": "document",
-                "source": {
-                  "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11",
-                  "excerpt": "Nouvelle grille tarifaire 2027 — entrée en vigueur au 1er janvier 2027",
-                  "zone": "table",
-                  "table_cell": null,
-                  "excerpt_origin": "source_text",
-                  "image_id": null,
-                  "format": "docx",
-                  "heading_path": [],
-                  "block_kind": "table",
-                  "block_index": 2
-                },
-                "excerpt_realigned": false
-              },
-              {
-                "kind": "document",
-                "source": {
-                  "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11",
-                  "excerpt": "Exemples de nouveaux tarifs (Zone 1, à titre indicatif — voir grille complète en pièce jointe)\n\n- 18-29 ans, formule CONFORT : 47,80 € (contre 35,80 € en 2024).\n\n- 40-49 ans, formule CONFORT : 66,60 € (contre 63,90 € en 2024).\n\n- 60-69 ans, formule SÉRÉNITÉ+ : 137,60 € (contre 131,90 € en 2024).",
-                  "zone": "text",
-                  "table_cell": null,
-                  "excerpt_origin": "source_text",
-                  "image_id": null,
-                  "format": "docx",
-                  "heading_path": [],
-                  "block_kind": "paragraph",
-                  "block_index": 9
-                },
-                "excerpt_realigned": true
-              },
-              {
-                "kind": "document",
-                "source": {
-                  "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11",
-                  "excerpt": "La grille actuellement documentée au chapitre 3 de la base de connaissance (« Cotisations et tarification ») date de juin 2024 et ne doit plus être communiquée à un adhérent ou prospect, y compris à titre indicatif, à compter de ce jour.",
-                  "zone": "text",
-                  "table_cell": null,
-                  "excerpt_origin": "source_text",
-                  "image_id": null,
-                  "format": "docx",
-                  "heading_path": [],
-                  "block_kind": "paragraph",
-                  "block_index": 6
-                },
-                "excerpt_realigned": true
-              }
-            ]
-          }
-        ],
-        "analysis": {
-          "origin": "model",
-          "subject": "Nouvelle grille tarifaire applicable au 01/01/2027",
-          "reason": "La grille tarifaire du chapitre 3 de la base de connaissance est obsolète depuis le 04/09/2026 et ne doit plus être utilisée pour communiquer des montants. La nouvelle grille entre en vigueur au 01/01/2027 et remplace définitivement les tarifs de 2024.",
-          "proposal": "Mettre à jour le chapitre 3 de la base de connaissance avec la nouvelle grille tarifaire 2027 avant le 01/12/2026, en intégrant un avertissement clair indiquant que les tarifs sont valables à partir du 01/01/2027. Supprimer ou archiver la grille de 2024 pour éviter toute confusion. Informer les équipes que toute communication de montant doit se référer exclusivement à la nouvelle grille à partir du 04/09/2026."
-        },
-        "answers": [
-          "follow_recommendation",
-          "accept_side",
-          "adjust",
-          "same_meaning",
-          "different_subjects",
-          "other_answer",
-          "later",
-          "out_of_scope"
-        ],
-        "unverified_quotes": [],
-        "recommended_effect": {
-          "action": null,
-          "basis": "la source renvoie à un contenu absent des documents importés (« voir grille complète en pièce jointe ») : l'existant reste, avec son avertissement"
-        },
-        "absent_references": [
-          {
-            "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11",
-            "excerpt": "voir grille complète en pièce jointe"
-          }
-        ],
-        "check": null
-      },
-      {
         "id": "card_a77ab7dd0f9cfbab",
         "nature": "dated_change",
         "rank": 3,
@@ -1202,10 +1066,12 @@
         "check": null
       },
       {
-        "id": "card_39e49dc5eefa9377",
+        "id": "card_8a78eb0f5449b8bf",
         "nature": "contradiction",
-        "rank": 1000,
-        "merged_ranks": [],
+        "rank": 11,
+        "merged_ranks": [
+          1
+        ],
         "document_ids": [
           "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7",
           "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11"
@@ -1309,9 +1175,9 @@
         }
       },
       {
-        "id": "card_170e017de86e3005",
+        "id": "card_70d8e8ba05cd24b8",
         "nature": "incomplete_or_outdated",
-        "rank": 1001,
+        "rank": 12,
         "merged_ranks": [],
         "document_ids": [
           "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_09_portail_ass_230ef642"
@@ -1370,9 +1236,9 @@
         }
       },
       {
-        "id": "card_48734b0d13769466",
+        "id": "card_f700e02c4c268524",
         "nature": "incomplete_or_outdated",
-        "rank": 1002,
+        "rank": 13,
         "merged_ranks": [],
         "document_ids": [
           "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11"
@@ -1456,9 +1322,9 @@
         }
       },
       {
-        "id": "card_988e3657fd1766b9",
+        "id": "card_e131a992e0297e5c",
         "nature": "incomplete_or_outdated",
-        "rank": 1003,
+        "rank": 14,
         "merged_ranks": [],
         "document_ids": [
           "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243"
@@ -1518,8 +1384,8 @@
         "rank": 2,
         "nature": "changement_date",
         "documents": [
-          "05-tiers-payant.md",
-          "email-1-changement-temporaire-maintenance.docx"
+          "pilote-corpus.zip/pilote-corpus/base-connaissance-mutuelle-notion/05-tiers-payant.md",
+          "pilote-corpus.zip/pilote-corpus/email-1-changement-temporaire-maintenance.docx"
         ],
         "reason": "measure_ended",
         "briefing_quotes": [],
@@ -1530,7 +1396,41 @@
           "reason": "La procédure standard de vérification des droits tiers payant via GESTOR (chapitre 5) est suspendue pendant la maintenance du 28 au 29/09/2026. Une procédure de secours temporaire est mise en place pour cette période, mais elle n'est pas documentée dans la base de connaissance, ce qui peut entraîner des erreurs ou des incohérences dans le traitement des dossiers.",
           "proposal": "Ajouter une note temporaire en tête du chapitre 5 de la base de connaissance, valable du 28/09/2026 au 29/09/2026, indiquant la procédure de secours à appliquer pendant la maintenance. Cette note doit préciser que la procédure standard reprend dès le 30/09/2026. Informer les équipes par email de cette mise à jour temporaire."
         },
-        "ended_on": "2026-09-29"
+        "ended_on": "2026-09-29",
+        "verified_quotes": [
+          {
+            "kind": "document",
+            "source": {
+              "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_1_changement_temporaire_maintenance_docx_13a7318d",
+              "excerpt": "une intervention technique majeure aura lieu du dimanche 28 septembre 2026 à 20h00 au lundi 29 septembre 2026 à 06h00. Pendant ce créneau, GESTOR sera totalement inaccessible, y compris en consultation.",
+              "zone": "text",
+              "table_cell": null,
+              "excerpt_origin": "source_text",
+              "image_id": null,
+              "format": "docx",
+              "heading_path": [],
+              "block_kind": "paragraph",
+              "block_index": 4
+            },
+            "excerpt_realigned": false
+          },
+          {
+            "kind": "document",
+            "source": {
+              "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_1_changement_temporaire_maintenance_docx_13a7318d",
+              "excerpt": "Le module de vérification des droits tiers payant (chapitre 5 de la base de connaissance) ne sera pas disponible. Pour toute vérification urgente pendant la fenêtre de maintenance ou au cours de la journée du 29 septembre (le temps que les données se resynchronisent), merci d'appliquer la procédure de secours suivante, à titre EXCEPTIONNEL ET TEMPORAIRE :\n\n- Consulter le fichier extrait « Droits_TP_export_13092026.xlsx » déposé sur le lecteur partagé [...] - En cas de doute sur un dossier, ne PAS refuser un tiers payant sur la seule base de ce fichier : demander à l'adhérent d'avancer les frais à titre exceptionnel et l'informer d'un remboursement accéléré sous 48h dès le retour à la normale.",
+              "zone": "text",
+              "table_cell": null,
+              "excerpt_origin": "source_text",
+              "image_id": null,
+              "format": "docx",
+              "heading_path": [],
+              "block_kind": "paragraph",
+              "block_index": 6
+            },
+            "excerpt_realigned": false
+          }
+        ]
       }
     ],
     "unverified_quotes": {
@@ -1560,7 +1460,7 @@
       "prompt_tokens": 57165,
       "completion_tokens": 22703,
       "cost_usd": 0.062637,
-      "duration_seconds": 0,
+      "duration_seconds": 0.084,
       "documents": [
         {
           "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_00_sommaire_md_81dd1a4c",
@@ -3178,142 +3078,6 @@
     "briefingGiven": true,
     "cards": [
       {
-        "id": "card_80dac97f4a649964",
-        "nature": "dated_change",
-        "rank": 1,
-        "mergedRanks": [],
-        "documentIds": [
-          "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7",
-          "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11"
-        ],
-        "sides": [
-          {
-            "label": "A",
-            "quotes": [
-              {
-                "kind": "document",
-                "excerptRealigned": false,
-                "source": {
-                  "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7",
-                  "excerpt": "| Tranche d'âge | ESSENTIELLE | CONFORT | SÉRÉNITÉ+ |\n|---|---|---|---|\n| 18-29 ans | 32,10 € | 45,80 € | 61,20 € |\n| 30-39 ans | 38,40 € | 54,90 € | 73,50 € |\n| 40-49 ans | 44,70 € | 63,90 € | 85,60 € |\n| 50-59 ans | 55,20 € | 78,90 € | 105,80 € |\n| 60-69 ans | 68,90 € | 98,40 € | 131,90 € |\n| 70 ans et + | 82,30 € | 117,60 € | 157,60 € |",
-                  "zone": "table",
-                  "table_cell": null,
-                  "excerpt_origin": "source_text",
-                  "image_id": null,
-                  "format": "md",
-                  "heading_path": [
-                    "Chapitre 3 — Cotisations et tarification",
-                    "3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus)",
-                    "Zone 1 (Île-de-France et grandes métropoles)"
-                  ],
-                  "block_kind": "table",
-                  "block_index": 0
-                }
-              },
-              {
-                "kind": "document",
-                "excerptRealigned": false,
-                "source": {
-                  "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7",
-                  "excerpt": "**⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024.**\nLes montants ci-dessous servent de référence pour comprendre la **structure** de la grille tarifaire (zones, tranches d'âge, coefficients), mais **ne doivent pas être communiqués tels quels à un adhérent ou un prospect**. Une révision tarifaire a eu lieu depuis — se référer à la dernière note tarifaire transmise par la Direction Commerciale avant toute communication de montant.",
-                  "zone": "text",
-                  "table_cell": null,
-                  "excerpt_origin": "source_text",
-                  "image_id": null,
-                  "format": "md",
-                  "heading_path": [
-                    "Chapitre 3 — Cotisations et tarification"
-                  ],
-                  "block_kind": "paragraph",
-                  "block_index": 0
-                }
-              }
-            ]
-          },
-          {
-            "label": "B",
-            "quotes": [
-              {
-                "kind": "document",
-                "excerptRealigned": false,
-                "source": {
-                  "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11",
-                  "excerpt": "Nouvelle grille tarifaire 2027 — entrée en vigueur au 1er janvier 2027",
-                  "zone": "table",
-                  "table_cell": null,
-                  "excerpt_origin": "source_text",
-                  "image_id": null,
-                  "format": "docx",
-                  "heading_path": [],
-                  "block_kind": "table",
-                  "block_index": 2
-                }
-              },
-              {
-                "kind": "document",
-                "excerptRealigned": true,
-                "source": {
-                  "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11",
-                  "excerpt": "Exemples de nouveaux tarifs (Zone 1, à titre indicatif — voir grille complète en pièce jointe)\n\n- 18-29 ans, formule CONFORT : 47,80 € (contre 35,80 € en 2024).\n\n- 40-49 ans, formule CONFORT : 66,60 € (contre 63,90 € en 2024).\n\n- 60-69 ans, formule SÉRÉNITÉ+ : 137,60 € (contre 131,90 € en 2024).",
-                  "zone": "text",
-                  "table_cell": null,
-                  "excerpt_origin": "source_text",
-                  "image_id": null,
-                  "format": "docx",
-                  "heading_path": [],
-                  "block_kind": "paragraph",
-                  "block_index": 9
-                }
-              },
-              {
-                "kind": "document",
-                "excerptRealigned": true,
-                "source": {
-                  "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11",
-                  "excerpt": "La grille actuellement documentée au chapitre 3 de la base de connaissance (« Cotisations et tarification ») date de juin 2024 et ne doit plus être communiquée à un adhérent ou prospect, y compris à titre indicatif, à compter de ce jour.",
-                  "zone": "text",
-                  "table_cell": null,
-                  "excerpt_origin": "source_text",
-                  "image_id": null,
-                  "format": "docx",
-                  "heading_path": [],
-                  "block_kind": "paragraph",
-                  "block_index": 6
-                }
-              }
-            ]
-          }
-        ],
-        "analysis": {
-          "subject": "Nouvelle grille tarifaire applicable au 01/01/2027",
-          "reason": "La grille tarifaire du chapitre 3 de la base de connaissance est obsolète depuis le 04/09/2026 et ne doit plus être utilisée pour communiquer des montants. La nouvelle grille entre en vigueur au 01/01/2027 et remplace définitivement les tarifs de 2024.",
-          "proposal": "Mettre à jour le chapitre 3 de la base de connaissance avec la nouvelle grille tarifaire 2027 avant le 01/12/2026, en intégrant un avertissement clair indiquant que les tarifs sont valables à partir du 01/01/2027. Supprimer ou archiver la grille de 2024 pour éviter toute confusion. Informer les équipes que toute communication de montant doit se référer exclusivement à la nouvelle grille à partir du 04/09/2026."
-        },
-        "answers": [
-          "accept_side",
-          "adjust",
-          "same_meaning",
-          "different_subjects",
-          "other_answer",
-          "later",
-          "out_of_scope"
-        ],
-        "unverifiedQuotes": [],
-        "recommendation": {
-          "text": "Mettre à jour le chapitre 3 de la base de connaissance avec la nouvelle grille tarifaire 2027 avant le 01/12/2026, en intégrant un avertissement clair indiquant que les tarifs sont valables à partir du 01/01/2027. Supprimer ou archiver la grille de 2024 pour éviter toute confusion. Informer les équipes que toute communication de montant doit se référer exclusivement à la nouvelle grille à partir du 04/09/2026.",
-          "effect": null,
-          "basis": "la source renvoie à un contenu absent des documents importés (« voir grille complète en pièce jointe ») : l'existant reste, avec son avertissement"
-        },
-        "absentReferences": [
-          {
-            "documentId": "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11",
-            "excerpt": "voir grille complète en pièce jointe"
-          }
-        ],
-        "origin": "model",
-        "check": null
-      },
-      {
         "id": "card_a77ab7dd0f9cfbab",
         "nature": "dated_change",
         "rank": 3,
@@ -4055,10 +3819,12 @@
         "check": null
       },
       {
-        "id": "card_39e49dc5eefa9377",
+        "id": "card_8a78eb0f5449b8bf",
         "nature": "contradiction",
-        "rank": 1000,
-        "mergedRanks": [],
+        "rank": 11,
+        "mergedRanks": [
+          1
+        ],
         "documentIds": [
           "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_03_cotisations_c162a4e7",
           "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11"
@@ -4159,9 +3925,9 @@
         }
       },
       {
-        "id": "card_170e017de86e3005",
+        "id": "card_70d8e8ba05cd24b8",
         "nature": "incomplete_or_outdated",
-        "rank": 1001,
+        "rank": 12,
         "mergedRanks": [],
         "documentIds": [
           "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_09_portail_ass_230ef642"
@@ -4217,9 +3983,9 @@
         }
       },
       {
-        "id": "card_48734b0d13769466",
+        "id": "card_f700e02c4c268524",
         "nature": "incomplete_or_outdated",
-        "rank": 1002,
+        "rank": 13,
         "mergedRanks": [],
         "documentIds": [
           "doc_pilote_corpus_zip_pilote_corpus_email_3_changement_tarifaire_docx_59056c11"
@@ -4300,9 +4066,9 @@
         }
       },
       {
-        "id": "card_988e3657fd1766b9",
+        "id": "card_e131a992e0297e5c",
         "nature": "incomplete_or_outdated",
-        "rank": 1003,
+        "rank": 14,
         "mergedRanks": [],
         "documentIds": [
           "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_14_faq_transve_a74aa243"
@@ -4359,8 +4125,8 @@
         "rank": 2,
         "nature": "changement_date",
         "documents": [
-          "05-tiers-payant.md",
-          "email-1-changement-temporaire-maintenance.docx"
+          "pilote-corpus.zip/pilote-corpus/base-connaissance-mutuelle-notion/05-tiers-payant.md",
+          "pilote-corpus.zip/pilote-corpus/email-1-changement-temporaire-maintenance.docx"
         ],
         "reason": "measure_ended",
         "briefingQuotes": [],
@@ -4371,6 +4137,40 @@
           "proposal": "Ajouter une note temporaire en tête du chapitre 5 de la base de connaissance, valable du 28/09/2026 au 29/09/2026, indiquant la procédure de secours à appliquer pendant la maintenance. Cette note doit préciser que la procédure standard reprend dès le 30/09/2026. Informer les équipes par email de cette mise à jour temporaire."
         },
         "endedOn": "2026-09-29",
+        "verifiedQuotes": [
+          {
+            "kind": "document",
+            "excerptRealigned": false,
+            "source": {
+              "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_1_changement_temporaire_maintenance_docx_13a7318d",
+              "excerpt": "une intervention technique majeure aura lieu du dimanche 28 septembre 2026 à 20h00 au lundi 29 septembre 2026 à 06h00. Pendant ce créneau, GESTOR sera totalement inaccessible, y compris en consultation.",
+              "zone": "text",
+              "table_cell": null,
+              "excerpt_origin": "source_text",
+              "image_id": null,
+              "format": "docx",
+              "heading_path": [],
+              "block_kind": "paragraph",
+              "block_index": 4
+            }
+          },
+          {
+            "kind": "document",
+            "excerptRealigned": false,
+            "source": {
+              "document_id": "doc_pilote_corpus_zip_pilote_corpus_email_1_changement_temporaire_maintenance_docx_13a7318d",
+              "excerpt": "Le module de vérification des droits tiers payant (chapitre 5 de la base de connaissance) ne sera pas disponible. Pour toute vérification urgente pendant la fenêtre de maintenance ou au cours de la journée du 29 septembre (le temps que les données se resynchronisent), merci d'appliquer la procédure de secours suivante, à titre EXCEPTIONNEL ET TEMPORAIRE :\n\n- Consulter le fichier extrait « Droits_TP_export_13092026.xlsx » déposé sur le lecteur partagé [...] - En cas de doute sur un dossier, ne PAS refuser un tiers payant sur la seule base de ce fichier : demander à l'adhérent d'avancer les frais à titre exceptionnel et l'informer d'un remboursement accéléré sous 48h dès le retour à la normale.",
+              "zone": "text",
+              "table_cell": null,
+              "excerpt_origin": "source_text",
+              "image_id": null,
+              "format": "docx",
+              "heading_path": [],
+              "block_kind": "paragraph",
+              "block_index": 6
+            }
+          }
+        ],
         "origin": "model"
       }
     ],
@@ -5907,7 +5707,7 @@
       "prompt_tokens": 57165,
       "completion_tokens": 22703,
       "cost_usd": 0.062637,
-      "duration_seconds": 0,
+      "duration_seconds": 0.084,
       "documents": [
         {
           "document_id": "doc_pilote_corpus_zip_pilote_corpus_base_connaissance_mutuelle_notion_00_sommaire_md_81dd1a4c",

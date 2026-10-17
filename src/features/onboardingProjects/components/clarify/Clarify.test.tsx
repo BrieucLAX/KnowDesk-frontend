@@ -661,7 +661,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
       .toHaveTextContent('La période écrite s\'est terminée le 14/09/2026.');
     expect(screen.queryByText('Analyse proposée par l\'IA')).not.toBeInTheDocument();
     expect(screen.getByText('Ce contenu est périmé : le retirer de la base ?')).toBeInTheDocument();
-    expect(answerButtons()).toEqual(['Le retirer de la base', 'Le garder', 'Autre réponse', 'Plus tard']);
+    expect(answerButtons()).toEqual(['Le retirer de la base', 'Le garder, il est à jour', 'Autre réponse', 'Plus tard']);
 
     fireEvent.click(screen.getByRole('button', { name: 'Le retirer de la base' }));
     await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalledWith('p1', 'a1', expect.objectContaining({
@@ -695,7 +695,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
     expect(screen.getByLabelText('La date complète, avec son année')).toBeInTheDocument();
   });
 
-  it('point écarté « mesure terminée » : sa raison et sa date de fin, sans la proposition de l\'IA', async () => {
+  it('point écarté « mesure terminée » : sa raison, sa date de fin et le passage de la mesure, sans la proposition de l\'IA', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
     await screen.findByRole('heading', { name: /cartes à clarifier/ });
     const details = screen.getByText('Détails de l\'analyse').closest('details')!;
@@ -704,6 +704,11 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
     expect(item).toHaveTextContent('05-tiers-payant.md');
     expect(item).toHaveTextContent('Procédure temporaire de secours pendant la maintenance GESTOR (28-29/09/2026)');
     expect(item).not.toHaveTextContent('Ce que l\'IA propose');
+    // Le passage de la mesure, vérifié, sous « Mesure terminée le … » : celui de l'email-1.
+    const text = item.textContent!;
+    const passage = text.indexOf('une intervention technique majeure aura lieu du dimanche 28 septembre 2026');
+    expect(passage).toBeGreaterThan(text.indexOf('Mesure terminée le 29/09/2026'));
+    expect(item).toHaveTextContent('email-1-changement-temporaire-maintenance.docx');
   });
 
   it('valeurs extraites et extraction : jamais affichées', async () => {

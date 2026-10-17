@@ -141,6 +141,8 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
                   <p className="obp-audit-item__title">
                     {modelNatureLabel(r.nature)} · {rejectedPointLabel(r)}
                   </p>
+                  {/* Mesure terminée : le passage de la mesure, vérifié, sous sa date de fin. */}
+                  {toQuotes(r.verifiedQuotes ?? []).map((q, i) => <ClarifyQuote key={`v${i}`} audit={audit} quote={q} />)}
                   {r.documents.length > 0 && (
                     <p className="obp-muted">
                       Documents nommés par l'IA : {r.documents.map((d, j) => <React.Fragment key={j}>{j > 0 && ', '}<AiFileName path={d} /></React.Fragment>)}
