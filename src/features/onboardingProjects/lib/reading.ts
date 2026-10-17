@@ -372,8 +372,12 @@ export function describeCardAnswer(action: Decision['action'], card: ReadingCard
 
 // ── Détails de l'analyse ──────────────────────────────────────
 
+/**
+ * `no_verified_quote` : aucune citation retrouvée, ou, depuis le plan v6 (B1), un des deux côtés
+ * d'une contradiction, d'un changement daté ou d'une erreur probable sans citation retrouvée.
+ */
 const REJECTION_REASONS: Readonly<Record<string, string>> = {
-  no_verified_quote: 'Aucune citation retrouvée dans les documents',
+  no_verified_quote: 'Un des passages cités est introuvable dans vos documents',
   briefing_only:     'Ne cite que la fiche de cadrage',
 };
 export const rejectionReasonLabel = (r: string) => REJECTION_REASONS[r] ?? 'Autre raison';
