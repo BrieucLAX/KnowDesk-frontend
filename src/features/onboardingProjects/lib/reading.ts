@@ -16,10 +16,12 @@ import { sourceRef, type Audit, type SourceRef } from './audit';
 import type { Decision } from './decisions';
 
 /**
- * Audits à cartes : 0.8.0, 0.9.0 qui ajoute « Je suis la recommandation de l'IA », et 0.10.0 qui
- * ajoute les renvois vers un contenu absent. Même liste que `READING_AUDIT_SCHEMAS` du back.
+ * Audits à cartes : 0.8.0, 0.9.0 qui ajoute « Je suis la recommandation de l'IA », 0.10.0 qui
+ * ajoute les renvois vers un contenu absent, et 0.11.0 (plan v6, B2 et C) qui ajoute les cartes
+ * levées par le code (`check`) et la raison d'écart « mesure terminée ». Même liste que
+ * `READING_AUDIT_SCHEMAS` du back.
  */
-export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0'];
+export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0'];
 export const isReadingAudit = (version: string): boolean => READING_AUDIT_SCHEMAS.includes(version);
 
 // ── Contrat (GET …/audit, champ `reading`) ────────────────────
@@ -63,6 +65,10 @@ export interface ReadingCard {
    * complète en pièce jointe »), leur extrait mot pour mot ; absent d'un back plus ancien.
    */
   absentReferences?: Array<{ documentId: string; excerpt: string }>;
+  /** Audit 0.11.0 : `code` pour une carte levée par un contrôle du code ; absent d'un back plus ancien. */
+  origin?:          'model' | 'code';
+  /** Audit 0.11.0 : le contrôle du code, tel que le pipeline l'a écrit (lu par codeCheck) ; null sinon. */
+  check?:           unknown;
 }
 
 export interface TemporaryNote {
@@ -82,8 +88,14 @@ export interface RejectedPoint {
   briefingQuotes:   RawQuote[];
   unverifiedQuotes: UnverifiedQuote[];
   analysis:         ModelAnalysis;
+  /** Audit 0.11.0, `measure_ended` : le jour où la mesure s'est terminée (AAAA-MM-JJ). */
+  endedOn?:         string | null;
 }
 
+/**
+ * Le back rend aussi, depuis l'audit 0.11.0, les valeurs extraites et leur extraction
+ * (`extractedValues`, `extractionRun`) : l'écran ne les affiche pas, elles ne sont pas déclarées ici.
+ */
 export interface Reading {
   readingDate:           string | null;
   briefingGiven:         boolean;
@@ -192,14 +204,17 @@ export function missingSide(card: ReadingCard): SideLabel | null {
 const TWO_SIDED: ReadonlySet<CardAnswerCode> = new Set(['distinct_cases', 'same_meaning', 'different_subjects']);
 
 /** Question posée sur une carte qui compare deux côtés, ou sur son seul côté retrouvé. */
-export const sidesQuestion = (card: ReadingCard): string =>
-  missingSide(card) ? 'Ce passage est-il juste ?' : NATURES[card.nature].sides;
+export function sidesQuestion(card: ReadingCard): string {
+  const check = codeCheck(card);
+  if (check) return CHECKS[check.kind].question;
+  return missingSide(card) ? 'Ce passage est-il juste ?' : NATURES[card.nature].sides;
+}
 
 /** Réponses de fond de la carte, hors côtés, « Autre réponse », « Plus tard » et menu secondaire. */
 export function substantiveAnswers(card: ReadingCard): Array<Exclude<CardAnswerCode, 'accept_side'>> {
   const secondary = new Set<CardAnswerCode>(['accept_side', 'other_answer', 'later', 'out_of_scope']);
   const oneSided = missingSide(card) !== null;
-  return card.answers.filter((a): a is Exclude<CardAnswerCode, 'accept_side'> => !secondary.has(a) && !(oneSided && TWO_SIDED.has(a)));
+  return cardAnswers(card).filter((a): a is Exclude<CardAnswerCode, 'accept_side'> => !secondary.has(a) && !(oneSided && TWO_SIDED.has(a)));
 }
 
 /** Noms de fichier des documents d'un côté, sans doublon ; « votre fiche de cadrage » pour une citation de la fiche. */
@@ -210,6 +225,186 @@ export function sideDocuments(quotes: Quote[], name: (documentId: string) => str
 
 /** Libellé de repérage d'une carte : son sujet (rédigé par l'IA), sinon « Carte N ». */
 export const cardTitle = (card: ReadingCard, position: number): string => card.analysis.subject.trim() || `Carte ${position}`;
+
+// ── Cartes du code (audit 0.11.0) ─────────────────────────────
+
+/**
+ * Les contrôles du code qui lèvent une carte (plan v6, B2 et C). Une telle carte n'a ni « Analyse
+ * proposée par l'IA » ni recommandation : un texte neutre, tiré de ce que le code a comparé.
+ */
+export type CheckKind = 'value_gap' | 'outdated_content' | 'period_gap' | 'date_without_year';
+
+/** Une période telle que le document l'écrit, lue par le code par rapport à la date de lecture. */
+export interface Period { start: string | null; end: string | null; status: 'past' | 'current' | 'future' | 'unknown' }
+
+export interface GapValue {
+  side:  SideLabel;
+  /** Décimal écrit avec un point (« 45.80 »). */
+  value: string;
+  unit:  { currency: string; per: 'month' | 'year' | 'once' | null; tax: 'ht' | 'ttc' | null };
+}
+
+export type CodeCheck =
+  | { kind: 'value_gap'; period: Period | null; values: GapValue[] }
+  | { kind: 'outdated_content'; period: Period }
+  | { kind: 'period_gap'; gapStart: string; gapEnd: string }
+  | { kind: 'date_without_year'; written: string };
+
+/**
+ * Libellé, question et réponses de chaque contrôle : les réponses sont celles que le back autorise
+ * (`answersOfCheck`, recopiées de `CHECK_ANSWERS` du pipeline), dans l'ordre d'affichage.
+ */
+export const CHECKS: Readonly<Record<CheckKind, { label: string; plural: string; question: string; answers: readonly CardAnswerCode[] }>> = {
+  value_gap:         { label: 'Écart entre documents', plural: 'Écarts entre documents', question: 'Quelle valeur est juste ?',
+    answers: ['accept_side', 'not_a_problem', 'other_answer', 'later'] },
+  outdated_content:  { label: 'Contenu périmé', plural: 'Contenus périmés', question: 'Ce contenu est périmé : le retirer de la base ?',
+    answers: ['remove', 'up_to_date', 'other_answer', 'later'] },
+  period_gap:        { label: 'Période sans règle', plural: 'Périodes sans règle', question: 'Quelle règle s\'applique pendant cette période ?',
+    answers: ['complete', 'not_a_problem', 'other_answer', 'later'] },
+  date_without_year: { label: 'Date sans année', plural: 'Dates sans année', question: 'Quelle est la date complète ?',
+    answers: ['other_answer', 'not_a_problem', 'later'] },
+};
+
+const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
+const dateOrNull = (v: unknown): string | null => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : null);
+const STATUSES: ReadonlySet<string> = new Set(['past', 'current', 'future', 'unknown']);
+
+function readPeriod(v: unknown): Period | null {
+  if (!isRecord(v)) return null;
+  const status = typeof v.status === 'string' && STATUSES.has(v.status) ? v.status as Period['status'] : 'unknown';
+  return { start: dateOrNull(v.start), end: dateOrNull(v.end), status };
+}
+
+function readGapValue(v: unknown): GapValue | null {
+  if (!isRecord(v) || (v.side !== 'A' && v.side !== 'B') || typeof v.value !== 'string' || !/^-?\d+(\.\d+)?$/.test(v.value)) return null;
+  const u = isRecord(v.unit) ? v.unit : {};
+  return {
+    side:  v.side,
+    value: v.value,
+    unit:  {
+      currency: typeof u.currency === 'string' ? u.currency : 'EUR',
+      per:      u.per === 'month' || u.per === 'year' || u.per === 'once' ? u.per : null,
+      tax:      u.tax === 'ht' || u.tax === 'ttc' ? u.tax : null,
+    },
+  };
+}
+
+/** Le contrôle du code d'une carte, lu défensivement ; null pour une carte du modèle ou un contrôle illisible. */
+export function codeCheck(card: Pick<ReadingCard, 'check'>): CodeCheck | null {
+  const c = card.check;
+  if (!isRecord(c)) return null;
+  switch (c.kind) {
+    case 'value_gap': {
+      const values = Array.isArray(c.values) ? c.values.map(readGapValue).filter((x): x is GapValue => x !== null) : [];
+      return values.length === 2 ? { kind: 'value_gap', period: readPeriod(c.period), values } : null;
+    }
+    case 'outdated_content': {
+      const period = readPeriod(c.period);
+      return period ? { kind: 'outdated_content', period } : null;
+    }
+    case 'period_gap': {
+      const gapStart = dateOrNull(c.gap_start);
+      const gapEnd = dateOrNull(c.gap_end);
+      return gapStart && gapEnd ? { kind: 'period_gap', gapStart, gapEnd } : null;
+    }
+    case 'date_without_year':
+      return typeof c.written === 'string' && c.written.trim() ? { kind: 'date_without_year', written: c.written.trim() } : null;
+    default:
+      return null;
+  }
+}
+
+/** Une carte levée par le code : jamais d'« Analyse proposée par l'IA », jamais de recommandation. */
+export const isCodeCard = (card: Pick<ReadingCard, 'origin' | 'check'>): boolean => card.origin === 'code' || codeCheck(card) !== null;
+
+/** « 2026-09-29 » → « 29/09/2026 », sans passer par un fuseau horaire. */
+export function formatDay(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+}
+
+const PER: Readonly<Record<string, string>> = { month: ' par mois', year: ' par an', once: ' en une fois' };
+
+/** « 45.80 » en euros par mois → « 45,80 € par mois ». */
+export function formatGapValue(v: GapValue): string {
+  const [int, dec] = v.value.split('.');
+  const amount = dec ? `${int},${dec.padEnd(2, '0')}` : int;
+  const currency = v.unit.currency === 'EUR' ? '€' : v.unit.currency;
+  return `${amount} ${currency}${v.unit.tax ? ` ${v.unit.tax.toUpperCase()}` : ''}${v.unit.per ? PER[v.unit.per] : ''}`;
+}
+
+/** Une période en clair : « du 01/01/2027 », « jusqu'au 14/09/2026 », « le 14/09/2026 »… */
+export function formatPeriod(p: Period | null): string {
+  if (!p || (!p.start && !p.end)) return 'aucune période écrite dans les documents';
+  if (p.start && p.end) return p.start === p.end ? `le ${formatDay(p.start)}` : `du ${formatDay(p.start)} au ${formatDay(p.end)}`;
+  return p.start ? `à compter du ${formatDay(p.start)}` : `jusqu'au ${formatDay(p.end!)}`;
+}
+
+/**
+ * Ce que le code a relevé, en phrases neutres, à la place de l'analyse de l'IA : les deux valeurs
+ * et leur période ; la fin de la période d'un contenu périmé ; les dates du trou ; la date telle
+ * qu'écrite.
+ */
+export function checkFacts(check: CodeCheck): string[] {
+  switch (check.kind) {
+    case 'value_gap':
+      return [
+        ...check.values.map(v => `Côté ${v.side} : ${formatGapValue(v)}.`),
+        `Période : ${formatPeriod(check.period)}.`,
+      ];
+    case 'outdated_content':
+      return [check.period.end
+        ? `La période écrite s'est terminée le ${formatDay(check.period.end)}.`
+        : `Période écrite : ${formatPeriod(check.period)}.`];
+    case 'period_gap':
+      return [`Aucune règle du ${formatDay(check.gapStart)} au ${formatDay(check.gapEnd)}.`];
+    case 'date_without_year':
+      return [`Date écrite : « ${check.written} », sans année. Aucune année n'est supposée.`];
+  }
+}
+
+/** Libellé de la carte : celui de son contrôle, sinon celui de sa nature. */
+export function cardLabel(card: ReadingCard): string {
+  const check = codeCheck(card);
+  return check ? CHECKS[check.kind].label : NATURES[card.nature].label;
+}
+
+/** Réponses de la carte : pour une carte du code, celles de son contrôle seulement. */
+export function cardAnswers(card: ReadingCard): CardAnswerCode[] {
+  const check = codeCheck(card);
+  if (check) return card.answers.filter(a => CHECKS[check.kind].answers.includes(a));
+  return isCodeCard(card) ? card.answers.filter(a => a !== 'out_of_scope') : card.answers;
+}
+
+/** Libellés propres à un contrôle, à la place de ceux de la nature (« Le retirer de la base »). */
+const CHECK_ANSWER_LABELS: Readonly<Partial<Record<CheckKind, Partial<Record<CardAnswerCode, { label: string; field?: string }>>>>> = {
+  outdated_content:  {
+    remove:     { label: 'Le retirer de la base' },
+    up_to_date: { label: 'Le garder' },
+  },
+  period_gap:        { complete: { label: 'Indiquer la règle de cette période', field: 'La règle qui s\'applique pendant cette période' } },
+  date_without_year: { other_answer: { label: 'Indiquer la date complète', field: 'La date complète, avec son année' } },
+};
+
+/** Libellé d'une réponse sur cette carte, et ce qu'on demande de saisir. */
+export function answerLabel(card: ReadingCard | undefined, a: Exclude<CardAnswerCode, 'accept_side'>): { label: string; field?: string } {
+  const check = card ? codeCheck(card) : null;
+  return (check && CHECK_ANSWER_LABELS[check.kind]?.[a]) || ANSWERS[a];
+}
+
+/** La valeur d'un côté d'un écart entre documents, pour « Retenir A : 45,80 € par mois ». */
+export function sideValue(card: ReadingCard, side: SideLabel): string | null {
+  const check = codeCheck(card);
+  if (check?.kind !== 'value_gap') return null;
+  const v = check.values.find(x => x.side === side);
+  return v ? formatGapValue(v) : null;
+}
+
+/** Titre d'un côté : « Côté A », ou, pour une période sans règle, la règle qui finit et celle qui commence. */
+export function sideTitle(card: ReadingCard, side: SideLabel): string {
+  if (codeCheck(card)?.kind === 'period_gap') return side === 'A' ? 'La règle qui finit' : 'La règle qui commence';
+  return `Côté ${side}`;
+}
 
 // ── Réponses (decision-0.8.0) ─────────────────────────────────
 
@@ -365,7 +560,7 @@ export function describeCardAnswer(action: Decision['action'], card: ReadingCard
     const label = card && missingSide(card) ? 'Passage jugé juste' : `Côté ${a.side} retenu`;
     return `${label}${docs.length > 0 ? ` : ${docs.join(', ')}` : ''}`;
   }
-  const known = a.type in ANSWERS ? ANSWERS[a.type as keyof typeof ANSWERS] : null;
+  const known = a.type in ANSWERS ? answerLabel(card, a.type as keyof typeof ANSWERS) : null;
   if (!known) return 'Réponse';
   return a.text ? `${known.label} : « ${a.text} »` : known.label;
 }
@@ -379,8 +574,18 @@ export function describeCardAnswer(action: Decision['action'], card: ReadingCard
 const REJECTION_REASONS: Readonly<Record<string, string>> = {
   no_verified_quote: 'Un des passages cités est introuvable dans vos documents',
   briefing_only:     'Ne cite que la fiche de cadrage',
+  measure_ended:     'Mesure terminée : elle n\'entre pas dans la base',
 };
 export const rejectionReasonLabel = (r: string) => REJECTION_REASONS[r] ?? 'Autre raison';
+
+/**
+ * La raison d'un point écarté, avec sa date pour une mesure terminée (audit 0.11.0) : « Mesure
+ * terminée le 29/09/2026 : elle n'entre pas dans la base ».
+ */
+export function rejectedPointLabel(r: Pick<RejectedPoint, 'reason' | 'endedOn'>): string {
+  if (r.reason === 'measure_ended' && r.endedOn) return `Mesure terminée le ${formatDay(r.endedOn)} : elle n'entre pas dans la base`;
+  return rejectionReasonLabel(r.reason);
+}
 
 /**
  * `other` : une raison que le back ne connaît pas encore ; il la compte et la journalise
@@ -435,3 +640,17 @@ const UNAVAILABLE: Readonly<Record<string, string>> = {
     + 'ils ne sont pas encore découpés en plusieurs lectures.',
 };
 export const unavailableLabel = (d: string) => UNAVAILABLE[d] ?? d;
+
+/**
+ * Les détections de l'audit 0.11.0 que l'extraction n'a pas pu faire pour cette analyse (appel en
+ * échec) : dites dans la vue d'ensemble, en clair, jamais tues ni rangées avec ce que l'analyse ne
+ * repère « pas encore ».
+ */
+const FAILED_DETECTIONS: Readonly<Record<string, string>> = {
+  value_gaps: 'Les écarts de valeurs entre documents (montants, tarifs) n\'ont pas pu être recherchés pour cette analyse.',
+  dates:      'Les dates (contenus périmés, périodes sans règle, dates sans année) n\'ont pas pu être vérifiées pour cette analyse.',
+};
+export const failedDetections = (reading: Pick<Reading, 'unavailableDetections'>): string[] =>
+  reading.unavailableDetections.flatMap(d => (d in FAILED_DETECTIONS ? [FAILED_DETECTIONS[d]] : []));
+export const notYetDetections = (reading: Pick<Reading, 'unavailableDetections'>): string[] =>
+  reading.unavailableDetections.filter(d => !(d in FAILED_DETECTIONS));

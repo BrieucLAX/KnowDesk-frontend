@@ -8,7 +8,7 @@ import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { onboardingApi } from '../../api/onboardingApi';
 import { cardTitles, isCorrectionActive, SUPPORTED_CORRECTION_SCHEMAS, type BaseVersion, type OnboardingCorrection } from '../../lib/correction';
 import type { Decision } from '../../lib/decisions';
-import { cardTitle, NATURES, orderedCards, type ReadingCard } from '../../lib/reading';
+import { cardTitle, codeCheck, NATURES, orderedCards, type ReadingCard } from '../../lib/reading';
 import { useBaseReview } from '../../hooks/useBaseReview';
 import type { OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from '../audit/AuditSource';
@@ -103,6 +103,11 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabPro
   );
   const images = useMemo<AuditImages>(() => ({ available: imageIds, load: loadImage }), [imageIds, loadImage]);
   const review = useBaseReview(project.id, base?.correctionId ?? null);
+  /** Audit 0.11.0 : les cartes « Contenu périmé », dont les retraits acceptés se listent à part. */
+  const outdatedCardIds = useMemo(
+    () => new Set(cards.filter(c => codeCheck(c)?.kind === 'outdated_content').map(c => c.id)),
+    [cards],
+  );
   /** Le bas de la relecture, où le panneau de validation reprend son bouton (plan v4, point 7). */
   const [footer, setFooter] = useState<HTMLDivElement | null>(null);
 
@@ -195,7 +200,8 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabPro
                 footer={footer}
               />
             )}
-            <BaseReviewView base={base.base} cardTitles={titles} decisions={decisions} editable={base.reviewable} review={review} />
+            <BaseReviewView base={base.base} cardTitles={titles} decisions={decisions} editable={base.reviewable} review={review}
+              outdatedCardIds={outdatedCardIds} />
             <div ref={setFooter} />
           </AuditImagesContext.Provider>
         )

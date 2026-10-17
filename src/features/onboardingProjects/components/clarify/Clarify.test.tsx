@@ -13,12 +13,13 @@ import { onboardingApi } from '../../api/onboardingApi';
 import { AuditTab } from '../audit/AuditTab';
 import { ClarifyQuote, ReadingCardView } from './ReadingCardView';
 import type { Audit, AuditResponse } from '../../lib/audit';
-import { orderedCards, unverifiedReasonLabel } from '../../lib/reading';
+import { NATURES, orderedCards, unverifiedReasonLabel } from '../../lib/reading';
 import type { Decision, DecisionsState } from '../../lib/decisions';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import PILOTE_2 from './fixtures/audit-0.8.0-pilote-2.response.json';
 import PILOTE_3 from './fixtures/audit-0.8.0-pilote-3.response.json';
 import PILOTE_10 from './fixtures/audit-0.10.0-pilote-2.response.json';
+import PILOTE_11 from './fixtures/audit-0.11.0-pilote-banc-v3.response.json';
 
 /**
  * Réponses de GET …/audit sur deux audits 0.8.0 rejoués par le pipeline (pilote, lectures 2 et 3),
@@ -577,5 +578,175 @@ describe('À clarifier : versions d\'audit affichées (Base de co 2026 v4)', () 
     goTo(absent.analysis.subject);
     const card = await screen.findByRole('article', { name: new RegExp(`^Carte ${ordered.indexOf(absent) + 1} sur ${ordered.length}`) });
     expect(within(card).queryByRole('note', { name: 'Contenu absent de vos documents' })).not.toBeInTheDocument();
+  });
+});
+
+/**
+ * Audit 0.11.0 du pilote (plan v6, B2 et C) : la fixture réelle de KnowDesk#44
+ * (`audit-0.11.0-pilote-banc-v3.json` : audit v5 et extraction v3 rejouée), passée par la lecture
+ * du back (`readReading`, branche audit-0-11-0, 0f459a1) : la réponse de GET …/audit. Quatre cartes
+ * du code (un écart entre documents, un contenu périmé, une période sans règle, une date sans
+ * année) et un point écarté « mesure terminée » (GESTOR, 29/09/2026).
+ */
+const RESPONSE_11 = PILOTE_11 as unknown as AuditResponse;
+const reading11 = RESPONSE_11.reading!;
+const ordered11 = orderedCards(reading11.cards);
+const byCheck = (kind: string) => reading11.cards.find(c => (c.check as { kind?: string } | null)?.kind === kind)!;
+
+describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () => {
+  beforeEach(() => {
+    vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(RESPONSE_11);
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
+    vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.answerCard).mockReset();
+    vi.mocked(onboardingApi.getAuditImage).mockReset().mockResolvedValue(new Blob([new Uint8Array([1])], { type: 'image/png' }));
+    Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:image'), revokeObjectURL: vi.fn() });
+  });
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  /** Ouvre la carte d'un contrôle du code, depuis la session. */
+  async function openCheck(kind: string) {
+    const card = byCheck(kind);
+    await openSession();
+    goTo(card.analysis.subject);
+    return screen.findByRole('article', { name: new RegExp(`^Carte ${ordered11.indexOf(card) + 1} sur ${ordered11.length}`) });
+  }
+
+  const answerButtons = () => [
+    ...within(screen.queryByRole('group', { name: 'Retenir un côté' }) ?? document.createElement('div')).queryAllByRole('button'),
+    ...within(screen.getByRole('group', { name: 'Répondre à la carte' })).getAllByRole('button'),
+  ].map(b => b.textContent);
+
+  it('l\'audit 0.11.0 s\'affiche ; les cartes du code n\'ont ni « Analyse proposée par l\'IA » ni recommandation', async () => {
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    expect(await screen.findByRole('heading', { name: `${reading11.cards.length} cartes à clarifier` })).toBeInTheDocument();
+    expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
+    for (const kind of ['value_gap', 'outdated_content', 'period_gap', 'date_without_year']) {
+      const card = byCheck(kind);
+      expect(card.origin).toBe('code');
+      expect(card.recommendation).toBeNull();
+    }
+  });
+
+  it('écart entre documents : les deux valeurs et leur période visibles ; réponses du back seulement', async () => {
+    const article = await openCheck('value_gap');
+    expect(within(article).getByText('Écart entre documents')).toBeInTheDocument();
+    expect(within(article).getByText('Bloque la publication')).toBeInTheDocument();
+    expect(within(article).getByRole('heading', { name: 'Côté A : 45,80 € par mois' })).toBeInTheDocument();
+    expect(within(article).getByRole('heading', { name: 'Côté B : 35,80 € par mois' })).toBeInTheDocument();
+    const facts = within(article).getByRole('complementary', { name: 'Relevé en comparant vos documents' });
+    expect(facts).toHaveTextContent('Côté A : 45,80 € par mois.');
+    expect(facts).toHaveTextContent('Côté B : 35,80 € par mois.');
+    expect(facts).toHaveTextContent('Période : aucune période écrite dans les documents.');
+    expect(screen.queryByText('Analyse proposée par l\'IA')).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Recommandation de l\'IA' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Je suis la recommandation de l\'IA' })).not.toBeInTheDocument();
+
+    expect(screen.getByText('Écart entre documents : Quelle valeur est juste ?')).toBeInTheDocument();
+    expect(answerButtons()).toEqual([
+      'Retenir A : 45,80 € par mois, 03-cotisations-tarification.md',
+      'Retenir B : 35,80 € par mois, email-3-changement-tarifaire.docx',
+      'Ce n\'est pas un problème pour la base', 'Autre réponse', 'Plus tard',
+    ]);
+    expect(screen.queryByRole('button', { name: 'Autres réponses…' })).not.toBeInTheDocument();
+  });
+
+  it('contenu périmé : la question, la fin de la période ; « Le retirer de la base » envoie `remove`', async () => {
+    const card = byCheck('outdated_content');
+    vi.mocked(onboardingApi.answerCard).mockResolvedValue(answer(card.id, { type: 'remove' }));
+    const article = await openCheck('outdated_content');
+    expect(within(article).getByText('Contenu périmé', { selector: '.obp-audit-tag' })).toBeInTheDocument();
+    expect(within(article).getByRole('complementary', { name: 'Relevé en comparant vos documents' }))
+      .toHaveTextContent('La période écrite s\'est terminée le 14/09/2026.');
+    expect(screen.queryByText('Analyse proposée par l\'IA')).not.toBeInTheDocument();
+    expect(screen.getByText('Ce contenu est périmé : le retirer de la base ?')).toBeInTheDocument();
+    expect(answerButtons()).toEqual(['Le retirer de la base', 'Le garder', 'Autre réponse', 'Plus tard']);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Le retirer de la base' }));
+    await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalledWith('p1', 'a1', expect.objectContaining({
+      cardId: card.id, action: { type: 'remove' },
+    })));
+  });
+
+  it('période sans règle : les dates du trou, la règle qui finit et celle qui commence', async () => {
+    const article = await openCheck('period_gap');
+    expect(within(article).getByText('Période sans règle', { selector: '.obp-audit-tag' })).toBeInTheDocument();
+    expect(within(article).getByRole('complementary', { name: 'Relevé en comparant vos documents' }))
+      .toHaveTextContent('Aucune règle du 04/09/2026 au 31/12/2026.');
+    expect(within(article).getByRole('heading', { name: 'La règle qui finit' })).toBeInTheDocument();
+    expect(within(article).getByRole('heading', { name: 'La règle qui commence' })).toBeInTheDocument();
+    expect(screen.getByText('Quelle règle s\'applique pendant cette période ?')).toBeInTheDocument();
+    expect(answerButtons()).toEqual([
+      'Indiquer la règle de cette période', 'Ce n\'est pas un problème pour la base', 'Autre réponse', 'Plus tard',
+    ]);
+    fireEvent.click(screen.getByRole('button', { name: 'Indiquer la règle de cette période' }));
+    expect(screen.getByLabelText('La règle qui s\'applique pendant cette période')).toBeInTheDocument();
+  });
+
+  it('date sans année : la date telle qu\'écrite, jamais une année supposée', async () => {
+    const article = await openCheck('date_without_year');
+    expect(within(article).getByText('Date sans année', { selector: '.obp-audit-tag' })).toBeInTheDocument();
+    expect(within(article).getByRole('complementary', { name: 'Relevé en comparant vos documents' }))
+      .toHaveTextContent('Date écrite : « 1 janvier », sans année. Aucune année n\'est supposée.');
+    expect(screen.getByText('Quelle est la date complète ?')).toBeInTheDocument();
+    expect(answerButtons()).toEqual(['Ce n\'est pas un problème pour la base', 'Indiquer la date complète', 'Plus tard']);
+    fireEvent.click(screen.getByRole('button', { name: 'Indiquer la date complète' }));
+    expect(screen.getByLabelText('La date complète, avec son année')).toBeInTheDocument();
+  });
+
+  it('point écarté « mesure terminée » : sa raison et sa date de fin, sans la proposition de l\'IA', async () => {
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    const details = screen.getByText('Détails de l\'analyse').closest('details')!;
+    const item = within(details).getByText(/Mesure terminée le/).closest('li')!;
+    expect(item).toHaveTextContent('Changement daté · Mesure terminée le 29/09/2026 : elle n\'entre pas dans la base');
+    expect(item).toHaveTextContent('05-tiers-payant.md');
+    expect(item).toHaveTextContent('Procédure temporaire de secours pendant la maintenance GESTOR (28-29/09/2026)');
+    expect(item).not.toHaveTextContent('Ce que l\'IA propose');
+  });
+
+  it('valeurs extraites et extraction : jamais affichées', async () => {
+    const { container } = render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    const run = (RESPONSE_11.audit as { extraction_run: { prompt_id: string; model: string } }).extraction_run;
+    const keys = (RESPONSE_11.audit as { extracted_values: Array<{ subject: { item_key: string } }> }).extracted_values.map(v => v.subject.item_key);
+    expect(keys.length).toBeGreaterThan(0);
+    for (const text of [run.prompt_id, run.model, ...keys]) expect(container).not.toHaveTextContent(text);
+  });
+
+  it('écarts de valeurs ou dates non recherchés : un message neutre dans la vue d\'ensemble, jamais tu', async () => {
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue({
+      ...RESPONSE_11, reading: { ...reading11, unavailableDetections: ['temporary_notes', 'value_gaps', 'dates'] },
+    });
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    const notes = screen.getAllByRole('note').map(n => n.textContent);
+    expect(notes).toContain('Les écarts de valeurs entre documents (montants, tarifs) n\'ont pas pu être recherchés pour cette analyse.');
+    expect(notes).toContain('Les dates (contenus périmés, périodes sans règle, dates sans année) n\'ont pas pu être vérifiées pour cette analyse.');
+    // Ni l'un ni l'autre ne se range avec ce que l'analyse ne repère « pas encore ».
+    const notYet = screen.getByRole('heading', { name: 'Ce que l\'analyse ne repère pas encore' }).nextElementSibling!;
+    expect(notYet.querySelectorAll('li')).toHaveLength(1);
+  });
+
+  it('toutes les détections faites : aucun message', async () => {
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    expect(screen.queryByText(/n'ont pas pu être/)).not.toBeInTheDocument();
+  });
+
+  it('audit 0.10.0 inchangé à l\'écran : analyse de l\'IA, libellé de la nature, réponses de la nature, aucun message', async () => {
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue(RESPONSE_10);
+    const reading = RESPONSE_10.reading!;
+    const first = orderedCards(reading.cards)[0];
+    await openSession();
+    const card = screen.getByRole('article', { name: /^Carte 1 sur/ });
+    expect(within(card).getByText(NATURES[first.nature].label, { selector: '.obp-audit-tag' })).toBeInTheDocument();
+    expect(within(card).getByText('Analyse proposée par l\'IA')).toBeInTheDocument();
+    expect(within(card).queryByRole('complementary', { name: 'Relevé en comparant vos documents' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeInTheDocument();
+    expect(screen.getByText(`${NATURES[first.nature].label} : ${NATURES[first.nature].sides}`)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Autres réponses…' })).toBeInTheDocument();
+    expect(screen.queryByText(/n'ont pas pu être/)).not.toBeInTheDocument();
   });
 });

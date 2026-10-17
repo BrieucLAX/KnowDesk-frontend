@@ -3,8 +3,9 @@ import { Button }   from '../../../../shared/components/ui/Button';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { docNaming, fileName, type Audit } from '../../lib/audit';
 import {
-  CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, groupByNature,
-  modelNatureLabel, NATURES, orderedCards, rejectionReasonLabel, toQuotes, unavailableLabel, unreadFiles, unverifiedCounts, unverifiedReasonLabel, type Reading,
+  CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, failedDetections, groupByNature,
+  modelNatureLabel, NATURES, notYetDetections, orderedCards, rejectedPointLabel, toQuotes, unavailableLabel, unreadFiles, unverifiedCounts,
+  unverifiedReasonLabel, type Reading,
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
 import { AiFileName, DocNames, FileName } from '../audit/DocName';
@@ -42,6 +43,8 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
   const p = cardProgress(reading.cards, current);
   const notesUnavailable = reading.unavailableDetections.includes('temporary_notes');
   const unread = unreadFiles(audit);
+  const failed = failedDetections(reading);
+  const notYet = notYetDetections(reading);
   const unverifiedTotal = Object.values(reading.unverifiedQuotes).reduce<number>((n, c) => n + (c ?? 0), 0);
 
   return (
@@ -57,6 +60,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
           {!notesUnavailable && (
             <p className="obp-muted">Notes temporaires : {reading.temporaryNotes.length}</p>
           )}
+          {failed.map(text => <p key={text} className="obp-clarify-unavailable" role="note">{text}</p>)}
         </div>
         {state.status === 'loading' && <Skeleton className="obp-arb-entry__loading" />}
         {ready && reading.cards.length > 0 && (
@@ -135,7 +139,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
               {reading.rejectedPoints.map(r => (
                 <li key={r.rank} className="obp-audit-item">
                   <p className="obp-audit-item__title">
-                    {modelNatureLabel(r.nature)} · {rejectionReasonLabel(r.reason)}
+                    {modelNatureLabel(r.nature)} · {rejectedPointLabel(r)}
                   </p>
                   {r.documents.length > 0 && (
                     <p className="obp-muted">
@@ -148,7 +152,8 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
                       Texte rendu par l'IA (<AiFileName path={u.document} />, {unverifiedReasonLabel(u.reason)}), qui n'est pas une citation : {u.text}
                     </p>
                   ))}
-                  <ModelAnalysisBox analysis={r.analysis} />
+                  {/* Mesure terminée : ce que l'IA proposait d'ajouter n'a plus d'objet, seul son sujet se lit. */}
+                  <ModelAnalysisBox analysis={r.reason === 'measure_ended' ? { ...r.analysis, proposal: '' } : r.analysis} />
                 </li>
               ))}
             </ul>
@@ -185,11 +190,11 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
             </>
           )}
 
-          {reading.unavailableDetections.length > 0 && (
+          {notYet.length > 0 && (
             <>
               <h4 className="obp-audit-item__title">Ce que l'analyse ne repère pas encore</h4>
               <ul className="obp-clarify-counts">
-                {reading.unavailableDetections.map(d => <li key={d}>{unavailableLabel(d)}</li>)}
+                {notYet.map(d => <li key={d}>{unavailableLabel(d)}</li>)}
               </ul>
             </>
           )}
