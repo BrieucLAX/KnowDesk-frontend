@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
   isReadingAudit, readsImageOnly, recommendationOutcome,
-  missingSide, orderedCards, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
+  missingSide, orderedCards, rejectionReasonLabel, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
 import type { Audit } from './audit';
 import type { Decision } from './decisions';
@@ -184,3 +184,11 @@ describe('« Je suis la recommandation de l\'IA »', () => {
   });
 });
 
+
+describe('rejectionReasonLabel', () => {
+  it('dit qu\'un passage cité est introuvable (plan v6, B1)', () => {
+    expect(rejectionReasonLabel('no_verified_quote')).toBe('Un des passages cités est introuvable dans vos documents');
+    expect(rejectionReasonLabel('briefing_only')).toBe('Ne cite que la fiche de cadrage');
+    expect(rejectionReasonLabel('inconnue')).toBe('Autre raison');
+  });
+});
