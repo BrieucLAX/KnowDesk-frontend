@@ -638,7 +638,7 @@ describe('Nouvelle base : retirés comme obsolètes (audit 0.11.0)', () => {
     const view = await screen.findByRole('region', { name: 'Retirés comme obsolètes' });
     const items = within(view).getAllByRole('listitem');
     expect(items).toHaveLength(1);
-    expect(items[0]).toHaveTextContent('1.1 Offre de bienvenue');
+    expect(within(items[0]).getByText('Chapitre 1 — Offres et avantages › 1.1 Offre de bienvenue')).toBeInTheDocument();
     expect(within(items[0]).getByText('Offre de bienvenue : -10 % sur la première cotisation, adhésion signée jusqu\'au 30/06/2026.').tagName).toBe('DEL');
     expect(within(items[0]).getByRole('link', { name: 'Modification 1' })).toHaveAttribute('href', '#obp-base-m1');
     expect(items[0]).toHaveTextContent('Modification 1, carte « Contenu périmé »');
