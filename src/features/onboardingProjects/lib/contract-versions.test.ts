@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { SUPPORTED_AUDIT_SCHEMAS } from './audit';
 import {
-  CORRECTABLE_AUDIT_SCHEMAS, PENDING_REASONS, REASON_LABEL, SUPPORTED_CORRECTION_SCHEMAS, UNDO_REASONS, type BaseCorrection,
+  CORRECTABLE_AUDIT_SCHEMAS, PENDING_REASONS, REASON_LABEL, SUPPORTED_CORRECTION_SCHEMAS, TO_VERIFY_REASONS, UNDO_REASONS,
+  type BaseCorrection,
 } from './correction';
 import BASE_PILOTE_03 from '../components/base/fixtures/base-0.3.0-pilote.response.json';
+import BASE_BANC_04 from '../components/base/fixtures/base-0.4.0-banc-v5-g1.response.json';
 import { READING_AUDIT_SCHEMAS } from './reading';
 import VERSIONS from './contract-versions.json';
 
@@ -79,17 +81,18 @@ describe('Raisons de la base corrigée : listes fermées, un libellé par valeur
     );
   });
 
-  it('la base 0.3.0 réelle du pilote n\'emploie que des raisons connues de l\'écran', () => {
-    const base = (BASE_PILOTE_03 as unknown as { base: BaseCorrection }).base;
-    const used = base.sheets.flatMap(s => s.sections.flatMap(x => (x.changes ?? []).map(c => c.undo_reason)))
-      .filter((r): r is string => Boolean(r));
-    for (const r of used) expect(UNDO_REASONS).toContain(r);
+  it.each([['0.3.0 réelle du pilote', BASE_PILOTE_03], ['0.4.0 du banc v5', BASE_BANC_04]])('la base %s n\'emploie que des raisons connues de l\'écran', (_, response) => {
+    const base = (response as unknown as { base: BaseCorrection }).base;
+    const changes = base.sheets.flatMap(s => s.sections.flatMap(x => x.changes ?? []));
+    for (const r of changes.map(c => c.undo_reason).filter((r): r is string => Boolean(r))) expect(UNDO_REASONS).toContain(r);
+    for (const c of changes) if (c.to_verify) expect(TO_VERIFY_REASONS).toContain(c.to_verify.reason);
     for (const p of base.pending ?? []) expect(PENDING_REASONS).toContain(p.reason);
   });
 
   // Une raison que le contrat du back déclare et que l'écran ne connaît pas fait échouer ce test.
   it.skipIf(Object.keys(BACK_CORRECTIONS).length === 0)('mêmes listes que les schémas consignés du back voisin (../KnowDesk)', () => {
     expect(backValues('undo_reason')).toEqual([...UNDO_REASONS].sort());
-    expect(backValues('reason')).toEqual([...PENDING_REASONS].sort());
+    // `reason` : celle d'une information en attente, et (0.4.0) celle d'une ligne « À vérifier ».
+    expect(backValues('reason')).toEqual([...PENDING_REASONS, ...TO_VERIFY_REASONS].sort());
   });
 });

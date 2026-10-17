@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
-  changedShare, imageOf, senseChanged, inlineParts, ownHeading, parseLines, proposedLines, rowCells, sectionBlocks, sectionTitle, sheetViews, wordDiff,
+  changedShare, imageOf, senseChanged, inlineParts, markVerify, ownHeading, parseLines, proposedLines, rowCells, sectionBlocks, sectionTitle, sheetViews,
+  verifyRanges, wordDiff,
 } from './baseDocument';
 import type { BaseCorrection, CorrectedSection } from './correction';
 
@@ -128,5 +129,56 @@ describe('mise en page', () => {
     expect(sheet).toMatchObject({ title: 'Chapitre 3 — Cotisations', fileName: '03-cotisations.md' });
     expect(sheet.sections[0]).toMatchObject({ changed: false, conventionIds: ['C1'], modificationIds: [] });
     expect(sheet.sections[1]).toMatchObject({ title: '3.1', changed: true, modificationIds: ['M1'] });
+  });
+});
+
+describe('phrases « À vérifier » (correction 0.4.0)', () => {
+  const marked = 'Dans 90 % des cas, le délai est inférieur à 30 minutes.';
+  const line = `La mise en relation s'effectue sous 15 minutes. ${marked}`;
+
+  it('chaque ligne ajoutée porte les phrases de son changement gardé, mot pour mot', () => {
+    const blocks = sectionBlocks(section({
+      original_markdown: '', corrected_markdown: `# Chapitre 16\n\n${line}`, modification_ids: ['M4'],
+      changes: [
+        { kind: 'insert', line_kind: 'heading', before: '', after: '# Chapitre 16', modification_id: 'M4', kept: true },
+        { kind: 'insert', line_kind: 'paragraph', before: '', after: line, modification_id: 'M4', kept: true,
+          to_verify: { reason: 'sentence_below_quotes', passages: [marked] } },
+      ],
+    }));
+    expect(blocks.map(b => (b.op === 'equal' ? undefined : b.toVerify))).toEqual([undefined, [marked]]);
+  });
+
+  it('retrouve une phrase dans le texte lisible : puce, gras et liens retirés comme pour la ligne', () => {
+    const item = { type: 'item' as const, text: '- une réponse **motivée** sous 2 mois ;' };
+    const text = 'une réponse motivée sous 2 mois ;';
+    expect(verifyRanges(text, ['- une réponse **motivée** sous 2 mois ;'], item.type)).toEqual([[0, text.length]]);
+    expect(verifyRanges(line, [marked], 'text')).toEqual([[line.indexOf(marked), line.length]]);
+    expect(verifyRanges(line, undefined, 'text')).toEqual([]);
+  });
+
+  it('une phrase introuvable marque toute la ligne : rien de signalé ne se perd', () => {
+    expect(verifyRanges(line, ['Une phrase découpée autrement.'], 'text')).toEqual([[0, line.length]]);
+  });
+
+  it('coupe les morceaux aux bords des phrases ; un mot retiré n\'est jamais marqué', () => {
+    const parts = markVerify(wordDiff('Délai : 20 minutes.', 'Délai : 15 minutes.'), [[8, 19]], p => p.op !== 'delete');
+    expect(parts.filter(p => p.verify).map(p => p.text).join('')).toBe('15 minutes.');
+    expect(parts.find(p => p.op === 'delete')).toMatchObject({ text: '20', verify: false });
+    expect(markVerify(inlineParts('Avant **gras** après'), [[3, 9]]).map(p => [p.text, p.strong, p.verify])).toEqual([
+      ['Ava', false, false], ['nt ', false, true], ['gra', true, true], ['s', true, false], [' après', false, false],
+    ]);
+  });
+
+  it('un chapitre créé : titré par son texte corrigé, et la modification qui le crée', () => {
+    const base = {
+      schema_version: '0.4.0', modifications: [], conventions: [],
+      sheets: [{
+        document_id: 'new:16-teleconsultation-medicale.md', document_path: '16-teleconsultation-medicale.md', markdown: '', created_by: 'M4',
+        sections: [section({ key: 'new:16-teleconsultation-medicale.md:0', heading_path: ['Chapitre 16 — Téléconsultation'], corrected_markdown: '# Chapitre 16 — Téléconsultation\n\nTexte.' })],
+      }],
+    } as BaseCorrection;
+    const [sheet] = sheetViews(base);
+    expect(sheet).toMatchObject({ title: 'Chapitre 16 — Téléconsultation', createdBy: 'M4' });
+    expect(sheet.sections[0].blocks.every(b => b.op === 'insert')).toBe(true);
   });
 });

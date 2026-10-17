@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { AuthorName } from './AuthorName';
 import { formatFull } from '../../../../shared/lib/formatDate';
-import type { Review, Verdict } from '../../lib/correction';
+import { toVerifyLabel, type Review, type Verdict } from '../../lib/correction';
 import type { ReviewDraft, SaveState } from '../../hooks/useBaseReview';
 
 const VERDICTS: ReadonlyArray<{ verdict: Verdict; label: string }> = [
@@ -41,6 +41,8 @@ interface ReviewCardProps {
   save:       SaveState | undefined;
   /** Les sections touchées, chacune avec son texte proposé, en point de départ de « Corriger ». */
   sections:   FixSection[];
+  /** 0.4.0 : le nombre de phrases « À vérifier » que la modification écrit ; 0 ou absent : aucune. */
+  toVerify?:  number;
   onSave:     (draft: ReviewDraft) => void;
 }
 
@@ -59,7 +61,7 @@ function initialTexts(current: Review | undefined, sections: FixSection[]): Reco
  * section touchée, tel qu'il l'écrirait) ou Refuser, et un commentaire facultatif. Une convention
  * s'accepte ou se refuse. Le verdict s'enregistre au clic, les textes quand on quitte le champ.
  */
-export function ReviewCard({ anchor, title, children, withVerdict, fixable, editable, current, save, sections, onSave }: ReviewCardProps) {
+export function ReviewCard({ anchor, title, children, withVerdict, fixable, editable, current, save, sections, toVerify = 0, onSave }: ReviewCardProps) {
   const id = useId();
   const [verdict, setVerdict] = useState<Verdict | null>(current?.verdict ?? null);
   const [fixTexts, setFixTexts] = useState<Record<string, string>>(() => initialTexts(current, sections));
@@ -100,6 +102,10 @@ export function ReviewCard({ anchor, title, children, withVerdict, fixable, edit
       <h4 className="obp-base-card__title">{title}</h4>
       {children}
 
+      {/* À côté des boutons d'avis : les phrases surlignées dans le texte, à relire avant d'accepter. */}
+      {toVerify > 0 && (
+        <p className="obp-base-verify-count"><mark className="obp-base-verify">{toVerifyLabel(toVerify)}</mark></p>
+      )}
       {editable && withVerdict && (
         <div className={`obp-base-verdicts${fixable ? '' : ' obp-base-verdicts--two'}`} role="group" aria-label={`Votre avis sur ${title}`}>
           {verdicts.map(v => (

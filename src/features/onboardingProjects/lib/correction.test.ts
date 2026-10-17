@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   blockingCardsLeft, blockingLeftLabel, correctionFailureMessage, correctionStepStates, firstSentence, itemLabel, originLabel, outcomeLabel,
   partialSummary, pendingSentences, reasonGroups,
-  reasonLabel, reviewProgressLabel, type Modification,
+  canCreateChapters, kindLabel, reasonLabel, reviewProgressLabel, toVerifyCounts, toVerifyLabel, type BaseCorrection, type Modification,
 } from './correction';
 import type { Decision } from './decisions';
 import type { ReadingCard } from './reading';
@@ -160,5 +160,40 @@ describe('pendingSentences', () => {
   it('une carte sans titre connu est comptée', () => {
     expect(pendingSentences([{ card_id: 'x', card_rank: 1, reason: 'no_modification' }], title))
       .toEqual(['Répondues, sans modification possible de la base : 1 information.']);
+  });
+});
+
+describe('correction 0.4.0', () => {
+  it('compte les phrases « À vérifier » de chaque modification, sur ses seules lignes gardées', () => {
+    const change = (id: string, kept: boolean, passages?: string[]) => ({
+      kind: 'insert' as const, line_kind: 'paragraph' as const, before: '', after: 'x', modification_id: id, kept,
+      ...(passages ? { to_verify: { reason: 'sentence_below_quotes' as const, passages } } : {}),
+    });
+    const base = { sheets: [
+      { document_id: 'd1', document_path: 'a.md', markdown: '', sections: [
+        { key: 'd1:0', heading_path: [], original_markdown: '', corrected_markdown: '', changes: [change('M4', true, ['A.', 'B.']), change('M7', true, ['C.'])] },
+      ] },
+      { document_id: 'd2', document_path: 'b.md', markdown: '', sections: [
+        { key: 'd2:0', heading_path: [], original_markdown: '', corrected_markdown: '', changes: [change('M4', true, ['D.']), change('M2', false, ['E.']), change('M3', true)] },
+      ] },
+    ] } as Pick<BaseCorrection, 'sheets'>;
+    expect(Object.fromEntries(toVerifyCounts(base))).toEqual({ M4: 3, M7: 1 });
+  });
+
+  it('dit « 1 phrase » et « N phrases à vérifier »', () => {
+    expect(toVerifyLabel(1)).toBe('1 phrase à vérifier');
+    expect(toVerifyLabel(2)).toBe('2 phrases à vérifier');
+  });
+
+  it('nomme le chapitre créé, jamais son code', () => {
+    expect(kindLabel('new_chapter')).toBe('Nouveau chapitre');
+  });
+
+  it('un chapitre resté en attente en 0.4.0 : aucun document importé ne le porte', () => {
+    expect(canCreateChapters('0.3.0')).toBe(false);
+    expect(canCreateChapters('0.4.0')).toBe(true);
+    const pending = [{ card_id: 'c1', card_rank: 1, reason: 'new_chapter' as const, modification_id: 'M4' }];
+    expect(pendingSentences(pending, () => 'Téléconsultation')[1]).toMatch(/^La préparation ne crée pas de nouveau chapitre\. /);
+    expect(pendingSentences(pending, () => 'Téléconsultation', true)[1]).toMatch(/^Aucun document importé ne porte ce chapitre : la préparation ne l'a pas créé\. Pour ajouter ce contenu/);
   });
 });

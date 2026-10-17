@@ -687,3 +687,7 @@
   .obp-base-figure__open { cursor: default; }
   .obp-audit-image { max-height: none; }
 }
+
+/* Correction 0.4.0 : les phrases « À vérifier », surlignées dans le texte et comptées sur la carte. */
+.obp-base-verify { background: var(--color-warning-bg); color: inherit; border-bottom: 2px solid var(--color-warning); padding: 0 1px; }
+.obp-base-verify-count { margin: 8px 0 0; text-align: right; font-size: 13px; font-weight: 600; }
