@@ -1,8 +1,8 @@
 import React from 'react';
 import type { Audit } from '../../lib/audit';
 import {
-  isBlocking, isBriefingOnly, readsImageOnly, missingSide, NATURES, toQuotes, unverifiedReasonLabel, type ModelAnalysis, type Quote,
-  type ReadingCard,
+  cardLabel, checkFacts, codeCheck, isBlocking, isBriefingOnly, isCodeCard, readsImageOnly, missingSide, sideTitle, sideValue, toQuotes,
+  unverifiedReasonLabel, type ModelAnalysis, type Quote, type ReadingCard,
 } from '../../lib/reading';
 import { joinParagraphLines } from '../../lib/excerpt';
 import { AuditSource } from '../audit/AuditSource';
@@ -60,6 +60,23 @@ export function ModelAnalysisBox({ analysis }: { analysis: ModelAnalysis }) {
 }
 
 /**
+ * Une carte levée par le code (audit 0.11.0) : ce qu'il a relevé, en phrases neutres (les deux
+ * valeurs et leur période, la fin d'une période, les dates d'un trou, la date telle qu'écrite), à
+ * la place de l'analyse de l'IA. Ni « Analyse proposée par l'IA », ni recommandation.
+ */
+export function CodeCheckBox({ card }: { card: ReadingCard }) {
+  const check = codeCheck(card);
+  const facts = check ? checkFacts(check) : [card.analysis.reason].filter(Boolean);
+  return (
+    <aside className="obp-clarify-check" aria-label="Relevé en comparant vos documents">
+      <p className="obp-clarify-check__title">Relevé en comparant vos documents</p>
+      {facts.map(f => <p key={f}>{f}</p>)}
+      <p className="obp-clarify-check__note">Relevé automatiquement à partir des passages cités, sans analyse ni recommandation de l'IA.</p>
+    </aside>
+  );
+}
+
+/**
  * Une citation renvoie à un contenu que vos documents ne contiennent pas (audit 0.10.0, « Base de
  * co 2026 v3 », carte 1 : « voir grille complète en pièce jointe ») : dit avant l'analyse de l'IA,
  * qui proposerait sinon d'intégrer ce qu'elle n'a pas.
@@ -106,7 +123,7 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
       <p className="obp-clarify-card__position">{position}</p>
       <header className="obp-audit-card__head">
         <h4 className="obp-audit-card__title">{title}</h4>
-        <span className={`obp-audit-tag obp-clarify-nature obp-clarify-nature--${card.nature}`}>{NATURES[card.nature].label}</span>
+        <span className={`obp-audit-tag obp-clarify-nature obp-clarify-nature--${card.nature}`}>{cardLabel(card)}</span>
         {blocking && <span className="obp-audit-tag obp-audit-tag--high">Bloque la publication</span>}
         {imageOnly && <span className="obp-audit-tag">Lecture d'image à confirmer</span>}
       </header>
@@ -120,7 +137,8 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
         {card.sides.map(side => {
           const quotes = toQuotes(side.quotes);
           const briefing = isBriefingOnly(quotes);
-          const label = briefing ? 'Votre fiche de cadrage' : `Côté ${side.label}`;
+          const value = sideValue(card, side.label);
+          const label = briefing ? 'Votre fiche de cadrage' : `${sideTitle(card, side.label)}${value ? ` : ${value}` : ''}`;
           return (
             <section key={side.label} className={`obp-clarify-side${briefing ? ' obp-clarify-side--briefing' : ''}`} aria-label={label}>
               <h5 className="obp-clarify-side__title">{label}</h5>
@@ -151,7 +169,7 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
       </div>
 
       <AbsentContent audit={audit} card={card} />
-      <ModelAnalysisBox analysis={card.analysis} />
+      {isCodeCard(card) ? <CodeCheckBox card={card} /> : <ModelAnalysisBox analysis={card.analysis} />}
     </article>
   );
 }

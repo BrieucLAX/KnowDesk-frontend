@@ -1,0 +1,211 @@
+{
+  "analysisId": "a1",
+  "schemaVersion": "0.11.0",
+  "audit": {
+    "schema_version": "0.11.0",
+    "generated_at": "2026-10-12T14:07:14.248388Z",
+    "reading_date": "2026-10-12",
+    "briefing_given": true,
+    "inventory": [
+      {
+        "document_id": "doc_01_offres_avantages_md_e4db51b7",
+        "path": "01-offres-avantages.md",
+        "format": "md",
+        "size_bytes": 2971,
+        "sha256": "4a117d055cc10b6cd7e9ef7770b0c47993f395553fd80392e5e2c1bfb8754cb8",
+        "unit_count": 5,
+        "title": null,
+        "source_type": null,
+        "scope": null,
+        "version_group": null,
+        "version_rank": null,
+        "status": "parsed",
+        "error": null
+      }
+    ],
+    "cards": [
+      {
+        "id": "card_perime",
+        "nature": "incomplete_or_outdated",
+        "rank": 1,
+        "merged_ranks": [],
+        "document_ids": [
+          "doc_01_offres_avantages_md_e4db51b7"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "source": {
+                  "document_id": "doc_01_offres_avantages_md_e4db51b7",
+                  "excerpt": "Offre de bienvenue : -10 % sur la première cotisation, adhésion signée jusqu'au 30/06/2026.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "md",
+                  "heading_path": [
+                    "Chapitre 1 — Offres et avantages",
+                    "1.1 Offre de bienvenue"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                },
+                "excerpt_realigned": false
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "origin": "code",
+          "subject": "Contenu périmé",
+          "reason": "La période écrite s'est terminée le 30/06/2026.",
+          "proposal": "Ce contenu est périmé : le retirer de la base ?"
+        },
+        "answers": [
+          "remove",
+          "up_to_date",
+          "other_answer",
+          "later"
+        ],
+        "unverified_quotes": [],
+        "recommended_effect": {
+          "action": null,
+          "basis": "relevé par le code, sans recommandation"
+        },
+        "absent_references": [],
+        "check": {
+          "kind": "outdated_content",
+          "period": {
+            "start": null,
+            "end": "2026-06-30",
+            "status": "past"
+          }
+        }
+      }
+    ],
+    "temporary_notes": [],
+    "rejected_points": [],
+    "unverified_quotes": {},
+    "unavailable_detections": [],
+    "run": {
+      "model": "mistral-large-2512",
+      "prompt_id": "lecture_globale",
+      "prompt_version": 1,
+      "estimated_tokens": 41608,
+      "prompt_tokens": 34194,
+      "completion_tokens": 7544,
+      "cost_usd": 0.028413,
+      "duration_seconds": 108.235,
+      "pipeline_commit": "unknown"
+    },
+    "extraction_run": {
+      "model": "mistral-large-2512",
+      "prompt_id": "extraction_valeurs",
+      "prompt_version": 3,
+      "calls": 1,
+      "prompt_tokens": 57165,
+      "completion_tokens": 22703,
+      "cost_usd": 0.062637,
+      "duration_seconds": 0,
+      "documents": [
+        {
+          "document_id": "doc_01_offres_avantages_md_e4db51b7",
+          "status": "extracted"
+        }
+      ]
+    },
+    "extracted_values": []
+  },
+  "imageIds": [],
+  "cards": null,
+  "conflictsAwaitingReading": null,
+  "extractionNotes": null,
+  "reading": {
+    "readingDate": "2026-10-12",
+    "briefingGiven": true,
+    "cards": [
+      {
+        "id": "card_perime",
+        "nature": "incomplete_or_outdated",
+        "rank": 1,
+        "mergedRanks": [],
+        "documentIds": [
+          "doc_01_offres_avantages_md_e4db51b7"
+        ],
+        "sides": [
+          {
+            "label": "A",
+            "quotes": [
+              {
+                "kind": "document",
+                "excerptRealigned": false,
+                "source": {
+                  "document_id": "doc_01_offres_avantages_md_e4db51b7",
+                  "excerpt": "Offre de bienvenue : -10 % sur la première cotisation, adhésion signée jusqu'au 30/06/2026.",
+                  "zone": "text",
+                  "table_cell": null,
+                  "excerpt_origin": "source_text",
+                  "image_id": null,
+                  "format": "md",
+                  "heading_path": [
+                    "Chapitre 1 — Offres et avantages",
+                    "1.1 Offre de bienvenue"
+                  ],
+                  "block_kind": "paragraph",
+                  "block_index": 0
+                }
+              }
+            ]
+          }
+        ],
+        "analysis": {
+          "subject": "Contenu périmé",
+          "reason": "La période écrite s'est terminée le 30/06/2026.",
+          "proposal": "Ce contenu est périmé : le retirer de la base ?"
+        },
+        "answers": [
+          "remove",
+          "up_to_date",
+          "other_answer",
+          "later"
+        ],
+        "unverifiedQuotes": [],
+        "recommendation": null,
+        "absentReferences": [],
+        "origin": "code",
+        "check": {
+          "kind": "outdated_content",
+          "period": {
+            "start": null,
+            "end": "2026-06-30",
+            "status": "past"
+          }
+        }
+      }
+    ],
+    "temporaryNotes": [],
+    "rejectedPoints": [],
+    "unverifiedQuotes": {},
+    "unavailableDetections": [],
+    "extractedValues": [],
+    "extractionRun": {
+      "model": "mistral-large-2512",
+      "prompt_id": "extraction_valeurs",
+      "prompt_version": 3,
+      "calls": 1,
+      "prompt_tokens": 57165,
+      "completion_tokens": 22703,
+      "cost_usd": 0.062637,
+      "duration_seconds": 0,
+      "documents": [
+        {
+          "document_id": "doc_01_offres_avantages_md_e4db51b7",
+          "status": "extracted"
+        }
+      ]
+    }
+  }
+}

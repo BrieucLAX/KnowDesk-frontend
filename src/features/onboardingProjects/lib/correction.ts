@@ -578,3 +578,37 @@ export function toVerifyCounts(base: Pick<BaseCorrection, 'sheets'>): Map<string
 
 /** « 1 phrase à vérifier », « 2 phrases à vérifier ». */
 export const toVerifyLabel = (n: number): string => `${n} ${n > 1 ? 'phrases' : 'phrase'} à vérifier`;
+
+/** Un passage retiré comme obsolète : la modification, sa carte, et le texte retiré section par section. */
+export interface RemovedAsObsolete {
+  id:       string;
+  cardId:   string;
+  sections: Array<{ key: string; headingPath: string[]; lines: string[] }>;
+}
+
+/**
+ * « Retirés comme obsolètes » (plan v6, lot C) : les retraits (`remove`) acceptés à la relecture
+ * dont la carte est un contenu périmé (`outdated_content`, audit 0.11.0), avec les lignes qu'ils
+ * retirent. Construite sur la seule correction 0.4.0 : une modification sans avis, refusée ou dont
+ * l'avis est annulé n'y entre pas, le passage reste alors dans la base.
+ */
+export function removedAsObsolete(
+  base: Pick<BaseCorrection, 'sheets' | 'modifications'>,
+  reviews: ReadonlyMap<string, Review>,
+  outdatedCardIds: ReadonlySet<string>,
+): RemovedAsObsolete[] {
+  const sections = base.sheets.flatMap(s => s.sections);
+  return base.modifications
+    .filter(m => m.kind === 'remove' && outdatedCardIds.has(m.origin.card_id))
+    .filter(m => { const r = reviews.get(m.id); return r?.verdict === 'accept' && !r.cancellation; })
+    .map(m => ({
+      id:       m.id,
+      cardId:   m.origin.card_id,
+      sections: sections.flatMap(s => {
+        const lines = (s.changes ?? []).filter(c => c.kind === 'delete' && c.kept && c.modification_id === m.id).map(c => c.before);
+        return lines.length > 0 ? [{ key: s.key, headingPath: s.heading_path, lines }] : [];
+      }),
+    }))
+    .filter(r => r.sections.length > 0)
+    .sort((a, b) => itemRank(a.id) - itemRank(b.id));
+}

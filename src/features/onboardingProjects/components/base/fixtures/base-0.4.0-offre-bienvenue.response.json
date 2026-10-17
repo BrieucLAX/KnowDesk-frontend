@@ -1,0 +1,111 @@
+{
+  "correctionId": "00000000-0000-4000-8000-0000000000d1",
+  "schemaVersion": "0.4.0",
+  "base": {
+    "schema_version": "0.4.0",
+    "audit_schema_version": "0.9.0",
+    "generated_at": "2026-10-17T14:52:35.046730Z",
+    "sheets": [
+      {
+        "document_id": "doc_01_offres_avantages_md_e4db51b7",
+        "document_path": "01-offres-avantages.md",
+        "sections": [
+          {
+            "key": "doc_01_offres_avantages_md_e4db51b7:0",
+            "heading_path": [
+              "Chapitre 1 — Offres et avantages"
+            ],
+            "original_markdown": "# Chapitre 1 — Offres et avantages\n",
+            "corrected_markdown": "# Chapitre 1 — Offres et avantages\n",
+            "modification_ids": [],
+            "convention_ids": [],
+            "changes": []
+          },
+          {
+            "key": "doc_01_offres_avantages_md_e4db51b7:1",
+            "heading_path": [
+              "Chapitre 1 — Offres et avantages",
+              "1.1 Offre de bienvenue"
+            ],
+            "original_markdown": "## 1.1 Offre de bienvenue\n\nOffre de bienvenue : -10 % sur la première cotisation, adhésion signée jusqu'au 30/06/2026.\n",
+            "corrected_markdown": "## 1.1 Offre de bienvenue\n",
+            "modification_ids": [
+              "M1"
+            ],
+            "convention_ids": [],
+            "changes": [
+              {
+                "kind": "delete",
+                "line_kind": "paragraph",
+                "before": "Offre de bienvenue : -10 % sur la première cotisation, adhésion signée jusqu'au 30/06/2026.",
+                "after": "",
+                "modification_id": "M1",
+                "kept": true,
+                "undo_reason": null,
+                "written_by": "model",
+                "to_verify": null
+              }
+            ]
+          },
+          {
+            "key": "doc_01_offres_avantages_md_e4db51b7:2",
+            "heading_path": [
+              "Chapitre 1 — Offres et avantages",
+              "1.2 Parrainage"
+            ],
+            "original_markdown": "## 1.2 Parrainage\n\nOffre parrainage : un mois offert au parrain, adhésion du 01/09/2026 au 31/12/2026.\n",
+            "corrected_markdown": "## 1.2 Parrainage\n\nOffre parrainage : un mois offert au parrain, adhésion du 01/09/2026 au 31/12/2026.\n",
+            "modification_ids": [],
+            "convention_ids": [],
+            "changes": []
+          }
+        ],
+        "markdown": "# Chapitre 1 — Offres et avantages\n\n## 1.1 Offre de bienvenue\n\n## 1.2 Parrainage\n\nOffre parrainage : un mois offert au parrain, adhésion du 01/09/2026 au 31/12/2026.\n",
+        "created_by": null
+      }
+    ],
+    "modifications": [
+      {
+        "id": "M1",
+        "kind": "remove",
+        "origin": {
+          "card_id": "card_perime",
+          "card_rank": 1,
+          "decision_id": "dec_card_perime",
+          "action_type": "remove",
+          "decided_at": "2026-09-13T10:00:00+02:00"
+        },
+        "instruction": "Retirer de la base les passages cités par la carte.",
+        "expert_text": null,
+        "source_document_ids": [],
+        "section_keys": [
+          "doc_01_offres_avantages_md_e4db51b7:1"
+        ],
+        "outcome": "applied",
+        "reasons": [],
+        "created_sheet": null
+      }
+    ],
+    "conventions": [],
+    "pending": [],
+    "controls": {
+      "changes_kept": 1,
+      "changes_undone": 0,
+      "headings_and_images_identical": true,
+      "every_modification_has_an_outcome": true,
+      "lines_to_verify": 0,
+      "sheets_created": 0
+    },
+    "run": {
+      "model": "mistral-large-2512",
+      "prompt_id": "redaction_correction",
+      "prompt_version": 1,
+      "calls": 1,
+      "cost_usd": 0.00065,
+      "duration_seconds": 0.005,
+      "pipeline_commit": null
+    }
+  },
+  "createdAt": "2026-10-17T12:00:00Z",
+  "reviewable": true
+}

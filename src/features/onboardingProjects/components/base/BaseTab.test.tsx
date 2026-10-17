@@ -33,6 +33,8 @@ import BASE_PILOTE_02 from './fixtures/base-0.2.0-pilote.response.json';
 import BASE_PILOTE_03 from './fixtures/base-0.3.0-pilote.response.json';
 import BASE_BANC_04 from './fixtures/base-0.4.0-banc-v5-g1.response.json';
 import CARDS_PILOTE_B9 from './fixtures/audit-pilote-b9a878c1-cards.json';
+import BASE_BIENVENUE from './fixtures/base-0.4.0-offre-bienvenue.response.json';
+import AUDIT_BIENVENUE from './fixtures/audit-0.11.0-offre-bienvenue.response.json';
 
 /**
  * Base corrigée par le service sur le pilote (lancée en local depuis « À clarifier », réponses de
@@ -608,5 +610,70 @@ describe('« À clarifier » : Préparer la nouvelle base', () => {
     unmount();
     entry(decided('accept_side'), vi.fn(), '0.8.0');
     expect(screen.getByText(/relancez une analyse pour préparer la nouvelle base/)).toBeInTheDocument();
+  });
+});
+
+/**
+ * « Retirés comme obsolètes » (plan v6, lot C). La base est la fixture réelle de KnowDesk#44
+ * (`correction-0.4.0-offre-bienvenue.json` : code de correction du pipeline, réponse « retirer » sur
+ * « Offre de bienvenue : -10 % … jusqu'au 30/06/2026 ») ; l'audit, sa carte « Contenu périmé »
+ * (`card_perime`), écrite au format 0.11.0 et passée par la lecture du back (`readReading`, 0f459a1).
+ */
+describe('Nouvelle base : retirés comme obsolètes (audit 0.11.0)', () => {
+  const BIENVENUE = BASE_BIENVENUE as unknown as BaseVersion;
+  const AUDIT = AUDIT_BIENVENUE as unknown as AuditResponse;
+
+  function mockWelcome(reviews: Review[], audit: AuditResponse = AUDIT) {
+    mockBase(BIENVENUE, [correction({ id: BIENVENUE.correctionId })]);
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue(audit);
+    vi.mocked(onboardingApi.listReviews).mockResolvedValue({ reviews, counts: { reviewed: reviews.length, toReview: 1 } });
+  }
+
+  beforeEach(() => { vi.clearAllMocks(); });
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it('retrait accepté d\'un contenu périmé : le texte retiré, sa section, sa modification et sa carte', async () => {
+    mockWelcome([review('M1')]);
+    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const view = await screen.findByRole('region', { name: 'Retirés comme obsolètes' });
+    const items = within(view).getAllByRole('listitem');
+    expect(items).toHaveLength(1);
+    expect(within(items[0]).getByText('Chapitre 1 — Offres et avantages › 1.1 Offre de bienvenue')).toBeInTheDocument();
+    expect(within(items[0]).getByText('Offre de bienvenue : -10 % sur la première cotisation, adhésion signée jusqu\'au 30/06/2026.').tagName).toBe('DEL');
+    expect(within(items[0]).getByRole('link', { name: 'Modification 1' })).toHaveAttribute('href', '#obp-base-m1');
+    expect(items[0]).toHaveTextContent('Modification 1, carte « Contenu périmé »');
+    expect(container.textContent).not.toMatch(/card_|doc_|outdated_content/);
+  });
+
+  it.each([
+    ['sans avis', [] as Review[]],
+    ['refusé', [review('M1', { verdict: 'refuse' })]],
+    ['avis annulé', [review('M1', { cancellation: { cancelledAt: '2026-10-07T11:00:00Z', cancelledByName: 'Camille Martin' } })]],
+  ])('retrait %s : le passage reste dans la base, la vue n\'apparaît pas', async (_, reviews) => {
+    mockWelcome(reviews);
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByRole('article', { name: /^Modification 1/ });
+    expect(screen.queryByRole('region', { name: 'Retirés comme obsolètes' })).not.toBeInTheDocument();
+  });
+
+  it('« Accepter » le retrait fait apparaître le passage dans la vue', async () => {
+    mockWelcome([]);
+    vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict }));
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const m1 = await screen.findByRole('article', { name: /^Modification 1/ });
+    expect(screen.queryByRole('region', { name: 'Retirés comme obsolètes' })).not.toBeInTheDocument();
+    fireEvent.click(within(m1).getByRole('button', { name: 'Accepter' }));
+    expect(await screen.findByRole('region', { name: 'Retirés comme obsolètes' })).toHaveTextContent('Offre de bienvenue : -10 %');
+  });
+
+  it('retrait accepté sur une carte du modèle (pas un contenu périmé) : pas dans la vue', async () => {
+    const reading = AUDIT.reading!;
+    const modelCard = { ...reading.cards[0], origin: 'model' as const, check: null };
+    mockWelcome([review('M1')], { ...AUDIT, schemaVersion: '0.10.0', reading: { ...reading, cards: [modelCard] } });
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const m1 = await screen.findByRole('article', { name: /^Modification 1/ });
+    // L'audit est lu : la modification nomme sa carte.
+    expect(await within(m1).findByText(/carte « Contenu périmé »/)).toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'Retirés comme obsolètes' })).not.toBeInTheDocument();
   });
 });

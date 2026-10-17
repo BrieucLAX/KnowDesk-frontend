@@ -5,7 +5,7 @@ import {
 } from '../../lib/baseDocument';
 import {
   canCreateChapters, chapterRequests, firstSentence, toVerifyCounts, recordedAnswer, itemLabel, itemRank, kindLabel, NEW_CHAPTER_LABEL, originLabel, outcomeLabel, partialSummary,
-  pendingSentences, reasonGroups, reviewProgressLabel, SHOWN_REASONS, type ReasonGroup,
+  pendingSentences, reasonGroups, removedAsObsolete, reviewProgressLabel, SHOWN_REASONS, type ReasonGroup, type RemovedAsObsolete,
   type BaseCorrection, type Convention, type Modification, type SectionFix,
 } from '../../lib/correction';
 import type { BaseReview } from '../../hooks/useBaseReview';
@@ -27,7 +27,11 @@ interface BaseReviewViewProps {
   decisions?: ReadonlyMap<string, Decision>;
   editable:   boolean;
   review:     BaseReview;
+  /** Audit 0.11.0 : les cartes « Contenu périmé » ; leurs retraits acceptés se listent dans « Retirés comme obsolètes ». */
+  outdatedCardIds?: ReadonlySet<string>;
 }
+
+const NO_CARDS: ReadonlySet<string> = new Set();
 
 const anchorOf = (id: string) => `obp-base-${id.toLowerCase()}`;
 
@@ -37,7 +41,7 @@ const anchorOf = (id: string) => `obp-base-${id.toLowerCase()}`;
  * inchangées repliées à leur place, un avis par modification et par convention, un commentaire
  * possible sur n'importe quelle section, et « n sur N relues » en tête.
  */
-export function BaseReviewView({ base, cardTitles, decisions = new Map(), editable, review }: BaseReviewViewProps) {
+export function BaseReviewView({ base, cardTitles, decisions = new Map(), editable, review, outdatedCardIds = NO_CARDS }: BaseReviewViewProps) {
   const sheets = useMemo(() => sheetViews(base), [base]);
   const titles = useMemo(() => sectionTitleIndex(sheets), [sheets]);
   const placement = useMemo(() => modificationPlacement(sheets, base.modifications), [sheets, base.modifications]);
@@ -83,6 +87,7 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
   if (state.status === 'error') return <p className="obp-muted">Les avis n'ont pas pu être chargés.</p>;
 
   const reviewed = [...state.reviews.values()].filter(r => r.verdict !== null).length;
+  const obsolete = removedAsObsolete(base, state.reviews, outdatedCardIds);
   const sectionTitle = (key: string) => titles.get(key) ?? null;
 
   const modificationCard = (m: Modification) => (
@@ -252,6 +257,8 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
         </p>
       )}
 
+      {obsolete.length > 0 && <RemovedAsObsoleteView removed={obsolete} cardTitles={cardTitles} sectionTitle={sectionTitle} />}
+
       {conventions.length > 0 && (
         <section className="obp-base-chapter" aria-labelledby="obp-base-conventions">
           <h2 id="obp-base-conventions" className="obp-base-chapter__title">Conventions appliquées</h2>
@@ -281,6 +288,45 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
         </section>
       ))}
     </div>
+  );
+}
+
+/**
+ * « Retirés comme obsolètes » (plan v6, lot C) : chaque passage qu'une réponse « Le retirer de la
+ * base » sur un contenu périmé a fait sortir de la base, une fois son retrait accepté. Le texte
+ * retiré reste lisible ici, avec sa section, sa modification et sa carte.
+ */
+function RemovedAsObsoleteView({ removed, cardTitles, sectionTitle }: {
+  removed:      RemovedAsObsolete[];
+  cardTitles:   ReadonlyMap<string, string>;
+  sectionTitle: (key: string) => string | null;
+}) {
+  return (
+    <section className="obp-base-chapter obp-base-obsolete" aria-labelledby="obp-base-obsolete">
+      <h2 id="obp-base-obsolete" className="obp-base-chapter__title">Retirés comme obsolètes</h2>
+      <p className="obp-muted">
+        Ces passages étaient périmés : vous avez accepté leur retrait, ils ne sont plus dans la base. Ils restent consultables ici.
+      </p>
+      <ul className="obp-base-obsolete__list">
+        {removed.map(r => r.sections.map(s => {
+          const title = cardTitles.get(r.cardId);
+          return (
+            <li key={`${r.id}:${s.key}`} className="obp-base-obsolete__item">
+              <p className="obp-base-obsolete__where">
+                {sectionTitle(s.key) ?? s.headingPath.join(' › ')}
+              </p>
+              <blockquote className="obp-base-obsolete__text">
+                {s.lines.map((l, i) => <p key={i}><del>{l}</del></p>)}
+              </blockquote>
+              <p className="obp-muted">
+                <a href={`#${anchorOf(r.id)}`}>{itemLabel(r.id)}</a>
+                {title ? `, carte « ${title} »` : ''}
+              </p>
+            </li>
+          );
+        }))}
+      </ul>
+    </section>
   );
 }
 

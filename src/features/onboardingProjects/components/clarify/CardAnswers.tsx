@@ -5,9 +5,9 @@ import { TextArea } from '../TextArea';
 import { namedLabel, type DocNaming } from '../../lib/audit';
 import type { Decision } from '../../lib/decisions';
 import {
-  ANSWERS, describeCardAnswer, FOLLOW_BLOCKED_REASON, FOLLOW_RECOMMENDATION_LABEL, FOLLOW_WARNING, followBlocked, followWarned,
-  isBriefingOnly, missingSide, NATURES, recommendationOutcome,
-  sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, TYPED_ANSWERS, type CardAction, type ReadingCard,
+  answerLabel, cardAnswers, cardLabel, codeCheck, describeCardAnswer, FOLLOW_BLOCKED_REASON, FOLLOW_RECOMMENDATION_LABEL, FOLLOW_WARNING,
+  followBlocked, followWarned, isBriefingOnly, isCodeCard, missingSide, recommendationOutcome,
+  sideDocuments, sidesQuestion, sideValue, substantiveAnswers, toQuotes, TYPED_ANSWERS, type CardAction, type CardAnswerCode, type ReadingCard,
   type TypedAnswer,
 } from '../../lib/reading';
 
@@ -79,14 +79,18 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
     );
   }
 
-  if (following && card.recommendation) {
+  // Une carte du code n'a jamais de recommandation, même si un back en rendait une.
+  const recommendation = isCodeCard(card) ? null : card.recommendation ?? null;
+  const answers = cardAnswers(card);
+
+  if (following && recommendation) {
     return (
       <form className="obp-decision__form" onSubmit={e => {
         e.preventDefault();
         void submit({ type: 'follow_recommendation', precisions: text.trim() || null });
       }}>
         <p className="obp-clarify-answer__chosen">{FOLLOW_RECOMMENDATION_LABEL}</p>
-        <blockquote className="obp-clarify-reco__text">{card.recommendation.text}</blockquote>
+        <blockquote className="obp-clarify-reco__text">{recommendation.text}</blockquote>
         <div className="obp-clarify-reco__outcome" role="note">
           <p className="obp-clarify-reco__outcome-title">Ce que cela fera dans la base</p>
           <p>{recommendationOutcome(card, docs.name)}</p>
@@ -106,7 +110,7 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
   }
 
   if (typing) {
-    const field = ANSWERS[typing];
+    const field = answerLabel(card, typing);
     return (
       <form className="obp-decision__form" onSubmit={e => {
         e.preventDefault();
@@ -127,28 +131,29 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
     );
   }
 
-  const choose = (a: keyof typeof ANSWERS) => {
+  const choose = (a: Exclude<CardAnswerCode, 'accept_side'>) => {
     if (isTyped(a)) { setText(''); setError(null); setTyping(a); return; }
     void submit({ type: a } as CardAction);
   };
 
-  const sides = card.answers.includes('accept_side') ? card.sides : [];
+  const sides = answers.includes('accept_side') ? card.sides : [];
   const oneSided = missingSide(card) !== null;
   const retain = (s: ReadingCard['sides'][number]): { label: string; title?: string } => {
     const quotes = toQuotes(s.quotes);
     if (oneSided) return { label: 'Oui, ce passage est juste' };
     if (isBriefingOnly(quotes)) return { label: 'Retenir votre fiche de cadrage' };
-    return namedLabel(docs, name => `Retenir ${s.label} : ${sideDocuments(quotes, name).join(', ')}`);
+    const value = sideValue(card, s.label);
+    return namedLabel(docs, name => `Retenir ${s.label} : ${value ? `${value}, ` : ''}${sideDocuments(quotes, name).join(', ')}`);
   };
 
   return (
     <div className="obp-decision">
       {current && <CurrentAnswer card={card} current={current} docs={docs} />}
 
-      {card.recommendation && (
+      {recommendation && (
         <div className="obp-clarify-reco" role="group" aria-label="Recommandation de l'IA">
           <p className="obp-clarify-answer__subtitle">Recommandation de l'IA</p>
-          <blockquote className="obp-clarify-reco__text">{card.recommendation.text}</blockquote>
+          <blockquote className="obp-clarify-reco__text">{recommendation.text}</blockquote>
           <div className="obp-decision__actions">
             <Button variant="primary" size="sm" disabled={busy || followBlocked(card)} onClick={() => { setText(''); setFollowing(true); }}>
               {FOLLOW_RECOMMENDATION_LABEL}
@@ -162,7 +167,7 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
 
       {sides.length > 0 && (
         <div className="obp-clarify-answer__group" role="group" aria-label="Retenir un côté">
-          <p className="obp-clarify-answer__subtitle">{NATURES[card.nature].label} : {sidesQuestion(card)}</p>
+          <p className="obp-clarify-answer__subtitle">{cardLabel(card)} : {sidesQuestion(card)}</p>
           <div className="obp-decision__actions">
             {sides.map(s => {
               const { label, title } = retain(s);
@@ -177,17 +182,20 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
         </div>
       )}
 
+      {sides.length === 0 && codeCheck(card) && (
+        <p className="obp-clarify-answer__subtitle">{sidesQuestion(card)}</p>
+      )}
       <div className="obp-decision__actions" role="group" aria-label="Répondre à la carte">
         {substantiveAnswers(card).map(a => (
-          <Button key={a} variant="secondary" size="sm" disabled={busy} onClick={() => choose(a)}>{ANSWERS[a].label}</Button>
+          <Button key={a} variant="secondary" size="sm" disabled={busy} onClick={() => choose(a)}>{answerLabel(card, a).label}</Button>
         ))}
-        {card.answers.includes('other_answer') && (
-          <Button variant="ghost" size="sm" disabled={busy} onClick={() => choose('other_answer')}>{ANSWERS.other_answer.label}</Button>
+        {answers.includes('other_answer') && (
+          <Button variant="ghost" size="sm" disabled={busy} onClick={() => choose('other_answer')}>{answerLabel(card, 'other_answer').label}</Button>
         )}
-        {card.answers.includes('later') && (
-          <Button variant="ghost" size="sm" disabled={busy} onClick={() => choose('later')}>{ANSWERS.later.label}</Button>
+        {answers.includes('later') && (
+          <Button variant="ghost" size="sm" disabled={busy} onClick={() => choose('later')}>{answerLabel(card, 'later').label}</Button>
         )}
-        {card.answers.includes('out_of_scope') && (
+        {answers.includes('out_of_scope') && (
           <Button variant="ghost" size="sm" disabled={busy} aria-expanded={more} onClick={() => setMore(m => !m)}>
             {more ? 'Moins de réponses' : 'Autres réponses…'}
           </Button>
@@ -196,7 +204,7 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
       </div>
       {more && (
         <div className="obp-decision__actions obp-clarify-answer__more" role="group" aria-label="Autres réponses">
-          <Button variant="ghost" size="sm" disabled={busy} onClick={() => choose('out_of_scope')}>{ANSWERS.out_of_scope.label}</Button>
+          <Button variant="ghost" size="sm" disabled={busy} onClick={() => choose('out_of_scope')}>{answerLabel(card, 'out_of_scope').label}</Button>
         </div>
       )}
     </div>
