@@ -217,7 +217,7 @@ describe('Nouvelle base : relecture', () => {
     // Le chapitre créé : une modification ordinaire, avec ses trois boutons d'avis.
     const m4 = cardOf(/^Modification 4/);
     expect(within(m4).getByRole('heading', { level: 4 })).toHaveTextContent('Modification 4 · Nouveau chapitre');
-    for (const name of ['Accepter', 'Corriger', 'Refuser']) expect(within(m4).getByRole('button', { name })).toBeInTheDocument();
+    for (const name of ['Accepter', 'Corriger l\'ajout', 'Refuser']) expect(within(m4).getByRole('button', { name })).toBeInTheDocument();
     expect(m4).not.toHaveTextContent('en attente');
     expect(screen.queryByRole('heading', { level: 2, name: 'Modifications sans emplacement dans la base' })).not.toBeInTheDocument();
 
@@ -395,7 +395,7 @@ describe('Nouvelle base : relecture', () => {
     const m3Key = PILOTE.base.modifications.find(m => m.id === 'M3')!.section_keys[0];
     render(<BaseTab project={project} onGoToClarify={() => {}} />);
     const m3 = await screen.findByRole('article', { name: /^Modification 3/ });
-    fireEvent.click(within(m3).getByRole('button', { name: 'Corriger' }));
+    fireEvent.click(within(m3).getByRole('button', { name: 'Corriger l\'ajout' }));
     const field = within(m3).getByLabelText('Le texte tel que vous l\'écririez') as HTMLTextAreaElement;
     expect(field.value).toMatch(/1er octobre 2026/);
     await waitFor(() => expect(onboardingApi.review).toHaveBeenCalledWith('p1', PILOTE.correctionId, expect.objectContaining({ itemId: 'M3', verdict: 'fix', correctedText: null, correctedTexts: { [m3Key]: field.value.trim() } })));
@@ -410,7 +410,7 @@ describe('Nouvelle base : relecture', () => {
     const [first, second] = PILOTE.base.modifications.find(m => m.id === 'M1')!.section_keys;
     render(<BaseTab project={project} onGoToClarify={() => {}} />);
     const m1 = await screen.findByRole('article', { name: /^Modification 1/ });
-    fireEvent.click(within(m1).getByRole('button', { name: 'Corriger' }));
+    fireEvent.click(within(m1).getByRole('button', { name: 'Corriger l\'ajout' }));
     expect(within(m1).getByText(/Une section laissée vide garde son texte d'origine/)).toBeInTheDocument();
     const [from, to] = within(m1).getAllByLabelText(/le texte tel que vous l'écririez/) as HTMLTextAreaElement[];
     fireEvent.change(from, { target: { value: '' } });
@@ -807,5 +807,73 @@ describe('Nouvelle base : accepter, corriger ou refuser chaque section touchée 
     expect(choice.parentElement).toHaveTextContent('Le texte d\'origine de cette section est vide : refusez la modification.');
     fireEvent.click(within(choice).getByRole('button', { name: 'Refuser' }));
     expect(onboardingApi.fixSection).not.toHaveBeenCalled();
+  });
+});
+
+describe('Nouvelle base : « Corriger l\'ajout » et le texte autour (plan v6, D4)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict, correctedTexts: body.correctedTexts }));
+    vi.mocked(onboardingApi.fixSection).mockImplementation(async (_p, _c, body) => fixOf(body.sectionKey, body.correctedText));
+  });
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it('M1 (banc v5, G1) : « Corriger l\'ajout » ne montre que l\'ajout ; « Modifier aussi le texte autour » ouvre la section, avertissement compris', async () => {
+    const base = BANC_AVANT[0];
+    mockBase(base, [correction({ id: base.correctionId })]);
+    const intro = sectionOf(base, 'c162a4e7:0');
+    const chapter = 'Chapitre 3 — Cotisations et tarification';
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const m1 = await screen.findByRole('article', { name: /^Modification 1 / });
+    expect(within(m1).queryByRole('button', { name: 'Corriger' })).not.toBeInTheDocument();
+    fireEvent.click(within(m1).getByRole('button', { name: 'Corriger l\'ajout' }));
+
+    // L'ajout seul : l'avertissement du chapitre 3 n'y est pas (« Je ne peux modifier que le passage ajouté par l'IA »).
+    const addition = within(m1).getByLabelText(`« ${chapter} » : le texte tel que vous l'écririez`) as HTMLTextAreaElement;
+    expect(addition.value).toMatch(/^Pour toute souscription avant le 31 décembre 2026/);
+    expect(addition.value).not.toContain('FICHE NON ACTUALISÉE');
+
+    fireEvent.click(within(m1).getByRole('button', { name: `Modifier aussi le texte autour, dans « ${chapter} »` }));
+    // La fiche et sa première section portent le même titre : la section est celle de la classe « open ».
+    const section = screen.getAllByRole('region', { name: chapter }).find(r => r.classList.contains('obp-base-section--open'))!;
+    const field = await within(section).findByLabelText(`« ${chapter} » : le texte de la section tel que vous l'écririez`) as HTMLTextAreaElement;
+    expect(field.value).toBe(intro.corrected_markdown);
+    expect(field).toHaveFocus();
+
+    const fixed = intro.corrected_markdown.replace('**⚠ FICHE NON ACTUALISÉE — dernière mise à jour 06/2024.**', '**Grille 2024, en vigueur jusqu\'au 31/12/2026.**');
+    fireEvent.change(field, { target: { value: fixed } });
+    fireEvent.click(within(section).getByRole('button', { name: 'Enregistrer ce texte' }));
+    await waitFor(() => expect(onboardingApi.fixSection).toHaveBeenCalledWith('p1', base.correctionId, {
+      sectionKey: intro.key, expectedCurrentId: null, correctedText: fixed,
+    }));
+    expect(await within(section).findByText(/^Texte corrigé par Camille Martin/)).toBeInTheDocument();
+  });
+
+  it('M8 (G1) : le texte autour d\'une section repliée « inchangée » la déplie, l\'éditeur ouvert', async () => {
+    const base = BANC_AVANT[0];
+    mockBase(base, [correction({ id: base.correctionId })]);
+    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const m8 = await screen.findByRole('article', { name: /^Modification 8 / });
+    const title = '4.5 Devis et accord préalable';
+    const folded = [...container.querySelectorAll('details.obp-base-section--unchanged')]
+      .find(d => d.querySelector('summary')!.textContent === `${title} · inchangée`) as HTMLDetailsElement;
+    expect(folded.open).toBe(false);
+    fireEvent.click(within(m8).getByRole('button', { name: 'Corriger l\'ajout' }));
+    fireEvent.click(within(m8).getByRole('button', { name: `Modifier aussi le texte autour, dans « Chapitre 4 — Remboursements santé › ${title} »` }));
+    const field = await within(folded).findByLabelText(`« ${title} » : le texte de la section tel que vous l'écririez`) as HTMLTextAreaElement;
+    expect(folded.open).toBe(true);
+    expect(field).toHaveFocus();
+    expect(field.value).toBe(sectionOf(base, '557eea2c:6').corrected_markdown);
+  });
+
+  it('une seule section touchée : le lien dit seulement « Modifier aussi le texte autour »', async () => {
+    const base = BANC_AVANT[0];
+    mockBase(base, [correction({ id: base.correctionId })]);
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const m7 = await screen.findByRole('article', { name: /^Modification 7 / });
+    fireEvent.click(within(m7).getByRole('button', { name: 'Corriger l\'ajout' }));
+    fireEvent.click(within(m7).getByRole('button', { name: 'Modifier aussi le texte autour' }));
+    const section = screen.getByRole('region', { name: '6.1 Définition et cadre réglementaire' });
+    expect(await within(section).findByLabelText(/le texte de la section tel que vous l'écririez/)).toHaveFocus();
   });
 });
