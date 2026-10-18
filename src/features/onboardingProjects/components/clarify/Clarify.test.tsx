@@ -13,13 +13,14 @@ import { onboardingApi } from '../../api/onboardingApi';
 import { AuditTab } from '../audit/AuditTab';
 import { ClarifyQuote, ReadingCardView } from './ReadingCardView';
 import type { Audit, AuditResponse } from '../../lib/audit';
-import { NATURES, orderedCards, unverifiedReasonLabel } from '../../lib/reading';
+import { NATURES, orderedCards } from '../../lib/reading';
 import type { Decision, DecisionsState } from '../../lib/decisions';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import PILOTE_2 from './fixtures/audit-0.8.0-pilote-2.response.json';
 import PILOTE_3 from './fixtures/audit-0.8.0-pilote-3.response.json';
 import PILOTE_10 from './fixtures/audit-0.10.0-pilote-2.response.json';
 import PILOTE_11 from './fixtures/audit-0.11.0-pilote-banc-v3.response.json';
+import PILOTE_D1 from './fixtures/audit-0.11.0-pilote-d1.response.json';
 
 /**
  * Réponses de GET …/audit sur deux audits 0.8.0 rejoués par le pipeline (pilote, lectures 2 et 3),
@@ -192,16 +193,17 @@ describe('À clarifier (audit 0.8.0)', () => {
       .toBe('Les TNS ne peuvent pas résilier en cours d\'année.\n\nLes particuliers, si.');
   });
 
-  it('un seul côté retrouvé, citation refusée rendue : le dire, la citer comme texte de l\'IA, une question sur ce passage', async () => {
+  it('un seul côté retrouvé, citation refusée rendue : le seul côté vérifié, sans bloc ni texte de l\'IA ; une question sur ce passage (plan v6, D1)', async () => {
     vi.mocked(onboardingApi.answerCard).mockResolvedValue(answer(oneSidedWithRefused.id, { type: 'accept_side', side: 'A' }));
     await openSession();
     goTo(oneSidedWithRefused.analysis.subject);
     const card = await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(oneSidedWithRefused) + 1} sur 9` });
-    const missing = within(card).getByRole('region', { name: 'Passage non retrouvé' });
-    expect(missing).toHaveTextContent('L\'autre passage cité n\'a pas pu être retrouvé dans vos documents.');
-    const [refused] = oneSidedWithRefused.unverifiedQuotes;
-    expect(missing).toHaveTextContent(`Texte rendu par l'IA (${refused.document}, ${refused.location}, ${unverifiedReasonLabel(refused.reason)}), qui n'est pas une citation`);
-    expect(missing.querySelector('blockquote')).toBeNull();
+    expect(oneSidedWithRefused.unverifiedQuotes).toHaveLength(1);
+    expect(card.querySelectorAll('.obp-clarify-side')).toHaveLength(1);
+    expect(within(card).getByRole('region', { name: `Côté ${oneSidedWithRefused.sides[0].label}` })).toBeInTheDocument();
+    expect(card).not.toHaveTextContent('L\'autre passage cité');
+    expect(card).not.toHaveTextContent('Texte rendu par l\'IA');
+    expect(card).not.toHaveTextContent(oneSidedWithRefused.unverifiedQuotes[0].text.slice(0, 40));
 
     expect(screen.getByText('Changement daté : Ce passage est-il juste ?')).toBeInTheDocument();
     const answers = screen.getByRole('group', { name: 'Répondre à la carte' });
@@ -215,15 +217,14 @@ describe('À clarifier (audit 0.8.0)', () => {
     expect(await screen.findByText(/^Passage jugé juste : /)).toBeInTheDocument();
   });
 
-  it('un seul côté retrouvé, sans citation refusée rendue : le dire quand même', async () => {
+  it('un seul côté retrouvé, sans citation refusée rendue : le seul côté vérifié, aucun bloc vide', async () => {
     vi.mocked(onboardingApi.getAudit).mockResolvedValue(RESPONSE_3);
     await openSession();
     goTo(oneSidedBare.analysis.subject);
     const position = orderedCards(RESPONSE_3.reading!.cards).indexOf(oneSidedBare) + 1;
     const card = await screen.findByRole('article', { name: `Carte ${position} sur ${RESPONSE_3.reading!.cards.length}` });
-    const missing = within(card).getByRole('region', { name: 'Passage non retrouvé' });
-    expect(missing).toHaveTextContent('L\'autre passage cité n\'a pas pu être retrouvé dans vos documents.');
-    expect(missing).not.toHaveTextContent('Texte rendu par l\'IA');
+    expect(card.querySelectorAll('.obp-clarify-side')).toHaveLength(1);
+    expect(card).not.toHaveTextContent('L\'autre passage cité');
     expect(screen.getByText('Erreur probable : Ce passage est-il juste ?')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Oui, ce passage est juste' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Ce sont deux sujets différents' })).not.toBeInTheDocument();
@@ -753,5 +754,68 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
     expect(screen.getByText(`${NATURES[first.nature].label} : ${NATURES[first.nature].sides}`)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Autres réponses…' })).toBeInTheDocument();
     expect(screen.queryByText(/n'ont pas pu être/)).not.toBeInTheDocument();
+  });
+});
+
+/**
+ * Plan v6, D1 : l'audit 0.11.0 du pilote dont la carte 4 (téléconsultation) n'a plus la citation
+ * du sommaire (KnowDesk-pipeline#71, `out/plan-v6/d1/pilote-d1.audit.json`), passé par la lecture
+ * du back (`readReading`, main dd09e7d) : la réponse de GET …/audit. Le back ne rend pas un côté
+ * sans citation : la carte 4 n'a que son côté B. Les cartes 5 et 6 n'ont qu'un côté vérifié.
+ */
+const RESPONSE_D1 = PILOTE_D1 as unknown as AuditResponse;
+const readingD1 = RESPONSE_D1.reading!;
+const orderedD1 = orderedCards(readingD1.cards);
+
+describe('À clarifier : des extraits utiles seulement, jamais de bloc vide (plan v6, D1)', () => {
+  beforeEach(() => {
+    vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(RESPONSE_D1);
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
+    vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.getAuditImage).mockReset().mockResolvedValue(new Blob([new Uint8Array([1])], { type: 'image/png' }));
+    Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:image'), revokeObjectURL: vi.fn() });
+  });
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it('aucune carte n\'a de bloc vide : chaque côté affiché montre au moins un extrait', async () => {
+    await openSession();
+    for (const [i, card] of orderedD1.entries()) {
+      goTo(card.analysis.subject);
+      const article = await screen.findByRole('article', { name: `Carte ${i + 1} sur ${orderedD1.length}` });
+      const sides = [...article.querySelectorAll('.obp-clarify-side')];
+      expect(sides).toHaveLength(card.sides.length);
+      for (const side of sides) expect(side.querySelectorAll('blockquote, .obp-audit-source').length).toBeGreaterThan(0);
+      expect(article).not.toHaveTextContent('L\'autre passage cité');
+      expect(article).not.toHaveTextContent('Texte rendu par l\'IA');
+    }
+  });
+
+  it('carte 4 (téléconsultation) : plus de sommaire, le seul côté B (le brief)', async () => {
+    const card = readingD1.cards.find(c => c.rank === 4)!;
+    expect(card.sides.map(s => s.label)).toEqual(['B']);
+    await openSession();
+    goTo(card.analysis.subject);
+    const article = await screen.findByRole('article', { name: `Carte ${orderedD1.indexOf(card) + 1} sur ${orderedD1.length}` });
+    expect(within(article).getByRole('region', { name: 'Côté B' })).toBeInTheDocument();
+    expect(within(article).queryByRole('region', { name: 'Côté A' })).not.toBeInTheDocument();
+    // Le sommaire n'est plus cité ; « Documents : » nomme encore son fichier (document_ids du pipeline).
+    const sides = article.querySelector('.obp-clarify-sides')!;
+    expect(sides).not.toHaveTextContent('00-sommaire');
+    expect(sides).not.toHaveTextContent('Dernière modification');
+    expect(sides).toHaveTextContent('Lancement visé : 1er mars 2027');
+  });
+
+  it('cartes 5 et 6 (erreurs probables, un seul côté vérifié) : ce côté seul, la question porte sur lui', async () => {
+    await openSession();
+    for (const rank of [5, 6]) {
+      const card = readingD1.cards.find(c => c.rank === rank)!;
+      goTo(card.analysis.subject);
+      const article = await screen.findByRole('article', { name: `Carte ${orderedD1.indexOf(card) + 1} sur ${orderedD1.length}` });
+      expect(article.querySelectorAll('.obp-clarify-side')).toHaveLength(1);
+      expect(article.querySelector('.obp-clarify-sides--two')).toBeNull();
+      expect(article.querySelector('.obp-clarify-sides')).not.toHaveTextContent('14-faq-transverse');
+      expect(screen.getByText('Erreur probable : Ce passage est-il juste ?')).toBeInTheDocument();
+    }
   });
 });

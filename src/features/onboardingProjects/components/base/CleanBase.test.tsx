@@ -71,7 +71,7 @@ describe('Relecture : « Corriger » par section, convention sans « Corriger »
     vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict, correctedTexts: body.correctedTexts }));
     render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
     const m1 = await screen.findByRole('article', { name: /^Modification 1/ });
-    fireEvent.click(within(m1).getByRole('button', { name: 'Corriger' }));
+    fireEvent.click(within(m1).getByRole('button', { name: 'Corriger l\'ajout' }));
     const keys = PILOTE.base.modifications.find(m => m.id === 'M1')!.section_keys;
     const fields = within(m1).getAllByLabelText(/: le texte tel que vous l'écririez$/) as HTMLTextAreaElement[];
     expect(fields).toHaveLength(keys.length);

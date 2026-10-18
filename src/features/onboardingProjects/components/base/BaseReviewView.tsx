@@ -17,7 +17,7 @@ import { BaseLines } from './BaseLines';
 import type { FixSection } from './ReviewCard';
 import { ReviewCard } from './ReviewCard';
 import { SectionCommentBox } from './SectionCommentBox';
-import { SectionFixBox } from './SectionFixBox';
+import { keepsOriginal, SectionFixBox } from './SectionFixBox';
 
 interface BaseReviewViewProps {
   base:       BaseCorrection;
@@ -82,6 +82,10 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
     return out;
   }, [base.modifications, sheets, titles]);
 
+  /** « Modifier aussi le texte autour » (plan v6, D4) : la section dont l'éditeur s'ouvre, et la demande. */
+  const [around, setAround] = React.useState<{ key: string; n: number } | null>(null);
+  const editAround = (key: string) => setAround(a => ({ key, n: (a?.n ?? 0) + 1 }));
+
   const { state } = review;
   if (state.status === 'loading') return <Skeleton className="obp-skeleton-block" />;
   if (state.status === 'error') return <p className="obp-muted">Les avis n'ont pas pu être chargés.</p>;
@@ -102,6 +106,7 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
       fixable
       sections={fixSections.get(m.id) ?? []}
       toVerify={toVerify.get(m.id) ?? 0}
+      onEditAround={editAround}
       onSave={d => { void review.saveReview(m.id, d); }}
     >
       <p className="obp-base-card__origin">{originLabel(m, cardTitles)}</p>
@@ -171,17 +176,28 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
       <SectionFixBox
         title={s.title}
         proposed={s.proposedMarkdown}
+        original={s.changed ? s.originalMarkdown : undefined}
         current={state.fixes.get(s.key)}
         editable={editable}
         save={review.saves.get(`fix:${s.key}`)}
         onSave={t => { void review.saveSectionFix(s.key, t); }}
+        openSignal={around?.key === s.key ? around.n : 0}
       />
     );
-    const open = s.changed || s.modificationIds.length > 0 || s.conventionIds.length > 0;
+    /**
+     * Une section sans ligne changée reste repliée, « inchangée », même quand une modification la
+     * vise (plan v6, D3 : CONFORT, la 2.3 et la 6.1 du rejeu v5) ; la carte de la modification et sa
+     * raison restent visibles, à côté.
+     */
+    const open = s.changed;
     /** Le texte de section enregistré (« Corriger cette section ») : la section l'affiche, comme la version propre. */
     const fixed = state.fixes.get(s.key);
     if (!open) {
-      return (
+      const cards = s.modificationIds.flatMap(id => {
+        const m = mods.get(id);
+        return m && placement.firstSection.get(id) === s.key ? [modificationCard(m)] : [];
+      });
+      const folded = (
         <details key={s.key} className="obp-base-section obp-base-section--unchanged">
           <summary>
             <span className="obp-base-section__title">{s.title}</span>
@@ -195,12 +211,19 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
           {comment}
         </details>
       );
+      if (cards.length === 0) return folded;
+      return (
+        <div key={s.key} className="obp-base-section-group">
+          {folded}
+          <div className="obp-base-side obp-base-side--wide">{cards}</div>
+        </div>
+      );
     }
     return (
       <section key={s.key} className="obp-base-section obp-base-section--open" aria-label={s.title}>
         {!ownHeading(s.blocks) && s.title !== sheet.title && <h3 className="obp-base-section__title">{s.title}</h3>}
         <div className="obp-base-grid">
-          {fixed ? <FixedText fix={fixed} blocks={s.blocks} /> : <BaseLines blocks={s.blocks} />}
+          {fixed ? <FixedText fix={fixed} blocks={s.blocks} refused={keepsOriginal(fixed, s.originalMarkdown)} /> : <BaseLines blocks={s.blocks} />}
           <div className="obp-base-side">
             {s.modificationIds.map(id => {
               const m = mods.get(id);
@@ -385,13 +408,14 @@ function Outcome({ label, applied, groups }: { label: string; applied: boolean; 
 
 /**
  * Une section corrigée (plan v4, point 8) : le texte enregistré, celui que la version propre
- * reprend, et qui l'a écrit ; le texte proposé reste lisible, replié.
+ * reprend, et qui l'a écrit ; le texte proposé reste lisible, replié. Une section refusée (plan v6,
+ * D3) : son texte d'origine, enregistré à l'identique, « Texte d'origine conservé ».
  */
-function FixedText({ fix, blocks }: { fix: SectionFix; blocks: SectionView['blocks'] }) {
+function FixedText({ fix, blocks, refused = false }: { fix: SectionFix; blocks: SectionView['blocks']; refused?: boolean }) {
   return (
     <div className="obp-base-fixed">
       <p className="obp-base-label">
-        Texte corrigé par <AuthorName name={fix.authorName ?? 'un membre de l\'équipe'} authorId={fix.authorId} />, le {formatFull(fix.createdAt)}
+        {refused ? 'Texte d\'origine conservé' : 'Texte corrigé'} par <AuthorName name={fix.authorName ?? 'un membre de l\'équipe'} authorId={fix.authorId} />, le {formatFull(fix.createdAt)}
       </p>
       <pre className="obp-base-section-fix__text">{fix.correctedText}</pre>
       <details className="obp-base-fixed__proposed">

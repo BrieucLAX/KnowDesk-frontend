@@ -1,12 +1,12 @@
 import React from 'react';
 import type { Audit } from '../../lib/audit';
 import {
-  cardLabel, checkFacts, codeCheck, isBlocking, isBriefingOnly, isCodeCard, readsImageOnly, missingSide, sideTitle, sideValue, toQuotes,
-  unverifiedReasonLabel, type ModelAnalysis, type Quote, type ReadingCard,
+  cardLabel, checkFacts, codeCheck, isBlocking, isBriefingOnly, isCodeCard, readsImageOnly, sideTitle, sideValue, toQuotes,
+  type ModelAnalysis, type Quote, type ReadingCard,
 } from '../../lib/reading';
 import { joinParagraphLines } from '../../lib/excerpt';
 import { AuditSource } from '../audit/AuditSource';
-import { AiFileName, DocName, DocNames } from '../audit/DocName';
+import { DocName, DocNames } from '../audit/DocName';
 import { ExcerptText } from '../audit/ExcerptText';
 
 /**
@@ -111,13 +111,14 @@ interface ReadingCardViewProps {
 /**
  * Une carte : son sujet, sa nature, les documents par leur nom de fichier, les citations
  * vérifiées de chaque côté (le nom du fichier au-dessus de chaque citation), puis l'analyse de
- * l'IA, à part. Une carte qui compare deux côtés dont l'un n'a pas été retrouvé le dit.
+ * l'IA, à part. Seuls les côtés vérifiés s'affichent, jamais de bloc vide (plan v6, D1) : une
+ * carte qui compare deux côtés dont l'un n'a pas été retrouvé montre le seul côté vérifié, et sa
+ * question porte sur lui (sidesQuestion) ; le texte non retrouvé reste compté dans la vue
+ * d'ensemble, sous « Citations non vérifiées ».
  */
 export function ReadingCardView({ audit, card, title, position }: ReadingCardViewProps) {
   const blocking = isBlocking(card);
   const imageOnly = readsImageOnly(card);
-  const missing = missingSide(card);
-  const refused = missing ? card.unverifiedQuotes.filter(u => u.side === missing) : [];
   return (
     <article className="obp-audit-card obp-clarify-card" aria-label={position}>
       <p className="obp-clarify-card__position">{position}</p>
@@ -133,7 +134,7 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
         <DocNames audit={audit} ids={card.documentIds} />
       </p>
 
-      <div className={`obp-clarify-sides${card.sides.length > 1 || missing ? ' obp-clarify-sides--two' : ''}`}>
+      <div className={`obp-clarify-sides${card.sides.length > 1 ? ' obp-clarify-sides--two' : ''}`}>
         {card.sides.map(side => {
           const quotes = toQuotes(side.quotes);
           const briefing = isBriefingOnly(quotes);
@@ -152,20 +153,6 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
             </section>
           );
         })}
-        {missing && (
-          <section className="obp-clarify-side obp-clarify-side--missing" aria-label="Passage non retrouvé">
-            <p className="obp-clarify-side__title">L'autre passage cité n'a pas pu être retrouvé dans vos documents.</p>
-            <p className="obp-muted">
-              Seul le passage affiché a été vérifié : la question porte sur lui.
-            </p>
-            {refused.map((u, i) => (
-              <p key={i} className="obp-clarify-unverified">
-                Texte rendu par l'IA ({u.document && <><AiFileName path={u.document} />, </>}{u.location && `${u.location}, `}{unverifiedReasonLabel(u.reason)}),
-                qui n'est pas une citation : {u.text}
-              </p>
-            ))}
-          </section>
-        )}
       </div>
 
       <AbsentContent audit={audit} card={card} />
