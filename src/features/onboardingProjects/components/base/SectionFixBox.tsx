@@ -8,6 +8,12 @@ interface SectionFixBoxProps {
   title:    string;
   /** Le texte proposé de la section : point de départ quand l'expert n'a encore rien écrit. */
   proposed: string;
+  /**
+   * Le texte d'origine d'une section que la préparation a changée (plan v6, D3) : la section se
+   * décide alors par trois gestes, Accepter, « Corriger cette section » ou Refuser. Absent : une
+   * section inchangée, qui ne se corrige que par « Corriger cette section ».
+   */
+  original?: string;
   current:  SectionFix | undefined;
   editable: boolean;
   save:     SaveState | undefined;
@@ -15,13 +21,24 @@ interface SectionFixBoxProps {
   onSave:   (text: string | null) => void;
 }
 
+/** Le back refuse un texte de section vide : une section vide à l'origine ne se refuse pas (Q6a). */
+export const EMPTY_ORIGINAL_REASON = 'Le texte d\'origine de cette section est vide : refusez la modification.';
+
+/** Refuser la section : son texte d'origine, à l'identique, enregistré comme texte de section. */
+export const keepsOriginal = (fix: SectionFix | undefined, original: string | undefined): boolean =>
+  fix !== undefined && original !== undefined && fix.correctedText === original;
+
 /**
  * « Corriger cette section » (migration 57), sur n'importe quelle section, modifiée ou non : le
  * texte de l'expert remplace la section entière dans la version propre, et prime sur les avis des
  * modifications qui la touchent (« Base de co 2026 v3 » : 45,80 € à corriger en 35,80 € dans une
  * section qu'aucune modification ne touchait). Un texte long : il s'enregistre par un bouton.
+ *
+ * Une section changée se décide à part de ses modifications (plan v6, D3, « Base de co 2026 v5 » :
+ * refuser M10 retirait aussi le glossaire) : Accepter, par défaut, garde le texte proposé ; Refuser
+ * enregistre le texte d'origine, à l'identique, par la même route.
  */
-export function SectionFixBox({ title, proposed, current, editable, save, onSave }: SectionFixBoxProps) {
+export function SectionFixBox({ title, proposed, original, current, editable, save, onSave }: SectionFixBoxProps) {
   const id = useId();
   const [open, setOpen] = useState(false);
   const [text, setText] = useState(current?.correctedText ?? proposed);
@@ -29,6 +46,30 @@ export function SectionFixBox({ title, proposed, current, editable, save, onSave
 
   // Le texte enregistré s'affiche à la place de la section (« Texte corrigé par … ») : ici, l'action seule.
   if (!editable) return null;
+  if (!open && original !== undefined) {
+    const refused = keepsOriginal(current, original);
+    const emptyOriginal = !original.trim();
+    return (
+      <div className="obp-base-section-fix">
+        <div className="obp-base-verdicts" role="group" aria-label={`Votre choix pour la section « ${title} »`}>
+          <button type="button" aria-pressed={!current} className="obp-base-verdict obp-base-verdict--accept"
+            onClick={() => { if (current) onSave(null); }}>
+            Accepter
+          </button>
+          <button type="button" aria-pressed={Boolean(current) && !refused} className="obp-base-verdict obp-base-verdict--fix"
+            onClick={() => { if (refused) setText(proposed); setOpen(true); }}>
+            Corriger cette section
+          </button>
+          <button type="button" aria-pressed={refused} className="obp-base-verdict obp-base-verdict--refuse"
+            disabled={emptyOriginal} onClick={() => { if (!refused) onSave(original); }}>
+            Refuser
+          </button>
+        </div>
+        {emptyOriginal && <p className="obp-muted">{EMPTY_ORIGINAL_REASON}</p>}
+        <SaveStatus state={save} />
+      </div>
+    );
+  }
   if (!open) {
     return (
       <div className="obp-base-section-fix">
@@ -54,7 +95,7 @@ export function SectionFixBox({ title, proposed, current, editable, save, onSave
         <Button variant="primary" size="sm" disabled={!text.trim()} onClick={() => { onSave(text); setOpen(false); }}>
           Enregistrer ce texte
         </Button>
-        {current && (
+        {current && original === undefined && (
           <Button variant="ghost" size="sm" onClick={() => { onSave(null); setOpen(false); }}>
             Revenir au texte de la base
           </Button>

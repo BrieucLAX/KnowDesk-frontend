@@ -35,6 +35,9 @@ import BASE_BANC_04 from './fixtures/base-0.4.0-banc-v5-g1.response.json';
 import CARDS_PILOTE_B9 from './fixtures/audit-pilote-b9a878c1-cards.json';
 import BASE_BIENVENUE from './fixtures/base-0.4.0-offre-bienvenue.response.json';
 import AUDIT_BIENVENUE from './fixtures/audit-0.11.0-offre-bienvenue.response.json';
+import BANC_AVANT_G1 from './fixtures/base-0.3.0-banc-v5-avant-g1.response.json';
+import BANC_AVANT_G2 from './fixtures/base-0.3.0-banc-v5-avant-g2.response.json';
+import BANC_AVANT_G3 from './fixtures/base-0.3.0-banc-v5-avant-g3.response.json';
 
 /**
  * Base corrigée par le service sur le pilote (lancée en local depuis « À clarifier », réponses de
@@ -256,7 +259,11 @@ describe('Nouvelle base : relecture', () => {
     const buttons = [...container.querySelectorAll('.obp-base-section-fix button')].filter(b => b.textContent === 'Corriger cette section');
     expect(sections.length).toBeGreaterThan(1);
     expect(buttons).toHaveLength(sections.length);
-    for (const b of buttons) expect(b.className).toMatch(/secondary/);
+    // Sur une section changée, c'est l'un des trois gestes de la section (plan v6, D3).
+    for (const b of buttons) {
+      if (b.closest('.obp-base-section--open')) expect(b.closest('[role="group"]')).toHaveAccessibleName(/^Votre choix pour la section/);
+      else expect(b.className).toMatch(/secondary/);
+    }
   });
 
   it('base d\'une version inconnue : le dit, sans rien afficher d\'autre', async () => {
@@ -675,5 +682,130 @@ describe('Nouvelle base : retirés comme obsolètes (audit 0.11.0)', () => {
     // L'audit est lu : la modification nomme sa carte.
     expect(await within(m1).findByText(/carte « Contenu périmé »/)).toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'Retirés comme obsolètes' })).not.toBeInTheDocument();
+  });
+});
+
+/**
+ * Plan v6, D3 : les bases du banc v5 « avant » (KnowDesk-pipeline#58, `out/plan-v6/rejeu/avant`,
+ * trois générations), validées par le back (`checkBaseCorrection`, main dd09e7d) ; la réponse de
+ * GET …/base les rend telles quelles. M10 y change la 1.3 et le glossaire ; Zone 1 est à moitié
+ * annotée en G1 ; M5 (CONFORT) et M6 (2.3) ne gardent aucune ligne.
+ */
+const BANC_AVANT = [BANC_AVANT_G1, BANC_AVANT_G2, BANC_AVANT_G3] as unknown as BaseVersion[];
+const sectionOf = (base: BaseVersion, suffix: string) => base.base.sheets.flatMap(sh => sh.sections).find(x => x.key.endsWith(suffix))!;
+const S13 = 'b64fd789:7', GLOSSAIRE = 'aed291d9:0', ZONE1 = 'c162a4e7:3', CONFORT = 'b64fd789:5', S23 = '832c4545:4';
+const choiceOf = (title: string) => screen.getByRole('group', { name: `Votre choix pour la section « ${title} »` });
+const fixOf = (sectionKey: string, correctedText: string) => ({
+  id: '00000000-0000-4000-8000-0000000000d3', sectionKey, correctedText, supersedesId: null,
+  authorName: 'Camille Martin', createdAt: '2026-10-18T10:00:00Z', cancellation: null,
+});
+
+describe('Nouvelle base : accepter, corriger ou refuser chaque section touchée (plan v6, D3)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict }));
+    vi.mocked(onboardingApi.fixSection).mockImplementation(async (_p, _c, body) => fixOf(body.sectionKey, body.correctedText));
+  });
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it.each([1, 2, 3])('G%i, M10 : la 1.3 refusée (son texte d\'origine, à l\'identique), le glossaire accepté', async n => {
+    const base = BANC_AVANT[n - 1];
+    mockBase(base, [correction({ id: base.correctionId })]);
+    const s13 = sectionOf(base, S13), glossaire = sectionOf(base, GLOSSAIRE);
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const m10 = await screen.findByRole('article', { name: /^Modification 10 / });
+    fireEvent.click(within(m10).getByRole('button', { name: 'Accepter' }));
+    await waitFor(() => expect(onboardingApi.review).toHaveBeenCalledWith('p1', base.correctionId, expect.objectContaining({ itemId: 'M10', verdict: 'accept' })));
+
+    // Accepter est le geste par défaut de chaque section touchée.
+    const choice = choiceOf('1.3 L\'offre collective entreprise');
+    expect(within(choice).getByRole('button', { name: 'Accepter' })).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(within(choice).getByRole('button', { name: 'Refuser' }));
+    await waitFor(() => expect(onboardingApi.fixSection).toHaveBeenCalledWith('p1', base.correctionId, {
+      sectionKey: s13.key, expectedCurrentId: null, correctedText: s13.original_markdown,
+    }));
+    const section = screen.getByRole('region', { name: '1.3 L\'offre collective entreprise' });
+    expect(await within(section).findByText(/^Texte d'origine conservé par Camille Martin, le /)).toBeInTheDocument();
+    expect(section.querySelector('.obp-base-fixed pre')!.textContent).toBe(s13.original_markdown);
+    expect(within(choiceOf('1.3 L\'offre collective entreprise')).getByRole('button', { name: 'Refuser' })).toHaveAttribute('aria-pressed', 'true');
+
+    // Le glossaire garde l'avis de M10 : aucun texte de section, Accepter toujours choisi.
+    expect(vi.mocked(onboardingApi.fixSection).mock.calls.map(c => c[2].sectionKey)).not.toContain(glossaire.key);
+    expect(within(choiceOf('Chapitre 13 — Glossaire et acronymes métier')).getByRole('button', { name: 'Accepter' })).toHaveAttribute('aria-pressed', 'true');
+    // La modification et sa raison restent visibles.
+    expect(within(m10).getByRole('button', { name: 'Accepter' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('G1, Zone 1 à moitié annotée : « Refuser » enregistre exactement le texte d\'origine ; « Accepter » le retire', async () => {
+    const base = BANC_AVANT[0];
+    mockBase(base, [correction({ id: base.correctionId })]);
+    const zone1 = sectionOf(base, ZONE1);
+    expect(zone1.corrected_markdown).not.toBe(zone1.original_markdown);
+    const saved = fixOf(zone1.key, zone1.original_markdown);
+    vi.mocked(onboardingApi.cancelSectionFix).mockResolvedValue({ cancelled: saved, current: null });
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByRole('article', { name: /^Modification 1 / });
+    const title = '3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus) › Zone 1 (Île-de-France et grandes métropoles)';
+    fireEvent.click(within(choiceOf(title)).getByRole('button', { name: 'Refuser' }));
+    await waitFor(() => expect(onboardingApi.fixSection).toHaveBeenCalledTimes(1));
+    expect(vi.mocked(onboardingApi.fixSection).mock.calls[0][2].correctedText).toBe(zone1.original_markdown);
+    const section = screen.getByRole('region', { name: title });
+    expect(await within(section).findByText(/^Texte d'origine conservé par /)).toBeInTheDocument();
+    expect(section.querySelector('.obp-base-fixed pre')!.textContent).toBe(zone1.original_markdown);
+    // Le texte proposé, et ce que la modification a fait, restent lisibles.
+    expect(within(section).getByText('Texte proposé par la préparation')).toBeInTheDocument();
+    expect(cardOf(/^Modification 1 /)).toHaveTextContent('Ce qui n\'a pas été repris');
+
+    fireEvent.click(within(choiceOf(title)).getByRole('button', { name: 'Accepter' }));
+    await waitFor(() => expect(onboardingApi.cancelSectionFix).toHaveBeenCalledWith('p1', base.correctionId, saved.id));
+    await waitFor(() => expect(within(section).queryByText(/^Texte d'origine conservé/)).not.toBeInTheDocument());
+  });
+
+  it('« Corriger cette section » sur une section touchée : part du texte proposé, et ce n\'est pas un refus', async () => {
+    const base = BANC_AVANT[0];
+    mockBase(base, [correction({ id: base.correctionId })]);
+    const s13 = sectionOf(base, S13);
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByRole('article', { name: /^Modification 10 / });
+    fireEvent.click(within(choiceOf('1.3 L\'offre collective entreprise')).getByRole('button', { name: 'Corriger cette section' }));
+    const section = screen.getByRole('region', { name: '1.3 L\'offre collective entreprise' });
+    const field = within(section).getByLabelText(/le texte de la section tel que vous l'écririez/) as HTMLTextAreaElement;
+    expect(field.value).toBe(s13.corrected_markdown);
+    expect(within(section).queryByRole('button', { name: 'Revenir au texte de la base' })).not.toBeInTheDocument();
+    fireEvent.change(field, { target: { value: 'Mon texte de la 1.3.' } });
+    fireEvent.click(within(section).getByRole('button', { name: 'Enregistrer ce texte' }));
+    expect(await within(section).findByText(/^Texte corrigé par Camille Martin/)).toBeInTheDocument();
+    const choice = choiceOf('1.3 L\'offre collective entreprise');
+    expect(within(choice).getByRole('button', { name: 'Corriger cette section' })).toHaveAttribute('aria-pressed', 'true');
+    expect(within(choice).getByRole('button', { name: 'Refuser' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it.each([1, 2, 3])('G%i : CONFORT et la 2.3, sans ligne gardée, restent repliées « inchangée » ; M5 et M6 restent visibles avec leur raison', async n => {
+    const base = BANC_AVANT[n - 1];
+    mockBase(base, [correction({ id: base.correctionId })]);
+    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByRole('article', { name: /^Modification 5 / });
+    const folded = (title: string) => [...container.querySelectorAll('details.obp-base-section--unchanged')]
+      .find(d => d.querySelector('summary')!.textContent === `${title} · inchangée`);
+    for (const [suffix, title, id] of [[CONFORT, '1.2 Les gammes de contrats santé individuels › Formule CONFORT', '5'], [S23, '2.3 Délai de carence', '6']]) {
+      expect(sectionOf(base, suffix).corrected_markdown).toBe(sectionOf(base, suffix).original_markdown);
+      expect(folded(title)).toBeDefined();
+      expect(screen.queryByRole('region', { name: title })).not.toBeInTheDocument();
+      const card = cardOf(new RegExp(`^Modification ${id} `));
+      expect(card.closest('details')).toBeNull();
+      expect(card.querySelector('.obp-base-card__outcome')).toHaveTextContent(/^(Non appliquée|Réglée sans modification)Pourquoi :.+/);
+    }
+  });
+
+  it('Q6a : une section vide à l\'origine (chapitre créé, banc v5 G1 en 0.4.0) ne se refuse pas : « refusez la modification »', async () => {
+    const base = BASE_BANC_04 as unknown as BaseVersion;
+    mockBase(base, [correction({ id: base.correctionId })]);
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    await screen.findByRole('article', { name: /^Modification 4 / });
+    const choice = choiceOf('Chapitre 16 — Téléconsultation médicale');
+    expect(within(choice).getByRole('button', { name: 'Refuser' })).toBeDisabled();
+    expect(choice.parentElement).toHaveTextContent('Le texte d\'origine de cette section est vide : refusez la modification.');
+    fireEvent.click(within(choice).getByRole('button', { name: 'Refuser' }));
+    expect(onboardingApi.fixSection).not.toHaveBeenCalled();
   });
 });

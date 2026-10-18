@@ -558,6 +558,8 @@
 }
 .obp-base-section--unchanged > summary .obp-base-section__title { margin: 0; font-weight: 500; }
 .obp-base-section--unchanged[open] > summary { margin-bottom: 8px; }
+.obp-base-section-group { border-top: 1px solid var(--neutral-100); padding-bottom: 12px; }
+.obp-base-section-group > .obp-base-section { border-top: 0; }
 .obp-base-chip {
   padding: 1px 8px; border-radius: 99px; background: var(--brand-50); color: var(--brand-700); font-size: 12px;
 }
