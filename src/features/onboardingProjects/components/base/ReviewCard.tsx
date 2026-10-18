@@ -6,7 +6,8 @@ import type { ReviewDraft, SaveState } from '../../hooks/useBaseReview';
 
 const VERDICTS: ReadonlyArray<{ verdict: Verdict; label: string }> = [
   { verdict: 'accept', label: 'Accepter' },
-  { verdict: 'fix', label: 'Corriger' },
+  // Plan v6, D4 : la carte ne corrige que ce que la modification ajoute ; le texte autour se corrige par la section.
+  { verdict: 'fix', label: 'Corriger l\'ajout' },
   { verdict: 'refuse', label: 'Refuser' },
 ];
 
@@ -43,6 +44,8 @@ interface ReviewCardProps {
   sections:   FixSection[];
   /** 0.4.0 : le nombre de phrases « À vérifier » que la modification écrit ; 0 ou absent : aucune. */
   toVerify?:  number;
+  /** « Modifier aussi le texte autour » (plan v6, D4) : ouvre « Corriger cette section » sur cette section. */
+  onEditAround?: (sectionKey: string) => void;
   onSave:     (draft: ReviewDraft) => void;
 }
 
@@ -61,7 +64,7 @@ function initialTexts(current: Review | undefined, sections: FixSection[]): Reco
  * section touchée, tel qu'il l'écrirait) ou Refuser, et un commentaire facultatif. Une convention
  * s'accepte ou se refuse. Le verdict s'enregistre au clic, les textes quand on quitte le champ.
  */
-export function ReviewCard({ anchor, title, children, withVerdict, fixable, editable, current, save, sections, toVerify = 0, onSave }: ReviewCardProps) {
+export function ReviewCard({ anchor, title, children, withVerdict, fixable, editable, current, save, sections, toVerify = 0, onEditAround, onSave }: ReviewCardProps) {
   const id = useId();
   const [verdict, setVerdict] = useState<Verdict | null>(current?.verdict ?? null);
   const [fixTexts, setFixTexts] = useState<Record<string, string>>(() => initialTexts(current, sections));
@@ -124,6 +127,15 @@ export function ReviewCard({ anchor, title, children, withVerdict, fixable, edit
           <textarea id={`${id}-fix-${section.key}`} className="obp-base-textarea" rows={5} value={fixTexts[section.key] ?? ''}
             onChange={e => setFixTexts(t => ({ ...t, [section.key]: e.target.value }))}
             onBlur={() => { if (written(fixTexts)) send(draft({ correctedTexts: fixTexts })); }} />
+          {/* « Je ne peux modifier que le passage ajouté par l'IA » (rejeu v5, M1) : le reste de la section, à côté. */}
+          {onEditAround && (
+            <p className="obp-base-around">
+              <button type="button" className="obp-link" onClick={() => onEditAround(section.key)}
+                aria-label={sections.length > 1 ? `Modifier aussi le texte autour, dans « ${section.title} »` : undefined}>
+                Modifier aussi le texte autour
+              </button>
+            </p>
+          )}
         </React.Fragment>
       ))}
       {editable && fixable && verdict === 'fix' && sections.length > 1 && (

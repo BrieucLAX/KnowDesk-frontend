@@ -209,6 +209,8 @@ export interface SectionView {
   conventionIds:   string[];
   /** Le texte proposé de la section, en Markdown : point de départ de « Corriger cette section ». */
   proposedMarkdown: string;
+  /** Son texte d'origine, en Markdown, tel que la base l'écrit : ce que « Refuser » enregistre (plan v6, D3). */
+  originalMarkdown: string;
 }
 
 export interface SheetView {
@@ -264,6 +266,7 @@ export function sheetViews(base: BaseCorrection): SheetView[] {
           modificationIds: [...new Set([...(s.modification_ids ?? []), ...(modsBySection.get(s.key) ?? [])])],
           conventionIds:   [...new Set([...(s.convention_ids ?? []), ...(convsBySection.get(s.key) ?? [])])],
           proposedMarkdown: s.corrected_markdown,
+          originalMarkdown: s.original_markdown,
         };
       }),
     };
@@ -281,15 +284,15 @@ export function sectionTitleIndex(sheets: SheetView[]): Map<string, string> {
 
 /**
  * Où s'affiche la carte de chaque modification : dans la première section, dans l'ordre du
- * document, qu'elle vise ; les suivantes y renvoient. Une modification sans section connue va
- * dans la liste du haut.
+ * document, qu'elle change ; sinon dans la première qu'elle vise, repliée « inchangée », la carte
+ * restant visible à côté (plan v6, D3). Les suivantes y renvoient. Une modification sans section
+ * connue va dans la liste du haut.
  */
 export function modificationPlacement(sheets: SheetView[], modifications: Modification[]) {
   const first = new Map<string, string>();
-  for (const sheet of sheets) {
-    for (const s of sheet.sections) {
-      for (const id of s.modificationIds) if (!first.has(id)) first.set(id, s.key);
-    }
+  const sections = sheets.flatMap(sheet => sheet.sections);
+  for (const s of [...sections.filter(x => x.changed), ...sections.filter(x => !x.changed)]) {
+    for (const id of s.modificationIds) if (!first.has(id)) first.set(id, s.key);
   }
   return {
     firstSection: first,
