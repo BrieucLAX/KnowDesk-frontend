@@ -82,6 +82,10 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
     return out;
   }, [base.modifications, sheets, titles]);
 
+  /** « Modifier aussi le texte autour » (plan v6, D4) : la section dont l'éditeur s'ouvre, et la demande. */
+  const [around, setAround] = React.useState<{ key: string; n: number } | null>(null);
+  const editAround = (key: string) => setAround(a => ({ key, n: (a?.n ?? 0) + 1 }));
+
   const { state } = review;
   if (state.status === 'loading') return <Skeleton className="obp-skeleton-block" />;
   if (state.status === 'error') return <p className="obp-muted">Les avis n'ont pas pu être chargés.</p>;
@@ -102,6 +106,7 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
       fixable
       sections={fixSections.get(m.id) ?? []}
       toVerify={toVerify.get(m.id) ?? 0}
+      onEditAround={editAround}
       onSave={d => { void review.saveReview(m.id, d); }}
     >
       <p className="obp-base-card__origin">{originLabel(m, cardTitles)}</p>
@@ -176,6 +181,7 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
         editable={editable}
         save={review.saves.get(`fix:${s.key}`)}
         onSave={t => { void review.saveSectionFix(s.key, t); }}
+        openSignal={around?.key === s.key ? around.n : 0}
       />
     );
     /**

@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import type { SectionFix } from '../../lib/correction';
 import type { SaveState } from '../../hooks/useBaseReview';
 import { Button } from '../../../../shared/components/ui/Button';
@@ -19,6 +19,11 @@ interface SectionFixBoxProps {
   save:     SaveState | undefined;
   /** Le texte de la section ; null : revenir au texte de la base proposée. */
   onSave:   (text: string | null) => void;
+  /**
+   * « Modifier aussi le texte autour » (plan v6, D4) : chaque nouvelle valeur ouvre l'éditeur,
+   * prérempli, sur la section, dépliée si elle est repliée ; 0 : aucune demande.
+   */
+  openSignal?: number;
 }
 
 /** Le back refuse un texte de section vide : une section vide à l'origine ne se refuse pas (Q6a). */
@@ -38,11 +43,20 @@ export const keepsOriginal = (fix: SectionFix | undefined, original: string | un
  * refuser M10 retirait aussi le glossaire) : Accepter, par défaut, garde le texte proposé ; Refuser
  * enregistre le texte d'origine, à l'identique, par la même route.
  */
-export function SectionFixBox({ title, proposed, original, current, editable, save, onSave }: SectionFixBoxProps) {
+export function SectionFixBox({ title, proposed, original, current, editable, save, onSave, openSignal = 0 }: SectionFixBoxProps) {
   const id = useId();
   const [open, setOpen] = useState(false);
   const [text, setText] = useState(current?.correctedText ?? proposed);
   useEffect(() => { if (!open) setText(current?.correctedText ?? proposed); }, [current, proposed, open]);
+  const field = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => { if (openSignal > 0) setOpen(true); }, [openSignal]);
+  useEffect(() => {
+    if (!open || openSignal === 0 || !field.current) return;
+    const folded = field.current.closest('details');
+    if (folded) folded.open = true;
+    field.current.scrollIntoView?.({ block: 'center' });
+    field.current.focus();
+  }, [open, openSignal]);
 
   // Le texte enregistré s'affiche à la place de la section (« Texte corrigé par … ») : ici, l'action seule.
   if (!editable) return null;
@@ -90,7 +104,7 @@ export function SectionFixBox({ title, proposed, original, current, editable, sa
       <p className="obp-muted">
         Il remplacera la section entière dans la version propre, à la place des modifications proposées pour elle.
       </p>
-      <textarea id={id} className="obp-base-textarea" rows={10} value={text} onChange={e => setText(e.target.value)} />
+      <textarea ref={field} id={id} className="obp-base-textarea" rows={10} value={text} onChange={e => setText(e.target.value)} />
       <div className="obp-decision__actions">
         <Button variant="primary" size="sm" disabled={!text.trim()} onClick={() => { onSave(text); setOpen(false); }}>
           Enregistrer ce texte
