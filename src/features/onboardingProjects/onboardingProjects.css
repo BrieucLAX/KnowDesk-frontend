@@ -503,7 +503,6 @@
 .obp-clarify-card__position { margin: 0; font-size: 12px; color: var(--neutral-500); }
 .obp-clarify-side--briefing { background: var(--brand-50); }
 .obp-clarify-side__note { margin: 0; font-size: 12px; color: var(--neutral-500); }
-.obp-clarify-side--missing { background: var(--neutral-0); border: 1px dashed var(--neutral-300); }
 .obp-clarify-summary { display: flex; flex-direction: column; gap: 4px; }
 .obp-clarify-summary p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--neutral-900); }
 .obp-clarify-summary p.obp-muted { color: var(--neutral-500); font-size: 13px; }
