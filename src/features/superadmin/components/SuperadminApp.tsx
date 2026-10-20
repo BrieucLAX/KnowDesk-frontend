@@ -6,7 +6,7 @@ import { ConfirmDialog }   from '../../../shared/components/ui/ConfirmDialog';
 import { formatRelative }  from '../../../shared/lib/formatDate';
 import { CreateTestOrgModal } from './CreateTestOrgModal';
 import { TestDataModal }     from './TestDataModal';
-import { formatDay, orgStatus, scheduledPurgeDate } from '../lib/testOrgStatus';
+import { endTestDescription, orgStatus } from '../lib/testOrgStatus';
 
 /** Organisation de test : créée par la route superadmin, module onboarding seul. */
 const isTestOrg = (org: { enabled_modules?: string[] }) => org.enabled_modules?.includes('onboarding') ?? false;
@@ -355,13 +355,7 @@ export function SuperadminApp() {
       {endTestTarget && (
         <ConfirmDialog
           title={`Terminer le test de « ${endTestTarget.name} »`}
-          description={
-            'L\'espace est désactivé immédiatement : ses utilisateurs ne peuvent plus se connecter. '
-          + 'Ses données de test (documents, fiches, analyses, audits, décisions) seront supprimées '
-          + `automatiquement 30 jours après, le ${formatDay(scheduledPurgeDate(new Date().toISOString()))}. `
-          + 'Pour les supprimer tout de suite, utilisez « Données de test ». '
-          + 'C\'est définitif : l\'espace ne pourra pas être réactivé.'
-          }
+          description={endTestDescription(new Date())}
           confirmLabel="Terminer le test"
           variant="danger"
           loading={endTestLoading}

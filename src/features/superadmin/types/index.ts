@@ -42,6 +42,8 @@ export interface PurgeReport {
   scope:   'org' | 'project';
   objects: number;
   rows:    Record<string, number>;
+  /** Suppression d'une organisation entière (KnowDesk#50) : sa base de connaissance, processus guidés compris. */
+  knowledgeBase?: { objects: number; rows: Record<string, number> };
 }
 
 /** Réponse de POST /superadmin/test-organizations. */

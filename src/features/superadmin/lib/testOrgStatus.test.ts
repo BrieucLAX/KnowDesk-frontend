@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { orgStatus, scheduledPurgeDate } from './testOrgStatus';
+import { endTestDescription, orgStatus, scheduledPurgeDate } from './testOrgStatus';
 
 const base = { disabled_at: null, test_ended_at: null, onboarding_purged_at: null };
 
@@ -36,5 +36,22 @@ describe('orgStatus', () => {
 describe('scheduledPurgeDate', () => {
   it('30 jours après la fin du test', () => {
     expect(scheduledPurgeDate('2026-10-01T10:00:00Z').toISOString()).toBe('2026-10-31T10:00:00.000Z');
+  });
+});
+
+describe('endTestDescription (« Terminer le test »)', () => {
+  const text = endTestDescription(new Date('2026-10-01T10:00:00Z'));
+
+  it('annonce la date de la purge automatique, 30 jours après', () => {
+    expect(text).toContain('Le 31 octobre 2026, 30 jours après');
+  });
+
+  it('dit ce que perd chaque organisation selon le texte accepté', () => {
+    expect(text).toContain('Si un administrateur a accepté le nouveau texte, seuls les documents importés sont supprimés.');
+    expect(text).toContain('Sinon, toutes ses données de test (documents, fiches, analyses, audits, décisions) sont supprimées, comme avant.');
+  });
+
+  it('renvoie à « Données de test » pour tout supprimer, base de connaissance comprise', () => {
+    expect(text).toContain('base de connaissance comprise, utilisez « Données de test »');
   });
 });
