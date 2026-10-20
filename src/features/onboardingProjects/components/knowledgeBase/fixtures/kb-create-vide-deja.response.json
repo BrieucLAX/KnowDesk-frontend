@@ -1,0 +1,10 @@
+{
+  "status": 409,
+  "body": {
+    "data": null,
+    "error": {
+      "code": "CONFLICT",
+      "message": "Cette base de connaissance a déjà été créée."
+    }
+  }
+}

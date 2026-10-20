@@ -10,6 +10,7 @@ import type {
   BaseVersion, ChainCancelResult, CorrectionQuota, OnboardingCorrection, Review, ReviewsState, SectionComment, SectionFix, Validation,
   ValidationSummary, Verdict,
 } from '../lib/correction';
+import type { KnowledgeBaseCreation, KnowledgeBasePreview } from '../lib/knowledgeBase';
 
 const BASE = '/onboarding';
 
@@ -142,4 +143,22 @@ export const onboardingApi = {
     apiClient.post<ChainCancelResult<SectionFix>>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-fixes/${fixId}/cancel`, {}),
   cancelSectionComment: (projectId: string, correctionId: string, commentId: string) =>
     apiClient.post<ChainCancelResult<SectionComment>>(`${BASE}/projects/${projectId}/corrections/${correctionId}/section-comments/${commentId}/cancel`, {}),
+
+  // ── Base de connaissance depuis la version propre (plan-articles-v1, lot 2) — administrateurs seulement ──
+  /**
+   * 201 : l'aperçu enregistré (titres des regroupements écrits par le modèle à cet appel).
+   * 409 KNOWLEDGE_MODULE_DISABLED ; 403 hors administrateur.
+   */
+  previewKnowledgeBase: (projectId: string, validationId: string) =>
+    apiClient.post<KnowledgeBasePreview>(`${BASE}/projects/${projectId}/validations/${validationId}/knowledge-base?dryRun=1`, {}),
+  /**
+   * 202 : la création de cet aperçu part en file (ou reprend après un échec). 409
+   * KNOWLEDGE_BASE_NOT_EMPTY, KNOWLEDGE_BASE_CREATION_RUNNING, KNOWLEDGE_MODULE_DISABLED, CONFLICT (déjà
+   * créée) ; 403 limite d'articles ou rôle.
+   */
+  createKnowledgeBase: (projectId: string, validationId: string, creationId: string) =>
+    apiClient.post<KnowledgeBaseCreation>(`${BASE}/projects/${projectId}/validations/${validationId}/knowledge-base`, { creationId }),
+  /** L'aperçu et l'état de sa création (progression, code d'erreur). */
+  getKnowledgeBaseCreation: (projectId: string, creationId: string) =>
+    apiClient.get<KnowledgeBaseCreation>(`${BASE}/projects/${projectId}/knowledge-base/${creationId}`),
 };

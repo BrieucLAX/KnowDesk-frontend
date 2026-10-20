@@ -20,6 +20,8 @@ interface ValidationPanelProps {
   /** Dernière correction réussie : elle se valide ; sinon, ses versions se consultent. */
   editable:     boolean;
   onOpen:       (validationId: string) => void;
+  /** « Créer la base de connaissance », proposé sur la version validée à jour ; absent : pas de bouton. */
+  onCreateKnowledgeBase?: (validationId: string) => void;
   /** Le bas de la relecture, où le bouton est repris (plan v4, point 7) ; null : pas repris. */
   footer?:      HTMLElement | null;
 }
@@ -32,7 +34,9 @@ interface ValidationPanelProps {
  * les avis sont donnés, le bouton est repris en bas de la relecture (`footer`), avec ce qu'il
  * fait. L'état reste ici : la relecture n'est pas rendue de nouveau à chaque avis.
  */
-export function ValidationPanel({ projectId, correctionId, reviews, fixes, toReview, editable, onOpen, footer = null }: ValidationPanelProps) {
+export function ValidationPanel({
+  projectId, correctionId, reviews, fixes, toReview, editable, onOpen, onCreateKnowledgeBase, footer = null,
+}: ValidationPanelProps) {
   const toast = useToast();
   const [validations, setValidations] = useState<ValidationSummary[] | null>(null);
   const [validating, setValidating] = useState(false);
@@ -88,6 +92,9 @@ export function ValidationPanel({ projectId, correctionId, reviews, fixes, toRev
             Validée par <AuthorName name={latest.validatedByName} authorId={latest.validatedById} /> le {formatFull(latest.validatedAt)}.
           </span>
           <Button variant="primary" size="md" onClick={() => onOpen(latest.id)}>Voir la version validée</Button>
+          {onCreateKnowledgeBase && (
+            <Button variant="secondary" size="md" onClick={() => onCreateKnowledgeBase(latest.id)}>Créer la base de connaissance</Button>
+          )}
         </div>
       ) : (
         <div className="obp-arb-entry">

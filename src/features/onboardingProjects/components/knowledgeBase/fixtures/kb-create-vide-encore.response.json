@@ -1,0 +1,10 @@
+{
+  "status": 409,
+  "body": {
+    "data": null,
+    "error": {
+      "code": "KNOWLEDGE_BASE_CREATION_RUNNING",
+      "message": "La création est déjà en cours."
+    }
+  }
+}

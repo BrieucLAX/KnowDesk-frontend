@@ -1,0 +1,10 @@
+{
+  "status": 409,
+  "body": {
+    "data": null,
+    "error": {
+      "code": "KNOWLEDGE_MODULE_DISABLED",
+      "message": "La base de connaissance n'est pas activée pour cette organisation."
+    }
+  }
+}

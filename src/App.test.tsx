@@ -55,4 +55,13 @@ describe('App — aiguillage', () => {
     expect(screen.getByText(/Importez au moins un document/)).toBeInTheDocument();
     expect(screen.queryByText(/introuvable/i)).not.toBeInTheDocument();
   });
+
+  it('/onboarding/projects/:id/base/validee/:v/base-de-connaissance ouvre « Créer la base de connaissance » ; sans le module, le message et aucun appel', async () => {
+    const { apiClient } = await import('./shared/lib/apiClient');
+    render(<MemoryRouter initialEntries={['/onboarding/projects/p1/base/validee/v1/base-de-connaissance']}><App /></MemoryRouter>);
+    expect(await screen.findByRole('heading', { name: 'Créer la base de connaissance' })).toBeInTheDocument();
+    expect(screen.getByText(/La base de connaissance n'est pas activée pour votre organisation/)).toBeInTheDocument();
+    expect(vi.mocked(apiClient.post)).not.toHaveBeenCalled();
+    expect(vi.mocked(apiClient.get).mock.calls.map(c => c[0]).filter(p => p.includes('knowledge-base') || p.includes('validations'))).toEqual([]);
+  });
 });

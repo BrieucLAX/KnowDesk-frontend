@@ -1,0 +1,21 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "id": "6a2ad083-a498-4ab5-8d6e-b73d31af06a6",
+        "correctionId": "8b898ac9-8a9d-4e53-8f33-d45fec9874dd",
+        "version": 1,
+        "validatedById": null,
+        "validatedByName": "un membre de l'équipe",
+        "validatedAt": "2026-10-20T16:33:33.627Z",
+        "upToDate": true,
+        "changed": {
+          "reviews": false,
+          "sectionTexts": false
+        }
+      }
+    ],
+    "error": null
+  }
+}

@@ -13,9 +13,11 @@ import { AnalysisTab }  from './AnalysisTab';
 import { AuditTab }     from './audit/AuditTab';
 import { BaseTab }      from './base/BaseTab';
 import { CleanBaseView } from './base/CleanBaseView';
+import { KnowledgeBaseCreationView } from './knowledgeBase/KnowledgeBaseCreationView';
 import type { OnboardingProject } from '../types';
 import '../onboardingProjects.css';
-import { useAuthStore } from '../../../store/authStore';
+import { useAuthStore, selectOrganization, selectUserRole } from '../../../store/authStore';
+import { hasModule } from '../../../shared/lib/modules';
 import { CurrentUserContext } from './base/AuthorName';
 
 export type ProjectTab = 'documents' | 'cadrage' | 'analysis' | 'audit' | 'base';
@@ -34,13 +36,19 @@ interface OnboardingProjectPageProps {
   tab:         ProjectTab;
   /** Une version validée à afficher (version propre), à la place des onglets. */
   validationId?: string | null;
+  /** Avec `validationId` : l'écran « Créer la base de connaissance » de cette version. */
+  knowledgeBase?: boolean;
   onTabChange: (tab: ProjectTab) => void;
   onOpenValidation?: (validationId: string) => void;
+  onOpenKnowledgeBase?: (validationId: string) => void;
+  onOpenKnowledge?: () => void;
   onBack:      () => void;
 }
 
 /** Un projet d'onboarding : ses documents, sa fiche de cadrage, ses analyses et leur audit. */
-export function OnboardingProjectPage({ projectId, tab, validationId = null, onTabChange, onOpenValidation, onBack }: OnboardingProjectPageProps) {
+export function OnboardingProjectPage({
+  projectId, tab, validationId = null, knowledgeBase = false, onTabChange, onOpenValidation, onOpenKnowledgeBase, onOpenKnowledge, onBack,
+}: OnboardingProjectPageProps) {
   const toast = useToast();
   const [project,  setProject]  = useState<OnboardingProject | null>(null);
   const [missing,  setMissing]  = useState(false);
@@ -51,6 +59,8 @@ export function OnboardingProjectPage({ projectId, tab, validationId = null, onT
   /** La carte à ouvrir dans « À clarifier », demandée depuis « Nouvelle base » ; oubliée hors de l'onglet. */
   const [clarifyCard, setClarifyCard] = useState<string | undefined>(undefined);
   const currentUserId = useAuthStore(s => s.session?.user.id ?? null);
+  const isAdmin = useAuthStore(selectUserRole) === 'admin';
+  const knowledgeEnabled = hasModule(useAuthStore(selectOrganization), 'knowledge');
   useEffect(() => { if (tab !== 'audit') setClarifyCard(undefined); }, [tab]);
 
   const leave = (action: () => void) => {
@@ -98,11 +108,28 @@ export function OnboardingProjectPage({ projectId, tab, validationId = null, onT
     );
   }
 
+  // « Créer la base de connaissance » depuis une version propre (plan-articles-v1, lot 2).
+  if (validationId && knowledgeBase) {
+    return (
+      <div className="obp-page">
+        <KnowledgeBaseCreationView
+          projectId={projectId}
+          validationId={validationId}
+          isAdmin={isAdmin}
+          knowledgeEnabled={knowledgeEnabled}
+          onBack={() => onOpenValidation?.(validationId)}
+          onOpenKnowledge={() => onOpenKnowledge?.()}
+        />
+      </div>
+    );
+  }
+
   // La version propre : un écran à part, une seule ligne en tête.
   if (validationId) {
     return (
       <div className="obp-page">
-        <CleanBaseView projectId={projectId} validationId={validationId} onBack={() => onTabChange('base')} />
+        <CleanBaseView projectId={projectId} validationId={validationId} onBack={() => onTabChange('base')}
+          onCreateKnowledgeBase={onOpenKnowledgeBase} />
       </div>
     );
   }
@@ -138,6 +165,7 @@ export function OnboardingProjectPage({ projectId, tab, validationId = null, onT
             project={project}
             onGoToClarify={cardId => { setClarifyCard(cardId); onTabChange('audit'); }}
             onOpenValidation={onOpenValidation}
+            onOpenKnowledgeBase={onOpenKnowledgeBase}
           />
         )}
       </div>

@@ -1,0 +1,10 @@
+{
+  "status": 409,
+  "body": {
+    "data": null,
+    "error": {
+      "code": "KNOWLEDGE_BASE_NOT_EMPTY",
+      "message": "La base de connaissance n'est pas vide : archivez ou supprimez ses articles et ses FAQ avant de la créer."
+    }
+  }
+}
