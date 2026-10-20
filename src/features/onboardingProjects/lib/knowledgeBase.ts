@@ -41,6 +41,30 @@ export interface KnowledgeBaseCreation extends KnowledgeBasePreview {
   finishedAt: string | null;
 }
 
+/** La dernière création d'un projet (`GET …/projects/:p/knowledge-base`) : son état, sans le plan. */
+export interface LatestKnowledgeBaseCreation {
+  creationId: string;
+  status:     KnowledgeBaseCreationStatus;
+  validation: { id: string | null; version: number };
+  progress:   KnowledgeBaseProgress;
+  errorCode:  string | null;
+  createdAt:  string;
+  startedAt:  string | null;
+  finishedAt: string | null;
+}
+
+/**
+ * La création à rouvrir sur l'écran d'une version, d'après la dernière du projet. Lancée (en file,
+ * en cours, réussie) : c'est la base de l'organisation, quelle que soit la version. En échec ou
+ * simple aperçu : seulement si elle vient de cette version, sinon la reprendre recréerait l'ancien
+ * texte.
+ */
+export function creationToReopen(latest: LatestKnowledgeBaseCreation | null, validationId: string): string | null {
+  if (!latest) return null;
+  if (latest.status === 'queued' || latest.status === 'running' || latest.status === 'succeeded') return latest.creationId;
+  return latest.validation.id === validationId ? latest.creationId : null;
+}
+
 export const isCreationActive = (c: Pick<KnowledgeBaseCreation, 'status'>) => c.status === 'queued' || c.status === 'running';
 
 /** Pourquoi le bouton « Créer » est désactivé, dans l'ordre où le back refuse. */
@@ -117,10 +141,10 @@ export function creationFailureMessage(code: string | null): string {
     + 's\'est arrêtée, sans doublon.';
 }
 
-// ── L'aperçu de cette version, retenu par navigateur ──
-// Le back n'a pas de route qui liste les créations d'un projet : sans cet identifiant, la page
-// rechargée préparerait un nouvel aperçu (nouveaux appels au modèle pour les titres) et ne
-// retrouverait pas une création en cours.
+// ── L'aperçu de cette version, retenu par navigateur : appoint seulement ──
+// La création se retrouve par la dernière du projet (route du back). L'identifiant retenu ne sert
+// que si cette route échoue, ou pour réutiliser l'aperçu de cette version quand le dernier aperçu
+// du projet vient d'une autre version.
 
 const storageKey = (validationId: string) => `knowdesk.kbCreation.${validationId}`;
 

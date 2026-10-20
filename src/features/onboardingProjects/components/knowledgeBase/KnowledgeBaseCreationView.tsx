@@ -7,8 +7,8 @@ import { formatFull } from '../../../../shared/lib/formatDate';
 import { usePolling } from '../../../../shared/lib/usePolling';
 import { onboardingApi } from '../../api/onboardingApi';
 import {
-  creationBlockers, creationErrorMessage, creationFailureMessage, creationSteps, excludedLabel, isCreationActive,
-  rememberCreation, rememberedCreation, type KnowledgeBaseCreation, type KnowledgeBasePreview,
+  creationBlockers, creationErrorMessage, creationFailureMessage, creationSteps, creationToReopen, excludedLabel, isCreationActive,
+  rememberCreation, rememberedCreation, type KnowledgeBaseCreation, type KnowledgeBasePreview, type LatestKnowledgeBaseCreation,
 } from '../../lib/knowledgeBase';
 import type { Validation } from '../../lib/correction';
 
@@ -41,7 +41,8 @@ interface KnowledgeBaseCreationViewProps {
 type Screen =
   | { kind: 'loading'; preparing: boolean }
   | { kind: 'module-off' }
-  | { kind: 'not-admin' }
+  /** `latest` : la dernière création du projet, lisible par un manager (état seul). */
+  | { kind: 'not-admin'; latest?: LatestKnowledgeBaseCreation | null }
   | { kind: 'outdated' }
   | { kind: 'error'; message: string }
   | { kind: 'ready'; creation: KnowledgeBaseCreation | KnowledgeBasePreview };
@@ -59,8 +60,9 @@ const asCreation = (c: KnowledgeBaseCreation | KnowledgeBasePreview): KnowledgeB
  * courte ; la création suit dans une tâche de fond, relue ici jusqu'au résultat. Aucune
  * validation article par article : les articles se relisent ensuite dans la base de connaissance.
  *
- * L'aperçu de cette version est retenu par navigateur (`rememberedCreation`) : la page rechargée
- * retrouve la création en cours sans préparer un nouvel aperçu.
+ * À l'ouverture, la dernière création du projet est relue (route du back) : depuis n'importe quel
+ * navigateur, une création en cours, réussie ou en échec se retrouve, et un aperçu de cette version
+ * se réutilise sans nouveaux appels au modèle. L'identifiant retenu par navigateur n'est qu'un appoint.
  */
 export function KnowledgeBaseCreationView({
   projectId, validationId, isAdmin, knowledgeEnabled, onBack, onOpenKnowledge,
@@ -100,18 +102,33 @@ export function KnowledgeBaseCreationView({
 
   useEffect(() => {
     if (!knowledgeEnabled) { setScreen({ kind: 'module-off' }); return; }
-    if (!isAdmin) { setScreen({ kind: 'not-admin' }); return; }
     let cancelled = false;
+    if (!isAdmin) {
+      setScreen({ kind: 'not-admin' });
+      onboardingApi.getLatestKnowledgeBaseCreation(projectId)
+        .then(latest => { if (!cancelled) setScreen({ kind: 'not-admin', latest }); })
+        .catch(() => {});
+      return () => { cancelled = true; };
+    }
     setScreen({ kind: 'loading', preparing: false });
     (async () => {
       const validation = await onboardingApi.getValidation(projectId, validationId);
       if (cancelled) return;
       if (!await isUpToDateValidation(projectId, validation)) { if (!cancelled) setScreen({ kind: 'outdated' }); return; }
       if (cancelled) return;
-      const remembered = rememberedCreation(validationId);
+      let reopen: string | null;
+      try {
+        reopen = creationToReopen(await onboardingApi.getLatestKnowledgeBaseCreation(projectId), validationId);
+      } catch (err) {
+        if (refusedBy(err)) throw err;
+        reopen = null;
+      }
+      if (cancelled) return;
+      const remembered = reopen ?? rememberedCreation(validationId);
       if (remembered) {
         try {
           const c = await onboardingApi.getKnowledgeBaseCreation(projectId, remembered);
+          if (c.validation.id === validationId) rememberCreation(validationId, c.creationId);
           if (!cancelled) setScreen({ kind: 'ready', creation: c });
           return;
         } catch (err) {
@@ -188,10 +205,30 @@ export function KnowledgeBaseCreationView({
     );
   }
   if (screen.kind === 'not-admin') {
+    const latest = screen.latest;
     return frame(
-      <p className="obp-kb__notice" role="status">
-        Seul un administrateur de votre organisation peut créer la base de connaissance depuis cette version.
-      </p>,
+      <>
+        <p className="obp-kb__notice" role="status">
+          Seul un administrateur de votre organisation peut créer la base de connaissance depuis cette version.
+        </p>
+        {latest?.status === 'succeeded' && (
+          <div className="obp-kb__result">
+            <p>
+              La base de connaissance a été créée{latest.finishedAt ? ` le ${formatFull(latest.finishedAt)}` : ''}, depuis la
+              version validée n° {latest.validation.version}.
+            </p>
+            <div><Button variant="secondary" size="md" onClick={onOpenKnowledge}>Ouvrir la base de connaissance</Button></div>
+          </div>
+        )}
+        {latest && isCreationActive(latest) && (
+          <p className="obp-muted">
+            Une création est en cours : {plural(latest.progress.articles ?? 0, 'article publié', 'articles publiés')} pour l'instant.
+          </p>
+        )}
+        {latest?.status === 'failed' && (
+          <p className="obp-muted">La création s'est arrêtée avant la fin ; un administrateur peut la reprendre depuis cet écran.</p>
+        )}
+      </>,
     );
   }
   if (screen.kind === 'outdated') {
@@ -248,7 +285,7 @@ export function KnowledgeBaseCreationView({
         </ol>
         {active && (
           <p className="obp-analysis__note">
-            Vous pouvez quitter cette page : la création continue, et vous la retrouverez ici depuis ce navigateur.
+            Vous pouvez quitter cette page : la création continue, et vous la retrouverez ici.
           </p>
         )}
         {failed && (

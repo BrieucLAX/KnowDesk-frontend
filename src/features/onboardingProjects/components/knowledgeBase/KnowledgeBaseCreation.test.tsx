@@ -5,7 +5,7 @@ import { act, render, screen, fireEvent, waitFor, within } from '@testing-librar
 vi.mock('../../api/onboardingApi', () => ({
   onboardingApi: {
     getValidation: vi.fn(), listAuditImages: vi.fn(), getAuditImage: vi.fn(), listValidations: vi.fn(), validateBase: vi.fn(),
-    previewKnowledgeBase: vi.fn(), createKnowledgeBase: vi.fn(), getKnowledgeBaseCreation: vi.fn(),
+    previewKnowledgeBase: vi.fn(), createKnowledgeBase: vi.fn(), getKnowledgeBaseCreation: vi.fn(), getLatestKnowledgeBaseCreation: vi.fn(),
   },
 }));
 
@@ -14,7 +14,9 @@ import { ApiError } from '../../../../shared/lib/apiClient';
 import { KnowledgeBaseCreationView, KNOWLEDGE_BASE_POLL_MS } from './KnowledgeBaseCreationView';
 import { CleanBaseView } from '../base/CleanBaseView';
 import { ValidationPanel } from '../base/ValidationPanel';
-import { creationErrorMessage, creationSteps, type KnowledgeBaseCreation } from '../../lib/knowledgeBase';
+import {
+  creationErrorMessage, creationSteps, creationToReopen, type KnowledgeBaseCreation, type LatestKnowledgeBaseCreation,
+} from '../../lib/knowledgeBase';
 import type { Validation, ValidationSummary } from '../../lib/correction';
 
 // Réponses réelles du back de main (9efcffe) lancé en local, enregistrées le 2026-10-20 : version propre
@@ -35,6 +37,19 @@ import FAILED from './fixtures/kb-get-failed.response.json';
 import RESUME from './fixtures/kb-resume-echec.response.json';
 import RESUMED_SUCCEEDED from './fixtures/kb-get-resumed-succeeded.response.json';
 import LIST_VALIDATIONS from './fixtures/kb-list-validations.response.json';
+// Dernière création du projet (KnowDesk#55, back de la PR lancé en local) : un échec retrouvé malgré
+// un aperçu préparé ensuite ailleurs, puis repris.
+import LATEST_NULL from './fixtures/kb-latest-null.response.json';
+import LATEST_PREVIEWED from './fixtures/kb-latest-previewed.response.json';
+import LATEST_FAILED from './fixtures/kb-latest-failed.response.json';
+import LATEST_FAILED_MANAGER from './fixtures/kb-latest-failed-manager.response.json';
+import LATEST_SUCCEEDED from './fixtures/kb-latest-succeeded.response.json';
+import LATEST_OTHER_ORG from './fixtures/kb-latest-other-org.response.json';
+import PREVIEW_2 from './fixtures/kb-preview-echec2.response.json';
+import PREVIEW_ELSEWHERE from './fixtures/kb-preview-echec-autre.response.json';
+import FAILED_2 from './fixtures/kb-get-failed2.response.json';
+import RESUME_2 from './fixtures/kb-resume-echec2.response.json';
+import RESUMED_SUCCEEDED_2 from './fixtures/kb-get-resumed-succeeded2.response.json';
 
 interface Recorded { status: number; body: { data: unknown; error: { code: string; message: string } | null } }
 /** Ce que rend `apiClient` pour une réponse enregistrée : les données, ou l'ApiError du code. */
@@ -73,6 +88,7 @@ describe('Créer la base de connaissance (plan-articles-v1, lot 2)', () => {
     vi.mocked(onboardingApi.getValidation).mockResolvedValue(validation(null));
     vi.mocked(onboardingApi.listValidations).mockResolvedValue(listed(true));
     vi.mocked(onboardingApi.previewKnowledgeBase).mockResolvedValue(ok(PREVIEW));
+    vi.mocked(onboardingApi.getLatestKnowledgeBaseCreation).mockResolvedValue(ok(LATEST_NULL));
   });
   afterEach(() => { vi.useRealTimers(); });
 
@@ -216,10 +232,11 @@ describe('Créer la base de connaissance (plan-articles-v1, lot 2)', () => {
     expect(creationErrorMessage(err)).toBe('Limite de 50 articles atteinte. Archivez des articles pour libérer de la place.');
   });
 
-  it('échec puis reprise : ce qui est fait reste affiché, la reprise le dit, la progression ne recule pas', async () => {
+  it('échec puis reprise, retrouvé par l\'identifiant retenu quand la route de la dernière création manque (back plus ancien)', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const failed = creation(FAILED);
     window.localStorage.setItem(`knowdesk.kbCreation.${VALIDATION_ID}`, failed.creationId);
+    vi.mocked(onboardingApi.getLatestKnowledgeBaseCreation).mockRejectedValue(new ApiError('NOT_FOUND', 'Route introuvable.', 404));
     vi.mocked(onboardingApi.getKnowledgeBaseCreation).mockResolvedValue(failed);
     const { container } = renderView();
 
@@ -244,6 +261,78 @@ describe('Créer la base de connaissance (plan-articles-v1, lot 2)', () => {
     vi.mocked(onboardingApi.getKnowledgeBaseCreation).mockResolvedValue(creation(RESUMED_SUCCEEDED));
     await tick();
     expect(await screen.findByText(/^Base de connaissance créée le .*, après une reprise,/)).toHaveTextContent('32 articles publiés, 23 FAQ');
+  });
+
+  it('session neuve (aucun identifiant retenu) : la création en échec est retrouvée par le back et reprise jusqu\'au résultat', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const latest = ok<LatestKnowledgeBaseCreation>(LATEST_FAILED);
+    const validationId = latest.validation.id!;
+    vi.mocked(onboardingApi.getValidation).mockResolvedValue({ ...validation(null), id: validationId });
+    vi.mocked(onboardingApi.listValidations).mockResolvedValue(listed(true).map(v => ({ ...v, id: validationId })));
+    vi.mocked(onboardingApi.getLatestKnowledgeBaseCreation).mockResolvedValue(latest);
+    vi.mocked(onboardingApi.getKnowledgeBaseCreation).mockResolvedValue(creation(FAILED_2));
+    expect(window.localStorage.length).toBe(0);
+    const { onOpenKnowledge } = renderView({ validationId });
+
+    expect(await screen.findByRole('heading', { name: 'Création interrompue' })).toBeInTheDocument();
+    // Un aperçu plus récent existe (préparé ailleurs) : ni lui ni un nouveau ne remplace l'échec.
+    expect(latest.creationId).not.toBe(ok<{ creationId: string }>(PREVIEW_ELSEWHERE).creationId);
+    expect(onboardingApi.getKnowledgeBaseCreation).toHaveBeenCalledWith('p1', latest.creationId);
+    expect(onboardingApi.previewKnowledgeBase).not.toHaveBeenCalled();
+    expect(screen.getByText('Articles publiés').parentElement).toHaveTextContent(`${latest.progress.articles} / 32`);
+
+    vi.mocked(onboardingApi.createKnowledgeBase).mockResolvedValue(creation(RESUME_2));
+    fireEvent.click(screen.getByRole('button', { name: 'Reprendre la création' }));
+    expect(await screen.findByRole('heading', { name: 'Reprise de la création' })).toBeInTheDocument();
+    expect(onboardingApi.createKnowledgeBase).toHaveBeenCalledWith('p1', validationId, latest.creationId);
+
+    vi.mocked(onboardingApi.getKnowledgeBaseCreation).mockResolvedValue(creation(RESUMED_SUCCEEDED_2));
+    await tick();
+    expect(await screen.findByText(/^Base de connaissance créée le .*, après une reprise,/)).toHaveTextContent('32 articles publiés, 23 FAQ');
+    fireEvent.click(screen.getByRole('button', { name: 'Ouvrir la base de connaissance' }));
+    expect(onOpenKnowledge).toHaveBeenCalled();
+    // L'identifiant est retenu ensuite, en appoint.
+    expect(window.localStorage.getItem(`knowdesk.kbCreation.${validationId}`)).toBe(latest.creationId);
+  });
+
+  it('aperçu de cette version déjà préparé ailleurs : réutilisé, sans nouvel aperçu (pas de nouveaux appels au modèle)', async () => {
+    const latest = ok<LatestKnowledgeBaseCreation>(LATEST_PREVIEWED);
+    const validationId = latest.validation.id!;
+    vi.mocked(onboardingApi.getValidation).mockResolvedValue({ ...validation(null), id: validationId });
+    vi.mocked(onboardingApi.listValidations).mockResolvedValue(listed(true).map(v => ({ ...v, id: validationId })));
+    vi.mocked(onboardingApi.getLatestKnowledgeBaseCreation).mockResolvedValue(latest);
+    vi.mocked(onboardingApi.getKnowledgeBaseCreation).mockResolvedValue({ ...ok<KnowledgeBaseCreation>(PREVIEW_2), creationId: latest.creationId, progress: {}, errorCode: null, startedAt: null, finishedAt: null });
+    renderView({ validationId });
+    expect(await screen.findByRole('button', { name: 'Créer la base de connaissance' })).toBeEnabled();
+    expect(onboardingApi.previewKnowledgeBase).not.toHaveBeenCalled();
+  });
+
+  it('création à rouvrir : lancée, quelle que soit la version ; échec ou aperçu, seulement de cette version', () => {
+    const failed = ok<LatestKnowledgeBaseCreation>(LATEST_FAILED);
+    const succeeded = ok<LatestKnowledgeBaseCreation>(LATEST_SUCCEEDED);
+    expect(creationToReopen(ok(LATEST_NULL), 'v')).toBeNull();
+    expect(creationToReopen(failed, failed.validation.id!)).toBe(failed.creationId);
+    expect(creationToReopen(failed, 'une-autre-version')).toBeNull();
+    expect(creationToReopen(succeeded, 'une-autre-version')).toBe(succeeded.creationId);
+    expect(creationToReopen(ok(LATEST_PREVIEWED), 'une-autre-version')).toBeNull();
+    // Autre organisation : 404, sans rien de la création de A.
+    expect((LATEST_OTHER_ORG as Recorded).status).toBe(404);
+    expect(JSON.stringify(LATEST_OTHER_ORG)).not.toContain(failed.creationId);
+  });
+
+  it('manager : sans bouton, l\'état de la dernière création (échec à reprendre par un administrateur, ou base créée)', async () => {
+    vi.mocked(onboardingApi.getLatestKnowledgeBaseCreation).mockResolvedValue(ok(LATEST_FAILED_MANAGER));
+    const { unmount } = renderView({ isAdmin: false });
+    expect(await screen.findByText(/un administrateur peut la reprendre depuis cet écran/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Reprendre|Créer/ })).not.toBeInTheDocument();
+    unmount();
+
+    vi.mocked(onboardingApi.getLatestKnowledgeBaseCreation).mockResolvedValue(ok(LATEST_SUCCEEDED));
+    const { onOpenKnowledge } = renderView({ isAdmin: false });
+    expect(await screen.findByText(/^La base de connaissance a été créée le .*, depuis la\s+version validée n° 1\./)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Ouvrir la base de connaissance' }));
+    expect(onOpenKnowledge).toHaveBeenCalled();
+    expect(onboardingApi.getKnowledgeBaseCreation).not.toHaveBeenCalled();
   });
 
   it('version qui n\'est plus à jour : rien n\'est préparé', async () => {

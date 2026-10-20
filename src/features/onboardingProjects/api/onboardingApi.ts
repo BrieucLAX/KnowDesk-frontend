@@ -10,7 +10,7 @@ import type {
   BaseVersion, ChainCancelResult, CorrectionQuota, OnboardingCorrection, Review, ReviewsState, SectionComment, SectionFix, Validation,
   ValidationSummary, Verdict,
 } from '../lib/correction';
-import type { KnowledgeBaseCreation, KnowledgeBasePreview } from '../lib/knowledgeBase';
+import type { KnowledgeBaseCreation, KnowledgeBasePreview, LatestKnowledgeBaseCreation } from '../lib/knowledgeBase';
 
 const BASE = '/onboarding';
 
@@ -158,7 +158,13 @@ export const onboardingApi = {
    */
   createKnowledgeBase: (projectId: string, validationId: string, creationId: string) =>
     apiClient.post<KnowledgeBaseCreation>(`${BASE}/projects/${projectId}/validations/${validationId}/knowledge-base`, { creationId }),
-  /** L'aperçu et l'état de sa création (progression, code d'erreur). */
+  /**
+   * La dernière création du projet (lancée d'abord, sinon le dernier aperçu) ou null : statut,
+   * progression, erreur, identifiant. Admin ou manager ; 404 hors de l'organisation.
+   */
+  getLatestKnowledgeBaseCreation: (projectId: string) =>
+    apiClient.get<LatestKnowledgeBaseCreation | null>(`${BASE}/projects/${projectId}/knowledge-base`),
+  /** L'aperçu et l'état de sa création (progression, code d'erreur) ; administrateurs seulement. */
   getKnowledgeBaseCreation: (projectId: string, creationId: string) =>
     apiClient.get<KnowledgeBaseCreation>(`${BASE}/projects/${projectId}/knowledge-base/${creationId}`),
 };

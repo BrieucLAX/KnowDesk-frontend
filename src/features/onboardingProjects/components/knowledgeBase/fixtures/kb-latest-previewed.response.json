@@ -1,0 +1,19 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "creationId": "4d6ce9df-11c3-4231-89bb-ef56fcc9ad13",
+      "status": "previewed",
+      "validation": {
+        "id": "1aebc352-2e49-4da0-937a-040e5da6e099",
+        "version": 1
+      },
+      "progress": {},
+      "errorCode": null,
+      "createdAt": "2026-10-20T16:52:28.202Z",
+      "startedAt": null,
+      "finishedAt": null
+    },
+    "error": null
+  }
+}
