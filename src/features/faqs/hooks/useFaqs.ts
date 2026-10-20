@@ -15,7 +15,7 @@ export function useFaqs(initialFilters: FaqListFilters = {}) {
     const f = next ?? filters;
     setLoading(true);
     try {
-      const data = await faqsApi.list(f);
+      const data = await faqsApi.listAll(f);
       setItems(data);
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les FAQs.');
@@ -26,7 +26,7 @@ export function useFaqs(initialFilters: FaqListFilters = {}) {
 
   useEffect(() => {
     let alive = true;
-    faqsApi.list(filters)
+    faqsApi.listAll(filters)
       .then(data => { if (alive) setItems(data); })
       .catch(err => {
         if (alive) toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les FAQs.');
@@ -62,8 +62,8 @@ export function useFaqs(initialFilters: FaqListFilters = {}) {
       } else {
         toast.error(`Aucune FAQ supprimée : ${res.blocked.length} bloquée${res.blocked.length > 1 ? 's' : ''} par des parcours de formation.`);
       }
-      // Refetch pour rapporter les FAQs « page suivante » qui n'étaient
-      // pas chargées (perPage cap). Sinon liste presque vide en trompe-l'œil.
+      // Refetch : la liste affichée doit refléter ce que le back a vraiment
+      // supprimé (les FAQs bloquées par Learning restent).
       if (res.deleted.length > 0) {
         try { await reload(); } catch { /* déjà toasté côté reload */ }
       }
