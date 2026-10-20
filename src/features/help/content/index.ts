@@ -357,7 +357,7 @@ Quand un conseiller clique sur un lien interne dans la fiche article, il navigue
         content: `
 ## Publier vs garder en brouillon
 
-Un article peut avoir deux statuts :
+Un article peut avoir trois statuts :
 
 **Brouillon**
 - Visible uniquement par les admins et managers
@@ -369,8 +369,16 @@ Un article peut avoir deux statuts :
 - Apparaît dans les résultats de recherche
 - Peut être mis à jour à tout moment
 
+**Archivé**
+- Retiré des articles publiés, de la recherche et du chatbot
+- Rangé dans l'onglet **Archivés** de la liste des articles
+- Ne compte pas dans la limite d'articles de l'organisation
+
 **Comment publier**
 Dans l'éditeur, clique sur **Publier** en haut à droite. Si l'article était déjà publié, le bouton affiche **Mettre à jour**.
+
+**Comment archiver**
+Dans le menu **···** de la ligne, ou dans l'éditeur, clique sur **Archiver**. Pour le retrouver, ouvre l'onglet **Archivés** et clique sur **Désarchiver** : l'article revient en brouillon, à publier de nouveau.
 
 > 💡 **Astuce** : Publie même si l'article n'est pas parfait. Il vaut mieux avoir un contenu imparfait disponible qu'un contenu parfait en brouillon.
         `.trim(),

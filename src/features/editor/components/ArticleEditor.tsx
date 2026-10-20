@@ -14,6 +14,8 @@ import { TagsInput } from '../../articles/components/TagsInput';
 import { tagsApi }   from '../../articles/api/tagsApi';
 import { ArticleQualityPanel } from '../../articleQuality/components/ArticleQualityPanel';
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
+import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
+import { archiveApi }    from '../../articles/api/archiveApi';
 
 interface ArticleEditorProps {
   articleId?: string;
@@ -46,6 +48,9 @@ export function ArticleEditor({ articleId, onSaved, onCancel }: ArticleEditorPro
   const isEdit  = !!articleId;
   const role    = useAuthStore(selectUserRole);
   const canSeeQuality = role === 'admin' || role === 'manager';
+  const canArchive    = role === 'admin' || role === 'manager';
+  const [confirmArchive, setConfirmArchive] = useState(false);
+  const [isArchiving,    setIsArchiving]    = useState(false);
   const [currentArticleId, setCurrentArticleId] = useState<string | undefined>(articleId);
   const titleId = useId();
 
@@ -222,10 +227,50 @@ if (!isEdit) {
     }
   }, [form, isEdit, articleId, onSaved, syncTagsIfChanged, toast]);
 
+  // Archiver retire l'article des publiés et de la recherche ; désarchiver le remet en brouillon.
+  const handleArchive = async () => {
+    if (!currentArticleId) return;
+    setIsArchiving(true);
+    try {
+      const updated = await archiveApi.archive(currentArticleId);
+      setForm(f => ({ ...f, status: updated.status }));
+      setConfirmArchive(false);
+      toast.success('Article archivé.');
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : 'Archivage impossible.');
+    } finally {
+      setIsArchiving(false);
+    }
+  };
+
+  const handleUnarchive = async () => {
+    if (!currentArticleId) return;
+    setIsArchiving(true);
+    try {
+      const updated = await archiveApi.unarchive(currentArticleId);
+      setForm(f => ({ ...f, status: updated.status }));
+      toast.success('Article désarchivé : il est de nouveau en brouillon.');
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : 'Désarchivage impossible.');
+    } finally {
+      setIsArchiving(false);
+    }
+  };
+
   const flatCats = flattenCategories(categories);
 
   return (
     <div className="article-editor">
+      {confirmArchive && (
+        <ConfirmDialog
+          title="Archiver cet article ?"
+          description={`« ${form.title} » ne sera plus visible des conseillers ni du chatbot. Vous pourrez le désarchiver ; il reviendra en brouillon.`}
+          confirmLabel="Archiver"
+          loading={isArchiving}
+          onConfirm={handleArchive}
+          onCancel={() => setConfirmArchive(false)}
+        />
+      )}
       <div className="article-editor__topbar">
         <button type="button" className="article-editor__back" onClick={onCancel}>
           ← Annuler
@@ -239,6 +284,16 @@ if (!isEdit) {
           </Button>
         )}
         <div className="article-editor__topbar-actions">
+          {isEdit && canArchive && form.status !== 'archived' && (
+            <Button variant="ghost" size="sm" onClick={() => setConfirmArchive(true)}>
+              Archiver
+            </Button>
+          )}
+          {isEdit && canArchive && form.status === 'archived' && (
+            <Button variant="ghost" size="sm" onClick={handleUnarchive} loading={isArchiving}>
+              Désarchiver
+            </Button>
+          )}
           <Button variant="ghost" size="sm" onClick={handleSaveDraft} loading={isSavingDraft}>
             Garder en brouillon
           </Button>

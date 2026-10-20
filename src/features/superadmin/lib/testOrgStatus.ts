@@ -13,6 +13,20 @@ export function scheduledPurgeDate(testEndedAt: string): Date {
   return new Date(new Date(testEndedAt).getTime() + ONBOARDING_RETENTION_DAYS * DAY_MS);
 }
 
+/**
+ * Texte de confirmation de « Terminer le test ». Ce que supprime la purge automatique dépend du
+ * texte d'information accepté (KnowDesk#49) : les seuls documents importés si un administrateur a
+ * accepté le texte du 2026-10-20, tout sinon.
+ */
+export function endTestDescription(now: Date): string {
+  return 'L\'espace est désactivé immédiatement : ses utilisateurs ne peuvent plus se connecter. '
+    + `Le ${formatDay(scheduledPurgeDate(now.toISOString()))}, 30 jours après, la purge automatique dépend du texte d'information accepté. `
+    + 'Si un administrateur a accepté le nouveau texte, seuls les documents importés sont supprimés. '
+    + 'Sinon, toutes ses données de test (documents, fiches, analyses, audits, décisions) sont supprimées, comme avant. '
+    + 'Pour tout supprimer tout de suite, base de connaissance comprise, utilisez « Données de test ». '
+    + 'C\'est définitif : l\'espace ne pourra pas être réactivé.';
+}
+
 export interface OrgStatus {
   label: 'Actif' | 'Désactivé' | 'Test terminé' | 'Purgé';
   tone:  'active' | 'disabled' | 'purged';

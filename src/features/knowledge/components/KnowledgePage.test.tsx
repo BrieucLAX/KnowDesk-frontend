@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('../../../shared/lib/apiClient', () => ({
@@ -34,9 +34,11 @@ describe('KnowledgePage : tous les articles, au-delà de 200 (réponses réelles
   it('charge les deux pages et compte les 205 articles, sans bannière de limite', async () => {
     render(<MemoryRouter><KnowledgePage onOpenArticle={() => {}} /></MemoryRouter>);
 
-    await waitFor(() => expect(tabCount('Tous')).toBe('205'));
+    // « Tous » ne compte pas les 2 archivés, qui ont leur onglet.
+    await waitFor(() => expect(tabCount('Tous')).toBe('203'));
     expect(tabCount('Publiés')).toBe('201');
     expect(tabCount('Brouillons')).toBe('2');
+    expect(tabCount('Archivés')).toBe('2');
     expect(screen.queryByText(/Affichage des 200 articles/)).toBeNull();
 
     const pages = vi.mocked(apiClient.getWithMeta).mock.calls.map(c => new URLSearchParams(c[0].split('?')[1]).get('page'));
@@ -45,8 +47,10 @@ describe('KnowledgePage : tous les articles, au-delà de 200 (réponses réelles
 
   it('les articles de la deuxième page sont dans la liste', async () => {
     render(<MemoryRouter><KnowledgePage onOpenArticle={() => {}} /></MemoryRouter>);
-    // Les 5 plus anciens, rendus seulement par la page 2 du back.
-    const page2 = (respond('/articles?page=2').data as Array<{ title: string }>).map(a => a.title);
-    for (const title of page2) expect(await screen.findByText(title)).toBeTruthy();
+    // Les 5 plus anciens, rendus seulement par la page 2 du back : les archivés sous leur onglet.
+    const page2 = respond('/articles?page=2').data as Array<{ title: string; status: string }>;
+    for (const a of page2.filter(a => a.status !== 'archived')) expect(await screen.findByText(a.title)).toBeTruthy();
+    fireEvent.click(screen.getByRole('tab', { name: /^Archivés/ }));
+    for (const a of page2.filter(a => a.status === 'archived')) expect(await screen.findByText(a.title)).toBeTruthy();
   });
 });

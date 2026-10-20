@@ -54,6 +54,27 @@ describe('TestDataModal', () => {
     expect(screen.getByText(/Aucun projet/)).toBeInTheDocument();
   });
 
+  it('la confirmation de toute l\'organisation nomme la base de connaissance et les processus guidés', async () => {
+    setup();
+    await screen.findByText('Projet 1');
+    fireEvent.click(screen.getByRole('button', { name: 'Supprimer toutes les données de test' }));
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveTextContent('ainsi que toute sa base de connaissance : articles et leurs versions, FAQ, processus guidés, catégories, tags, synonymes, images et imports.');
+  });
+
+  it('le résumé compte aussi ce que la base de connaissance a perdu', async () => {
+    // Forme de la réponse de KnowDesk#50 (POST …/onboarding/purge), celle que vérifie son test d'intégration.
+    const withKb: PurgeReport = {
+      scope: 'org', objects: 2, rows: { onboarding_documents: 2, onboarding_projects: 1 },
+      knowledgeBase: { objects: 4, rows: { articles: 1, faqs: 1, trees: 1, categories: 1, tags: 1, synonyms: 1, imports: 1, images: 2 } },
+    };
+    setup({ projects: [[P1], []], purge: async () => withKb });
+    await screen.findByText('Projet 1');
+    fireEvent.click(screen.getByRole('button', { name: 'Supprimer toutes les données de test' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+    expect(await screen.findByRole('status')).toHaveTextContent('Données de test supprimées : 6 fichiers et 12 lignes supprimés.');
+  });
+
   it('annuler la confirmation ne supprime rien', async () => {
     const { purge } = setup();
     await screen.findByText('Projet 1');
