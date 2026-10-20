@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { learningApi } from '../api/learningApi';
 import { apiClient, ApiError } from '../../../shared/lib/apiClient';
+import { fetchAllPages } from '../../../shared/lib/fetchAllPages';
 import { PageHeader } from '../../../shared/components/layout/PageHeader';
 import { Button }     from '../../../shared/components/ui/Button';
 import { Input }      from '../../../shared/components/ui/Input';
@@ -297,8 +298,9 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
     setLoadingRes(true);
     Promise.all([
       learningApi.listResources(module.id),
-      apiClient.get<any[]>('/articles?perPage=200&status=published'),
-      apiClient.get<any[]>('/faqs?perPage=200&status=published'),
+      // Toutes les ressources publiées, page après page : le sélecteur filtre localement.
+      fetchAllPages<ArticleLite>('/articles', new URLSearchParams({ status: 'published' }), 200),
+      fetchAllPages<{ id: string; question: string }>('/faqs', new URLSearchParams({ status: 'published' }), 100),
       apiClient.get<any[]>('/trees?status=published'),
       learningApi.getQuiz(module.id),
     ])

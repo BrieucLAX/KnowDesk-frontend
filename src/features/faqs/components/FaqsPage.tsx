@@ -72,10 +72,10 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
   const [bulkDeleting,    setBulkDeleting]    = useState(false);
 
   // Stratégie : pas de filtre statut/staleOnly envoyé au backend — on charge
-  // tout (jusqu'à perPage=200) et on filtre/compte localement. Permet
+  // tout (page après page, cf useFaqs) et on filtre/compte localement. Permet
   // d'avoir des compteurs cohérents sur les onglets (Toutes / Publiées /
   // Brouillons / À réviser) qui ne s'effondrent pas à 0 quand on change
-  // d'onglet. Pour les FAQs (< 200 par org en pratique), le coût est nul.
+  // d'onglet.
   const filterPayload = useMemo(() => ({
     q:                    search.trim() || undefined,
     tags:                 activeTags.length > 0 ? activeTags : undefined,
@@ -83,7 +83,6 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
     includeSubcategories: !!categoryId, // élargit aux descendants quand cat sélectionnée
     sortBy,
     sortDir,
-    perPage:              200,
   }), [search, activeTags, categoryId, sortBy, sortDir]);
 
   const { items: rawItems, loading, setFilters, remove, bulkRemove } = useFaqs(filterPayload);
@@ -186,10 +185,6 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
   };
 
   const hasActiveFilters = !!search || activeTags.length > 0 || !!categoryId || tab !== 'all';
-  // Bannière limite : on charge perPage=200 — au-delà, on prévient
-  // l'utilisateur. Vraie pagination UI à ajouter en V2 si nécessaire.
-  const reachedLimit = rawItems.length >= 200;
-
   const emptyState = (
     <EmptyState
       title={hasActiveFilters ? 'Aucune FAQ ne correspond' : 'Aucune FAQ pour l\'instant'}
@@ -258,11 +253,6 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
             </Button>
           )}
         />
-        {reachedLimit && (
-          <div className="list-limit-banner" role="status">
-            Affichage des 200 FAQs les plus récentes. Affinez les filtres pour voir plus.
-          </div>
-        )}
 
         <PageToolbar
           left={(

@@ -14,6 +14,20 @@ interface NoticeGateProps {
 }
 
 /**
+ * Le texte d'information en paragraphes : le back les sépare par une ligne vide
+ * (version du 2026-10-20). Un texte sans ligne vide, comme celui du 2026-09-26,
+ * reste un seul paragraphe.
+ */
+export function NoticeText({ text }: { text: string }) {
+  const paragraphs = text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+  return (
+    <div className="obp-notice__body">
+      {paragraphs.map((p, i) => <p key={i} className="obp-notice__text">{p}</p>)}
+    </div>
+  );
+}
+
+/**
  * Texte d'information à accepter avant le premier import (décision produit 2).
  * Le texte vient du back (GET /onboarding/notice), qui trace l'acceptation par
  * utilisateur avec sa version : il n'est jamais recopié dans le front.
@@ -45,7 +59,7 @@ export function NoticeGate({ notice, onChange }: NoticeGateProps) {
   return (
     <section className="obp-notice" aria-labelledby="obp-notice-title">
       <h2 id="obp-notice-title" className="obp-notice__title">Avant votre premier import</h2>
-      <p className="obp-notice__text">{notice.text}</p>
+      <NoticeText text={notice.text} />
       <label className="obp-notice__check">
         <input type="checkbox" checked={read} onChange={e => setRead(e.target.checked)} />
         <span>J'ai lu ce texte d'information.</span>
@@ -72,7 +86,7 @@ export function NoticeReminder({ notice }: { notice: OnboardingNotice }) {
           onClose={() => setOpen(false)}
           footer={<Button variant="primary" size="md" onClick={() => setOpen(false)}>Fermer</Button>}
         >
-          <p className="obp-notice__text">{notice.text}</p>
+          <NoticeText text={notice.text} />
         </Modal>
       )}
     </div>

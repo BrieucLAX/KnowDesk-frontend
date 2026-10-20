@@ -17,8 +17,10 @@ type Pending = { kind: 'org' } | { kind: 'project'; project: OnboardingProjectRo
 const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? 's' : ''}`;
 
 function summary(report: PurgeReport): string {
-  const rows = Object.values(report.rows).reduce((sum, n) => sum + n, 0);
-  return `${plural(report.objects, 'fichier')} et ${plural(rows, 'ligne')} supprimés.`;
+  const kb = report.knowledgeBase;
+  const objects = report.objects + (kb?.objects ?? 0);
+  const rows = [report.rows, kb?.rows ?? {}].flatMap(r => Object.values(r)).reduce((sum, n) => sum + n, 0);
+  return `${plural(objects, 'fichier')} et ${plural(rows, 'ligne')} supprimés.`;
 }
 
 /**
@@ -71,7 +73,8 @@ export function TestDataModal({ org, listProjects, purge, onClose }: TestDataMod
           : `Supprimer le projet ${pending.rank} de « ${org.name} »`}
         description={
           (pending.kind === 'org'
-            ? 'Tous les projets, documents, fiches de cadrage, analyses, audits, images, décisions et acceptations du texte d\'information de cette organisation sont supprimés, en base et dans le stockage. '
+            ? 'Tous les projets, documents, fiches de cadrage, analyses, audits, images, décisions et acceptations du texte d\'information de cette organisation sont supprimés, en base et dans le stockage, '
+              + 'ainsi que toute sa base de connaissance : articles et leurs versions, FAQ, processus guidés, catégories, tags, synonymes, images et imports. '
             : `Ce projet (${plural(pending.project.documents, 'document')}), ses fiches, analyses, audits, images et décisions sont supprimés, en base et dans le stockage. `)
           + 'L\'organisation et ses comptes restent. C\'est définitif.'
         }

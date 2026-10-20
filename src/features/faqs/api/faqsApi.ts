@@ -1,4 +1,5 @@
 import { apiClient } from '../../../shared/lib/apiClient';
+import { fetchAllPages } from '../../../shared/lib/fetchAllPages';
 import type { FaqDetail, FaqListItem, FaqListFilters, FaqInput, FaqHistory } from '../types';
 
 function buildQuery(filters: FaqListFilters): string {
@@ -20,6 +21,10 @@ function buildQuery(filters: FaqListFilters): string {
 export const faqsApi = {
   list: (filters: FaqListFilters = {}) =>
     apiClient.get<FaqListItem[]>(`/faqs${buildQuery(filters)}`),
+
+  /** Toutes les FAQ qui répondent aux filtres, page après page (le back en rend 100 au plus par page). */
+  listAll: (filters: Omit<FaqListFilters, 'page' | 'perPage'> = {}) =>
+    fetchAllPages<FaqListItem>('/faqs', new URLSearchParams(buildQuery(filters).slice(1)), 100),
 
   get: (id: string, opts?: { noTrack?: boolean }) =>
     apiClient.get<FaqDetail>(`/faqs/${id}${opts?.noTrack ? '?noTrack=1' : ''}`),

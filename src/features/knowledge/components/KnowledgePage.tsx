@@ -22,9 +22,11 @@ import { EntityRow }        from '../../../shared/components/ui/EntityRow';
 import { PageHeader }       from '../../../shared/components/layout/PageHeader';
 import { knowledgeApi } from '../api/knowledgeApi';
 import { apiClient, ApiError } from '../../../shared/lib/apiClient';
+import { fetchAllPages }    from '../../../shared/lib/fetchAllPages';
 import { useToast }     from '../../../shared/lib/useToast';
 import { useLocalStorageState } from '../../../shared/lib/useLocalStorageState';
 import { tagsApi, type OrgTag } from '../../articles/api/tagsApi';
+import { archiveApi }       from '../../articles/api/archiveApi';
 
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
 import { formatRelative }   from '../../../shared/lib/formatDate';
@@ -39,9 +41,58 @@ interface KnowledgePageProps {
 
 type SortKey = 'updated' | 'alpha' | 'popular';
 
+/** Onglet de statut. « Tous » et « À réviser » ne montrent pas les archivés, qui ont leur onglet. */
+type ArticleFilter = 'all' | 'published' | 'draft' | 'stale' | 'archived';
+
+const FILTER_PLURAL: Record<Exclude<ArticleFilter, 'all'>, string> = {
+  published: 'publiés', draft: 'brouillons', stale: 'articles à réviser', archived: 'archivés',
+};
+
+function matchesFilter(a: ArticleListItem, filter: ArticleFilter): boolean {
+  if (filter === 'archived') return a.status === 'archived';
+  if (a.status === 'archived') return false;
+  if (filter === 'stale') return a.isStale;
+  return filter === 'all' || a.status === filter;
+}
+
 const SIDEBAR_MIN     = 180;
 const SIDEBAR_MAX     = 360;
 const SIDEBAR_DEFAULT = 220;
+
+/** Une ligne de GET /articles, telle que le back la rend. */
+interface ArticleListRow {
+  id: string; title: string; status: ArticleListItem['status']; category_id: string; category_name?: string | null;
+  version: number; author_email?: string | null; updated_at: string; tags?: unknown; is_stale?: boolean;
+  views_30d?: number | string | null; visibility?: string;
+}
+
+/**
+ * Tous les articles de la catégorie (ou de l'organisation), page après page : le back en rend
+ * 200 au plus par page. Les onglets, les compteurs et les filtres travaillent sur la liste entière.
+ */
+async function loadArticles(categoryId: string | null, sort: SortKey): Promise<ArticleListItem[]> {
+  const params = new URLSearchParams();
+  if (categoryId) {
+    params.set('categoryId', categoryId);
+    params.set('includeSubcategories', 'true');
+  }
+  params.set('sort', sort);
+  const rows = await fetchAllPages<ArticleListRow>('/articles', params, 200);
+  return rows.map(a => ({
+    id:           a.id,
+    title:        a.title,
+    status:       a.status,
+    categoryId:   a.category_id,
+    categoryName: a.category_name ?? '',
+    version:      a.version,
+    authorName:   a.author_email ?? '',
+    updatedAt:    a.updated_at,
+    tags:         Array.isArray(a.tags) ? a.tags : [],
+    isStale:      a.is_stale === true,
+    viewsCount:   Number(a.views_30d ?? 0),
+    visibility:   a.visibility === 'public' ? 'public' : 'internal',
+  }));
+}
 
 /**
  * KnowledgePage — the browsable knowledge base.
@@ -72,7 +123,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
   const [moveCat,          setMoveCat]          = useState<Category | null>(null);
   const [moveTargetId,     setMoveTargetId]     = useState<string | null>(null);
   const [moveLoading,      setMoveLoading]      = useState(false);
-  const [filter,           setFilter]         = useState<'all' | 'published' | 'draft' | 'stale'>('all');
+  const [filter,           setFilter]         = useState<ArticleFilter>('all');
   const [orgTags,        setOrgTags]        = useState<OrgTag[]>([]);
   const [activeTags,     setActiveTags]     = useState<string[]>([]);
   const [tagsExpanded,   setTagsExpanded]   = useState(false);
@@ -177,29 +228,9 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
   // pour permettre le calcul des compteurs locaux par tag dans la sélection.
   useEffect(() => {
     setLoadingArticles(true);
-    const params = new URLSearchParams();
-    params.set('perPage', '200');
-    if (selectedCatId) {
-      params.set('categoryId', selectedCatId);
-      params.set('includeSubcategories', 'true');
-    }
-    params.set('sort', sort);
-    apiClient.get<ArticleListItem[]>(`/articles?${params.toString()}`)
-      .then(data => {
-        setArticles(data.map((a: any) => ({
-          id:           a.id,
-          title:        a.title,
-          status:       a.status,
-          categoryId:   a.category_id,
-          categoryName: a.category_name ?? '',
-          version:      a.version,
-          authorName:   a.author_email ?? '',
-          updatedAt:    a.updated_at,
-          tags:         Array.isArray(a.tags) ? a.tags : [],
-          isStale:      a.is_stale === true,
-          viewsCount:   Number(a.views_30d ?? 0),
-          visibility:   (a.visibility === 'public' ? 'public' : 'internal') as 'internal' | 'public',
-        })));
+    loadArticles(selectedCatId, sort)
+      .then(items => {
+        setArticles(items);
         setLoadingArticles(false);
       })
       .catch(err => {
@@ -219,11 +250,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
   const filteredArticles = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     return articles.filter(a => {
-      if (filter === 'stale') {
-        if (!a.isStale) return false;
-      } else if (filter !== 'all' && a.status !== filter) {
-        return false;
-      }
+      if (!matchesFilter(a, filter)) return false;
       if (q && !a.title.toLowerCase().includes(q)) return false;
       // Filtre tag (AND) : l'article doit porter chacun des tags actifs
       if (activeTags.length > 0 && !activeTags.every(t => a.tags?.includes(t))) return false;
@@ -392,18 +419,8 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
             onCompleted={() => {
               setShowImportModal(false);
               setLoadingArticles(true);
-              const params = new URLSearchParams();
-              params.set('perPage', '200');
-              params.set('sort', sort);
-              apiClient.get<ArticleListItem[]>(`/articles?${params.toString()}`)
-                .then(data => setArticles(data.map((a: any) => ({
-                  id: a.id, title: a.title, status: a.status,
-                  categoryId: a.category_id, categoryName: a.category_name ?? '',
-                  version: a.version, authorName: a.author_email ?? '',
-                  updatedAt: a.updated_at, tags: Array.isArray(a.tags) ? a.tags : [],
-                  isStale: a.is_stale === true, viewsCount: Number(a.views_30d ?? 0),
-                  visibility: (a.visibility === 'public' ? 'public' : 'internal') as 'internal' | 'public',
-                }))))
+              loadArticles(null, sort)
+                .then(setArticles)
                 .finally(() => setLoadingArticles(false));
             }}
           />
@@ -539,7 +556,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
                 </select>
               </label>
               <div className="knowledge-page__filters" role="tablist" aria-label="Filtrer les articles">
-                {(['all', 'published', 'draft', 'stale'] as const).map(f => (
+                {(['all', 'published', 'draft', 'stale', 'archived'] as const).map(f => (
                   <button
                     key={f}
                     role="tab"
@@ -550,7 +567,8 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
                     {f === 'all' ? 'Tous' :
                      f === 'published' ? 'Publiés' :
                      f === 'draft' ? 'Brouillons' :
-                     'À réviser'}
+                     f === 'stale' ? 'À réviser' :
+                     'Archivés'}
                   </button>
                 ))}
               </div>
@@ -651,7 +669,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
 
         {!loadingArticles && filteredArticles.length === 0 && articles.length > 0 && (
           <p className="knowledge-page__no-match">
-            Aucun article ne correspond à « {searchQuery} »{filter !== 'all' && ` dans les ${filter === 'published' ? 'publiés' : 'brouillons'}`}.
+            Aucun article ne correspond à « {searchQuery} »{filter !== 'all' && ` dans les ${FILTER_PLURAL[filter]}`}.
           </p>
         )}
 
@@ -871,8 +889,8 @@ interface KnowledgeListViewProps {
   /** Force le parent à refetcher la liste depuis le backend (post bulk delete). */
   onReload:        () => void;
   categories:      Category[];
-  filter:          'all' | 'published' | 'draft' | 'stale';
-  setFilter:       (f: 'all' | 'published' | 'draft' | 'stale') => void;
+  filter:          ArticleFilter;
+  setFilter:       (f: ArticleFilter) => void;
   searchQuery:     string;
   setSearchQuery:  (q: string) => void;
   activeTags:      string[];
@@ -905,6 +923,8 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
   const [sortDir, setSortDir] = useState<SortDir>('desc');
   const [confirmDelete, setConfirmDelete] = useState<ArticleListItem | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [confirmArchive, setConfirmArchive] = useState<ArticleListItem | null>(null);
+  const [archiving, setArchiving] = useState(false);
 
   // ── Bulk selection ────────────────────────────────────────────
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -922,9 +942,8 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       setSelectedIds(new Set());
       setBulkConfirmOpen(false);
 
-      // Trigger un refetch pour rapporter les articles « page suivante »
-      // qui n'étaient pas dans le perPage=200 initial. Sans ça, après un
-      // delete massif l'admin voit une liste presque vide à tort.
+      // Refetch : la liste affichée doit refléter ce que le back a vraiment
+      // supprimé (les articles bloqués par Learning restent).
       if (res.deleted.length > 0) {
         onReload();
       }
@@ -946,6 +965,32 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
     }
   }, [selectedIds, toast]);
 
+  // Archiver retire l'article des publiés et de la recherche ; désarchiver le remet en brouillon.
+  const handleArchive = async () => {
+    if (!confirmArchive) return;
+    setArchiving(true);
+    try {
+      const updated = await archiveApi.archive(confirmArchive.id);
+      setArticles(prev => prev.map(a => a.id === updated.id ? { ...a, status: updated.status } : a));
+      toast.success('Article archivé.');
+      setConfirmArchive(null);
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : 'Archivage impossible.');
+    } finally {
+      setArchiving(false);
+    }
+  };
+
+  const handleUnarchive = async (article: ArticleListItem) => {
+    try {
+      const updated = await archiveApi.unarchive(article.id);
+      setArticles(prev => prev.map(a => a.id === updated.id ? { ...a, status: updated.status } : a));
+      toast.success('Article désarchivé : il est de nouveau en brouillon.');
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : 'Désarchivage impossible.');
+    }
+  };
+
   const handleDelete = async () => {
     if (!confirmDelete) return;
     setDeleting(true);
@@ -963,18 +1008,18 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
 
   // Compteurs onglets — sur articles raw, pas filtrés.
   const counts = useMemo(() => ({
-    all:       articles.length,
-    published: articles.filter(a => a.status === 'published').length,
-    draft:     articles.filter(a => a.status === 'draft').length,
-    stale:     articles.filter(a => a.isStale).length,
+    all:       articles.filter(a => matchesFilter(a, 'all')).length,
+    published: articles.filter(a => matchesFilter(a, 'published')).length,
+    draft:     articles.filter(a => matchesFilter(a, 'draft')).length,
+    stale:     articles.filter(a => matchesFilter(a, 'stale')).length,
+    archived:  articles.filter(a => matchesFilter(a, 'archived')).length,
   }), [articles]);
 
   // Filtre les articles selon onglet + cat + search + tags
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     return articles.filter(a => {
-      if (filter === 'stale')             { if (!a.isStale) return false; }
-      else if (filter !== 'all'           && a.status !== filter) return false;
+      if (!matchesFilter(a, filter)) return false;
       if (selectedCatId && a.categoryId !== selectedCatId) {
         // Inclut aussi les descendants (mêmes règles que la sidebar)
         const desc = collectDescendantIds(categories, selectedCatId);
@@ -1050,6 +1095,8 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       items={[
         { label: 'Ouvrir',   onClick: () => onOpenArticle(a.id) },
         { label: 'Modifier', onClick: () => navigate(`/articles/${a.id}/edit`), hidden: !isAdmin },
+        { label: 'Archiver',    onClick: () => setConfirmArchive(a),  hidden: !isAdmin || a.status === 'archived' },
+        { label: 'Désarchiver', onClick: () => handleUnarchive(a),     hidden: !isAdmin || a.status !== 'archived' },
         { type: 'separator', hidden: !canDelete },
         { label: 'Supprimer', onClick: () => setConfirmDelete(a), variant: 'danger', hidden: !canDelete },
       ]}
@@ -1067,11 +1114,6 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       onCta={isAdmin && !hasActiveFilters ? onNewArticle : undefined}
     />
   );
-
-  // Bannière limite : on charge perPage=200 — au-delà, on prévient l'admin
-  // que tous les résultats ne sont pas visibles. Vraie pagination UI à
-  // ajouter en V2 si besoin (cf message en bas du fichier KnowledgePage).
-  const reachedLimit = articles.length >= 200;
 
   return (
     <div className="knowledge-page-wrap">
@@ -1092,6 +1134,16 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
           loading={bulkDeleting}
           onConfirm={handleBulkDelete}
           onCancel={() => setBulkConfirmOpen(false)}
+        />
+      )}
+      {confirmArchive && (
+        <ConfirmDialog
+          title="Archiver cet article ?"
+          description={`« ${confirmArchive.title} » ne sera plus visible des conseillers ni du chatbot. Vous pourrez le désarchiver depuis l'onglet Archivés ; il reviendra en brouillon.`}
+          confirmLabel="Archiver"
+          loading={archiving}
+          onConfirm={handleArchive}
+          onCancel={() => setConfirmArchive(null)}
         />
       )}
       {confirmDelete && (
@@ -1115,11 +1167,6 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
           </>
         )}
       />
-      {reachedLimit && (
-        <div className="list-limit-banner" role="status">
-          Affichage des 200 articles les plus récents. Affinez les filtres pour voir plus.
-        </div>
-      )}
 
       <PageToolbar
         left={(
@@ -1129,6 +1176,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
               { id: 'published', label: 'Publiés',    count: counts.published },
               { id: 'draft',     label: 'Brouillons', count: counts.draft },
               { id: 'stale',     label: 'À réviser',  count: counts.stale },
+              { id: 'archived',  label: 'Archivés',   count: counts.archived },
             ]}
             value={filter}
             onChange={setFilter}
