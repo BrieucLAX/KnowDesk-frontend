@@ -1,0 +1,10 @@
+{
+  "status": 403,
+  "body": {
+    "data": null,
+    "error": {
+      "code": "FORBIDDEN",
+      "message": "Droits insuffisants pour cette action."
+    }
+  }
+}

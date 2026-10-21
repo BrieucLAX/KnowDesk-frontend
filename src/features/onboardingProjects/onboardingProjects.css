@@ -676,6 +676,7 @@
   font-size: 14px; color: var(--neutral-700);
 }
 .obp-clean-head p { margin: 0; }
+.obp-clean-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .obp-clean-toc { padding: 12px 16px; border: 1px solid var(--neutral-200); border-radius: var(--radius-lg); background: var(--neutral-0); }
 .obp-clean-toc__title { margin: 0 0 6px; font-weight: 600; }
 .obp-clean-toc ol { margin: 0; padding-left: 20px; line-height: 1.8; }
@@ -719,3 +720,34 @@
 .obp-base-obsolete__where { margin: 0; font-size: 13px; font-weight: 600; color: var(--neutral-700); }
 .obp-base-obsolete__text { margin: 0; padding-left: 12px; border-left: 3px solid var(--neutral-300); }
 .obp-base-obsolete__text p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--neutral-700); overflow-wrap: anywhere; }
+
+/* ── Créer la base de connaissance (plan-articles-v1, lot 2) ─── */
+.obp-kb {
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 20px 24px;
+  background: var(--neutral-0);
+  border: 1px solid var(--neutral-200); border-radius: var(--radius-lg);
+}
+.obp-kb__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.obp-kb__head .obp-section-title { margin: 0; }
+.obp-kb__subtitle { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--neutral-700); }
+.obp-kb__columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px 32px; }
+.obp-kb__columns section { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.obp-kb__categories,
+.obp-kb__examples { display: flex; flex-direction: column; gap: 4px; margin: 0; padding-left: 20px; font-size: 14px; color: var(--neutral-900); }
+.obp-kb__examples + .obp-kb__subtitle { margin-top: 8px; }
+.obp-kb__facts { display: flex; flex-direction: column; gap: 4px; margin: 0; padding-left: 20px; font-size: 13px; color: var(--neutral-700); }
+.obp-kb__notice {
+  margin: 0; padding: 10px 14px;
+  background: var(--neutral-50); border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
+  font-size: 14px; color: var(--neutral-700);
+}
+.obp-kb__blockers {
+  display: flex; flex-direction: column; gap: 4px;
+  margin: 0; padding: 10px 14px 10px 32px;
+  background: var(--color-warning-bg); border: 1px solid var(--color-warning);
+  border-radius: var(--radius-md);
+  font-size: 13px; color: var(--neutral-900);
+}
+.obp-kb__result { display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: var(--neutral-900); }
+.obp-kb__result p { margin: 0; }

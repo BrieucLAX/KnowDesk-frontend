@@ -1,0 +1,10 @@
+{
+  "status": 404,
+  "body": {
+    "data": null,
+    "error": {
+      "code": "NOT_FOUND",
+      "message": "Projet introuvable."
+    }
+  }
+}

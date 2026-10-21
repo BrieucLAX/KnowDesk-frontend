@@ -1,0 +1,121 @@
+{
+  "status": 201,
+  "body": {
+    "data": {
+      "creationId": "296f3f29-f29e-45d2-87db-6f88d8de44fd",
+      "status": "previewed",
+      "validation": {
+        "id": "936d0f66-3d03-49ca-9b12-1b4b77554a49",
+        "version": 1
+      },
+      "categories": [
+        {
+          "name": "Présentation d'Alviva Mutuelle et de l'offre",
+          "articles": 3
+        },
+        {
+          "name": "Adhésion et souscription",
+          "articles": 2
+        },
+        {
+          "name": "Cotisations et tarification",
+          "articles": 2
+        },
+        {
+          "name": "Remboursements santé",
+          "articles": 3
+        },
+        {
+          "name": "Tiers payant",
+          "articles": 3
+        },
+        {
+          "name": "Réclamations et litiges",
+          "articles": 1
+        },
+        {
+          "name": "Résiliation de contrat",
+          "articles": 1
+        },
+        {
+          "name": "Prévoyance : arrêt de travail et invalidité",
+          "articles": 1
+        },
+        {
+          "name": "Portail assuré et application mobile",
+          "articles": 1
+        },
+        {
+          "name": "Relations avec les professionnels de santé et réseaux de soins",
+          "articles": 1
+        },
+        {
+          "name": "Outils internes de gestion (SI)",
+          "articles": 1
+        },
+        {
+          "name": "Lutte contre la fraude et contrôle médical",
+          "articles": 1
+        },
+        {
+          "name": "Glossaire et acronymes métier",
+          "articles": 1
+        },
+        {
+          "name": "Cas pratiques résolus",
+          "articles": 10
+        },
+        {
+          "name": "Téléconsultation médicale",
+          "articles": 1
+        }
+      ],
+      "counts": {
+        "categories": 15,
+        "articles": 32,
+        "faqs": 23,
+        "faqsLinked": 16,
+        "synonyms": 6,
+        "images": 8
+      },
+      "examples": [
+        "Notre organisation",
+        "Les gammes de contrats santé individuels",
+        "Orientation des contrats collectifs entreprise et TNS Madelin",
+        "Adhésion individuelle : synthèse, parcours et outils",
+        "Adhésion et délais de carence : cas particuliers, documents et erreurs à éviter"
+      ],
+      "titles": {
+        "author": 22,
+        "model": 9,
+        "fallback": 1,
+        "calls": 12,
+        "costUsd": 0.004778
+      },
+      "references": {
+        "resolved": 62,
+        "unresolved": 1
+      },
+      "excluded": [
+        {
+          "title": "Base de connaissance interne — Alviva Mutuelle",
+          "reason": "table_of_contents"
+        },
+        {
+          "title": "Chapitre 14 — FAQ transverse",
+          "reason": "faq"
+        }
+      ],
+      "quota": {
+        "limit": 50,
+        "current": 0,
+        "toCreate": 32,
+        "after": 32,
+        "allowed": true
+      },
+      "knowledgeBaseEmpty": true,
+      "synonymsApplied": false
+    },
+    "error": null
+  }
+}

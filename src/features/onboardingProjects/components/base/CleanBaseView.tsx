@@ -9,12 +9,15 @@ import { parseLines, type Block } from '../../lib/baseDocument';
 import type { Validation } from '../../lib/correction';
 import { AuditImagesContext, type AuditImages } from '../audit/AuditSource';
 import { BaseLines } from './BaseLines';
+import { isUpToDateValidation } from '../knowledgeBase/KnowledgeBaseCreationView';
 
 interface CleanBaseViewProps {
   projectId:    string;
   validationId: string;
   /** Revenir à la relecture (onglet « Nouvelle base »). */
   onBack:       () => void;
+  /** « Créer la base de connaissance », proposé si cette version est la version validée à jour. */
+  onCreateKnowledgeBase?: (validationId: string) => void;
 }
 
 const anchor = (i: number) => `obp-clean-fiche-${i + 1}`;
@@ -25,16 +28,20 @@ const anchor = (i: number) => `obp-clean-fiche-${i + 1}`;
  * le … » et le retour à la relecture ; puis un sommaire cliquable. Aucun badge, raison, numéro de
  * modification ni code. « Imprimer / PDF » s'appuie sur la feuille d'impression du module.
  */
-export function CleanBaseView({ projectId, validationId, onBack }: CleanBaseViewProps) {
+export function CleanBaseView({ projectId, validationId, onBack, onCreateKnowledgeBase }: CleanBaseViewProps) {
   const toast = useToast();
   const [validation, setValidation] = useState<Validation | null>(null);
   const [failed, setFailed] = useState(false);
   const [imageIds, setImageIds] = useState<ReadonlySet<string>>(new Set());
+  /** La version validée à jour : seule elle propose « Créer la base de connaissance ». */
+  const [upToDate, setUpToDate] = useState(false);
+  const offerKnowledgeBase = onCreateKnowledgeBase !== undefined;
 
   useEffect(() => {
     let cancelled = false;
     setValidation(null);
     setFailed(false);
+    setUpToDate(false);
     onboardingApi.getValidation(projectId, validationId)
       .then(v => {
         if (cancelled) return;
@@ -42,6 +49,11 @@ export function CleanBaseView({ projectId, validationId, onBack }: CleanBaseView
         onboardingApi.listAuditImages(projectId, v.analysisId)
           .then(list => { if (!cancelled) setImageIds(new Set(list.map(i => i.imageId))); })
           .catch(() => {});
+        if (offerKnowledgeBase) {
+          isUpToDateValidation(projectId, v)
+            .then(ok => { if (!cancelled) setUpToDate(ok); })
+            .catch(() => {});
+        }
       })
       .catch(err => {
         if (cancelled) return;
@@ -49,7 +61,7 @@ export function CleanBaseView({ projectId, validationId, onBack }: CleanBaseView
         toast.error(getErrorMessage(err));
       });
     return () => { cancelled = true; };
-  }, [projectId, validationId, toast]);
+  }, [projectId, validationId, toast, offerKnowledgeBase]);
 
   const analysisId = validation?.analysisId ?? '';
   const loadImage = useCallback(
@@ -81,9 +93,14 @@ export function CleanBaseView({ projectId, validationId, onBack }: CleanBaseView
             Validée par {validation.validatedByName} le {formatFull(validation.validatedAt)}
             <span className="obp-clean-noprint"> · {back}</span>
           </p>
-          <Button variant="secondary" size="sm" className="obp-clean-noprint" onClick={() => window.print()}>
-            Imprimer / PDF
-          </Button>
+          <span className="obp-clean-actions obp-clean-noprint">
+            {onCreateKnowledgeBase && upToDate && (
+              <Button variant="primary" size="sm" onClick={() => onCreateKnowledgeBase(validation.id)}>Créer la base de connaissance</Button>
+            )}
+            <Button variant="secondary" size="sm" onClick={() => window.print()}>
+              Imprimer / PDF
+            </Button>
+          </span>
         </header>
 
         <nav className="obp-clean-toc" aria-label="Sommaire">

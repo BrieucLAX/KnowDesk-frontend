@@ -25,6 +25,8 @@ interface BaseTabProps {
   onGoToClarify: (cardId?: string) => void;
   /** Ouvre la version propre d'une version validée. */
   onOpenValidation?: (validationId: string) => void;
+  /** Ouvre « Créer la base de connaissance » depuis une version validée à jour. */
+  onOpenKnowledgeBase?: (validationId: string) => void;
 }
 
 type Loaded =
@@ -37,7 +39,7 @@ type Loaded =
  * Onglet « Nouvelle base » : la préparation en cours (étapes, avancement), puis la relecture de la
  * dernière base prête. Les bases précédentes de l'analyse se consultent, en lecture seule.
  */
-export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabProps) {
+export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowledgeBase }: BaseTabProps) {
   const toast = useToast();
   const [loaded,   setLoaded]   = useState<Loaded>({ state: 'loading' });
   const [selected, setSelected] = useState<string | null>(null);
@@ -197,6 +199,7 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation }: BaseTabPro
                 toReview={review.state.toReview}
                 editable={base.reviewable}
                 onOpen={onOpenValidation}
+                onCreateKnowledgeBase={onOpenKnowledgeBase}
                 footer={footer}
               />
             )}
