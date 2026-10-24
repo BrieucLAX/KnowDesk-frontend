@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Button } from '../../../../shared/components/ui/Button';
+import { Modal } from '../../../../shared/components/ui/Modal';
 import {
   headingLevel, imageOf, inlineParts, markVerify, plainText, rowCells, verifyRanges, wordDiff, type Block, type Line,
 } from '../../lib/baseDocument';
@@ -42,18 +45,37 @@ function WordDiff({ before, after, ranges = [] }: { before: string; after: strin
   );
 }
 
-/** Une image de la base, servie par la route des images de l'analyse ; un clic l'agrandit. */
+/**
+ * Une image de la base, servie par la route des images de l'analyse ; un clic l'agrandit dans une
+ * fenêtre qui se referme par « Fermer », Échap ou un clic sur le fond, le focus rendu à l'image
+ * (rejeu v6 : l'image agrandie sur place ne se refermait pas).
+ */
 function BaseImage({ line }: { line: Line }) {
   const { alt, imageId } = imageOf(line);
   const [zoom, setZoom] = useState(false);
+  const opener = useRef<HTMLButtonElement>(null);
+  const opened = useRef(false);
+  // Refermée, le focus revient à l'image, même si le clic ne l'y avait pas mis (Safari).
+  useEffect(() => {
+    if (zoom) opened.current = true;
+    else if (opened.current) opener.current?.focus();
+  }, [zoom]);
   if (imageId === null) return <span className="obp-base-image-missing">Image conservée : {alt || 'image'}</span>;
+  const label = alt || 'Image de la fiche';
+  const close = () => setZoom(false);
   return (
-    <figure className={`obp-base-figure${zoom ? ' obp-base-figure--zoom' : ''}`}>
-      <button type="button" className="obp-base-figure__open" onClick={() => setZoom(z => !z)}
-        aria-label={zoom ? 'Réduire l\'image' : 'Agrandir l\'image'}>
-        <AuditImage imageId={imageId} alt={alt || 'Image de la fiche'} />
+    <figure className="obp-base-figure">
+      <button ref={opener} type="button" className="obp-base-figure__open" onClick={() => setZoom(true)} aria-label="Agrandir l'image">
+        <AuditImage imageId={imageId} alt={label} />
       </button>
       {alt && <figcaption>{alt}</figcaption>}
+      {zoom && createPortal(
+        <Modal title={label} onClose={close} size="lg" className="obp-base-zoom" showCloseButton={false}
+          footer={<Button type="button" variant="primary" size="md" onClick={close}>Fermer</Button>}>
+          <AuditImage imageId={imageId} alt={label} />
+        </Modal>,
+        document.body,
+      )}
     </figure>
   );
 }
