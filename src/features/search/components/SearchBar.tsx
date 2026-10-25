@@ -6,7 +6,8 @@ import { AiAnswerCard }        from './AiAnswerCard';
 import { useSearch }           from '../hooks/useSearch';
 import { useAiTrigger }        from '../hooks/useAiTrigger';
 import { useAiAnswer, type AiSource } from '../hooks/useAiAnswer';
-import { useAuthStore }        from '../../../store/authStore';
+import { useAuthStore, selectOrganization } from '../../../store/authStore';
+import { hasModule }           from '../../../shared/lib/modules';
 import { useToast }            from '../../../shared/lib/useToast';
 import type { SearchResult, SearchResultType }   from '../types';
 
@@ -43,6 +44,7 @@ const SECTIONS: SectionDef[] = [
  */
 export function SearchBar({ onSelect, className }: SearchBarProps) {
   const token      = useAuthStore(s => s.session?.accessToken);
+  const organization = useAuthStore(selectOrganization);
   const listboxId  = useId();
   const resultIdPrefix = useId();
   const toast      = useToast();
@@ -120,8 +122,10 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
   // Effective open : on respecte le dismiss tant que l'utilisateur n'a pas re-focus
   const isOpenEffective = isOpen && !dismissed;
 
-  // Réponse IA : trigger + état stream
-  const aiTriggered = useAiTrigger(state.query);
+  // Réponse IA : trigger + état stream. Sans le module `ai_answer`, le back
+  // répond 404 : ni appel, ni sparkle, ni encadré, comme le statut 'disabled'.
+  const aiModule    = hasModule(organization, 'ai_answer');
+  const aiTriggered = useAiTrigger(state.query) && aiModule;
   const aiVisible   = aiTriggered && !dismissed && state.query.trim().length > 0;
   const aiState     = useAiAnswer(state.query, aiVisible);
 
