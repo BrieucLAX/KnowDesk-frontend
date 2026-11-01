@@ -8,6 +8,7 @@ import type { Arbitration } from '../../hooks/useArbitration';
 import { ReadingCardView } from './ReadingCardView';
 import { CardAnswers } from './CardAnswers';
 import { CardHistory } from './CardHistory';
+import { CardCommentBox } from './CardCommentBox';
 
 interface ClarifySessionProps {
   audit:       Audit;
@@ -108,6 +109,7 @@ export function ClarifySession({ audit, reading, projectId, analysisId, arbitrat
               onCancel={() => arbitration.cancel({ id: card.id })}
             />
             <CardHistory projectId={projectId} analysisId={analysisId} card={card} docs={docs} currentId={decision?.id ?? null} />
+            <CardCommentBox key={`comment-${card.id}`} projectId={projectId} analysisId={analysisId} cardId={card.id} editable={arbitrable} />
           </div>
           <div className="obp-arb__nav">
             <Button variant="ghost" size="sm" disabled={i === 0} onClick={() => setIndex(i - 1)}>← Précédente</Button>
