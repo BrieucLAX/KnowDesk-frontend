@@ -6,6 +6,7 @@ vi.mock('../../api/onboardingApi', () => ({
   onboardingApi: {
     listAnalyses: vi.fn(), getAudit: vi.fn(), getAuditImage: vi.fn(), listDecisions: vi.fn(),
     cardHistory: vi.fn(), answerCard: vi.fn(), cancelDecision: vi.fn(),
+    cardCommentHistory: vi.fn(), commentCard: vi.fn(), cancelCardComment: vi.fn(),
   },
 }));
 
@@ -13,6 +14,7 @@ import { onboardingApi } from '../../api/onboardingApi';
 import { AuditTab } from '../audit/AuditTab';
 import { ClarifyQuote, ReadingCardView } from './ReadingCardView';
 import { PRECISION_WARNING } from './CardAnswers';
+import { CARD_COMMENT_HINT } from './CardCommentBox';
 import type { Audit, AuditResponse } from '../../lib/audit';
 import { NATURES, orderedCards } from '../../lib/reading';
 import type { Decision, DecisionsState } from '../../lib/decisions';
@@ -75,6 +77,7 @@ describe('À clarifier (audit 0.8.0)', () => {
     vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(RESPONSE_2);
     vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
     vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
     vi.mocked(onboardingApi.answerCard).mockReset();
     vi.mocked(onboardingApi.cancelDecision).mockReset();
     vi.mocked(onboardingApi.getAuditImage).mockReset().mockResolvedValue(new Blob([new Uint8Array([1])], { type: 'image/png' }));
@@ -430,6 +433,24 @@ describe('À clarifier (audit 0.8.0)', () => {
       )).toBeInTheDocument();
     });
 
+    it('commentaire de carte : enregistré à part, jamais comme une réponse', async () => {
+      const saved = {
+        id: 'cc1', cardId: dated.id, comment: 'Doublon de la carte 5.', supersedesId: null,
+        author: { id: 'u1', name: 'Camille Martin' }, createdAt: '2026-11-01T10:00:00Z', cancelledAt: null, cancelledBy: null,
+      };
+      vi.mocked(onboardingApi.commentCard).mockResolvedValue(saved);
+      await openSession();
+      expect(await screen.findByText(CARD_COMMENT_HINT)).toBeInTheDocument();
+      const field = screen.getByLabelText('Un commentaire sur la carte ? (facultatif)');
+      fireEvent.change(field, { target: { value: ' Doublon de la carte 5. ' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Enregistrer le commentaire' }));
+      await waitFor(() => expect(onboardingApi.commentCard).toHaveBeenCalledWith('p1', 'a1', {
+        cardId: dated.id, expectedCurrentId: null, comment: 'Doublon de la carte 5.',
+      }));
+      expect(await screen.findByRole('button', { name: 'Retirer le commentaire' })).toBeInTheDocument();
+      expect(onboardingApi.answerCard).not.toHaveBeenCalled();
+    });
+
     it('sous la précision, l\'avertissement : le texte sera repris dans la base', async () => {
       await openSession();
       fireEvent.click(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' }));
@@ -564,6 +585,7 @@ describe('À clarifier : versions d\'audit affichées (Base de co 2026 v4)', () 
     vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
     vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
     vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
     vi.mocked(onboardingApi.getAuditImage).mockReset().mockResolvedValue(new Blob([new Uint8Array([1])], { type: 'image/png' }));
     Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:image'), revokeObjectURL: vi.fn() });
   });
@@ -607,6 +629,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
     vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(RESPONSE_11);
     vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
     vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
     vi.mocked(onboardingApi.answerCard).mockReset();
     vi.mocked(onboardingApi.getAuditImage).mockReset().mockResolvedValue(new Blob([new Uint8Array([1])], { type: 'image/png' }));
     Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:image'), revokeObjectURL: vi.fn() });
@@ -780,6 +803,7 @@ describe('À clarifier : des extraits utiles seulement, jamais de bloc vide (pla
     vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(RESPONSE_D1);
     vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
     vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
     vi.mocked(onboardingApi.getAuditImage).mockReset().mockResolvedValue(new Blob([new Uint8Array([1])], { type: 'image/png' }));
     Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:image'), revokeObjectURL: vi.fn() });
   });
@@ -826,3 +850,45 @@ describe('À clarifier : des extraits utiles seulement, jamais de bloc vide (pla
     }
   });
 });
+
+/**
+ * Audit 0.12.0 (lot Elyra v2, décision du porteur du 2026-11-01) : la base existante repérée par
+ * le pipeline est annoncée dans la vue d'ensemble, avec sa raison et ses documents ; rien n'est
+ * demandé. La réponse du back est celle de l'audit 0.11.0 du pilote, passée en 0.12.0 avec sa base.
+ */
+describe('Vue d\'ensemble : la base existante repérée (audit 0.12.0)', () => {
+  const docIds = reading11.cards[0].documentIds.slice(0, 1);
+  const with12 = (base: unknown) => ({
+    ...RESPONSE_11, schemaVersion: '0.12.0', audit: { ...(RESPONSE_11.audit as object), schema_version: '0.12.0' },
+    reading: { ...reading11, base },
+  }) as unknown as AuditResponse;
+
+  beforeEach(() => {
+    vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
+    vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
+  });
+
+  it('une base repérée : le titre, la raison, les documents retenus', async () => {
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(
+      with12({ mode: 'correct', reason: 'numbered_files', documentIds: docIds, briefingExcerpt: null }),
+    );
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    const note = await screen.findByRole('note', { name: 'Nous avons repéré une base existante (1 document) : nous allons la corriger' });
+    expect(note).toHaveTextContent('Ses fichiers sont numérotés « NN- ».');
+    expect(note).toHaveTextContent('Documents retenus :');
+  });
+
+  it('pas de base : dit pourquoi, et les cartes restent à traiter', async () => {
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(
+      with12({ mode: 'build', reason: 'none', documentIds: [], briefingExcerpt: null }),
+    );
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    const note = await screen.findByRole('note', { name: 'Pas de base existante' });
+    expect(note).toHaveTextContent('aucun fichier n\'est numéroté « NN- »');
+    expect(within(note).queryByText(/Documents retenus/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Commencer' })).toBeInTheDocument();
+  });
+});
+

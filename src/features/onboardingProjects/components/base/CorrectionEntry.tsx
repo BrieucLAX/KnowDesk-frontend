@@ -6,7 +6,7 @@ import { useToast } from '../../../../shared/lib/useToast';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { onboardingApi } from '../../api/onboardingApi';
 import type { Decision } from '../../lib/decisions';
-import type { ReadingCard } from '../../lib/reading';
+import { NO_BASE_TO_PREPARE, type ExistingBase, type ReadingCard } from '../../lib/reading';
 import {
   blockingCardsLeft, blockingLeftLabel, CORRECTABLE_AUDIT_SCHEMAS, correctionFailureMessage, isCorrectionActive,
   type CorrectionQuota, type OnboardingCorrection,
@@ -19,6 +19,8 @@ interface CorrectionEntryProps {
   cards:         ReadingCard[];
   current:       ReadonlyMap<string, Decision>;
   onOpenBase:    () => void;
+  /** Audit 0.12.0 : la base existante repérée ; sans base (`build`), la préparation est refusée. */
+  base?:         ExistingBase | null;
 }
 
 /**
@@ -26,13 +28,14 @@ interface CorrectionEntryProps {
  * bloquantes ont une décision (règle du back : la nature seule ; « Plus tard » ne tranche pas),
  * sinon le nombre de cartes qui restent. Une préparation en cours, ou une base prête, y renvoie.
  */
-export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, current, onOpenBase }: CorrectionEntryProps) {
+export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, current, onOpenBase, base = null }: CorrectionEntryProps) {
   const toast = useToast();
   const [corrections, setCorrections] = useState<OnboardingCorrection[] | null>(null);
   const [quota,     setQuota]     = useState<CorrectionQuota | null>(null);
   const [launching, setLaunching] = useState(false);
   const [confirm,   setConfirm]   = useState(false);
-  const correctable = CORRECTABLE_AUDIT_SCHEMAS.includes(schemaVersion);
+  const noBase = base?.mode === 'build';
+  const correctable = CORRECTABLE_AUDIT_SCHEMAS.includes(schemaVersion) && !noBase;
 
   const load = useCallback(async () => {
     const res = await onboardingApi.listCorrections(projectId, analysisId);
@@ -45,6 +48,9 @@ export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, c
     load().catch(() => setCorrections([]));
   }, [correctable, load]);
 
+  if (noBase) {
+    return <p className="obp-muted obp-correction-entry" role="status">{NO_BASE_TO_PREPARE}</p>;
+  }
   if (!correctable) {
     return (
       <p className="obp-muted obp-correction-entry">

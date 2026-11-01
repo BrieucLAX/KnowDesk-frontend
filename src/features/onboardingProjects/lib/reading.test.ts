@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
+  baseAnnouncement, cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
   isReadingAudit, readsImageOnly, recommendationOutcome,
   missingSide, orderedCards, rejectionReasonLabel, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
@@ -121,6 +121,23 @@ describe('reading', () => {
     expect(unverifiedReasonLabel('inconnue')).toBe('autre raison');
     expect(unverifiedCounts({ other: 2, image_description_only: 1, not_found: 3 }))
       .toEqual([['image_description_only', 1], ['not_found', 3], ['other', 2]]);
+  });
+});
+
+describe('base existante repérée (audit 0.12.0, lot Elyra v2)', () => {
+  it('annonce la base et sa raison, sans rien demander ; rien avant 0.12.0', () => {
+    expect(baseAnnouncement({ base: { mode: 'correct', reason: 'numbered_files', documentIds: ['a', 'b'], briefingExcerpt: null } }))
+      .toEqual({ title: 'Nous avons repéré une base existante (2 documents) : nous allons la corriger', reason: 'Ses fichiers sont numérotés « NN- ».' });
+    expect(baseAnnouncement({ base: { mode: 'correct', reason: 'briefing', documentIds: ['a'], briefingExcerpt: 'Notre base est la FAQ.' } }))
+      .toEqual({
+        title: 'Nous avons repéré une base existante (1 document) : nous allons la corriger',
+        reason: 'Votre fiche de cadrage la désigne : « Notre base est la FAQ. ».',
+      });
+    const none = baseAnnouncement({ base: { mode: 'build', reason: 'none', documentIds: [], briefingExcerpt: null } });
+    expect(none?.title).toBe('Pas de base existante');
+    expect(none?.reason).toContain('aucun fichier n\'est numéroté « NN- »');
+    expect(baseAnnouncement({ base: null })).toBeNull();
+    expect(baseAnnouncement({})).toBeNull();
   });
 });
 

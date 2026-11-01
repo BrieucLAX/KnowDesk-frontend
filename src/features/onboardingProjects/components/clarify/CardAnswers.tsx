@@ -27,10 +27,12 @@ const isTyped = (a: string): a is TypedAnswer => (TYPED_ANSWERS as readonly stri
 
 /**
  * Sous la précision et sous une réponse saisie (lot Elyra v2, F1) : ce texte part dans la
- * préparation de la base comme consigne de rédaction. Une remarque sur la carte n'a rien à y faire.
+ * préparation de la base comme consigne de rédaction. Une remarque sur la carte va dans le
+ * commentaire sur la carte (`CardCommentBox`), que le back garde seul.
  */
 export const PRECISION_WARNING = 'Ce texte sera repris dans la base comme consigne de rédaction. '
-  + 'N\'y mettez pas de remarque sur la carte elle-même (doublon, côtés mal classés, question sur l\'analyse).';
+  + 'Une remarque sur la carte elle-même (doublon, côtés mal classés, question sur l\'analyse) va dans le '
+  + 'commentaire sur la carte, plus bas : il n\'entre jamais dans la base.';
 
 /** Réponse courante d'une carte, en clair : la réponse, qui l'a donnée, quand. Un texte saisi est « saisi par X le Y ». */
 export function CurrentAnswer({ card, current, docs }: { card: ReadingCard | undefined; current: Decision; docs: DocNaming }) {

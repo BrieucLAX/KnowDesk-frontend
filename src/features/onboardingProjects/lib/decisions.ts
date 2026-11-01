@@ -171,3 +171,19 @@ export function describeDecision(action: DecisionAction | CardAction, q: Questio
       return 'Décision';
   }
 }
+
+/**
+ * Commentaire sur une carte (lot Elyra v2, B1 et F1b) : une remarque pour l'équipe (doublon,
+ * côtés mal classés, question sur l'analyse). Gardé par le back seul : il n'est pas une réponse,
+ * n'entre jamais dans la base et n'est jamais envoyé au pipeline.
+ */
+export interface CardComment {
+  id:           string;
+  cardId:       string;
+  comment:      string;
+  supersedesId: string | null;
+  author:       { id: string | null; name: string };
+  createdAt:    string;
+  cancelledAt:  string | null;
+  cancelledBy:  { id: string | null; name: string } | null;
+}
