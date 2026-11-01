@@ -9,7 +9,7 @@ import {
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
 import { AiFileName, DocNames, FileName } from '../audit/DocName';
-import { ClarifyQuote, ModelAnalysisBox } from './ReadingCardView';
+import { ClarifyQuote, CodeFactsBox, ModelAnalysisBox } from './ReadingCardView';
 import { CurrentAnswer } from './CardAnswers';
 
 interface ClarifyViewProps {
@@ -152,7 +152,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
                   <p className="obp-audit-item__title">
                     {modelNatureLabel(r.nature)} · {rejectedPointLabel(r)}
                   </p>
-                  {/* Mesure terminée : le passage de la mesure, vérifié, sous sa date de fin. */}
+                  {/* Mesure terminée, objet non nommé, même valeur : les passages vérifiés, sous leur raison. */}
                   {toQuotes(r.verifiedQuotes ?? []).map((q, i) => <ClarifyQuote key={`v${i}`} audit={audit} quote={q} />)}
                   {r.documents.length > 0 && (
                     <p className="obp-muted">
@@ -166,7 +166,10 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
                     </p>
                   ))}
                   {/* Mesure terminée : ce que l'IA proposait d'ajouter n'a plus d'objet, seul son sujet se lit. */}
-                  <ModelAnalysisBox analysis={r.reason === 'measure_ended' ? { ...r.analysis, proposal: '' } : r.analysis} />
+                  {/* Un écart relevé par le code (audit 0.13.0) : son relevé, jamais « Analyse proposée par l'IA ». */}
+                  {r.origin === 'code'
+                    ? <CodeFactsBox facts={[r.analysis.reason].filter(Boolean)} />
+                    : <ModelAnalysisBox analysis={r.reason === 'measure_ended' ? { ...r.analysis, proposal: '' } : r.analysis} />}
                 </li>
               ))}
             </ul>
