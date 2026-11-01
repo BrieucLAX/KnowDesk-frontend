@@ -25,6 +25,13 @@ interface CardAnswersProps {
 
 const isTyped = (a: string): a is TypedAnswer => (TYPED_ANSWERS as readonly string[]).includes(a);
 
+/**
+ * Sous la précision et sous une réponse saisie (lot Elyra v2, F1) : ce texte part dans la
+ * préparation de la base comme consigne de rédaction. Une remarque sur la carte n'a rien à y faire.
+ */
+export const PRECISION_WARNING = 'Ce texte sera repris dans la base comme consigne de rédaction. '
+  + 'N\'y mettez pas de remarque sur la carte elle-même (doublon, côtés mal classés, question sur l\'analyse).';
+
 /** Réponse courante d'une carte, en clair : la réponse, qui l'a donnée, quand. Un texte saisi est « saisi par X le Y ». */
 export function CurrentAnswer({ card, current, docs }: { card: ReadingCard | undefined; current: Decision; docs: DocNaming }) {
   const typed = 'text' in current.action;
@@ -101,6 +108,7 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
         <TextArea id={`obp-card-${card.id}-precision`} label="Ajouter une précision (facultatif)" value={text} rows={3}
           maxLength={5000} onChange={e => setText(e.target.value)} />
         <p className="obp-muted">Votre précision est enregistrée telle quelle, avec votre nom et la date ; elle prime sur la recommandation.</p>
+        <p className="obp-warning obp-clarify-precision__warning">{PRECISION_WARNING}</p>
         <div className="obp-decision__actions">
           <Button type="submit" variant="primary" size="sm" loading={busy}>Confirmer</Button>
           <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={() => { setFollowing(false); setText(''); }}>Retour</Button>
@@ -122,6 +130,7 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
         <TextArea id={`obp-card-${card.id}-text`} label={field.field ?? 'Votre réponse'} value={text} rows={3}
           maxLength={5000} onChange={e => setText(e.target.value)} />
         <p className="obp-muted">Votre texte est enregistré tel quel, « saisi par » vous, avec la date.</p>
+        <p className="obp-warning obp-clarify-precision__warning">{PRECISION_WARNING}</p>
         {error && <p className="field-error" role="alert">{error}</p>}
         <div className="obp-decision__actions">
           <Button type="submit" variant="primary" size="sm" loading={busy}>Enregistrer</Button>

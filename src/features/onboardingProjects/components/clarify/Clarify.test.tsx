@@ -12,6 +12,7 @@ vi.mock('../../api/onboardingApi', () => ({
 import { onboardingApi } from '../../api/onboardingApi';
 import { AuditTab } from '../audit/AuditTab';
 import { ClarifyQuote, ReadingCardView } from './ReadingCardView';
+import { PRECISION_WARNING } from './CardAnswers';
 import type { Audit, AuditResponse } from '../../lib/audit';
 import { NATURES, orderedCards } from '../../lib/reading';
 import type { Decision, DecisionsState } from '../../lib/decisions';
@@ -427,6 +428,12 @@ describe('À clarifier (audit 0.8.0)', () => {
       expect(await screen.findByText(
         'Recommandation de l\'IA suivie (changement daté retenu) — précision : « Seulement pour les souscriptions 2027. »',
       )).toBeInTheDocument();
+    });
+
+    it('sous la précision, l\'avertissement : le texte sera repris dans la base', async () => {
+      await openSession();
+      fireEvent.click(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' }));
+      expect(screen.getByText(PRECISION_WARNING)).toBeInTheDocument();
     });
 
     it('incomplet : « le passage sera complété » ; sans précision, null', async () => {

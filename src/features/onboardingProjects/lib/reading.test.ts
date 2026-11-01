@@ -135,6 +135,12 @@ describe('fichiers non lus', () => {
     expect(unreadReasonLabel(null)).toBe('document illisible');
   });
 
+  it('un doublon nomme le fichier gardé', () => {
+    expect(unreadReasonLabel('duplicate_file: même contenu que jeu.zip/cr_comite.docx'))
+      .toBe('doublon, non relu : même contenu que jeu.zip/cr_comite.docx');
+    expect(unreadReasonLabel('duplicate_file')).toBe('doublon d\'un autre fichier, non relu');
+  });
+
   it('seuls les fichiers en échec, dans l\'ordre de l\'inventaire', () => {
     const audit = { inventory: [
       { documentId: 'a', path: 'export.zip/Export/Page.md', format: 'md', status: 'parsed', error: null },

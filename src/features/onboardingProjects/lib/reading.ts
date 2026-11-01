@@ -626,9 +626,19 @@ const UNREAD_REASONS: Readonly<Record<string, string>> = {
   unreferenced_image: 'image citée par aucun document',
 };
 
+/**
+ * Un doublon (même empreinte qu'un fichier lu, lot Elyra v2) : le pipeline écrit
+ * `duplicate_file: même contenu que <chemin>` ; le fichier gardé est nommé.
+ */
+const DUPLICATE = 'duplicate_file';
+
 export function unreadReasonLabel(error: string | null): string {
-  const code = (error ?? '').split(':', 1)[0].trim();
-  return UNREAD_REASONS[code] ?? 'document illisible';
+  const [code, ...rest] = (error ?? '').split(':');
+  if (code.trim() === DUPLICATE) {
+    const detail = rest.join(':').trim();
+    return detail ? `doublon, non relu : ${detail}` : 'doublon d\'un autre fichier, non relu';
+  }
+  return UNREAD_REASONS[code.trim()] ?? 'document illisible';
 }
 
 /** Les fichiers non lus, dans l'ordre de l'inventaire. */
