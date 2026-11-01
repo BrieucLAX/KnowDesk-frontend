@@ -66,7 +66,11 @@ export function ModelAnalysisBox({ analysis }: { analysis: ModelAnalysis }) {
  */
 export function CodeCheckBox({ card }: { card: ReadingCard }) {
   const check = codeCheck(card);
-  const facts = check ? checkFacts(check) : [card.analysis.reason].filter(Boolean);
+  return <CodeFactsBox facts={check ? checkFacts(check) : [card.analysis.reason].filter(Boolean)} />;
+}
+
+/** Ce que le code a relevé, en phrases neutres : sur une carte du code, ou un point écarté par lui (audit 0.13.0). */
+export function CodeFactsBox({ facts }: { facts: string[] }) {
   return (
     <aside className="obp-clarify-check" aria-label="Relevé en comparant vos documents">
       <p className="obp-clarify-check__title">Relevé en comparant vos documents</p>

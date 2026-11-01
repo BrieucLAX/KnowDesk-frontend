@@ -214,4 +214,10 @@ describe('rejectionReasonLabel', () => {
     expect(rejectionReasonLabel('briefing_only')).toBe('Ne cite que la fiche de cadrage');
     expect(rejectionReasonLabel('inconnue')).toBe('Autre raison');
   });
+
+  it('nomme les deux raisons de l\'audit 0.13.0 (lot Elyra v2.1)', () => {
+    expect(rejectionReasonLabel('unnamed_object')).toBe('Objet non nommé : ni produit, ni libellé, ni zone');
+    expect(rejectionReasonLabel('same_value')).toBe('Même valeur des deux côtés');
+    expect(isReadingAudit('0.13.0')).toBe(true);
+  });
 });

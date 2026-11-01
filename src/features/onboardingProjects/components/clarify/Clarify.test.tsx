@@ -892,3 +892,63 @@ describe('Vue d\'ensemble : la base existante repérée (audit 0.12.0)', () => {
   });
 });
 
+/**
+ * Audit 0.13.0 (lot Elyra v2.1) : deux raisons nouvelles de point écarté, chacune avec ses
+ * citations vérifiées sous sa raison, sans date. Un objet non nommé est relevé par le code (pas
+ * d'« Analyse proposée par l'IA ») ; une même valeur vient du modèle. La réponse du back est celle
+ * de l'audit 0.11.0 du pilote, passée en 0.13.0 avec ces deux points.
+ */
+describe('Détails de l\'analyse : points écartés de l\'audit 0.13.0', () => {
+  const ended = reading11.rejectedPoints.find(r => r.reason === 'measure_ended')!;
+  const points = [
+    {
+      ...ended, rank: 90, nature: 'contradiction', reason: 'unnamed_object', endedOn: null, origin: 'code',
+      analysis: { subject: 'Montant', reason: 'Deux montants différents pour un objet que les passages ne nomment pas.', proposal: 'Quel montant retenir ?' },
+    },
+    {
+      ...ended, rank: 91, nature: 'contradiction', reason: 'same_value', endedOn: null, origin: 'model',
+      analysis: { subject: 'Délai de remboursement', reason: 'Les deux documents donnent le même délai.', proposal: 'Rien à trancher.' },
+    },
+  ];
+  const response13 = {
+    ...RESPONSE_11, schemaVersion: '0.13.0', audit: { ...(RESPONSE_11.audit as object), schema_version: '0.13.0' },
+    reading: { ...reading11, rejectedPoints: [...reading11.rejectedPoints, ...points] },
+  } as unknown as AuditResponse;
+
+  beforeEach(() => {
+    vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(response13);
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
+    vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
+  });
+
+  async function item(label: string) {
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    const details = screen.getByText('Détails de l\'analyse').closest('details')!;
+    return within(details).getByText(new RegExp(label)).closest('li')!;
+  }
+
+  it('objet non nommé : sa raison, ses citations dessous, le relevé du code sans analyse de l\'IA', async () => {
+    const li = await item('Objet non nommé');
+    expect(li).toHaveTextContent('Contradiction · Objet non nommé : ni produit, ni libellé, ni zone');
+    expect(li).not.toHaveTextContent('Mesure terminée');
+    const text = li.textContent!;
+    expect(text.indexOf('une intervention technique majeure aura lieu du dimanche 28 septembre 2026'))
+      .toBeGreaterThan(text.indexOf('Objet non nommé'));
+    expect(within(li).queryByRole('complementary', { name: 'Analyse proposée par l\'IA' })).not.toBeInTheDocument();
+    expect(within(li).getByRole('complementary', { name: 'Relevé en comparant vos documents' }))
+      .toHaveTextContent('Deux montants différents pour un objet que les passages ne nomment pas.');
+  });
+
+  it('même valeur : sa raison, ses citations dessous, l\'analyse de l\'IA', async () => {
+    const li = await item('Même valeur des deux côtés');
+    expect(li).toHaveTextContent('Contradiction · Même valeur des deux côtés');
+    const text = li.textContent!;
+    expect(text.indexOf('une intervention technique majeure aura lieu du dimanche 28 septembre 2026'))
+      .toBeGreaterThan(text.indexOf('Même valeur des deux côtés'));
+    expect(within(li).getByRole('complementary', { name: 'Analyse proposée par l\'IA' }))
+      .toHaveTextContent('Les deux documents donnent le même délai.');
+  });
+});

@@ -19,10 +19,11 @@ import type { Decision } from './decisions';
  * Audits à cartes : 0.8.0, 0.9.0 qui ajoute « Je suis la recommandation de l'IA », 0.10.0 qui
  * ajoute les renvois vers un contenu absent, et 0.11.0 (plan v6, B2 et C) qui ajoute les cartes
  * levées par le code (`check`) et la raison d'écart « mesure terminée », et 0.12.0 (lot Elyra v2)
- * qui ajoute les courriels et les classeurs, et la base existante repérée (`base`). Même liste que
+ * qui ajoute les courriels et les classeurs, et la base existante repérée (`base`), et 0.13.0 (lot
+ * Elyra v2.1) qui ajoute les raisons d'écart « objet non nommé » et « même valeur ». Même liste que
  * `READING_AUDIT_SCHEMAS` du back.
  */
-export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0', '0.12.0'];
+export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0', '0.12.0', '0.13.0'];
 export const isReadingAudit = (version: string): boolean => READING_AUDIT_SCHEMAS.includes(version);
 
 // ── Contrat (GET …/audit, champ `reading`) ────────────────────
@@ -93,9 +94,15 @@ export interface RejectedPoint {
   endedOn?:         string | null;
   /**
    * Audit 0.11.0 : ses citations vérifiées, au format de celles des cartes ; pour une mesure
-   * terminée, les passages de la mesure, montrés sous « Mesure terminée le … ».
+   * terminée, les passages de la mesure, montrés sous « Mesure terminée le … » ; depuis 0.13.0,
+   * ceux d'un objet non nommé ou d'une même valeur, sous leur raison.
    */
   verifiedQuotes?:  RawQuote[];
+  /**
+   * Qui a écrit son analyse (back : `analysis.origin`) : `code` pour un écart de valeurs relevé par
+   * le code (0.13.0, `unnamed_object`), sans « Analyse proposée par l'IA » ; `model` sinon.
+   */
+  origin?:          'model' | 'code';
 }
 
 /**
@@ -626,6 +633,10 @@ const REJECTION_REASONS: Readonly<Record<string, string>> = {
   no_verified_quote: 'Un des passages cités est introuvable dans vos documents',
   briefing_only:     'Ne cite que la fiche de cadrage',
   measure_ended:     'Mesure terminée : elle n\'entre pas dans la base',
+  // Audit 0.13.0 (lot Elyra v2.1) : un écart de valeurs relevé par le code dont l'objet n'est pas
+  // nommé (aucune carte n'est posée), et une carte dont les deux côtés donnent la même valeur.
+  unnamed_object:    'Objet non nommé : ni produit, ni libellé, ni zone',
+  same_value:        'Même valeur des deux côtés',
 };
 export const rejectionReasonLabel = (r: string) => REJECTION_REASONS[r] ?? 'Autre raison';
 
