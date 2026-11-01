@@ -43,19 +43,25 @@ const ZONES: Readonly<Record<string, string>> = { table: 'tableau', notes: 'note
 
 /**
  * Emplacement d'un extrait dans son document : page (pdf), diapositive
- * (pptx), titres et bloc (docx, et Markdown repéré de la même façon), puis
- * zone et cellule de tableau.
+ * (pptx), titres et bloc (docx, et Markdown repéré de la même façon), objet
+ * du courriel (eml) ou feuille (xlsx) puis bloc, puis zone et cellule de
+ * tableau.
  */
+const SECTIONED = ['docx', 'md', 'eml', 'xlsx'];
+
 export function sourceLocation(s: SourceRef): string {
   const parts: string[] = [];
   if (s.format === 'pdf' && s.page !== null) parts.push(`page ${s.page}`);
   else if (s.format === 'pptx' && s.slide !== null) parts.push(`diapositive ${s.slide}`);
-  else if (s.format === 'docx' || s.format === 'md') {
-    if (s.headingPath.length > 0) parts.push(s.headingPath.join(' › '));
+  else if (SECTIONED.includes(s.format)) {
+    const [first, ...rest] = s.headingPath;
+    if (s.format === 'eml' && first) parts.push([`courriel « ${first} »`, ...rest].join(' › '));
+    else if (s.format === 'xlsx' && first) parts.push(`feuille « ${first} »`);
+    else if (s.headingPath.length > 0) parts.push(s.headingPath.join(' › '));
     if (s.blockIndex !== null) parts.push(`${s.blockKind === 'table' ? 'tableau' : 'paragraphe'} ${s.blockIndex + 1}`);
   }
   if (parts.length === 0) parts.push('emplacement non précisé');
-  const sectioned = s.format === 'docx' || s.format === 'md';
+  const sectioned = SECTIONED.includes(s.format);
   if (has(ZONES, s.zone) && !(sectioned && s.zone === 'table' && s.blockKind === 'table')) {
     parts.push(ZONES[s.zone]);
   }

@@ -182,6 +182,7 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
                   cards={loaded.reading.cards}
                   current={arbitration.state.current}
                   onOpenBase={onOpenBase}
+                  base={loaded.reading.base ?? null}
                 />
               )}
             />

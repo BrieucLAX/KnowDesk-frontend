@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
+  baseAnnouncement, cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
   isReadingAudit, readsImageOnly, recommendationOutcome,
   missingSide, orderedCards, rejectionReasonLabel, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
@@ -124,6 +124,23 @@ describe('reading', () => {
   });
 });
 
+describe('base existante repérée (audit 0.12.0, lot Elyra v2)', () => {
+  it('annonce la base et sa raison, sans rien demander ; rien avant 0.12.0', () => {
+    expect(baseAnnouncement({ base: { mode: 'correct', reason: 'numbered_files', documentIds: ['a', 'b'], briefingExcerpt: null } }))
+      .toEqual({ title: 'Nous avons repéré une base existante (2 documents) : nous allons la corriger', reason: 'Ses fichiers sont numérotés « NN- ».' });
+    expect(baseAnnouncement({ base: { mode: 'correct', reason: 'briefing', documentIds: ['a'], briefingExcerpt: 'Notre base est la FAQ.' } }))
+      .toEqual({
+        title: 'Nous avons repéré une base existante (1 document) : nous allons la corriger',
+        reason: 'Votre fiche de cadrage la désigne : « Notre base est la FAQ. ».',
+      });
+    const none = baseAnnouncement({ base: { mode: 'build', reason: 'none', documentIds: [], briefingExcerpt: null } });
+    expect(none?.title).toBe('Pas de base existante');
+    expect(none?.reason).toContain('aucun fichier n\'est numéroté « NN- »');
+    expect(baseAnnouncement({ base: null })).toBeNull();
+    expect(baseAnnouncement({})).toBeNull();
+  });
+});
+
 describe('fichiers non lus', () => {
   it('chaque raison du pipeline a son libellé ; un échec de lecture, « document illisible »', () => {
     expect(unreadReasonLabel('unsupported_file: format non lu')).toBe('format non lu');
@@ -133,6 +150,12 @@ describe('fichiers non lus', () => {
     expect(unreadReasonLabel('unreadable_archive: archive chiffrée')).toBe('archive illisible ou chiffrée');
     expect(unreadReasonLabel('UnicodeDecodeError: invalid start byte')).toBe('document illisible');
     expect(unreadReasonLabel(null)).toBe('document illisible');
+  });
+
+  it('un doublon nomme le fichier gardé', () => {
+    expect(unreadReasonLabel('duplicate_file: même contenu que jeu.zip/cr_comite.docx'))
+      .toBe('doublon, non relu : même contenu que jeu.zip/cr_comite.docx');
+    expect(unreadReasonLabel('duplicate_file')).toBe('doublon d\'un autre fichier, non relu');
   });
 
   it('seuls les fichiers en échec, dans l\'ordre de l\'inventaire', () => {
