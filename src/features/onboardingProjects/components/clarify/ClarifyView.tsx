@@ -3,7 +3,7 @@ import { Button }   from '../../../../shared/components/ui/Button';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { docNaming, fileName, type Audit } from '../../lib/audit';
 import {
-  CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, failedDetections, groupByNature,
+  baseAnnouncement, CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, failedDetections, groupByNature,
   modelNatureLabel, NATURES, notYetDetections, orderedCards, rejectedPointLabel, toQuotes, unavailableLabel, unreadFiles, unverifiedCounts,
   unverifiedReasonLabel, type Reading,
 } from '../../lib/reading';
@@ -46,9 +46,20 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
   const failed = failedDetections(reading);
   const notYet = notYetDetections(reading);
   const unverifiedTotal = Object.values(reading.unverifiedQuotes).reduce<number>((n, c) => n + (c ?? 0), 0);
+  const base = baseAnnouncement(reading);
 
   return (
     <div className="obp-audit obp-clarify">
+      {base && reading.base && (
+        // Lot Elyra v2 : la détection de la base décide, l'écran l'explique ; rien n'est demandé.
+        <section className="obp-audit-section obp-clarify-base" aria-labelledby="obp-clarify-base-title" role="note">
+          <h3 id="obp-clarify-base-title" className="obp-section-title">{base.title}</h3>
+          <p className="obp-muted">{base.reason}</p>
+          {reading.base.documentIds.length > 0 && (
+            <p className="obp-clarify-base__docs">Documents retenus : <DocNames audit={audit} ids={reading.base.documentIds} /></p>
+          )}
+        </section>
+      )}
       <section className="obp-audit-section" aria-labelledby="obp-clarify-title">
         <h3 id="obp-clarify-title" className="obp-section-title">
           {reading.cards.length === 0
