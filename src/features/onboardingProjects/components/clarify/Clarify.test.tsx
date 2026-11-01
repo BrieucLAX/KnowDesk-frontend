@@ -850,3 +850,45 @@ describe('À clarifier : des extraits utiles seulement, jamais de bloc vide (pla
     }
   });
 });
+
+/**
+ * Audit 0.12.0 (lot Elyra v2, décision du porteur du 2026-11-01) : la base existante repérée par
+ * le pipeline est annoncée dans la vue d'ensemble, avec sa raison et ses documents ; rien n'est
+ * demandé. La réponse du back est celle de l'audit 0.11.0 du pilote, passée en 0.12.0 avec sa base.
+ */
+describe('Vue d\'ensemble : la base existante repérée (audit 0.12.0)', () => {
+  const docIds = reading11.cards[0].documentIds.slice(0, 1);
+  const with12 = (base: unknown) => ({
+    ...RESPONSE_11, schemaVersion: '0.12.0', audit: { ...(RESPONSE_11.audit as object), schema_version: '0.12.0' },
+    reading: { ...reading11, base },
+  }) as unknown as AuditResponse;
+
+  beforeEach(() => {
+    vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
+    vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
+  });
+
+  it('une base repérée : le titre, la raison, les documents retenus', async () => {
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(
+      with12({ mode: 'correct', reason: 'numbered_files', documentIds: docIds, briefingExcerpt: null }),
+    );
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    const note = await screen.findByRole('note', { name: 'Nous avons repéré une base existante (1 document) : nous allons la corriger' });
+    expect(note).toHaveTextContent('Ses fichiers sont numérotés « NN- ».');
+    expect(note).toHaveTextContent('Documents retenus :');
+  });
+
+  it('pas de base : dit pourquoi, et les cartes restent à traiter', async () => {
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(
+      with12({ mode: 'build', reason: 'none', documentIds: [], briefingExcerpt: null }),
+    );
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    const note = await screen.findByRole('note', { name: 'Pas de base existante' });
+    expect(note).toHaveTextContent('aucun fichier n\'est numéroté « NN- »');
+    expect(within(note).queryByText(/Documents retenus/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Commencer' })).toBeInTheDocument();
+  });
+});
+

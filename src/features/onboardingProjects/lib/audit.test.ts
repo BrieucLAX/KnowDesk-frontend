@@ -198,6 +198,13 @@ describe('emplacement d\'un extrait', () => {
       .toBe('Retours › Délais, paragraphe 1');
     expect(sourceLocation({ ...base, format: 'docx', blockKind: 'table', blockIndex: 1, zone: 'table', tableCell: { row: 0, column: 2 } }))
       .toBe('tableau 2, ligne 1, colonne 3');
+    // Audit 0.12.0 (lot Elyra v2) : un courriel, par son objet ; un classeur, par sa feuille.
+    expect(sourceLocation({ ...base, format: 'eml', headingPath: ['Changement des horaires'], blockKind: 'paragraph', blockIndex: 2 }))
+      .toBe('courriel « Changement des horaires », paragraphe 3');
+    expect(sourceLocation({ ...base, format: 'eml', headingPath: ['RE: Question', 'Message d\'origine'], blockKind: 'paragraph', blockIndex: 0 }))
+      .toBe('courriel « RE: Question » › Message d\'origine, paragraphe 1');
+    expect(sourceLocation({ ...base, format: 'xlsx', headingPath: ['Gamme'], blockKind: 'table', blockIndex: 0, zone: 'table', tableCell: { row: 3, column: 1 } }))
+      .toBe('feuille « Gamme », tableau 1, ligne 4, colonne 2');
   });
 
   it('Markdown : titres et bloc, comme un docx', () => {

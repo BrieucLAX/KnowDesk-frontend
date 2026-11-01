@@ -18,10 +18,11 @@ import type { Decision } from './decisions';
 /**
  * Audits à cartes : 0.8.0, 0.9.0 qui ajoute « Je suis la recommandation de l'IA », 0.10.0 qui
  * ajoute les renvois vers un contenu absent, et 0.11.0 (plan v6, B2 et C) qui ajoute les cartes
- * levées par le code (`check`) et la raison d'écart « mesure terminée ». Même liste que
+ * levées par le code (`check`) et la raison d'écart « mesure terminée », et 0.12.0 (lot Elyra v2)
+ * qui ajoute les courriels et les classeurs, et la base existante repérée (`base`). Même liste que
  * `READING_AUDIT_SCHEMAS` du back.
  */
-export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0'];
+export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0', '0.12.0'];
 export const isReadingAudit = (version: string): boolean => READING_AUDIT_SCHEMAS.includes(version);
 
 // ── Contrat (GET …/audit, champ `reading`) ────────────────────
@@ -109,7 +110,52 @@ export interface Reading {
   rejectedPoints:        RejectedPoint[];
   unverifiedQuotes:      Partial<Record<string, number>>;
   unavailableDetections: string[];
+  /**
+   * Audit 0.12.0 : la base existante repérée par Knowdesk, jamais demandée ; null avant (ou absent
+   * d'un back plus ancien) : rien n'est annoncé, la règle d'avant s'applique.
+   */
+  base?:                 ExistingBase | null;
 }
+
+export type BaseReason = 'briefing' | 'numbered_files' | 'notion_export' | 'faq_documents' | 'none';
+
+export interface ExistingBase {
+  mode:            'correct' | 'build';
+  reason:          BaseReason;
+  documentIds:     string[];
+  briefingExcerpt: string | null;
+}
+
+const BASE_REASONS: Readonly<Record<BaseReason, string>> = {
+  briefing:       'Votre fiche de cadrage la désigne',
+  numbered_files: 'Ses fichiers sont numérotés « NN- »',
+  notion_export:  'C\'est un export Notion',
+  faq_documents:  'Plusieurs documents sont nommés FAQ, base ou KB, ou écrits en questions et réponses',
+  none:           'Aucun document n\'est désigné comme base dans votre fiche de cadrage, aucun fichier n\'est '
+    + 'numéroté « NN- », il n\'y a pas d\'export Notion ni plusieurs documents de FAQ',
+};
+
+/**
+ * Ce que Knowdesk annonce de la base (lot Elyra v2, décision du porteur du 2026-11-01) : la
+ * détection décide, l'écran l'explique, sans rien demander. null pour un audit d'avant 0.12.0.
+ */
+export function baseAnnouncement(reading: Pick<Reading, 'base'>): { title: string; reason: string } | null {
+  const base = reading.base;
+  if (!base) return null;
+  if (base.mode === 'build') {
+    return { title: 'Pas de base existante', reason: `${BASE_REASONS.none}.` };
+  }
+  const n = base.documentIds.length;
+  const excerpt = base.reason === 'briefing' && base.briefingExcerpt ? ` : « ${base.briefingExcerpt} »` : '';
+  return {
+    title:  `Nous avons repéré une base existante (${n} document${n > 1 ? 's' : ''}) : nous allons la corriger`,
+    reason: `${BASE_REASONS[base.reason]}${excerpt}.`,
+  };
+}
+
+/** Sans base existante (audit 0.12.0) : la préparation est refusée, avec ce message (le back : 409 NO_EXISTING_BASE). */
+export const NO_BASE_TO_PREPARE = 'Knowdesk ne sait pas encore construire une nouvelle base : la préparation n\'est pas '
+  + 'disponible pour un projet sans base existante. Les cartes se traitent normalement.';
 
 // ── Citations ─────────────────────────────────────────────────
 

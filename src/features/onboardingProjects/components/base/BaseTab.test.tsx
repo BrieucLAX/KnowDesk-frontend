@@ -574,6 +574,20 @@ describe('« À clarifier » : Préparer la nouvelle base', () => {
     vi.mocked(onboardingApi.listCorrections).mockResolvedValue({ data: [], meta: { quota: { used: 0, max: 30 } } });
   });
 
+  it('audit 0.12.0 sans base existante : la préparation est refusée, avec sa raison (lot Elyra v2)', async () => {
+    render(<CorrectionEntry projectId="p1" analysisId="a1" schemaVersion="0.12.0" cards={CARDS} current={decided('accept_side')}
+      onOpenBase={vi.fn()} base={{ mode: 'build', reason: 'none', documentIds: [], briefingExcerpt: null }} />);
+    expect(screen.getByRole('status')).toHaveTextContent('ne sait pas encore construire une nouvelle base');
+    expect(screen.queryByRole('button', { name: 'Préparer la nouvelle base' })).not.toBeInTheDocument();
+    expect(onboardingApi.listCorrections).not.toHaveBeenCalled();
+  });
+
+  it('audit 0.12.0 avec une base repérée : la préparation se propose', async () => {
+    render(<CorrectionEntry projectId="p1" analysisId="a1" schemaVersion="0.12.0" cards={CARDS} current={decided('accept_side')}
+      onOpenBase={vi.fn()} base={{ mode: 'correct', reason: 'numbered_files', documentIds: ['d1'], briefingExcerpt: null }} />);
+    expect(await screen.findByRole('button', { name: 'Préparer la nouvelle base' })).toBeInTheDocument();
+  });
+
   it('compte les cartes bloquantes qui restent, « Plus tard » compris', async () => {
     const current = decided('accept_side', blocking.slice(1));
     current.set(blocking[1].id, { id: 'x', action: { type: 'later' } } as unknown as Decision);
