@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   baseAnnouncement, cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
-  isReadingAudit, readsImageOnly, recommendationOutcome,
+  codeCheck, formatGapValue, isReadingAudit, readsImageOnly, recommendationOutcome,
   missingSide, orderedCards, rejectionReasonLabel, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
 import type { Audit } from './audit';
@@ -219,5 +219,39 @@ describe('rejectionReasonLabel', () => {
     expect(rejectionReasonLabel('unnamed_object')).toBe('Objet non nommé : ni produit, ni libellé, ni zone');
     expect(rejectionReasonLabel('same_value')).toBe('Même valeur des deux côtés');
     expect(isReadingAudit('0.13.0')).toBe(true);
+  });
+});
+
+/** Audit 0.14.0 (lot Elyra v2.2) : une valeur d'écart dit ce qu'elle mesure (`unit.measure`). */
+describe('formatGapValue (audit 0.14.0)', () => {
+  const gap = (value: string, unit: object | undefined) =>
+    codeCheck({ check: { kind: 'value_gap', period: null, values: [
+      { side: 'A', value, unit }, { side: 'B', value: '2', unit },
+    ] } }) as { kind: 'value_gap'; values: Parameters<typeof formatGapValue>[0][] } | null;
+  const shown = (value: string, unit: object | undefined) => formatGapValue(gap(value, unit)!.values[0]);
+
+  it('montant : inchangé, avec ou sans `measure`', () => {
+    expect(shown('45.80', { currency: 'EUR', per: 'month', tax: 'ttc' })).toBe('45,80 € TTC par mois');
+    expect(shown('45.80', { currency: 'EUR', per: 'month', tax: 'ttc', measure: 'amount' })).toBe('45,80 € TTC par mois');
+    expect(shown('45.8', { currency: 'EUR', per: null, tax: null })).toBe('45,80 €');
+    expect(shown('12', undefined)).toBe('12 €');
+  });
+
+  it('durée en mois, en jours ; pourcentage : jamais de « € »', () => {
+    const none = { currency: null, per: null, tax: null };
+    expect(shown('36', { ...none, measure: 'months' })).toBe('36 mois');
+    expect(shown('1', { ...none, measure: 'months' })).toBe('1 mois');
+    expect(shown('14', { ...none, measure: 'days' })).toBe('14 jours');
+    expect(shown('1', { ...none, measure: 'days' })).toBe('1 jour');
+    expect(shown('8', { ...none, measure: 'percent' })).toBe('8 %');
+    expect(shown('5.5', { ...none, measure: 'percent' })).toBe('5,5 %');
+    // Une durée ou un pourcentage qui porterait encore une devise ne la montre pas.
+    expect(shown('30', { currency: 'EUR', per: 'month', tax: 'ttc', measure: 'days' })).toBe('30 jours');
+  });
+
+  it('mesure inconnue : la valeur nue, jamais un « € » faux', () => {
+    expect(shown('5.5', { currency: null, per: null, tax: null, measure: 'weeks' })).toBe('5,5');
+    expect(shown('3', { currency: 'EUR', per: 'month', tax: null, measure: 42 })).toBe('3');
+    expect(isReadingAudit('0.14.0')).toBe(true);
   });
 });

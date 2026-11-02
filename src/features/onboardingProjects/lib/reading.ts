@@ -20,10 +20,11 @@ import type { Decision } from './decisions';
  * ajoute les renvois vers un contenu absent, et 0.11.0 (plan v6, B2 et C) qui ajoute les cartes
  * levées par le code (`check`) et la raison d'écart « mesure terminée », et 0.12.0 (lot Elyra v2)
  * qui ajoute les courriels et les classeurs, et la base existante repérée (`base`), et 0.13.0 (lot
- * Elyra v2.1) qui ajoute les raisons d'écart « objet non nommé » et « même valeur ». Même liste que
+ * Elyra v2.1) qui ajoute les raisons d'écart « objet non nommé » et « même valeur », et 0.14.0
+ * (lot Elyra v2.2) où une valeur d'écart dit ce qu'elle mesure (`unit.measure`). Même liste que
  * `READING_AUDIT_SCHEMAS` du back.
  */
-export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0', '0.12.0', '0.13.0'];
+export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0', '0.12.0', '0.13.0', '0.14.0'];
 export const isReadingAudit = (version: string): boolean => READING_AUDIT_SCHEMAS.includes(version);
 
 // ── Contrat (GET …/audit, champ `reading`) ────────────────────
@@ -295,11 +296,25 @@ export type CheckKind = 'value_gap' | 'outdated_content' | 'period_gap' | 'date_
 /** Une période telle que le document l'écrit, lue par le code par rapport à la date de lecture. */
 export interface Period { start: string | null; end: string | null; status: 'past' | 'current' | 'future' | 'unknown' }
 
+/**
+ * Ce que mesure une valeur (audit 0.14.0, `unit.measure`) : un montant en euros, une durée en mois
+ * ou en jours, un pourcentage. Absente (audits antérieurs) : un montant. Une mesure que l'écran ne
+ * connaît pas est lue `unknown` : la valeur se montre nue, jamais avec un « € » faux.
+ */
+export type GapMeasure = 'amount' | 'months' | 'days' | 'percent' | 'unknown';
+
 export interface GapValue {
   side:  SideLabel;
-  /** Décimal écrit avec un point (« 45.80 »). */
+  /** Décimal écrit avec un point (« 45.80 », « 36 », « 5.5 »). */
   value: string;
-  unit:  { currency: string; per: 'month' | 'year' | 'once' | null; tax: 'ht' | 'ttc' | null };
+  unit:  { measure: GapMeasure; currency: string | null; per: 'month' | 'year' | 'once' | null; tax: 'ht' | 'ttc' | null };
+}
+
+const MEASURES: ReadonlySet<string> = new Set(['amount', 'months', 'days', 'percent']);
+
+function readMeasure(v: unknown): GapMeasure {
+  if (v === undefined || v === null) return 'amount';
+  return typeof v === 'string' && MEASURES.has(v) ? v as GapMeasure : 'unknown';
 }
 
 export type CodeCheck =
@@ -336,11 +351,13 @@ function readPeriod(v: unknown): Period | null {
 function readGapValue(v: unknown): GapValue | null {
   if (!isRecord(v) || (v.side !== 'A' && v.side !== 'B') || typeof v.value !== 'string' || !/^-?\d+(\.\d+)?$/.test(v.value)) return null;
   const u = isRecord(v.unit) ? v.unit : {};
+  const measure = readMeasure(u.measure);
   return {
     side:  v.side,
     value: v.value,
     unit:  {
-      currency: typeof u.currency === 'string' ? u.currency : 'EUR',
+      measure,
+      currency: measure !== 'amount' ? null : typeof u.currency === 'string' ? u.currency : 'EUR',
       per:      u.per === 'month' || u.per === 'year' || u.per === 'once' ? u.per : null,
       tax:      u.tax === 'ht' || u.tax === 'ttc' ? u.tax : null,
     },
@@ -383,12 +400,34 @@ export function formatDay(iso: string): string {
 
 const PER: Readonly<Record<string, string>> = { month: ' par mois', year: ' par an', once: ' en une fois' };
 
-/** « 45.80 » en euros par mois → « 45,80 € par mois ». */
+/** « 5.5 » → « 5,5 » : la virgule, sans zéro ajouté. */
+const decimal = (value: string): string => value.replace('.', ',');
+
+/** Singulier pour une valeur égale à 1 (« 1 mois », « 1 jour »), pluriel sinon. */
+const isOne = (value: string): boolean => Number(value) === 1;
+
+/**
+ * Une valeur d'écart en clair, selon ce qu'elle mesure : « 45,80 € TTC par mois », « 36 mois »,
+ * « 14 jours », « 5,5 % ». Une durée ou un pourcentage ne porte jamais « € » ; une mesure inconnue
+ * se montre nue.
+ */
 export function formatGapValue(v: GapValue): string {
-  const [int, dec] = v.value.split('.');
-  const amount = dec ? `${int},${dec.padEnd(2, '0')}` : int;
-  const currency = v.unit.currency === 'EUR' ? '€' : v.unit.currency;
-  return `${amount} ${currency}${v.unit.tax ? ` ${v.unit.tax.toUpperCase()}` : ''}${v.unit.per ? PER[v.unit.per] : ''}`;
+  switch (v.unit.measure) {
+    case 'months':
+      return `${decimal(v.value)} mois`;
+    case 'days':
+      return `${decimal(v.value)} ${isOne(v.value) ? 'jour' : 'jours'}`;
+    case 'percent':
+      return `${decimal(v.value)} %`;
+    case 'unknown':
+      return decimal(v.value);
+    case 'amount': {
+      const [int, dec] = v.value.split('.');
+      const amount = dec ? `${int},${dec.padEnd(2, '0')}` : int;
+      const currency = v.unit.currency === 'EUR' || v.unit.currency === null ? '€' : v.unit.currency;
+      return `${amount} ${currency}${v.unit.tax ? ` ${v.unit.tax.toUpperCase()}` : ''}${v.unit.per ? PER[v.unit.per] : ''}`;
+    }
+  }
 }
 
 /** Une période en clair : « du 01/01/2027 », « jusqu'au 14/09/2026 », « le 14/09/2026 »… */

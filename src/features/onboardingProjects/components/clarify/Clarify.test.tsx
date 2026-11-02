@@ -952,3 +952,57 @@ describe('Détails de l\'analyse : points écartés de l\'audit 0.13.0', () => {
       .toHaveTextContent('Les deux documents donnent le même délai.');
   });
 });
+
+/**
+ * Audit 0.14.0 (lot Elyra v2.2) : une valeur d'écart dit ce qu'elle mesure. La réponse du back est
+ * celle de l'audit 0.11.0 du pilote, passée en 0.14.0, dont l'écart entre documents porte sur un
+ * délai en jours (`unit.measure: 'days'`, sans devise) : jamais de « € ».
+ */
+describe('À clarifier : audit 0.14.0, un écart en jours', () => {
+  const gap = byCheck('value_gap');
+  const days = { currency: null, per: null, tax: null, measure: 'days' };
+  const gap14 = {
+    ...gap,
+    check: {
+      kind: 'value_gap',
+      subject: { kind: 'duration', item_key: '9b1c2d3e4f5a', formula: null, age_band: null, zone: null },
+      period: null,
+      values: [{ side: 'A', value: '14', unit: days }, { side: 'B', value: '1', unit: days }],
+    },
+  };
+  const response14 = {
+    ...RESPONSE_11, schemaVersion: '0.14.0', audit: { ...(RESPONSE_11.audit as object), schema_version: '0.14.0' },
+    reading: { ...reading11, cards: reading11.cards.map(c => (c.id === gap.id ? gap14 : c)) },
+  } as unknown as AuditResponse;
+
+  beforeEach(() => {
+    vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(response14);
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
+    vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.getAuditImage).mockReset().mockResolvedValue(new Blob([new Uint8Array([1])], { type: 'image/png' }));
+    Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:image'), revokeObjectURL: vi.fn() });
+  });
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it('les deux valeurs en jours, dans les titres, le relevé et « Retenir A / B », sans « € »', async () => {
+    await openSession();
+    expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
+    goTo(gap.analysis.subject);
+    const article = await screen.findByRole('article', { name: new RegExp(`^Carte ${ordered11.indexOf(gap) + 1} sur ${ordered11.length}`) });
+    expect(within(article).getByText('Écart entre documents')).toBeInTheDocument();
+    expect(within(article).getByRole('heading', { name: 'Côté A : 14 jours' })).toBeInTheDocument();
+    expect(within(article).getByRole('heading', { name: 'Côté B : 1 jour' })).toBeInTheDocument();
+    const facts = within(article).getByRole('complementary', { name: 'Relevé en comparant vos documents' });
+    expect(facts).toHaveTextContent('Côté A : 14 jours.');
+    expect(facts).toHaveTextContent('Côté B : 1 jour.');
+    const group = screen.getByRole('group', { name: 'Retenir un côté' });
+    expect(within(group).getByRole('button', { name: /^Retenir A : 14 jours, / })).toBeInTheDocument();
+    expect(within(group).getByRole('button', { name: /^Retenir B : 1 jour, / })).toBeInTheDocument();
+    // Les passages cités gardent le texte de la source ; ce que l'écran écrit lui-même ne dit jamais « € ».
+    expect(facts).not.toHaveTextContent('€');
+    for (const h of within(article).getAllByRole('heading', { name: /^Côté [AB]/ })) expect(h).not.toHaveTextContent('€');
+    for (const b of within(group).getAllByRole('button')) expect(b).not.toHaveTextContent('€');
+  });
+});
