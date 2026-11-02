@@ -750,3 +750,20 @@
 }
 .obp-kb__result { display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: var(--neutral-900); }
 .obp-kb__result p { margin: 0; }
+
+/* « Documents analysés » : l'inventaire de l'audit, sous le nombre de documents lus. */
+.obp-docs-analyzed { margin: 4px 0 16px; }
+.obp-docs-analyzed__list { margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--neutral-700); }
+.obp-docs-analyzed__row {
+  display: grid; grid-template-columns: minmax(0, 2fr) 96px minmax(0, 2fr); gap: 4px 12px; align-items: baseline;
+  padding: 6px 0;
+}
+.obp-docs-analyzed__row + .obp-docs-analyzed__row { border-top: 1px solid var(--neutral-100); }
+.obp-docs-analyzed__name { color: var(--neutral-900); overflow-wrap: anywhere; }
+.obp-docs-analyzed__type { color: var(--neutral-500); }
+.obp-docs-analyzed__row--duplicate .obp-docs-analyzed__name,
+.obp-docs-analyzed__row--unread .obp-docs-analyzed__name { color: var(--neutral-500); }
+@media (max-width: 640px) {
+  .obp-docs-analyzed__row { grid-template-columns: minmax(0, 1fr) auto; }
+  .obp-docs-analyzed__status { grid-column: 1 / -1; }
+}

@@ -1,0 +1,3440 @@
+{
+ "analysisId": "ad795063-ee75-4139-a85d-06a22ea8a37c",
+ "schemaVersion": "0.15.0",
+ "audit": {
+  "run": {
+   "model": "mistral-large-2512",
+   "cost_usd": 0.024711,
+   "prompt_id": "lecture_globale",
+   "prompt_tokens": 24969,
+   "prompt_version": 1,
+   "pipeline_commit": null,
+   "duration_seconds": 0,
+   "estimated_tokens": 18681,
+   "completion_tokens": 8151
+  },
+  "base": {
+   "mode": "build",
+   "reason": "none",
+   "document_ids": [],
+   "briefing_excerpt": null
+  },
+  "cards": [
+   {
+    "id": "card_97f117cc4c93a9bc",
+    "rank": 1,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Pour les offres sans engagement, aucun frais. Pour l'offre Elyra Fixe 2 ans, des frais de résiliation anticipée de 50 € TTC s'appliquent si le client part avant 12 mois.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+         "heading_path": [
+          "Résiliation",
+          "Y a-t-il des frais si je résilie ?"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Aucun frais de résiliation\n\nConformément au code de la consommation, aucun frais ni aucune indemnité ne peut être réclamé au client résidentiel en cas de résiliation, y compris pour les offres à prix fixe.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "contradiction",
+    "answers": [
+     "follow_recommendation",
+     "accept_side",
+     "distinct_cases",
+     "same_meaning",
+     "different_subjects",
+     "example_only",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "La FAQ conseillers indique des frais de résiliation de 50 € pour l'offre Elyra Fixe 2 ans si le client part avant 12 mois, alors que les CGV (document juridique de référence) stipulent qu'aucun frais de résiliation ne peut être appliqué à un client particulier, quelle que soit l'offre. Cette contradiction est confirmée par la réclamation d'un client et la réponse du service juridique.",
+     "subject": "Frais de résiliation pour l'offre Elyra Fixe 2 ans (particuliers)",
+     "proposal": "Retirer toute mention de frais de résiliation pour les particuliers dans la FAQ et les supports de formation. Appliquer strictement l'article 11 des CGV Particuliers : aucun frais de résiliation pour les clients résidentiels, y compris pour Elyra Fixe 2 ans."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+     "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+     "doc_jeudetestsv2_zip_courrier_reclamation_lambert_2026_10_06_pdf_eaff2e7a"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "aucune décision structurée pour la nature contradiction",
+     "action": null
+    }
+   },
+   {
+    "id": "card_5aa64d1b1508ffd4",
+    "rank": 2,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Elyra Gaz Indexé propose un prix du kWh qui suit le tarif réglementé du gaz (TRV), avec une remise permanente de 5 % sur le prix HT du kWh.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0",
+         "heading_path": [
+          "L'offre en bref"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "table",
+         "format": "docx",
+         "excerpt": "TRV gaz HT – 5 %",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0",
+         "heading_path": [
+          "Caractéristiques"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "Elyra Gaz Indexé | 22,40 | Prix repère CRE – 4 %",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "eml",
+         "excerpt": "les tarifs réglementés du gaz ont été supprimés pour les particuliers le 30 juin 2023. Il n'y a plus de « TRV gaz ».\n\nDepuis juillet 2023, notre offre Gaz Indexé est calée sur le prix repère publié chaque mois par la CRE, avec une remise de 4 % sur le prix HT (et non 5 %).",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 5,
+         "document_id": "doc_jeudetestsv2_zip_2026_06_04_re_question_offre_gaz_indexe_eml_67d7ea1a",
+         "heading_path": [
+          "RE: Question offre Gaz Indexé – client qui conteste"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "Supprimés pour les particuliers le 30 juin 2023 [...] Il n'existe plus aucun tarif réglementé en gaz naturel",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_8f9b49ba",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "Elyra Gaz Indexé | 22,40 | Prix repère CRE – 4 %",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "dated_change",
+    "answers": [
+     "follow_recommendation",
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "La fiche offre Elyra Gaz Indexé (datée de juin 2026) mentionne encore une indexation sur le \"TRV gaz\" avec une remise de 5 %, alors que les TRV gaz ont été supprimés le 30/06/2023. Les documents plus récents (formation de juin 2026, grille tarifaire de septembre 2026, e-mail d'expert) confirment que l'offre est désormais indexée sur le prix repère CRE avec une remise de 4 % sur le prix HT.",
+     "subject": "Référence de prix pour l'offre Elyra Gaz Indexé",
+     "proposal": "Mettre à jour la fiche offre Elyra Gaz Indexé pour remplacer toute mention de \"TRV gaz\" par \"prix repère CRE\" et corriger la remise à 4 % sur le prix HT. Retirer ou archiver la grille tarifaire v1 (août 2025) qui mentionne encore le TRV gaz."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0",
+     "doc_jeudetestsv2_zip_2026_06_04_re_question_offre_gaz_indexe_eml_67d7ea1a",
+     "doc_jeudetestsv2_zip_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_8f9b49ba",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet",
+     "action": null
+    }
+   },
+   {
+    "id": "card_e261c8ae52e663a4",
+    "rank": 3,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "Base 6 kVA : 0,2018 € TTC/kWh · abonnement 16,20 € TTC/mois",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,2018 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "table",
+         "format": "xlsx",
+         "excerpt": "| Elyra Fixe 2 ans | Électricité | 0,2018 | 16,2 | Fixe HT | 24 mois | Aucun |",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 1,
+         "document_id": "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8",
+         "heading_path": [
+          "Gamme 2026"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "eml",
+         "excerpt": "Elyra Fixe 2 ans : 0,1952 € TTC/kWh en Base 6 kVA (au lieu de 0,2018)",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 7,
+         "document_id": "doc_jeudetestsv2_zip_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_70589c67",
+         "heading_path": [
+          "IMPORTANT – Nouvelle grille tarifaire au 1er septembre 2026"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "table",
+         "format": "docx",
+         "excerpt": "0,1925 € TTC",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_fiche_offre_elyra_fixe_2ans_docx_7acb5733",
+         "heading_path": [
+          "Caractéristiques"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "dated_change",
+    "answers": [
+     "follow_recommendation",
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "La grille tarifaire v1 (août 2025) et les supports de mars 2026 indiquent un prix de 0,2018 € TTC/kWh pour Elyra Fixe 2 ans, mais la grille v2 (septembre 2026) et l'e-mail du 31/08/2026 annoncent une baisse à 0,1952 € TTC/kWh. La fiche offre mise à jour le 3 septembre 2026 mentionne un prix de 0,1925 € TTC, ce qui semble être une erreur (valeur non confirmée par d'autres sources).",
+     "subject": "Prix de l'offre Elyra Fixe 2 ans (particuliers)",
+     "proposal": "Appliquer le prix de 0,1952 € TTC/kWh pour Elyra Fixe 2 ans (Base 6 kVA) à partir du 01/09/2026, comme indiqué dans la grille v2 et l'e-mail du 31/08/2026. Corriger la fiche offre pour refléter ce prix et archiver la grille v1."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+     "doc_jeudetestsv2_zip_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_70589c67",
+     "doc_jeudetestsv2_zip_fiche_offre_elyra_fixe_2ans_docx_7acb5733",
+     "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet",
+     "action": null
+    }
+   },
+   {
+    "id": "card_abfeb3d786399df6",
+    "rank": 4,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "slide": 4,
+         "format": "pptx",
+         "excerpt": "Prix du kWh HT = prix du kWh HT du TRVE – 6 %",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Elyra Indexée | Base | 15,96 | TRVE HT – 6 % | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "table",
+         "format": "xlsx",
+         "excerpt": "| Elyra Indexée | Électricité | TRVE HT – 6 % | 15,96 | Indexé | – | Aucun |",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 1,
+         "document_id": "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8",
+         "heading_path": [
+          "Gamme 2026"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Elyra Indexée | Base | 15,96 | TRVE HT – 8 % | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "dated_change",
+    "answers": [
+     "follow_recommendation",
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "Les supports de mars 2026 et la grille tarifaire v1 indiquent une remise de 6 % sur le prix HT du TRVE pour Elyra Indexée, mais la grille v2 (septembre 2026) et l'e-mail du 31/08/2026 annoncent une augmentation de la remise à 8 % à partir du 01/09/2026.",
+     "subject": "Remise pour l'offre Elyra Indexée (particuliers)",
+     "proposal": "Appliquer une remise de 8 % sur le prix HT du TRVE pour Elyra Indexée à partir du 01/09/2026, comme indiqué dans la grille v2. Mettre à jour les supports obsolètes (présentation de mars 2026, grille v1, tableau comparatif)."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+     "doc_jeudetestsv2_zip_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_70589c67",
+     "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet",
+     "action": null
+    }
+   },
+   {
+    "id": "card_63c6ca9a2a442a8f",
+    "rank": 5,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "slide": 7,
+         "format": "pptx",
+         "excerpt": "Remise de 5 € TTC par mois sur l'abonnement gaz",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Cette grille annule et remplace la grille du 1er février 2025.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Remise Duo (élec + gaz) | – 5,00 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "table",
+         "format": "xlsx",
+         "excerpt": "| Remise Duo : 5 € TTC/mois sur l'abonnement gaz |",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 1,
+         "document_id": "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8",
+         "heading_path": [
+          "Gamme 2026"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "dated_change",
+    "answers": [
+     "follow_recommendation",
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "Aucune contradiction sur le montant de la remise Duo (5 € TTC/mois), mais la grille v1 (août 2025) ne mentionne pas explicitement ce montant. Il est important de confirmer que la remise n'a pas changé entre les deux grilles, car les autres offres ont évolué.",
+     "subject": "Montant de la remise Duo (particuliers)",
+     "proposal": "Confirmer que la remise Duo est bien de 5 € TTC/mois sur l'abonnement gaz dans la grille v2 (septembre 2026) et l'ajouter explicitement dans les mentions de la grille v1 pour éviter toute ambiguïté."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+     "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet",
+     "action": null
+    }
+   },
+   {
+    "id": "card_d883345260c7cf85",
+    "rank": 6,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Le service client est joignable du lundi au vendredi de 8h à 19h et le samedi de 9h à 12h, au 09 99 99 20 26 (appel non surtaxé).",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+         "heading_path": [
+          "Contrat et souscription",
+          "Quels sont vos horaires ?"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "« Elyra Énergie, bonjour, je suis [prénom], votre conseiller. Notre service client est ouvert du lundi au samedi de 8h à 20h. Que puis-je faire pour vous ? »",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_script_appel_souscription_particuliers_v4_docx_d02e9c6b",
+         "heading_path": [
+          "1. Accueil"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "eml",
+         "excerpt": "les horaires d'ouverture du service client évoluent à compter du lundi 2 novembre 2026 :\n\n- Du lundi au vendredi : 9h – 18h\n\n- Samedi : fermé (le client peut demander un rappel programmé depuis l'appli ou le site)",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 4,
+         "document_id": "doc_jeudetestsv2_zip_2026_10_01_changement_horaires_service_client_eml_b79c4434",
+         "heading_path": [
+          "Nouveaux horaires du service client à compter du 2 novembre"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "dated_change",
+    "answers": [
+     "follow_recommendation",
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "La FAQ conseillers (avril 2026) et le script d'appel (janvier 2026) indiquent des horaires obsolètes (8h-19h en semaine, 8h-20h dans le script, et samedi 9h-12h). Les décisions du comité Offres (septembre 2026) et l'e-mail du 01/10/2026 annoncent un changement d'horaires à partir du 02/11/2026 (9h-18h en semaine, samedi fermé).",
+     "subject": "Horaires du service client",
+     "proposal": "Mettre à jour la FAQ et le script d'appel pour refléter les nouveaux horaires (9h-18h du lundi au vendredi, samedi fermé) à partir du 02/11/2026. Prévoir une période de transition pour informer les clients des anciens horaires jusqu'au 31/10/2026."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+     "doc_jeudetestsv2_zip_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_918e6ce5",
+     "doc_jeudetestsv2_zip_2026_10_01_changement_horaires_service_client_eml_b79c4434",
+     "doc_jeudetestsv2_zip_script_appel_souscription_particuliers_v4_docx_d02e9c6b"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "changement confirmé, côté B (le document daté) retenu ; date d'effet dans la citation",
+     "action": {
+      "side": "B",
+      "type": "accept_side"
+     }
+    }
+   },
+   {
+    "id": "card_a6df5ae12e0c419d",
+    "rank": 7,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Si vous êtes mensualisé, le prélèvement a lieu le 10 de chaque mois.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+         "heading_path": [
+          "Facturation et paiement",
+          "Quand suis-je prélevé ?"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "En cas de mensualisation, le prélèvement intervient le 5 de chaque mois.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "eml",
+         "excerpt": "la même FAQ indique un prélèvement le 10 du mois alors que nos CGV prévoient le 5.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 9,
+         "document_id": "doc_jeudetestsv2_zip_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_c9847f0d",
+         "heading_path": [
+          "RE: Réclamation M. Lambert – frais de résiliation 50 €"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "dated_change",
+    "answers": [
+     "follow_recommendation",
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "La FAQ conseillers indique un prélèvement le 10 du mois, alors que les CGV (document juridique de référence) stipulent que le prélèvement a lieu le 5 du mois. Cette contradiction est signalée dans un e-mail du service juridique.",
+     "subject": "Date de prélèvement des mensualités (particuliers)",
+     "proposal": "Corriger la FAQ pour indiquer que le prélèvement a lieu le 5 de chaque mois, conformément à l'article 9 des CGV Particuliers."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+     "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+     "doc_jeudetestsv2_zip_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_c9847f0d"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet",
+     "action": null
+    }
+   },
+   {
+    "id": "card_50b7d1e9d7c308a5",
+    "rank": 8,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "50 € de remise pour le parrain et 50 € pour le filleul",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_flyer_parrainage_octobre2026_pptx_97827844",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Le marketing proposait 50 € par personne. Le contrôle de gestion a jugé le coût d'acquisition trop élevé au regard de la marge sur les offres fixes. Le comité retient 30 €, avec revue au bout de 6 mois.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+         "heading_path": [
+          "Détail des échanges",
+          "Parrainage"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "dated_change",
+    "answers": [
+     "follow_recommendation",
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "Le flyer de parrainage (octobre 2026) annonce une remise de 50 € pour le parrain et le filleul, alors que les décisions du comité Offres (22/09/2026) et l'e-mail du 23/09/2026 confirment un montant de 30 € par personne.",
+     "subject": "Montant de la remise de parrainage",
+     "proposal": "Corriger le flyer de parrainage pour indiquer une remise de 30 € pour le parrain et 30 € pour le filleul, conformément aux décisions du comité Offres."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_flyer_parrainage_octobre2026_pptx_97827844",
+     "doc_jeudetestsv2_zip_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_918e6ce5",
+     "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [
+     {
+      "side": "A",
+      "text": "50 €\nofferts au parrain ET au filleul\ndès la 1re facture du filleul",
+      "reason": "not_found",
+      "document": "jeudetestsv2.zip/Flyer_Parrainage_Octobre2026.pptx",
+      "location": ""
+     }
+    ],
+    "recommended_effect": {
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet",
+     "action": null
+    }
+   },
+   {
+    "id": "card_c0da6f62b309973b",
+    "rank": 9,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Elyra Pro Sérénité : prix fixe, engagement 3 ans",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_argumentaire_commercial_tpe_artisans_docx_2de2034b",
+         "heading_path": [
+          "Rappel de la gamme"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Avec Elyra Pro Sérénité, le prix du kWh hors taxes de votre électricité est bloqué pendant 3 ans.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Prix fixe 3 ans · bilan énergétique offert · un conseiller dédié.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "table",
+         "format": "docx",
+         "excerpt": "Pro Sérénité | Engagement de 36 mois confirmé, aucune version 24 mois | N. Benali",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+         "heading_path": [
+          "Synthèse des décisions"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "table",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "| Elyra Pro Sérénité | Électricité | Fixe HT | 2 ans |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_12_presentation_gamme_professionnels_2026_pptx_db0f9ddc",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Elyra Pro Sérénité | 36 mois |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_cgv_professionnels_2026_pdf_fea1611b",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "probable_error",
+    "answers": [
+     "follow_recommendation",
+     "accept_side",
+     "different_subjects",
+     "example_only",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "La brochure Elyra Pro Sérénité et l'argumentaire commercial mentionnent une durée de blocage du prix de 3 ans, mais la présentation de la gamme professionnels (mars 2026) indique un engagement de 2 ans. Les CGV et le compte rendu du comité Offres (septembre 2026) confirment un engagement de 36 mois (3 ans). L'erreur semble provenir de la présentation de mars 2026.",
+     "subject": "Durée d'engagement pour l'offre Elyra Pro Sérénité",
+     "proposal": "Corriger la présentation de la gamme professionnels pour indiquer un engagement de 36 mois (3 ans) pour Elyra Pro Sérénité, conformément aux CGV et aux décisions du comité Offres."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_argumentaire_commercial_tpe_artisans_docx_2de2034b",
+     "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+     "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+     "doc_jeudetestsv2_zip_2026_03_12_presentation_gamme_professionnels_2026_pptx_db0f9ddc",
+     "doc_jeudetestsv2_zip_cgv_professionnels_2026_pdf_fea1611b"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "erreur probable : la recommandation ne désigne pas un côté par sa valeur",
+     "action": null
+    }
+   },
+   {
+    "id": "card_402f0566c880c290",
+    "rank": 10,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "eml",
+         "excerpt": "Une offre d'électricité locale est en préparation pour l'automne, je vous en dirai plus avant l'été.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 11,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_10_lancement_gamme_particuliers_2026_eml_94d730a5",
+         "heading_path": [
+          "[Offres] La gamme Particuliers 2026 est en ligne"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "slide": 2,
+         "format": "pptx",
+         "excerpt": "Commercialisation à partir du 15 novembre 2026",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_09_20_lancement_offre_vert_local_pptx_ec9c6328",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "table",
+         "slide": 5,
+         "format": "pptx",
+         "excerpt": "| 15 novembre | Ouverture des souscriptions |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_09_20_lancement_offre_vert_local_pptx_ec9c6328",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Nouvelle offre Elyra Vert Local, souscriptible à partir du 1er novembre 2026",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "incomplete_or_outdated",
+    "answers": [
+     "follow_recommendation",
+     "complete",
+     "remove",
+     "up_to_date",
+     "not_a_problem",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "L'e-mail de mars 2026 mentionne une offre locale en préparation pour l'automne sans préciser de date. La présentation du 20/09/2026 annonce une ouverture des souscriptions le 15/11/2026, mais les décisions du comité Offres (22/09/2026) et la grille tarifaire v2 (01/09/2026) indiquent une date au 01/11/2026. Cette incohérence doit être clarifiée.",
+     "subject": "Date de lancement de l'offre Elyra Vert Local",
+     "proposal": "Confirmer la date d'ouverture des souscriptions pour Elyra Vert Local au 01/11/2026, comme indiqué dans les décisions du comité Offres et la grille tarifaire v2. Mettre à jour la présentation du 20/09/2026 pour refléter cette date."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_2026_03_10_lancement_gamme_particuliers_2026_eml_94d730a5",
+     "doc_jeudetestsv2_zip_2026_09_20_lancement_offre_vert_local_pptx_ec9c6328",
+     "doc_jeudetestsv2_zip_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_918e6ce5",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "à compléter, la recommandation pour consigne",
+     "action": {
+      "type": "complete"
+     }
+    }
+   },
+   {
+    "id": "card_4fde63e665a4a499",
+    "rank": 11,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "slide": 7,
+         "format": "pptx",
+         "excerpt": "Professionnels : micro-entreprises uniquement\n\n- – moins de 10 salariés\n\n- – ET chiffre d'affaires, recettes ou total de bilan ≤ 2 M€\n\n- – ET puissance ≤ 36 kVA",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Un professionnel n'est éligible au TRVE que s'il emploie moins de 10 personnes ET que son chiffre d'affaires, ses recettes ou son total de bilan n'excèdent pas 2 millions d'euros, pour un site de 36 kVA au plus.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_guide_eligibilite_trve_professionnels_pdf_9258c2ab",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Un professionnel peut bénéficier du tarif réglementé s'il emploie moins de 50 salariés et réalise un chiffre d'affaires annuel inférieur à 10 M€, pour une puissance de 36 kVA au plus.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_argumentaire_commercial_tpe_artisans_docx_2de2034b",
+         "heading_path": [
+          "Rappel : éligibilité au tarif réglementé"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "incomplete_or_outdated",
+    "answers": [
+     "follow_recommendation",
+     "complete",
+     "remove",
+     "up_to_date",
+     "not_a_problem",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "L'argumentaire commercial pour les TPE et artisans (août 2026) indique des critères d'éligibilité au TRVE obsolètes ou erronés (moins de 50 salariés et CA < 10 M€), alors que la formation des conseillers (janvier 2026) et le guide d'éligibilité (mai 2026) précisent les bons critères (moins de 10 salariés et CA/bilan < 2 M€).",
+     "subject": "Critères d'éligibilité au TRVE pour les professionnels",
+     "proposal": "Corriger l'argumentaire commercial pour refléter les critères d'éligibilité exacts : moins de 10 salariés ET chiffre d'affaires, recettes ou total de bilan ≤ 2 M€, pour une puissance ≤ 36 kVA."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+     "doc_jeudetestsv2_zip_argumentaire_commercial_tpe_artisans_docx_2de2034b",
+     "doc_jeudetestsv2_zip_guide_eligibilite_trve_professionnels_pdf_9258c2ab"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "à compléter, la recommandation pour consigne",
+     "action": {
+      "type": "complete"
+     }
+    }
+   },
+   {
+    "id": "card_adb234faca0b8088",
+    "rank": 12,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "table",
+         "slide": 6,
+         "format": "pptx",
+         "excerpt": "| Énergie concernée | Électricité uniquement (≤ 36 kVA) | Électricité et gaz |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "notes",
+         "slide": 6,
+         "format": "pptx",
+         "excerpt": "Les TRV gaz ont été supprimés le 30 juin 2023 : il n'existe plus aucun tarif réglementé en gaz.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Elyra Gaz Indexé propose un prix du kWh qui suit le tarif réglementé du gaz (TRV), avec une remise permanente de 5 % sur le prix HT du kWh.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0",
+         "heading_path": [
+          "L'offre en bref"
+         ],
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "zone": "text",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "Ne jamais dire « tarif réglementé du gaz » : on parle de prix repère.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_8f9b49ba",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "incomplete_or_outdated",
+    "answers": [
+     "follow_recommendation",
+     "complete",
+     "remove",
+     "up_to_date",
+     "not_a_problem",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "La fiche offre Elyra Gaz Indexé (juin 2026) mentionne encore le \"tarif réglementé du gaz (TRV)\", alors que les TRV gaz ont été supprimés le 30/06/2023, comme l'indiquent la formation des conseillers (janvier 2026) et la formation spécifique sur le gaz (juin 2026).",
+     "subject": "Mention des tarifs réglementés du gaz (TRV gaz)",
+     "proposal": "Mettre à jour la fiche offre Elyra Gaz Indexé pour supprimer toute mention des TRV gaz et remplacer par \"prix repère CRE\". Archiver ou corriger les supports obsolètes."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+     "doc_jeudetestsv2_zip_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_8f9b49ba",
+     "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "à compléter, la recommandation pour consigne",
+     "action": {
+      "type": "complete"
+     }
+    }
+   },
+   {
+    "id": "card_ae4e888353facc8c",
+    "rank": 13,
+    "check": null,
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Poste | Prix HT |\n|---|---|\n| Abonnement | 38,90 €/mois |\n| kWh Heures Pleines | 0,1412 € |\n| kWh Heures Creuses | 0,1098 € |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       },
+       {
+        "kind": "document",
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Prix hors TVA, accise, CTA et acheminement. Exemple au 15/03/2026, valable 30 jours.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+         "excerpt_origin": "source_text"
+        },
+        "excerpt_realigned": false
+       }
+      ]
+     }
+    ],
+    "nature": "incomplete_or_outdated",
+    "answers": [
+     "follow_recommendation",
+     "complete",
+     "remove",
+     "up_to_date",
+     "not_a_problem",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "analysis": {
+     "origin": "model",
+     "reason": "La brochure Elyra Pro Sérénité (mars 2026) indique que l'exemple de prix est valable 30 jours à compter du 15/03/2026. Ce prix est donc périmé depuis le 14/04/2026 et ne doit plus être utilisé pour les nouvelles souscriptions.",
+     "subject": "Prix d'exemple dans la brochure Elyra Pro Sérénité",
+     "proposal": "Mettre à jour la brochure Elyra Pro Sérénité avec un exemple de prix valide ou supprimer la mention de validité de 30 jours. Préciser que les prix sont indicatifs et que les tarifs exacts sont disponibles dans la grille tarifaire en vigueur."
+    },
+    "document_ids": [
+     "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289"
+    ],
+    "merged_ranks": [],
+    "absent_references": [],
+    "unverified_quotes": [],
+    "recommended_effect": {
+     "basis": "à compléter, la recommandation pour consigne",
+     "action": {
+      "type": "complete"
+     }
+    }
+   }
+  ],
+  "inventory": [
+   {
+    "path": "jeudetestsv2.zip/2026-01-14_Bienvenue_promo_janvier.eml",
+    "error": null,
+    "scope": null,
+    "title": "Bienvenue chez Elyra ! Votre parcours d'intégration démarre demain",
+    "format": "eml",
+    "sha256": "9ebe4229af85ddf2febff8d32f0beb5cb81e8d71a78f0c98ebe29a4e1192b3b7",
+    "status": "parsed",
+    "size_bytes": 267057,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_01_14_bienvenue_promo_janvier_eml_4d5af175",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-01-15_Formation_Onboarding_Conseillers_Energie.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Onboarding conseillers – Les fondamentaux de l'énergie",
+    "format": "pptx",
+    "sha256": "f5e5174cbf1b65b6f27d02d76abfbeb995d2dab323a72f10af0cd140c34eda11",
+    "status": "parsed",
+    "size_bytes": 193770,
+    "unit_count": 11,
+    "document_id": "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-03-10_Lancement_gamme_particuliers_2026.eml",
+    "error": null,
+    "scope": null,
+    "title": "[Offres] La gamme Particuliers 2026 est en ligne",
+    "format": "eml",
+    "sha256": "274ebef42c33fb1064c7d29f697c8eafab556ce5d53fa9c50a8fd95456f75c86",
+    "status": "parsed",
+    "size_bytes": 150991,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_03_10_lancement_gamme_particuliers_2026_eml_94d730a5",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-03-10_Presentation_Gamme_Particuliers_2026.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Gamme Particuliers 2026",
+    "format": "pptx",
+    "sha256": "824bb95a677254980d471edeb16ba3cbc88f5b0b9b059d237fa35ad393c48152",
+    "status": "parsed",
+    "size_bytes": 103484,
+    "unit_count": 8,
+    "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-03-12_Presentation_Gamme_Professionnels_2026.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Gamme Professionnels 2026",
+    "format": "pptx",
+    "sha256": "6fedc7179558cb0e33ab969a9b46f1cc09de0a9c5159d39cca9a155444525a01",
+    "status": "parsed",
+    "size_bytes": 119627,
+    "unit_count": 7,
+    "document_id": "doc_jeudetestsv2_zip_2026_03_12_presentation_gamme_professionnels_2026_pptx_db0f9ddc",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-04-08_Formation_Lecture_Facture.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Module 2 – Lire et expliquer une facture",
+    "format": "pptx",
+    "sha256": "ddffb4eea36ebfb687956656a62be7129d414c5ef79c777627b919e25580a8dc",
+    "status": "parsed",
+    "size_bytes": 173310,
+    "unit_count": 6,
+    "document_id": "doc_jeudetestsv2_zip_2026_04_08_formation_lecture_facture_pptx_b953d3c7",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-06-02_Formation_Gaz_Fin_TRV_Offres_Marche.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Formation Gaz naturel",
+    "format": "pptx",
+    "sha256": "8d7fa065751f507d3d7a682a7908e65e674b541dc8d7a3d71a0bc1939169d676",
+    "status": "parsed",
+    "size_bytes": 128518,
+    "unit_count": 8,
+    "document_id": "doc_jeudetestsv2_zip_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_8f9b49ba",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-06-04_RE_Question_offre_gaz_indexe.eml",
+    "error": null,
+    "scope": null,
+    "title": "RE: Question offre Gaz Indexé – client qui conteste",
+    "format": "eml",
+    "sha256": "9a4489501c0e62a223dcf71f4d43b140f03951932632e522892fcf94dfcd6baa",
+    "status": "parsed",
+    "size_bytes": 228766,
+    "unit_count": 2,
+    "document_id": "doc_jeudetestsv2_zip_2026_06_04_re_question_offre_gaz_indexe_eml_67d7ea1a",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-07-02_Note_garanties_origine.eml",
+    "error": null,
+    "scope": null,
+    "title": "Électricité verte : comment répondre aux clients",
+    "format": "eml",
+    "sha256": "8dd7d0e3be8901ddf84eccb6cfc84ef4d7078899fba6ed6d8ca37086522571d8",
+    "status": "parsed",
+    "size_bytes": 79848,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_07_02_note_garanties_origine_eml_6b121e5f",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-08-31_Nouvelle_grille_tarifaire_1er_septembre.eml",
+    "error": null,
+    "scope": null,
+    "title": "IMPORTANT – Nouvelle grille tarifaire au 1er septembre 2026",
+    "format": "eml",
+    "sha256": "742f003e6819558e979c0548671d982b4b889e7f05a426ab5bc13ddc724861c3",
+    "status": "parsed",
+    "size_bytes": 179253,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_70589c67",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-09-20_Lancement_Offre_Vert_Local.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Lancement Elyra Vert Local",
+    "format": "pptx",
+    "sha256": "95c42a81d7a63cc91702829aadc9afa66f318435fdff26a895a56a042d37e46d",
+    "status": "parsed",
+    "size_bytes": 90499,
+    "unit_count": 6,
+    "document_id": "doc_jeudetestsv2_zip_2026_09_20_lancement_offre_vert_local_pptx_ec9c6328",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-09-23_Decisions_comite_offres_parrainage_VertLocal.eml",
+    "error": null,
+    "scope": null,
+    "title": "Décisions du comité Offres : parrainage et Vert Local",
+    "format": "eml",
+    "sha256": "487397dea0c5fb6bb1d4a510b6a0c615ccf41e5e33096f84731728e597d0dbc1",
+    "status": "parsed",
+    "size_bytes": 73323,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_918e6ce5",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-10-01_Changement_horaires_service_client.eml",
+    "error": null,
+    "scope": null,
+    "title": "Nouveaux horaires du service client à compter du 2 novembre",
+    "format": "eml",
+    "sha256": "d8428571b1cec9f4f97209226f7b400e016e521c4bd626e614a8c5bf738eac70",
+    "status": "parsed",
+    "size_bytes": 1269,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_10_01_changement_horaires_service_client_eml_b79c4434",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-10-13_RE_Reclamation_Lambert_frais_resiliation.eml",
+    "error": null,
+    "scope": null,
+    "title": "RE: Réclamation M. Lambert – frais de résiliation 50 €",
+    "format": "eml",
+    "sha256": "7ffbd624b2c83dd3fbbb0e30fbd4dc347f35f0a57bd672ea65c44019c1c0180b",
+    "status": "parsed",
+    "size_bytes": 194911,
+    "unit_count": 2,
+    "document_id": "doc_jeudetestsv2_zip_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_c9847f0d",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Argumentaire_Commercial_TPE_Artisans.docx",
+    "error": null,
+    "scope": null,
+    "title": "Argumentaire commercial – TPE et artisans",
+    "format": "docx",
+    "sha256": "ef0de80ca8e52aff6de36470f60f0fde7ef1835a003f4bc37e1cd912efb3693f",
+    "status": "parsed",
+    "size_bytes": 52184,
+    "unit_count": 6,
+    "document_id": "doc_jeudetestsv2_zip_argumentaire_commercial_tpe_artisans_docx_2de2034b",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Brochure_Elyra_Pro_Serenite.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Elyra Pro Sérénité",
+    "format": "pdf",
+    "sha256": "d84a1d67a9092c8711d4d74c84afa4c9a897cc15658d8a6ee8934a94a3f4e94a",
+    "status": "parsed",
+    "size_bytes": 57518,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/CGV_Particuliers_Electricite_Gaz_2026.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Conditions générales de vente – Particuliers",
+    "format": "pdf",
+    "sha256": "7d2de4b6671478b65294393155c02399443f45aef52c056b55922e21cb4f2b60",
+    "status": "parsed",
+    "size_bytes": 57876,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/CGV_Professionnels_2026.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Conditions générales de vente – Professionnels",
+    "format": "pdf",
+    "sha256": "d85c0f07bb6c599215665c0faf983e6ba1f1b1e37558029564d3848e565e68ab",
+    "status": "parsed",
+    "size_bytes": 57658,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_cgv_professionnels_2026_pdf_fea1611b",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/CR_Comite_Offres_2026-09-22.docx",
+    "error": null,
+    "scope": null,
+    "title": "Compte rendu – Comité Offres & Prix du 22 septembre 2026",
+    "format": "docx",
+    "sha256": "6dab866335de802996dbbb0280edda31fd44c08de15c989262a408bbcddac670",
+    "status": "parsed",
+    "size_bytes": 52339,
+    "unit_count": 8,
+    "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Courrier_reclamation_Lambert_2026-10-06.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Courrier_reclamation_Lambert_2026-10-06",
+    "format": "pdf",
+    "sha256": "e135deace7e2c5b1ea3111145542ea8891924fef92ebf2f9c2befb6540f4dfbb",
+    "status": "parsed",
+    "size_bytes": 140691,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_courrier_reclamation_lambert_2026_10_06_pdf_eaff2e7a",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/FAQ_Conseillers_Particuliers_avril2026.docx",
+    "error": null,
+    "scope": null,
+    "title": "FAQ conseillers – Questions fréquentes des particuliers",
+    "format": "docx",
+    "sha256": "d7336c2fcc2dd527ff800f903c8ccef0f572b97bd7deac61cd60a41a1a34f58c",
+    "status": "parsed",
+    "size_bytes": 52343,
+    "unit_count": 15,
+    "document_id": "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Fiche_Offre_Elyra_Fixe_2ans.docx",
+    "error": null,
+    "scope": null,
+    "title": "Fiche offre – Elyra Fixe 2 ans",
+    "format": "docx",
+    "sha256": "c138a96b4d11da622b4459f736833410ab44efc01bb9360e8a6d0b95e46ac3a1",
+    "status": "parsed",
+    "size_bytes": 52140,
+    "unit_count": 8,
+    "document_id": "doc_jeudetestsv2_zip_fiche_offre_elyra_fixe_2ans_docx_7acb5733",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Fiche_Offre_Gaz_Indexe.docx",
+    "error": null,
+    "scope": null,
+    "title": "Fiche offre – Elyra Gaz Indexé",
+    "format": "docx",
+    "sha256": "063b90d8635d03a49419cba6f51b86977b5336b322eaf5f24c0be2703a3794c5",
+    "status": "parsed",
+    "size_bytes": 51757,
+    "unit_count": 5,
+    "document_id": "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Flyer_Parrainage_Octobre2026.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Programme de parrainage Elyra",
+    "format": "pptx",
+    "sha256": "f0c7696222fe2f374e3654454c865d62750305e290a3e1644843ead7f4352478",
+    "status": "parsed",
+    "size_bytes": 81164,
+    "unit_count": 4,
+    "document_id": "doc_jeudetestsv2_zip_flyer_parrainage_octobre2026_pptx_97827844",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Grille tarifaire Particuliers",
+    "format": "pdf",
+    "sha256": "dd747d1ac720649a738fe5b2b18ac356e5c831e7389d09f8719142590977af8b",
+    "status": "parsed",
+    "size_bytes": 57529,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Grille tarifaire Particuliers",
+    "format": "pdf",
+    "sha256": "e299f0069a79c6856f1d8fe2ef5da1959dfc23506b9ab36f2e5d1b06f21b8eb9",
+    "status": "parsed",
+    "size_bytes": 129790,
+    "unit_count": 2,
+    "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Guide_Eligibilite_TRVE_Professionnels.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Guide d'éligibilité au tarif réglementé",
+    "format": "pdf",
+    "sha256": "3a79e3edbcdb57b3fe2de4cf0d52149b2b38d5bc6fb61c2b3a937908020b3b62",
+    "status": "parsed",
+    "size_bytes": 114720,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_guide_eligibilite_trve_professionnels_pdf_9258c2ab",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Historique_prix_repere_S1_2026.xlsx",
+    "error": null,
+    "scope": null,
+    "title": null,
+    "format": "xlsx",
+    "sha256": "145c957d8bc82d5759a0d7075e608f95400a1388a704e6d76de896f29b2be7b1",
+    "status": "parsed",
+    "size_bytes": 83098,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_historique_prix_repere_s1_2026_xlsx_cf84cbab",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Note_interne_Garanties_Origine_2026-07-01.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Note interne – Garanties d'origine",
+    "format": "pdf",
+    "sha256": "3abd3da873a661714f733bf45e4848a49870f1f2362002dacd4799ddc0a97a47",
+    "status": "parsed",
+    "size_bytes": 57158,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_note_interne_garanties_origine_2026_07_01_pdf_0c344c53",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Procedure_Demenagement_Clients_Particuliers.docx",
+    "error": null,
+    "scope": null,
+    "title": "Procédure – Déménagement d'un client particulier",
+    "format": "docx",
+    "sha256": "695a0c65b93f26d532cf6425fddcdaadfb37492fe8a282613cf6ddb932f06088",
+    "status": "parsed",
+    "size_bytes": 52145,
+    "unit_count": 6,
+    "document_id": "doc_jeudetestsv2_zip_procedure_demenagement_clients_particuliers_docx_bc1edd10",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Process_Reclamations_et_Mediation.docx",
+    "error": null,
+    "scope": null,
+    "title": "Processus de traitement des réclamations",
+    "format": "docx",
+    "sha256": "6fb1c94e83daee57a72396b12110b25e6f4598badf10b11fd8e93574b953a330",
+    "status": "parsed",
+    "size_bytes": 87609,
+    "unit_count": 7,
+    "document_id": "doc_jeudetestsv2_zip_process_reclamations_et_mediation_docx_b860d4b3",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Script_Appel_Souscription_Particuliers_v4.docx",
+    "error": null,
+    "scope": null,
+    "title": "Script d'appel – Souscription d'un contrat particulier",
+    "format": "docx",
+    "sha256": "d7e0177d2cb972cc87e447191b87b8f6c5da6447d0d0e74a63b94f59cd1469e1",
+    "status": "parsed",
+    "size_bytes": 52550,
+    "unit_count": 8,
+    "document_id": "doc_jeudetestsv2_zip_script_appel_souscription_particuliers_v4_docx_d02e9c6b",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Tableau_comparatif_gamme_2026.xlsx",
+    "error": null,
+    "scope": null,
+    "title": null,
+    "format": "xlsx",
+    "sha256": "2a07a460d515feada3591ca160d20ebb41e7043c2cb9bf613977c78f965c8dfb",
+    "status": "parsed",
+    "size_bytes": 5508,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-01-15_Formation_Onboarding_Conseillers_Energie_1.pptx",
+    "error": "duplicate_file: même contenu que jeudetestsv2.zip/2026-01-15_Formation_Onboarding_Conseillers_Energie.pptx",
+    "scope": null,
+    "title": null,
+    "format": "pptx",
+    "sha256": "f5e5174cbf1b65b6f27d02d76abfbeb995d2dab323a72f10af0cd140c34eda11",
+    "status": "failed",
+    "size_bytes": 193770,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_1_pptx_375a8815",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-03-10_Presentation_Gamme_Particuliers_2026_1.pptx",
+    "error": "duplicate_file: même contenu que jeudetestsv2.zip/2026-03-10_Presentation_Gamme_Particuliers_2026.pptx",
+    "scope": null,
+    "title": null,
+    "format": "pptx",
+    "sha256": "824bb95a677254980d471edeb16ba3cbc88f5b0b9b059d237fa35ad393c48152",
+    "status": "failed",
+    "size_bytes": 103484,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_1_pptx_f51e40a9",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/CR_Comite_Offres_2026-09-22_1.docx",
+    "error": "duplicate_file: même contenu que jeudetestsv2.zip/CR_Comite_Offres_2026-09-22.docx",
+    "scope": null,
+    "title": null,
+    "format": "docx",
+    "sha256": "6dab866335de802996dbbb0280edda31fd44c08de15c989262a408bbcddac670",
+    "status": "failed",
+    "size_bytes": 52339,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_1_docx_83010655",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v2_2026-09-01_1.pdf",
+    "error": "duplicate_file: même contenu que jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf",
+    "scope": null,
+    "title": null,
+    "format": "pdf",
+    "sha256": "e299f0069a79c6856f1d8fe2ef5da1959dfc23506b9ab36f2e5d1b06f21b8eb9",
+    "status": "failed",
+    "size_bytes": 129790,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_1_pdf_8bbdb717",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Note_interne_Garanties_Origine_2026-07-01_1.pdf",
+    "error": "duplicate_file: même contenu que jeudetestsv2.zip/Note_interne_Garanties_Origine_2026-07-01.pdf",
+    "scope": null,
+    "title": null,
+    "format": "pdf",
+    "sha256": "3abd3da873a661714f733bf45e4848a49870f1f2362002dacd4799ddc0a97a47",
+    "status": "failed",
+    "size_bytes": 57158,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_note_interne_garanties_origine_2026_07_01_1_pdf_1d345594",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/graphique_prix_repere.png",
+    "error": "unreferenced_image: image citée par aucun document",
+    "scope": null,
+    "title": null,
+    "format": "other",
+    "sha256": "d08b8210bad1be722ced095cfef47865c3d2bde1976a7dd05b14b9c53a90a60d",
+    "status": "failed",
+    "size_bytes": 82390,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_graphique_prix_repere_png_07802039",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   }
+  ],
+  "generated_at": "2026-11-02T16:32:11.246490Z",
+  "reading_date": "2026-11-02",
+  "unread_images": null,
+  "briefing_given": false,
+  "extraction_run": null,
+  "schema_version": "0.15.0",
+  "rejected_points": [],
+  "temporary_notes": [],
+  "extracted_values": [],
+  "unverified_quotes": {
+   "not_found": 1,
+   "wrong_document": 4
+  },
+  "unavailable_detections": [
+   "temporary_notes"
+  ]
+ },
+ "imageIds": [],
+ "cards": null,
+ "conflictsAwaitingReading": null,
+ "extractionNotes": null,
+ "reading": {
+  "readingDate": "2026-11-02",
+  "briefingGiven": false,
+  "cards": [
+   {
+    "id": "card_97f117cc4c93a9bc",
+    "nature": "contradiction",
+    "rank": 1,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+     "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+     "doc_jeudetestsv2_zip_courrier_reclamation_lambert_2026_10_06_pdf_eaff2e7a"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Pour les offres sans engagement, aucun frais. Pour l'offre Elyra Fixe 2 ans, des frais de résiliation anticipée de 50 € TTC s'appliquent si le client part avant 12 mois.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+         "heading_path": [
+          "Résiliation",
+          "Y a-t-il des frais si je résilie ?"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Aucun frais de résiliation\n\nConformément au code de la consommation, aucun frais ni aucune indemnité ne peut être réclamé au client résidentiel en cas de résiliation, y compris pour les offres à prix fixe.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Frais de résiliation pour l'offre Elyra Fixe 2 ans (particuliers)",
+     "reason": "La FAQ conseillers indique des frais de résiliation de 50 € pour l'offre Elyra Fixe 2 ans si le client part avant 12 mois, alors que les CGV (document juridique de référence) stipulent qu'aucun frais de résiliation ne peut être appliqué à un client particulier, quelle que soit l'offre. Cette contradiction est confirmée par la réclamation d'un client et la réponse du service juridique.",
+     "proposal": "Retirer toute mention de frais de résiliation pour les particuliers dans la FAQ et les supports de formation. Appliquer strictement l'article 11 des CGV Particuliers : aucun frais de résiliation pour les clients résidentiels, y compris pour Elyra Fixe 2 ans."
+    },
+    "answers": [
+     "accept_side",
+     "distinct_cases",
+     "same_meaning",
+     "different_subjects",
+     "example_only",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Retirer toute mention de frais de résiliation pour les particuliers dans la FAQ et les supports de formation. Appliquer strictement l'article 11 des CGV Particuliers : aucun frais de résiliation pour les clients résidentiels, y compris pour Elyra Fixe 2 ans.",
+     "effect": null,
+     "basis": "aucune décision structurée pour la nature contradiction"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_5aa64d1b1508ffd4",
+    "nature": "dated_change",
+    "rank": 2,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0",
+     "doc_jeudetestsv2_zip_2026_06_04_re_question_offre_gaz_indexe_eml_67d7ea1a",
+     "doc_jeudetestsv2_zip_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_8f9b49ba",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Elyra Gaz Indexé propose un prix du kWh qui suit le tarif réglementé du gaz (TRV), avec une remise permanente de 5 % sur le prix HT du kWh.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0",
+         "heading_path": [
+          "L'offre en bref"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "table",
+         "format": "docx",
+         "excerpt": "TRV gaz HT – 5 %",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0",
+         "heading_path": [
+          "Caractéristiques"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "Elyra Gaz Indexé | 22,40 | Prix repère CRE – 4 %",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "eml",
+         "excerpt": "les tarifs réglementés du gaz ont été supprimés pour les particuliers le 30 juin 2023. Il n'y a plus de « TRV gaz ».\n\nDepuis juillet 2023, notre offre Gaz Indexé est calée sur le prix repère publié chaque mois par la CRE, avec une remise de 4 % sur le prix HT (et non 5 %).",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 5,
+         "document_id": "doc_jeudetestsv2_zip_2026_06_04_re_question_offre_gaz_indexe_eml_67d7ea1a",
+         "heading_path": [
+          "RE: Question offre Gaz Indexé – client qui conteste"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "Supprimés pour les particuliers le 30 juin 2023 [...] Il n'existe plus aucun tarif réglementé en gaz naturel",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_8f9b49ba",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "Elyra Gaz Indexé | 22,40 | Prix repère CRE – 4 %",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Référence de prix pour l'offre Elyra Gaz Indexé",
+     "reason": "La fiche offre Elyra Gaz Indexé (datée de juin 2026) mentionne encore une indexation sur le \"TRV gaz\" avec une remise de 5 %, alors que les TRV gaz ont été supprimés le 30/06/2023. Les documents plus récents (formation de juin 2026, grille tarifaire de septembre 2026, e-mail d'expert) confirment que l'offre est désormais indexée sur le prix repère CRE avec une remise de 4 % sur le prix HT.",
+     "proposal": "Mettre à jour la fiche offre Elyra Gaz Indexé pour remplacer toute mention de \"TRV gaz\" par \"prix repère CRE\" et corriger la remise à 4 % sur le prix HT. Retirer ou archiver la grille tarifaire v1 (août 2025) qui mentionne encore le TRV gaz."
+    },
+    "answers": [
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Mettre à jour la fiche offre Elyra Gaz Indexé pour remplacer toute mention de \"TRV gaz\" par \"prix repère CRE\" et corriger la remise à 4 % sur le prix HT. Retirer ou archiver la grille tarifaire v1 (août 2025) qui mentionne encore le TRV gaz.",
+     "effect": null,
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_e261c8ae52e663a4",
+    "nature": "dated_change",
+    "rank": 3,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+     "doc_jeudetestsv2_zip_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_70589c67",
+     "doc_jeudetestsv2_zip_fiche_offre_elyra_fixe_2ans_docx_7acb5733",
+     "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "Base 6 kVA : 0,2018 € TTC/kWh · abonnement 16,20 € TTC/mois",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,2018 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "table",
+         "format": "xlsx",
+         "excerpt": "| Elyra Fixe 2 ans | Électricité | 0,2018 | 16,2 | Fixe HT | 24 mois | Aucun |",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 1,
+         "document_id": "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8",
+         "heading_path": [
+          "Gamme 2026"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "eml",
+         "excerpt": "Elyra Fixe 2 ans : 0,1952 € TTC/kWh en Base 6 kVA (au lieu de 0,2018)",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 7,
+         "document_id": "doc_jeudetestsv2_zip_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_70589c67",
+         "heading_path": [
+          "IMPORTANT – Nouvelle grille tarifaire au 1er septembre 2026"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "table",
+         "format": "docx",
+         "excerpt": "0,1925 € TTC",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_fiche_offre_elyra_fixe_2ans_docx_7acb5733",
+         "heading_path": [
+          "Caractéristiques"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Prix de l'offre Elyra Fixe 2 ans (particuliers)",
+     "reason": "La grille tarifaire v1 (août 2025) et les supports de mars 2026 indiquent un prix de 0,2018 € TTC/kWh pour Elyra Fixe 2 ans, mais la grille v2 (septembre 2026) et l'e-mail du 31/08/2026 annoncent une baisse à 0,1952 € TTC/kWh. La fiche offre mise à jour le 3 septembre 2026 mentionne un prix de 0,1925 € TTC, ce qui semble être une erreur (valeur non confirmée par d'autres sources).",
+     "proposal": "Appliquer le prix de 0,1952 € TTC/kWh pour Elyra Fixe 2 ans (Base 6 kVA) à partir du 01/09/2026, comme indiqué dans la grille v2 et l'e-mail du 31/08/2026. Corriger la fiche offre pour refléter ce prix et archiver la grille v1."
+    },
+    "answers": [
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Appliquer le prix de 0,1952 € TTC/kWh pour Elyra Fixe 2 ans (Base 6 kVA) à partir du 01/09/2026, comme indiqué dans la grille v2 et l'e-mail du 31/08/2026. Corriger la fiche offre pour refléter ce prix et archiver la grille v1.",
+     "effect": null,
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_abfeb3d786399df6",
+    "nature": "dated_change",
+    "rank": 4,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+     "doc_jeudetestsv2_zip_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_70589c67",
+     "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "slide": 4,
+         "format": "pptx",
+         "excerpt": "Prix du kWh HT = prix du kWh HT du TRVE – 6 %",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Elyra Indexée | Base | 15,96 | TRVE HT – 6 % | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "table",
+         "format": "xlsx",
+         "excerpt": "| Elyra Indexée | Électricité | TRVE HT – 6 % | 15,96 | Indexé | – | Aucun |",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 1,
+         "document_id": "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8",
+         "heading_path": [
+          "Gamme 2026"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Elyra Indexée | Base | 15,96 | TRVE HT – 8 % | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Remise pour l'offre Elyra Indexée (particuliers)",
+     "reason": "Les supports de mars 2026 et la grille tarifaire v1 indiquent une remise de 6 % sur le prix HT du TRVE pour Elyra Indexée, mais la grille v2 (septembre 2026) et l'e-mail du 31/08/2026 annoncent une augmentation de la remise à 8 % à partir du 01/09/2026.",
+     "proposal": "Appliquer une remise de 8 % sur le prix HT du TRVE pour Elyra Indexée à partir du 01/09/2026, comme indiqué dans la grille v2. Mettre à jour les supports obsolètes (présentation de mars 2026, grille v1, tableau comparatif)."
+    },
+    "answers": [
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Appliquer une remise de 8 % sur le prix HT du TRVE pour Elyra Indexée à partir du 01/09/2026, comme indiqué dans la grille v2. Mettre à jour les supports obsolètes (présentation de mars 2026, grille v1, tableau comparatif).",
+     "effect": null,
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_63c6ca9a2a442a8f",
+    "nature": "dated_change",
+    "rank": 5,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+     "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "slide": 7,
+         "format": "pptx",
+         "excerpt": "Remise de 5 € TTC par mois sur l'abonnement gaz",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Cette grille annule et remplace la grille du 1er février 2025.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Remise Duo (élec + gaz) | – 5,00 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "table",
+         "format": "xlsx",
+         "excerpt": "| Remise Duo : 5 € TTC/mois sur l'abonnement gaz |",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 1,
+         "document_id": "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8",
+         "heading_path": [
+          "Gamme 2026"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Montant de la remise Duo (particuliers)",
+     "reason": "Aucune contradiction sur le montant de la remise Duo (5 € TTC/mois), mais la grille v1 (août 2025) ne mentionne pas explicitement ce montant. Il est important de confirmer que la remise n'a pas changé entre les deux grilles, car les autres offres ont évolué.",
+     "proposal": "Confirmer que la remise Duo est bien de 5 € TTC/mois sur l'abonnement gaz dans la grille v2 (septembre 2026) et l'ajouter explicitement dans les mentions de la grille v1 pour éviter toute ambiguïté."
+    },
+    "answers": [
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Confirmer que la remise Duo est bien de 5 € TTC/mois sur l'abonnement gaz dans la grille v2 (septembre 2026) et l'ajouter explicitement dans les mentions de la grille v1 pour éviter toute ambiguïté.",
+     "effect": null,
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_d883345260c7cf85",
+    "nature": "dated_change",
+    "rank": 6,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+     "doc_jeudetestsv2_zip_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_918e6ce5",
+     "doc_jeudetestsv2_zip_2026_10_01_changement_horaires_service_client_eml_b79c4434",
+     "doc_jeudetestsv2_zip_script_appel_souscription_particuliers_v4_docx_d02e9c6b"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Le service client est joignable du lundi au vendredi de 8h à 19h et le samedi de 9h à 12h, au 09 99 99 20 26 (appel non surtaxé).",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+         "heading_path": [
+          "Contrat et souscription",
+          "Quels sont vos horaires ?"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "« Elyra Énergie, bonjour, je suis [prénom], votre conseiller. Notre service client est ouvert du lundi au samedi de 8h à 20h. Que puis-je faire pour vous ? »",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_script_appel_souscription_particuliers_v4_docx_d02e9c6b",
+         "heading_path": [
+          "1. Accueil"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "eml",
+         "excerpt": "les horaires d'ouverture du service client évoluent à compter du lundi 2 novembre 2026 :\n\n- Du lundi au vendredi : 9h – 18h\n\n- Samedi : fermé (le client peut demander un rappel programmé depuis l'appli ou le site)",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 4,
+         "document_id": "doc_jeudetestsv2_zip_2026_10_01_changement_horaires_service_client_eml_b79c4434",
+         "heading_path": [
+          "Nouveaux horaires du service client à compter du 2 novembre"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Horaires du service client",
+     "reason": "La FAQ conseillers (avril 2026) et le script d'appel (janvier 2026) indiquent des horaires obsolètes (8h-19h en semaine, 8h-20h dans le script, et samedi 9h-12h). Les décisions du comité Offres (septembre 2026) et l'e-mail du 01/10/2026 annoncent un changement d'horaires à partir du 02/11/2026 (9h-18h en semaine, samedi fermé).",
+     "proposal": "Mettre à jour la FAQ et le script d'appel pour refléter les nouveaux horaires (9h-18h du lundi au vendredi, samedi fermé) à partir du 02/11/2026. Prévoir une période de transition pour informer les clients des anciens horaires jusqu'au 31/10/2026."
+    },
+    "answers": [
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Mettre à jour la FAQ et le script d'appel pour refléter les nouveaux horaires (9h-18h du lundi au vendredi, samedi fermé) à partir du 02/11/2026. Prévoir une période de transition pour informer les clients des anciens horaires jusqu'au 31/10/2026.",
+     "effect": {
+      "type": "accept_side",
+      "side": "B"
+     },
+     "basis": "changement confirmé, côté B (le document daté) retenu ; date d'effet dans la citation"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_a6df5ae12e0c419d",
+    "nature": "dated_change",
+    "rank": 7,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+     "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+     "doc_jeudetestsv2_zip_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_c9847f0d"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Si vous êtes mensualisé, le prélèvement a lieu le 10 de chaque mois.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+         "heading_path": [
+          "Facturation et paiement",
+          "Quand suis-je prélevé ?"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "En cas de mensualisation, le prélèvement intervient le 5 de chaque mois.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "eml",
+         "excerpt": "la même FAQ indique un prélèvement le 10 du mois alors que nos CGV prévoient le 5.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 9,
+         "document_id": "doc_jeudetestsv2_zip_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_c9847f0d",
+         "heading_path": [
+          "RE: Réclamation M. Lambert – frais de résiliation 50 €"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Date de prélèvement des mensualités (particuliers)",
+     "reason": "La FAQ conseillers indique un prélèvement le 10 du mois, alors que les CGV (document juridique de référence) stipulent que le prélèvement a lieu le 5 du mois. Cette contradiction est signalée dans un e-mail du service juridique.",
+     "proposal": "Corriger la FAQ pour indiquer que le prélèvement a lieu le 5 de chaque mois, conformément à l'article 9 des CGV Particuliers."
+    },
+    "answers": [
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Corriger la FAQ pour indiquer que le prélèvement a lieu le 5 de chaque mois, conformément à l'article 9 des CGV Particuliers.",
+     "effect": null,
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_50b7d1e9d7c308a5",
+    "nature": "dated_change",
+    "rank": 8,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_flyer_parrainage_octobre2026_pptx_97827844",
+     "doc_jeudetestsv2_zip_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_918e6ce5",
+     "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "50 € de remise pour le parrain et 50 € pour le filleul",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_flyer_parrainage_octobre2026_pptx_97827844",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Le marketing proposait 50 € par personne. Le contrôle de gestion a jugé le coût d'acquisition trop élevé au regard de la marge sur les offres fixes. Le comité retient 30 €, avec revue au bout de 6 mois.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+         "heading_path": [
+          "Détail des échanges",
+          "Parrainage"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Montant de la remise de parrainage",
+     "reason": "Le flyer de parrainage (octobre 2026) annonce une remise de 50 € pour le parrain et le filleul, alors que les décisions du comité Offres (22/09/2026) et l'e-mail du 23/09/2026 confirment un montant de 30 € par personne.",
+     "proposal": "Corriger le flyer de parrainage pour indiquer une remise de 30 € pour le parrain et 30 € pour le filleul, conformément aux décisions du comité Offres."
+    },
+    "answers": [
+     "accept_side",
+     "adjust",
+     "same_meaning",
+     "different_subjects",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [
+     {
+      "side": "A",
+      "document": "jeudetestsv2.zip/Flyer_Parrainage_Octobre2026.pptx",
+      "location": "",
+      "text": "50 €\nofferts au parrain ET au filleul\ndès la 1re facture du filleul",
+      "reason": "not_found"
+     }
+    ],
+    "recommendation": {
+     "text": "Corriger le flyer de parrainage pour indiquer une remise de 30 € pour le parrain et 30 € pour le filleul, conformément aux décisions du comité Offres.",
+     "effect": null,
+     "basis": "changement daté : aucun côté seul ne porte une date d'effet"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_c0da6f62b309973b",
+    "nature": "probable_error",
+    "rank": 9,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_argumentaire_commercial_tpe_artisans_docx_2de2034b",
+     "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+     "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+     "doc_jeudetestsv2_zip_2026_03_12_presentation_gamme_professionnels_2026_pptx_db0f9ddc",
+     "doc_jeudetestsv2_zip_cgv_professionnels_2026_pdf_fea1611b"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Elyra Pro Sérénité : prix fixe, engagement 3 ans",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_argumentaire_commercial_tpe_artisans_docx_2de2034b",
+         "heading_path": [
+          "Rappel de la gamme"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Avec Elyra Pro Sérénité, le prix du kWh hors taxes de votre électricité est bloqué pendant 3 ans.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Prix fixe 3 ans · bilan énergétique offert · un conseiller dédié.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "table",
+         "format": "docx",
+         "excerpt": "Pro Sérénité | Engagement de 36 mois confirmé, aucune version 24 mois | N. Benali",
+         "image_id": null,
+         "block_kind": "table",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+         "heading_path": [
+          "Synthèse des décisions"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "table",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "| Elyra Pro Sérénité | Électricité | Fixe HT | 2 ans |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_12_presentation_gamme_professionnels_2026_pptx_db0f9ddc",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Elyra Pro Sérénité | 36 mois |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_cgv_professionnels_2026_pdf_fea1611b",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Durée d'engagement pour l'offre Elyra Pro Sérénité",
+     "reason": "La brochure Elyra Pro Sérénité et l'argumentaire commercial mentionnent une durée de blocage du prix de 3 ans, mais la présentation de la gamme professionnels (mars 2026) indique un engagement de 2 ans. Les CGV et le compte rendu du comité Offres (septembre 2026) confirment un engagement de 36 mois (3 ans). L'erreur semble provenir de la présentation de mars 2026.",
+     "proposal": "Corriger la présentation de la gamme professionnels pour indiquer un engagement de 36 mois (3 ans) pour Elyra Pro Sérénité, conformément aux CGV et aux décisions du comité Offres."
+    },
+    "answers": [
+     "accept_side",
+     "different_subjects",
+     "example_only",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Corriger la présentation de la gamme professionnels pour indiquer un engagement de 36 mois (3 ans) pour Elyra Pro Sérénité, conformément aux CGV et aux décisions du comité Offres.",
+     "effect": null,
+     "basis": "erreur probable : la recommandation ne désigne pas un côté par sa valeur"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_402f0566c880c290",
+    "nature": "incomplete_or_outdated",
+    "rank": 10,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_2026_03_10_lancement_gamme_particuliers_2026_eml_94d730a5",
+     "doc_jeudetestsv2_zip_2026_09_20_lancement_offre_vert_local_pptx_ec9c6328",
+     "doc_jeudetestsv2_zip_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_918e6ce5",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "eml",
+         "excerpt": "Une offre d'électricité locale est en préparation pour l'automne, je vous en dirai plus avant l'été.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 11,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_10_lancement_gamme_particuliers_2026_eml_94d730a5",
+         "heading_path": [
+          "[Offres] La gamme Particuliers 2026 est en ligne"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "slide": 2,
+         "format": "pptx",
+         "excerpt": "Commercialisation à partir du 15 novembre 2026",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_09_20_lancement_offre_vert_local_pptx_ec9c6328",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "table",
+         "slide": 5,
+         "format": "pptx",
+         "excerpt": "| 15 novembre | Ouverture des souscriptions |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_09_20_lancement_offre_vert_local_pptx_ec9c6328",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Nouvelle offre Elyra Vert Local, souscriptible à partir du 1er novembre 2026",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Date de lancement de l'offre Elyra Vert Local",
+     "reason": "L'e-mail de mars 2026 mentionne une offre locale en préparation pour l'automne sans préciser de date. La présentation du 20/09/2026 annonce une ouverture des souscriptions le 15/11/2026, mais les décisions du comité Offres (22/09/2026) et la grille tarifaire v2 (01/09/2026) indiquent une date au 01/11/2026. Cette incohérence doit être clarifiée.",
+     "proposal": "Confirmer la date d'ouverture des souscriptions pour Elyra Vert Local au 01/11/2026, comme indiqué dans les décisions du comité Offres et la grille tarifaire v2. Mettre à jour la présentation du 20/09/2026 pour refléter cette date."
+    },
+    "answers": [
+     "complete",
+     "remove",
+     "up_to_date",
+     "not_a_problem",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Confirmer la date d'ouverture des souscriptions pour Elyra Vert Local au 01/11/2026, comme indiqué dans les décisions du comité Offres et la grille tarifaire v2. Mettre à jour la présentation du 20/09/2026 pour refléter cette date.",
+     "effect": {
+      "type": "complete"
+     },
+     "basis": "à compléter, la recommandation pour consigne"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_4fde63e665a4a499",
+    "nature": "incomplete_or_outdated",
+    "rank": 11,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+     "doc_jeudetestsv2_zip_argumentaire_commercial_tpe_artisans_docx_2de2034b",
+     "doc_jeudetestsv2_zip_guide_eligibilite_trve_professionnels_pdf_9258c2ab"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "slide": 7,
+         "format": "pptx",
+         "excerpt": "Professionnels : micro-entreprises uniquement\n\n- – moins de 10 salariés\n\n- – ET chiffre d'affaires, recettes ou total de bilan ≤ 2 M€\n\n- – ET puissance ≤ 36 kVA",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Un professionnel n'est éligible au TRVE que s'il emploie moins de 10 personnes ET que son chiffre d'affaires, ses recettes ou son total de bilan n'excèdent pas 2 millions d'euros, pour un site de 36 kVA au plus.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_guide_eligibilite_trve_professionnels_pdf_9258c2ab",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Un professionnel peut bénéficier du tarif réglementé s'il emploie moins de 50 salariés et réalise un chiffre d'affaires annuel inférieur à 10 M€, pour une puissance de 36 kVA au plus.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_argumentaire_commercial_tpe_artisans_docx_2de2034b",
+         "heading_path": [
+          "Rappel : éligibilité au tarif réglementé"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Critères d'éligibilité au TRVE pour les professionnels",
+     "reason": "L'argumentaire commercial pour les TPE et artisans (août 2026) indique des critères d'éligibilité au TRVE obsolètes ou erronés (moins de 50 salariés et CA < 10 M€), alors que la formation des conseillers (janvier 2026) et le guide d'éligibilité (mai 2026) précisent les bons critères (moins de 10 salariés et CA/bilan < 2 M€).",
+     "proposal": "Corriger l'argumentaire commercial pour refléter les critères d'éligibilité exacts : moins de 10 salariés ET chiffre d'affaires, recettes ou total de bilan ≤ 2 M€, pour une puissance ≤ 36 kVA."
+    },
+    "answers": [
+     "complete",
+     "remove",
+     "up_to_date",
+     "not_a_problem",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Corriger l'argumentaire commercial pour refléter les critères d'éligibilité exacts : moins de 10 salariés ET chiffre d'affaires, recettes ou total de bilan ≤ 2 M€, pour une puissance ≤ 36 kVA.",
+     "effect": {
+      "type": "complete"
+     },
+     "basis": "à compléter, la recommandation pour consigne"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_adb234faca0b8088",
+    "nature": "incomplete_or_outdated",
+    "rank": 12,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+     "doc_jeudetestsv2_zip_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_8f9b49ba",
+     "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "table",
+         "slide": 6,
+         "format": "pptx",
+         "excerpt": "| Énergie concernée | Électricité uniquement (≤ 36 kVA) | Électricité et gaz |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "notes",
+         "slide": 6,
+         "format": "pptx",
+         "excerpt": "Les TRV gaz ont été supprimés le 30 juin 2023 : il n'existe plus aucun tarif réglementé en gaz.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Elyra Gaz Indexé propose un prix du kWh qui suit le tarif réglementé du gaz (TRV), avec une remise permanente de 5 % sur le prix HT du kWh.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0",
+         "heading_path": [
+          "L'offre en bref"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "Ne jamais dire « tarif réglementé du gaz » : on parle de prix repère.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_8f9b49ba",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Mention des tarifs réglementés du gaz (TRV gaz)",
+     "reason": "La fiche offre Elyra Gaz Indexé (juin 2026) mentionne encore le \"tarif réglementé du gaz (TRV)\", alors que les TRV gaz ont été supprimés le 30/06/2023, comme l'indiquent la formation des conseillers (janvier 2026) et la formation spécifique sur le gaz (juin 2026).",
+     "proposal": "Mettre à jour la fiche offre Elyra Gaz Indexé pour supprimer toute mention des TRV gaz et remplacer par \"prix repère CRE\". Archiver ou corriger les supports obsolètes."
+    },
+    "answers": [
+     "complete",
+     "remove",
+     "up_to_date",
+     "not_a_problem",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Mettre à jour la fiche offre Elyra Gaz Indexé pour supprimer toute mention des TRV gaz et remplacer par \"prix repère CRE\". Archiver ou corriger les supports obsolètes.",
+     "effect": {
+      "type": "complete"
+     },
+     "basis": "à compléter, la recommandation pour consigne"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   },
+   {
+    "id": "card_ae4e888353facc8c",
+    "nature": "incomplete_or_outdated",
+    "rank": 13,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "table",
+         "format": "pdf",
+         "excerpt": "| Poste | Prix HT |\n|---|---|\n| Abonnement | 38,90 €/mois |\n| kWh Heures Pleines | 0,1412 € |\n| kWh Heures Creuses | 0,1098 € |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Prix hors TVA, accise, CTA et acheminement. Exemple au 15/03/2026, valable 30 jours.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Prix d'exemple dans la brochure Elyra Pro Sérénité",
+     "reason": "La brochure Elyra Pro Sérénité (mars 2026) indique que l'exemple de prix est valable 30 jours à compter du 15/03/2026. Ce prix est donc périmé depuis le 14/04/2026 et ne doit plus être utilisé pour les nouvelles souscriptions.",
+     "proposal": "Mettre à jour la brochure Elyra Pro Sérénité avec un exemple de prix valide ou supprimer la mention de validité de 30 jours. Préciser que les prix sont indicatifs et que les tarifs exacts sont disponibles dans la grille tarifaire en vigueur."
+    },
+    "answers": [
+     "complete",
+     "remove",
+     "up_to_date",
+     "not_a_problem",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Mettre à jour la brochure Elyra Pro Sérénité avec un exemple de prix valide ou supprimer la mention de validité de 30 jours. Préciser que les prix sont indicatifs et que les tarifs exacts sont disponibles dans la grille tarifaire en vigueur.",
+     "effect": {
+      "type": "complete"
+     },
+     "basis": "à compléter, la recommandation pour consigne"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null
+   }
+  ],
+  "temporaryNotes": [],
+  "rejectedPoints": [],
+  "unverifiedQuotes": {
+   "not_found": 1,
+   "wrong_document": 4
+  },
+  "unavailableDetections": [
+   "temporary_notes"
+  ],
+  "extractedValues": [],
+  "extractionRun": null,
+  "base": {
+   "mode": "build",
+   "reason": "none",
+   "documentIds": [],
+   "briefingExcerpt": null
+  },
+  "unreadImages": null
+ }
+}
