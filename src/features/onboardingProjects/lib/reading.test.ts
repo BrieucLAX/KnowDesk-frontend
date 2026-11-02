@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   baseAnnouncement, cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
-  codeCheck, formatGapValue, isReadingAudit, readsImageOnly, recommendationOutcome,
+  codeCheck, failedDetections, formatGapValue, isReadingAudit, notYetDetections, readsImageOnly, recommendationOutcome, unreadImagesText,
   missingSide, orderedCards, rejectionReasonLabel, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
 import type { Audit } from './audit';
@@ -253,5 +253,34 @@ describe('formatGapValue (audit 0.14.0)', () => {
     expect(shown('5.5', { currency: null, per: null, tax: null, measure: 'weeks' })).toBe('5,5');
     expect(shown('3', { currency: 'EUR', per: 'month', tax: null, measure: 42 })).toBe('3');
     expect(isReadingAudit('0.14.0')).toBe(true);
+  });
+});
+
+describe('Audit 0.15.0 : les images non lues, « non disponible », jamais « 0 »', () => {
+  const docs = [{ documentId: 'doc_a', path: 'guide.docx', count: 2 }, { documentId: 'doc_b', path: 'faq.docx', count: 1 }];
+
+  it('une panne complète du modèle de lecture des images se distingue d\'une image illisible', () => {
+    expect(unreadImagesText({ cause: 'vision_unavailable', count: 3, total: 3, documents: docs })).toBe(
+      'Le modèle de lecture des images n\'a pas répondu : aucune des 3 images n\'a été lue, les informations qu\'elles contiennent ne sont pas analysées.');
+    expect(unreadImagesText({ cause: 'vision_unavailable', count: 1, total: 1, documents: [docs[1]] })).toBe(
+      'Le modèle de lecture des images n\'a pas répondu : l\'image n\'a pas été lue, les informations qu\'elle contient ne sont pas analysées.');
+    expect(unreadImagesText({ cause: 'vision_unavailable', count: 3, total: 8, documents: docs })).toBe(
+      'Le modèle de lecture des images n\'a pas répondu pour 3 images sur 8 : les informations qu\'elles contiennent ne sont pas analysées.');
+    expect(unreadImagesText({ cause: 'unreadable', count: 3, total: 8, documents: docs })).toBe(
+      '3 images n\'ont pas pu être lues : les informations qu\'elles contiennent ne sont pas analysées.');
+    expect(unreadImagesText({ cause: 'unreadable', count: 1, total: 8, documents: [docs[1]] })).toBe(
+      '1 image n\'a pas pu être lue : les informations qu\'elle contient ne sont pas analysées.');
+  });
+
+  it('rangées avec les détections en échec, jamais avec ce que l\'analyse ne repère pas encore', () => {
+    const unreadImages = { cause: 'unreadable' as const, count: 3, total: 8, documents: docs };
+    const reading = { unavailableDetections: ['temporary_notes', 'images'], unreadImages };
+    expect(failedDetections(reading)).toEqual([unreadImagesText(unreadImages)]);
+    expect(notYetDetections(reading)).toEqual(['temporary_notes']);
+    // Sans le détail (back plus ancien) : une phrase générale, jamais rien.
+    expect(failedDetections({ unavailableDetections: ['images'] })).toEqual([
+      'Des images n\'ont pas pu être lues : les informations qu\'elles contiennent ne sont pas analysées.']);
+    expect(failedDetections({ unavailableDetections: ['temporary_notes'], unreadImages: null })).toEqual([]);
+    expect(isReadingAudit('0.15.0')).toBe(true);
   });
 });

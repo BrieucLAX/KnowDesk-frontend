@@ -21,10 +21,11 @@ import type { Decision } from './decisions';
  * levées par le code (`check`) et la raison d'écart « mesure terminée », et 0.12.0 (lot Elyra v2)
  * qui ajoute les courriels et les classeurs, et la base existante repérée (`base`), et 0.13.0 (lot
  * Elyra v2.1) qui ajoute les raisons d'écart « objet non nommé » et « même valeur », et 0.14.0
- * (lot Elyra v2.2) où une valeur d'écart dit ce qu'elle mesure (`unit.measure`). Même liste que
+ * (lot Elyra v2.2) où une valeur d'écart dit ce qu'elle mesure (`unit.measure`), et 0.15.0 (lot
+ * « images non disponibles ») qui dit les images non lues (`unreadImages`). Même liste que
  * `READING_AUDIT_SCHEMAS` du back.
  */
-export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0', '0.12.0', '0.13.0', '0.14.0'];
+export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0', '0.12.0', '0.13.0', '0.14.0', '0.15.0'];
 export const isReadingAudit = (version: string): boolean => READING_AUDIT_SCHEMAS.includes(version);
 
 // ── Contrat (GET …/audit, champ `reading`) ────────────────────
@@ -123,6 +124,43 @@ export interface Reading {
    * d'un back plus ancien) : rien n'est annoncé, la règle d'avant s'applique.
    */
   base?:                 ExistingBase | null;
+  /**
+   * Audit 0.15.0 : les images que l'analyse n'a pas lues (leur contenu n'est pas analysé) ; null
+   * quand toutes ont été lues, et avant (ou absent d'un back plus ancien).
+   */
+  unreadImages?:         UnreadImages | null;
+}
+
+/**
+ * Audit 0.15.0 (lot « images non disponibles ») : `vision_unavailable`, le modèle de lecture des
+ * images n'a pas répondu (panne complète quand `count` vaut `total`) ; `unreadable`, il a répondu
+ * et ces images n'ont pas pu être lues.
+ */
+export interface UnreadImages {
+  cause:     'vision_unavailable' | 'unreadable';
+  count:     number;
+  total:     number;
+  documents: Array<{ documentId: string; path: string; count: number }>;
+}
+
+const images = (n: number) => `${n} image${n > 1 ? 's' : ''}`;
+
+/** Les images non lues, en clair : jamais « 0 », jamais tues. */
+export function unreadImagesText(u: UnreadImages): string {
+  const lost = u.count > 1
+    ? 'les informations qu\'elles contiennent ne sont pas analysées'
+    : 'les informations qu\'elle contient ne sont pas analysées';
+  if (u.cause === 'vision_unavailable' && u.count === u.total) {
+    return u.total > 1
+      ? `Le modèle de lecture des images n'a pas répondu : aucune des ${u.total} images n'a été lue, ${lost}.`
+      : `Le modèle de lecture des images n'a pas répondu : l'image n'a pas été lue, ${lost}.`;
+  }
+  if (u.cause === 'vision_unavailable') {
+    return `Le modèle de lecture des images n'a pas répondu pour ${images(u.count)} sur ${u.total} : ${lost}.`;
+  }
+  return u.count > 1
+    ? `${images(u.count)} n'ont pas pu être lues : ${lost}.`
+    : `1 image n'a pas pu être lue : ${lost}.`;
 }
 
 export type BaseReason = 'briefing' | 'numbered_files' | 'notion_export' | 'faq_documents' | 'none';
@@ -761,7 +799,16 @@ const FAILED_DETECTIONS: Readonly<Record<string, string>> = {
   value_gaps: 'Les écarts de valeurs entre documents (montants, tarifs) n\'ont pas pu être recherchés pour cette analyse.',
   dates:      'Les dates (contenus périmés, périodes sans règle, dates sans année) n\'ont pas pu être vérifiées pour cette analyse.',
 };
-export const failedDetections = (reading: Pick<Reading, 'unavailableDetections'>): string[] =>
-  reading.unavailableDetections.flatMap(d => (d in FAILED_DETECTIONS ? [FAILED_DETECTIONS[d]] : []));
+/**
+ * Audit 0.15.0 : des images non lues, dites dans la vue d'ensemble comme les détections en échec ;
+ * sans leur détail (back plus ancien), une phrase générale, jamais rien.
+ */
+const UNREAD_IMAGES_FALLBACK = 'Des images n\'ont pas pu être lues : les informations qu\'elles contiennent ne sont pas analysées.';
+
+export const failedDetections = (reading: Pick<Reading, 'unavailableDetections' | 'unreadImages'>): string[] =>
+  reading.unavailableDetections.flatMap(d => {
+    if (d === 'images') return [reading.unreadImages ? unreadImagesText(reading.unreadImages) : UNREAD_IMAGES_FALLBACK];
+    return d in FAILED_DETECTIONS ? [FAILED_DETECTIONS[d]] : [];
+  });
 export const notYetDetections = (reading: Pick<Reading, 'unavailableDetections'>): string[] =>
-  reading.unavailableDetections.filter(d => !(d in FAILED_DETECTIONS));
+  reading.unavailableDetections.filter(d => d !== 'images' && !(d in FAILED_DETECTIONS));
