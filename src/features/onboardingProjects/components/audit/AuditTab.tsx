@@ -15,6 +15,7 @@ import { AuditView } from './AuditView';
 import { ArbitrationSession } from './ArbitrationSession';
 import { CurrentDecision } from './DecisionActions';
 import { ClarifyView } from '../clarify/ClarifyView';
+import { AnalyzedDocuments } from '../clarify/AnalyzedDocuments';
 import { ClarifySession } from '../clarify/ClarifySession';
 import { CorrectionEntry } from '../base/CorrectionEntry';
 
@@ -147,6 +148,10 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
           ? `Fiche de cadrage version ${current.cadrageVersion}, ${documentsLine(current.documents.length, loadedAudit)}.`
           : 'Audit d\'une analyse précédente, en lecture seule.'}
       </p>
+      {loaded.state === 'reading' && clarify === undefined && (
+        // Tout l'inventaire, sous le nombre de documents lus : ce qui a été lu, écarté ou non lu.
+        <AnalyzedDocuments audit={loaded.audit} reading={loaded.reading} />
+      )}
 
       {loaded.state === 'loading' && <Skeleton className="obp-skeleton-block" />}
       {loaded.state === 'error' && <p className="obp-muted">L'audit n'a pas pu être chargé.</p>}

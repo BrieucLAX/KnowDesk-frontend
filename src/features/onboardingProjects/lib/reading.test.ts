@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  analyzedDocuments, analyzedDocumentsSummary, citedByText, documentType,
   baseAnnouncement, cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
   codeCheck, failedDetections, formatGapValue, isReadingAudit, notYetDetections, readsImageOnly, recommendationOutcome, unreadImagesText,
   missingSide, orderedCards, rejectionReasonLabel, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
@@ -282,5 +283,50 @@ describe('Audit 0.15.0 : les images non lues, « non disponible », jamais « 0 
       'Des images n\'ont pas pu être lues : les informations qu\'elles contiennent ne sont pas analysées.']);
     expect(failedDetections({ unavailableDetections: ['temporary_notes'], unreadImages: null })).toEqual([]);
     expect(isReadingAudit('0.15.0')).toBe(true);
+  });
+});
+
+describe('Documents analysés', () => {
+  const audit = { inventory: [
+    { documentId: 'd1', path: 'a.zip/grille.pdf', format: 'pdf', status: 'parsed', error: null },
+    { documentId: 'd2', path: 'a.zip/faq.docx', format: 'docx', status: 'parsed', error: null },
+    { documentId: 'd3', path: 'a.zip/note.eml', format: 'eml', status: 'parsed', error: null },
+    { documentId: 'd4', path: 'a.zip/grille_1.pdf', format: 'pdf', status: 'failed', error: 'duplicate_file: même contenu que a.zip/grille.pdf' },
+    { documentId: 'd5', path: 'a.zip/vieux.pdf', format: 'pdf', status: 'failed', error: 'duplicate_file' },
+    { documentId: 'd6', path: 'a.zip/Base.csv', format: 'other', status: 'failed', error: 'unsupported_file: format non lu' },
+  ] } as unknown as Audit;
+
+  it('tout l\'inventaire, dans son ordre, avec le nombre de cartes de chaque document lu, 0 compris', () => {
+    // Carte 1 : nomme d1 et d2, cite d1 et d2 ; carte 2 : nomme d1 seul, cite aussi d3 (une citation rattachée).
+    const c2 = { ...card('c2', 'contradiction', 2, [{ label: 'A', quotes: [doc('d1')] }, { label: 'B', quotes: [doc('d3')] }]), documentIds: ['d1'] };
+    const docs = analyzedDocuments(audit, { cards: [card('c1', 'contradiction', 1), c2], unreadImages: {
+      cause: 'unreadable', count: 1, total: 3, documents: [{ documentId: 'd2', path: 'a.zip/faq.docx', count: 1 }],
+    } });
+    expect(docs.map(d => [d.documentId, d.type, d.status, d.unreadImages])).toEqual([
+      ['d1', 'PDF', { kind: 'read', cards: 2 }, 0],
+      ['d2', 'Word', { kind: 'read', cards: 1 }, 1],
+      ['d3', 'Courriel', { kind: 'read', cards: 1 }, 0],
+      ['d4', 'PDF', { kind: 'duplicate', of: 'a.zip/grille.pdf' }, 0],
+      ['d5', 'PDF', { kind: 'duplicate', of: null }, 0],
+      ['d6', 'CSV', { kind: 'unread', reason: 'format non lu' }, 0],
+    ]);
+    expect(analyzedDocumentsSummary(docs)).toBe('3 lus, 2 doublons écartés, 1 non lu');
+    expect(analyzedDocuments(audit, { cards: [] }).filter(d => d.status.kind === 'read').map(d => d.status))
+      .toEqual([{ kind: 'read', cards: 0 }, { kind: 'read', cards: 0 }, { kind: 'read', cards: 0 }]);
+  });
+
+  it('le type en clair ; une image ou un format inconnu, par l\'extension', () => {
+    expect(documentType('pptx', 'x.pptx')).toBe('PowerPoint');
+    expect(documentType('xlsx', 'x.xlsx')).toBe('Excel');
+    expect(documentType('md', 'x.md')).toBe('Markdown');
+    expect(documentType('zip', 'x.zip')).toBe('Archive');
+    expect(documentType('other', 'dossier/graphique.PNG')).toBe('Image');
+    expect(documentType('other', 'sans-extension')).toBe('Autre');
+  });
+
+  it('cité par aucune carte, une carte, des cartes', () => {
+    expect(citedByText(0)).toBe('cité par aucune carte');
+    expect(citedByText(1)).toBe('cité par 1 carte');
+    expect(citedByText(4)).toBe('cité par 4 cartes');
   });
 });

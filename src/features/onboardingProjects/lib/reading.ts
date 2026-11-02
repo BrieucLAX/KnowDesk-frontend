@@ -812,3 +812,91 @@ export const failedDetections = (reading: Pick<Reading, 'unavailableDetections' 
   });
 export const notYetDetections = (reading: Pick<Reading, 'unavailableDetections'>): string[] =>
   reading.unavailableDetections.filter(d => d !== 'images' && !(d in FAILED_DETECTIONS));
+
+// ── Documents analysés (inventaire de l'audit) ───────────────
+
+/** Le type d'un document, en clair ; un format inconnu de la liste, par l'extension du fichier. */
+const DOCUMENT_TYPES: Readonly<Record<string, string>> = {
+  pdf: 'PDF', docx: 'Word', pptx: 'PowerPoint', xlsx: 'Excel', md: 'Markdown', eml: 'Courriel', zip: 'Archive',
+};
+const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'svg']);
+
+export function documentType(format: string, path: string): string {
+  if (format in DOCUMENT_TYPES) return DOCUMENT_TYPES[format];
+  const ext = (path.split('.').pop() ?? '').toLowerCase();
+  if (IMAGE_EXTENSIONS.has(ext)) return 'Image';
+  if (ext in DOCUMENT_TYPES) return DOCUMENT_TYPES[ext];
+  return ext && ext !== path.toLowerCase() ? ext.toUpperCase() : 'Autre';
+}
+
+/**
+ * Le statut d'un document de l'inventaire : lu (avec le nombre de cartes qui le citent, 0 compris) ;
+ * écarté comme doublon d'un autre fichier (son chemin, quand le pipeline l'écrit) ; non lu, avec sa
+ * raison.
+ */
+export type AnalyzedDocumentStatus =
+  | { kind: 'read'; cards: number }
+  | { kind: 'duplicate'; of: string | null }
+  | { kind: 'unread'; reason: string };
+
+export interface AnalyzedDocument {
+  documentId:   string;
+  path:         string;
+  type:         string;
+  status:       AnalyzedDocumentStatus;
+  /** Audit 0.15.0 : les images de ce document que l'analyse n'a pas lues ; 0 sinon. */
+  unreadImages: number;
+}
+
+/** Les documents qu'une carte cite : ceux qu'elle nomme, et ceux de ses citations vérifiées. */
+export function cardDocuments(card: ReadingCard): Set<string> {
+  const ids = new Set(card.documentIds);
+  for (const s of card.sides) {
+    for (const q of toQuotes(s.quotes)) if (q.kind === 'document') ids.add(q.source.documentId);
+  }
+  return ids;
+}
+
+/** `duplicate_file: même contenu que <chemin>` : le chemin du fichier gardé. */
+function duplicateOf(error: string | null): string | null {
+  const detail = (error ?? '').split(':').slice(1).join(':').trim();
+  const kept = detail.replace(/^même contenu que\s*/i, '').trim();
+  return kept || null;
+}
+
+/**
+ * Tout l'inventaire de l'audit, dans son ordre : ce qui a été lu, écarté ou non lu, et, pour un
+ * document lu, le nombre de cartes qui le citent. Un document lu cité par aucune carte reste listé
+ * (« 0 carte ») : lu ne veut pas dire sans question manquée, mais l'experte voit qu'il a été lu.
+ */
+export function analyzedDocuments(audit: Audit, reading: Pick<Reading, 'cards' | 'unreadImages'>): AnalyzedDocument[] {
+  const cited = new Map<string, number>();
+  for (const c of reading.cards) for (const id of cardDocuments(c)) cited.set(id, (cited.get(id) ?? 0) + 1);
+  const images = new Map((reading.unreadImages?.documents ?? []).map(d => [d.documentId, d.count]));
+  return audit.inventory.map(i => {
+    const code = (i.error ?? '').split(':')[0].trim();
+    const status: AnalyzedDocumentStatus = i.status === 'parsed'
+      ? { kind: 'read', cards: cited.get(i.documentId) ?? 0 }
+      : i.status === 'failed' && code === DUPLICATE
+        ? { kind: 'duplicate', of: duplicateOf(i.error) }
+        : { kind: 'unread', reason: i.status === 'failed' ? unreadReasonLabel(i.error) : 'lecture non terminée' };
+    return { documentId: i.documentId, path: i.path, type: documentType(i.format, i.path), status, unreadImages: images.get(i.documentId) ?? 0 };
+  });
+}
+
+/** « 34 lus, 5 doublons écartés, 1 non lu » : le résumé du volet, sans les catégories vides. */
+export function analyzedDocumentsSummary(docs: AnalyzedDocument[]): string {
+  const count = (k: AnalyzedDocumentStatus['kind']) => docs.filter(d => d.status.kind === k).length;
+  const read = count('read');
+  const dup = count('duplicate');
+  const unread = count('unread');
+  return [
+    read > 0 ? `${read} ${read > 1 ? 'lus' : 'lu'}` : '',
+    dup > 0 ? `${dup} ${dup > 1 ? 'doublons écartés' : 'doublon écarté'}` : '',
+    unread > 0 ? `${unread} ${unread > 1 ? 'non lus' : 'non lu'}` : '',
+  ].filter(Boolean).join(', ');
+}
+
+/** Le nombre de cartes qui citent un document lu, 0 compris. */
+export const citedByText = (n: number): string =>
+  n === 0 ? 'cité par aucune carte' : `cité par ${n} ${n > 1 ? 'cartes' : 'carte'}`;

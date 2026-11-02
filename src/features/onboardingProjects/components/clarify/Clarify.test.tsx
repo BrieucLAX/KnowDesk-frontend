@@ -24,6 +24,7 @@ import PILOTE_3 from './fixtures/audit-0.8.0-pilote-3.response.json';
 import PILOTE_10 from './fixtures/audit-0.10.0-pilote-2.response.json';
 import PILOTE_11 from './fixtures/audit-0.11.0-pilote-banc-v3.response.json';
 import PILOTE_D1 from './fixtures/audit-0.11.0-pilote-d1.response.json';
+import ELYRA_V2 from './fixtures/audit-0.15.0-elyra-v2.response.json';
 
 /**
  * Réponses de GET …/audit sur deux audits 0.8.0 rejoués par le pipeline (pilote, lectures 2 et 3),
@@ -1049,5 +1050,90 @@ describe('À clarifier : audit 0.14.0, un écart en jours', () => {
     expect(facts).not.toHaveTextContent('€');
     for (const h of within(article).getAllByRole('heading', { name: /^Côté [AB]/ })) expect(h).not.toHaveTextContent('€');
     for (const b of within(group).getAllByRole('button')) expect(b).not.toHaveTextContent('€');
+  });
+});
+
+describe('« Documents analysés » : tout l\'inventaire sous le nombre de documents lus (Base de co v2, Elyra)', () => {
+  /**
+   * Réponse du back local à GET …/audit : l'audit de l'export « Base de co v2 » (2026-11-02),
+   * rejoué par le code du pipeline (citations revérifiées sur le corpus jeudetestsv2.zip).
+   */
+  const ELYRA = ELYRA_V2 as unknown as AuditResponse;
+  const elyraAnalysis: OnboardingAnalysis = { ...analysis, documents: [{ id: 'd1', filename: 'jeudetestsv2.zip' }] };
+
+  beforeEach(() => {
+    vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [elyraAnalysis], meta: { quota: { used: 1, max: 5 } } });
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(ELYRA);
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
+    vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
+  });
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  /** La ligne d'un document, par son nom en tête de ligne (un doublon nomme aussi le fichier gardé). */
+  const rowOf = (list: HTMLElement, name: string) =>
+    [...list.querySelectorAll('li')].find(li => li.querySelector('.obp-docs-analyzed__name')?.textContent === name)!;
+
+  it('replié sous le nombre de documents lus, avec son résumé', async () => {
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: '13 cartes à clarifier' });
+    const line = screen.getByText('Fiche de cadrage version 1, 33 documents lus (dans 1 fichier importé).');
+    const details = screen.getByText('Documents analysés').closest('details')!;
+    expect(details).not.toHaveAttribute('open');
+    expect(details).toHaveTextContent('Documents analysés · 33 lus, 5 doublons écartés, 1 non lu');
+    // Juste sous la ligne des documents lus, avant la vue d'ensemble.
+    expect(line.nextElementSibling).toBe(details);
+  });
+
+  it('chaque document : son nom, son type et son statut ; un document lu dit combien de cartes le citent, 0 compris', async () => {
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: '13 cartes à clarifier' });
+    const list = screen.getByRole('list', { name: 'Documents analysés' });
+    expect(list.querySelectorAll('li')).toHaveLength(39);
+    // Les notes sur les garanties d'origine : lues, mais sans carte.
+    expect(rowOf(list, 'Note_interne_Garanties_Origine_2026-07-01.pdf')).toHaveTextContent('PDFLu, cité par aucune carte');
+    expect(rowOf(list, '2026-07-02_Note_garanties_origine.eml')).toHaveTextContent('CourrielLu, cité par aucune carte');
+    expect(rowOf(list, 'Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf')).toHaveTextContent('Lu, cité par 5 cartes');
+    expect(rowOf(list, 'Fiche_Offre_Elyra_Fixe_2ans.docx')).toHaveTextContent('WordLu, cité par 1 carte');
+    expect(rowOf(list, 'Tableau_comparatif_gamme_2026.xlsx')).toHaveTextContent('Excel');
+    // Un doublon nomme le fichier gardé ; le chemin de l'archive reste en infobulle.
+    const dup = rowOf(list, 'CR_Comite_Offres_2026-09-22_1.docx');
+    expect(dup).toHaveTextContent('Écarté : doublon de CR_Comite_Offres_2026-09-22.docx');
+    expect(within(dup).getByText('CR_Comite_Offres_2026-09-22.docx')).toHaveAttribute('title', 'jeudetestsv2.zip/CR_Comite_Offres_2026-09-22.docx');
+    // Un fichier non lu, avec sa raison.
+    expect(rowOf(list, 'graphique_prix_repere.png')).toHaveTextContent('ImageNon lu : image citée par aucun document');
+  });
+
+  it('le nombre de cartes compte chaque carte une fois par document, qu\'elle le nomme ou le cite', async () => {
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: '13 cartes à clarifier' });
+    const list = screen.getByRole('list', { name: 'Documents analysés' });
+    const reading = ELYRA.reading!;
+    const fixe = reading.cards.filter(c => c.documentIds.some(id => id.includes('fiche_offre_elyra_fixe_2ans')));
+    expect(rowOf(list, 'Fiche_Offre_Elyra_Fixe_2ans.docx')).toHaveTextContent(`cité par ${fixe.length} carte`);
+  });
+
+  it('audit 0.15.0 : les images non lues d\'un document, sur sa ligne', async () => {
+    const doc = ELYRA.audit as { inventory: Array<{ document_id: string; path: string }> };
+    const flyer = doc.inventory.find(i => i.path.endsWith('Flyer_Parrainage_Octobre2026.pptx'))!;
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue({
+      ...ELYRA,
+      reading: {
+        ...ELYRA.reading!,
+        unavailableDetections: ['temporary_notes', 'images'],
+        unreadImages: { cause: 'unreadable', count: 2, total: 25, documents: [{ documentId: flyer.document_id, path: flyer.path, count: 2 }] },
+      },
+    });
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: '13 cartes à clarifier' });
+    const list = screen.getByRole('list', { name: 'Documents analysés' });
+    expect(rowOf(list, 'Flyer_Parrainage_Octobre2026.pptx')).toHaveTextContent('Lu, cité par 1 carte, 2 images non lues');
+  });
+
+  it('une carte ouverte : la liste laisse la place à la session', async () => {
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Commencer' }));
+    await screen.findByRole('article', { name: /^Carte 1 sur/ });
+    expect(screen.queryByText('Documents analysés')).not.toBeInTheDocument();
   });
 });
