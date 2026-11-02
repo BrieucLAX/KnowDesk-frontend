@@ -765,10 +765,55 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
     expect(notYet.querySelectorAll('li')).toHaveLength(1);
   });
 
+  it('audit 0.15.0, panne du modèle de lecture des images : dite dans la vue d\'ensemble, documents détaillés, jamais tue', async () => {
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue({
+      ...RESPONSE_11,
+      reading: {
+        ...reading11,
+        unavailableDetections: ['temporary_notes', 'images'],
+        unreadImages: {
+          cause: 'vision_unavailable', count: 3, total: 3,
+          documents: [
+            { documentId: 'doc_a', path: 'base/09-portail-assure-app.docx', count: 2 },
+            { documentId: 'doc_b', path: 'Flyer_Parrainage.pptx', count: 1 },
+          ],
+        },
+      },
+    });
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    const outage = 'Le modèle de lecture des images n\'a pas répondu : aucune des 3 images n\'a été lue, '
+      + 'les informations qu\'elles contiennent ne sont pas analysées.';
+    expect(screen.getAllByRole('note').map(n => n.textContent)).toContain(outage);
+    // Rangée avec les détections en échec, jamais avec ce que l'analyse ne repère « pas encore ».
+    const notYet = screen.getByRole('heading', { name: 'Ce que l\'analyse ne repère pas encore' }).nextElementSibling!;
+    expect(notYet).not.toHaveTextContent(/image/i);
+    const detail = screen.getByRole('heading', { name: 'Images non lues' }).parentElement!;
+    expect(detail).toHaveTextContent('09-portail-assure-app.docx : 2 images non lues');
+    expect(detail).toHaveTextContent('Flyer_Parrainage.pptx : 1 image non lue');
+  });
+
+  it('audit 0.15.0, une image isolée illisible : distinguée d\'une panne', async () => {
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue({
+      ...RESPONSE_11,
+      reading: {
+        ...reading11,
+        unavailableDetections: ['temporary_notes', 'images'],
+        unreadImages: { cause: 'unreadable', count: 1, total: 4, documents: [{ documentId: 'doc_a', path: 'facture.pptx', count: 1 }] },
+      },
+    });
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    const notes = screen.getAllByRole('note').map(n => n.textContent);
+    expect(notes).toContain('1 image n\'a pas pu être lue : les informations qu\'elle contient ne sont pas analysées.');
+    expect(screen.queryByText(/n'a pas répondu/)).not.toBeInTheDocument();
+  });
+
   it('toutes les détections faites : aucun message', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
     await screen.findByRole('heading', { name: /cartes à clarifier/ });
     expect(screen.queryByText(/n'ont pas pu être/)).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Images non lues' })).not.toBeInTheDocument();
   });
 
   it('audit 0.10.0 inchangé à l\'écran : analyse de l\'IA, libellé de la nature, réponses de la nature, aucun message', async () => {

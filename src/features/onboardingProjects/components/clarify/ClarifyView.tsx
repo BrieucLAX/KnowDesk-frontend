@@ -4,7 +4,7 @@ import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { docNaming, fileName, type Audit } from '../../lib/audit';
 import {
   baseAnnouncement, CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, failedDetections, groupByNature,
-  modelNatureLabel, NATURES, notYetDetections, orderedCards, rejectedPointLabel, toQuotes, unavailableLabel, unreadFiles, unverifiedCounts,
+  modelNatureLabel, NATURES, notYetDetections, orderedCards, rejectedPointLabel, toQuotes, unavailableLabel, unreadFiles, unreadImagesText, unverifiedCounts,
   unverifiedReasonLabel, type Reading,
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
@@ -202,6 +202,21 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
               </p>
               <ul className="obp-clarify-counts">
                 {unread.map(f => <li key={f.path}><FileName name={fileName(f.path)} path={f.path} /> : {f.reason}</li>)}
+              </ul>
+            </>
+          )}
+
+          {reading.unreadImages && (
+            // Audit 0.15.0 : les images non lues, document par document ; leur contenu n'est pas analysé.
+            <>
+              <h4 className="obp-audit-item__title">Images non lues</h4>
+              <p className="obp-muted">{unreadImagesText(reading.unreadImages)}</p>
+              <ul className="obp-clarify-counts">
+                {reading.unreadImages.documents.map(d => (
+                  <li key={d.documentId}>
+                    <FileName name={fileName(d.path)} path={d.path} /> : {d.count} {d.count > 1 ? 'images non lues' : 'image non lue'}
+                  </li>
+                ))}
               </ul>
             </>
           )}
