@@ -13,7 +13,7 @@ vi.mock('../../api/onboardingApi', () => ({
 import { onboardingApi } from '../../api/onboardingApi';
 import { AuditTab } from '../audit/AuditTab';
 import { ClarifyQuote, ReadingCardView } from './ReadingCardView';
-import { DECIDES_WARNING, PRECISION_WARNING } from './CardAnswers';
+import { ARBITRAGE_WARNING, PRECISION_WARNING } from './CardAnswers';
 import { CARD_COMMENT_HINT } from './CardCommentBox';
 import type { Audit, AuditResponse } from '../../lib/audit';
 import { NATURES, orderedCards } from '../../lib/reading';
@@ -443,7 +443,7 @@ describe('À clarifier (audit 0.8.0)', () => {
       vi.mocked(onboardingApi.commentCard).mockResolvedValue(saved);
       await openSession();
       expect(await screen.findByText(CARD_COMMENT_HINT)).toBeInTheDocument();
-      const field = screen.getByLabelText('Un commentaire sur la carte ? (facultatif)');
+      const field = screen.getByLabelText('Commentaire (facultatif)');
       fireEvent.change(field, { target: { value: ' Doublon de la carte 5. ' } });
       fireEvent.click(screen.getByRole('button', { name: 'Enregistrer le commentaire' }));
       await waitFor(() => expect(onboardingApi.commentCard).toHaveBeenCalledWith('p1', 'a1', {
@@ -1238,12 +1238,23 @@ describe('À clarifier (audit 0.16.0, plan-construire-v1, lot A)', () => {
     expect(vi.mocked(onboardingApi.answerCard).mock.calls[0][2].action).toEqual({ type: 'document_stays_valid' });
   });
 
-  it('« Autre réponse » sur une carte de versions : son texte n\'entre dans la base que s\'il tranche', async () => {
+  it('« Autre réponse » sur une carte de versions : son texte est un arbitrage qui entre dans la base (2026-11-09)', async () => {
     await openSession();
     goTo(replacement.analysis.subject);
     await articleOf(replacement);
     fireEvent.click(screen.getByRole('button', { name: 'Autre réponse' }));
-    expect(screen.getByText(DECIDES_WARNING)).toBeInTheDocument();
+    expect(screen.getByText(ARBITRAGE_WARNING)).toBeInTheDocument();
+    expect(screen.queryByText(PRECISION_WARNING)).not.toBeInTheDocument();
+    // Le commentaire, sous le champ, dit qu'il n'entre jamais dans la base.
+    expect(screen.getByLabelText('Commentaire (facultatif)')).toBeInTheDocument();
+  });
+
+  it('sur une carte 0.16.0 sans valeur, « Autre réponse » est aussi un arbitrage', async () => {
+    await openSession();
+    goTo(plain.analysis.subject);
+    await articleOf(plain);
+    fireEvent.click(screen.getByRole('button', { name: 'Autre réponse' }));
+    expect(screen.getByText(ARBITRAGE_WARNING)).toBeInTheDocument();
     expect(screen.queryByText(PRECISION_WARNING)).not.toBeInTheDocument();
   });
 

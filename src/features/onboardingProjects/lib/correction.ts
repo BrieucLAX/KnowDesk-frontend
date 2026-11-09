@@ -154,6 +154,11 @@ export interface Modification {
   created_sheet?: CreatedSheet | null;
   /** 0.5.0, `version_update` : les valeurs remplacées. */
   value_updates?: VersionValueUpdate[];
+  /**
+   * 0.5.0, carte d'un audit 0.16.0 (décision du porteur du 2026-11-09) : le jour de la décision,
+   * quand `expert_text` est un arbitrage qui entre dans la base, « saisi par l'expert le … ».
+   */
+  expert_entered_on?: string | null;
 }
 
 export interface Convention { id: string; rule: string; section_keys: string[] }
@@ -639,4 +644,13 @@ export function removedAsObsolete(
     }))
     .filter(r => r.sections.length > 0)
     .sort((a, b) => itemRank(a.id) - itemRank(b.id));
+}
+
+/**
+ * La mention d'un arbitrage de l'expert entré dans la base (correction 0.5.0, décision du
+ * 2026-11-09) : « saisi par l'expert le 13/09/2026 ». La date est un jour, lu sans fuseau.
+ */
+export function expertEntered(day: string): string {
+  const [y, m, d] = day.split('-');
+  return `Saisi par l'expert le ${d}/${m}/${y}.`;
 }

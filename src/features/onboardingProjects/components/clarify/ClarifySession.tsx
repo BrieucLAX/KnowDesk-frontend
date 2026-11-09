@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import { docNaming, type Audit } from '../../lib/audit';
 import {
-  CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, firstOpenCard, groupByNature, NATURES, orderedCards, type Reading,
+  ARBITRAGE_AUDIT_SCHEMAS, CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, firstOpenCard, groupByNature, NATURES, orderedCards, type Reading,
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
 import { ReadingCardView } from './ReadingCardView';
@@ -13,6 +13,8 @@ import { CardCommentBox } from './CardCommentBox';
 interface ClarifySessionProps {
   audit:       Audit;
   reading:     Reading;
+  /** Version de l'audit : à partir de 0.16.0, le texte saisi est un arbitrage (2026-11-09). */
+  schemaVersion?: string;
   projectId:   string;
   analysisId:  string;
   arbitration: Arbitration;
@@ -27,7 +29,7 @@ const STATUS_CLASS = { open: 'todo', answered: 'decided', later: 'later' } as co
  * Session « À clarifier » : une carte à la fois, dans l'ordre des natures (celles qui bloquent
  * la publication d'abord) puis du modèle ; vue d'ensemble par nature ; précédente / suivante.
  */
-export function ClarifySession({ audit, reading, projectId, analysisId, arbitration, startCardId, onExit }: ClarifySessionProps) {
+export function ClarifySession({ audit, reading, schemaVersion = '', projectId, analysisId, arbitration, startCardId, onExit }: ClarifySessionProps) {
   const ordered = useMemo(() => orderedCards(reading.cards), [reading.cards]);
   const groups  = useMemo(() => groupByNature(reading.cards), [reading.cards]);
   const current = arbitration.state.status === 'ready' ? arbitration.state.current : new Map();
@@ -103,6 +105,7 @@ export function ClarifySession({ audit, reading, projectId, analysisId, arbitrat
               card={card}
               current={decision}
               arbitrable={arbitrable}
+              arbitrage={ARBITRAGE_AUDIT_SCHEMAS.includes(schemaVersion)}
               busy={arbitration.pending === card.id}
               docs={docs}
               onAnswer={action => arbitration.answer(card.id, action)}

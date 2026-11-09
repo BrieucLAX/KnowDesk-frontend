@@ -167,6 +167,7 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
             <ClarifySession
               audit={loaded.audit}
               reading={loaded.reading}
+              schemaVersion={loaded.schemaVersion}
               projectId={project.id}
               analysisId={current.id}
               arbitration={arbitration}

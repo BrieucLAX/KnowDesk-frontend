@@ -278,7 +278,9 @@ describe('Nouvelle base : relecture', () => {
     const update = { ...first, kind: 'version_update' as const, outcome: 'applied' as const, value_updates: [
       { subject: 'Elyra Fixe 2 ans, Base', old_value: '0,2018 €', new_value: '0,1952 €', source: {} },
     ] };
-    mockBase({ ...PILOTE, schemaVersion: '0.5.0', base: { ...PILOTE.base, modifications: [update, ...others], retired_sources: [
+    const [second, ...rest] = others;
+    const entered = { ...second, kind: 'expert_answer' as const, expert_text: 'Retenir 40 €, décision de la direction.', expert_entered_on: '2026-11-09' };
+    mockBase({ ...PILOTE, schemaVersion: '0.5.0', base: { ...PILOTE.base, modifications: [update, entered, ...rest], retired_sources: [
       { document_id: 'doc_v1', document_path: 'jeu.zip/Grille_v1.pdf', card_id: 'card_v', decision_id: 'd1' },
     ] } });
     render(<BaseTab project={project} onGoToClarify={() => {}} />);
@@ -286,6 +288,7 @@ describe('Nouvelle base : relecture', () => {
     expect(screen.getByRole('heading', { name: 'Anciennes versions retirées des sources' })).toBeInTheDocument();
     expect(screen.getByRole('list', { name: 'Valeurs remplacées' })).toHaveTextContent('Elyra Fixe 2 ans, Base : 0,2018 € → 0,1952 €');
     expect(screen.getAllByText(/Valeurs mises à jour/).length).toBeGreaterThan(0);
+    expect(screen.getByText('Saisi par l\'expert le 09/11/2026.')).toBeInTheDocument();
   });
 
   it('titre chaque fiche par son premier titre, et chaque section une seule fois (Essai 5)', async () => {

@@ -4,7 +4,7 @@ import {
   modificationPlacement, ownHeading, proposedLines, sectionTitleIndex, sheetViews, type SectionView, type SheetView,
 } from '../../lib/baseDocument';
 import {
-  canCreateChapters, chapterRequests, firstSentence, toVerifyCounts, recordedAnswer, itemLabel, itemRank, kindLabel, NEW_CHAPTER_LABEL, originLabel, outcomeLabel, partialSummary, retiredSourceSentence,
+  canCreateChapters, chapterRequests, expertEntered, firstSentence, toVerifyCounts, recordedAnswer, itemLabel, itemRank, kindLabel, NEW_CHAPTER_LABEL, originLabel, outcomeLabel, partialSummary, retiredSourceSentence,
   pendingSentences, reasonGroups, removedAsObsolete, reviewProgressLabel, SHOWN_REASONS, type ReasonGroup, type RemovedAsObsolete,
   type BaseCorrection, type Convention, type Modification, type SectionFix,
 } from '../../lib/correction';
@@ -112,6 +112,7 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
       <p className="obp-base-card__origin">{originLabel(m, cardTitles)}</p>
       <p className="obp-base-card__what">{m.instruction}</p>
       {m.expert_text && m.expert_text.trim() && <p className="obp-base-quote">« {m.expert_text.trim()} »</p>}
+      {m.expert_text && m.expert_entered_on && <p className="obp-muted">{expertEntered(m.expert_entered_on)}</p>}
       {(m.value_updates ?? []).length > 0 && (
         <ul className="obp-base-updates" aria-label="Valeurs remplacées">
           {(m.value_updates ?? []).map(u => (

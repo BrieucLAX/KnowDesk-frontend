@@ -364,6 +364,13 @@ export const ANSWERS: Readonly<Record<PlainAnswerCode, { label: string; field?: 
   document_stays_valid: { label: 'Non, ce document reste valable tel quel' },
 };
 
+/**
+ * Audits où le texte de l'expert (« Autre réponse », précision) est un arbitrage qui entre dans la
+ * base pour le sujet de la carte (décision du porteur du 2026-11-09, audit 0.16.0 et plus). Les
+ * analyses plus anciennes gardent leur fonctionnement.
+ */
+export const ARBITRAGE_AUDIT_SCHEMAS: readonly string[] = ['0.16.0'];
+
 /** Une carte de versions (audit 0.16.0) : une affirmation à confirmer, sans côtés ni analyse de l'IA. */
 export const isVersionCard = (card: Pick<ReadingCard, 'nature'>): boolean =>
   card.nature === 'remplacement_version' || card.nature === 'reprise_version_remplacee';

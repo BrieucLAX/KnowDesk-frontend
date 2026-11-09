@@ -16,6 +16,8 @@ interface CardAnswersProps {
   current:    Decision | undefined;
   /** Faux pour l'audit d'une analyse précédente : la réponse se lit, sans action. */
   arbitrable: boolean;
+  /** Audit 0.16.0 et plus : le texte saisi est un arbitrage qui entre dans la base (2026-11-09). */
+  arbitrage?: boolean;
   busy:       boolean;
   /** Nom de fichier d'un document, et son chemin pour l'infobulle. */
   docs:       DocNaming;
@@ -35,11 +37,13 @@ export const PRECISION_WARNING = 'Ce texte sera repris dans la base comme consig
   + 'commentaire sur la carte, plus bas : il n\'entre jamais dans la base.';
 
 /**
- * Sur une carte à valeurs ou de versions (audit 0.16.0, décision D3 du porteur) : le texte de l'expert
- * n'entre dans la base que s'il tranche la question posée par la carte.
+ * Sur toute carte d'un audit 0.16.0 et plus (décision du porteur du 2026-11-09) : le texte écrit
+ * dans « Autre réponse » ou dans la précision est un arbitrage ; il entre dans la base pour le
+ * sujet de la carte, « saisi par l'expert le … ». Une remarque pour l'équipe va dans le commentaire.
  */
-export const DECIDES_WARNING = 'Ce texte n\'entre dans la base que s\'il tranche la question posée par la carte. '
-  + 'Une remarque sur la carte elle-même va dans le commentaire sur la carte, plus bas : il n\'entre jamais dans la base.';
+export const ARBITRAGE_WARNING = 'Ce texte est votre arbitrage : il entre dans la base, pour le sujet de cette carte seulement, '
+  + 'avec la mention « saisi par l\'expert le … ». Une remarque pour l\'équipe (doublon, côtés mal classés, question '
+  + 'sur l\'analyse) va dans le champ « Commentaire », plus bas : il n\'entre jamais dans la base.';
 
 /** Réponse courante d'une carte, en clair : la réponse, qui l'a donnée, quand. Un texte saisi est « saisi par X le Y ». */
 export function CurrentAnswer({ card, current, docs }: { card: ReadingCard | undefined; current: Decision; docs: DocNaming }) {
@@ -66,7 +70,7 @@ export function CurrentAnswer({ card, current, docs }: { card: ReadingCard | und
  * juste »), sans les réponses qui comparent deux côtés. Une
  * carte répondue montre sa réponse, « Annuler » (retour à la précédente) et « Changer ».
  */
-export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, onCancel }: CardAnswersProps) {
+export function CardAnswers({ card, current, arbitrable, arbitrage = false, busy, docs, onAnswer, onCancel }: CardAnswersProps) {
   const [editing, setEditing] = useState(false);
   const [typing,  setTyping]  = useState<TypedAnswer | null>(null);
   const [text,    setText]    = useState('');
@@ -101,7 +105,7 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
   const groups = valueGroups(card);
   const version = isVersionCard(card);
   // L'effet sur les sources ne s'affiche jamais dans « À clarifier » sur une carte à valeurs (D1).
-  const warning = groups.length > 0 || version ? DECIDES_WARNING : PRECISION_WARNING;
+  const warning = arbitrage ? ARBITRAGE_WARNING : PRECISION_WARNING;
 
   if (following && recommendation) {
     return (
