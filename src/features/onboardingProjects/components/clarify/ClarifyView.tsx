@@ -4,7 +4,7 @@ import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { docNaming, fileName, type Audit } from '../../lib/audit';
 import {
   baseAnnouncement, CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, failedDetections, groupByNature,
-  modelNatureLabel, NATURES, notYetDetections, orderedCards, rejectedPointLabel, toQuotes, unavailableLabel, unreadFiles, unreadImagesText, unverifiedCounts,
+  isVersionCard, modelNatureLabel, NATURES, notYetDetections, orderedCards, rejectedPointLabel, toQuotes, unavailableLabel, unreadFiles, unreadImagesText, unverifiedCounts,
   unverifiedReasonLabel, type Reading,
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
@@ -104,7 +104,8 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
                 <li key={c.id} className="obp-clarify-row">
                   <button type="button" className="obp-clarify-row__open" onClick={() => onOpen(c.id)}>
                     <span className="obp-clarify-row__title">{cardTitle(c, ordered.indexOf(c) + 1)}</span>
-                    <span className="obp-clarify-row__docs"><DocNames audit={audit} ids={c.documentIds} /></span>
+                    {/* Le titre d'une carte de versions nomme déjà ses documents. */}
+                    {!isVersionCard(c) && <span className="obp-clarify-row__docs"><DocNames audit={audit} ids={c.documentIds} /></span>}
                     {ready && <span className={`obp-arb__status obp-arb__status--${STATUS_CLASS[st]}`}>{CARD_STATUS_LABEL[st]}</span>}
                   </button>
                   {decision && <CurrentAnswer card={c} current={decision} docs={docs} />}
@@ -150,7 +151,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
               {reading.rejectedPoints.map(r => (
                 <li key={r.rank} className="obp-audit-item">
                   <p className="obp-audit-item__title">
-                    {modelNatureLabel(r.nature)} · {rejectedPointLabel(r)}
+                    {modelNatureLabel(r.nature)} · {rejectedPointLabel(r, reading.cards)}
                   </p>
                   {/* Mesure terminée, objet non nommé, même valeur : les passages vérifiés, sous leur raison. */}
                   {toQuotes(r.verifiedQuotes ?? []).map((q, i) => <ClarifyQuote key={`v${i}`} audit={audit} quote={q} />)}

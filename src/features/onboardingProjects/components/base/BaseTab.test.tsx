@@ -267,10 +267,25 @@ describe('Nouvelle base : relecture', () => {
   });
 
   it('base d\'une version inconnue : le dit, sans rien afficher d\'autre', async () => {
-    mockBase({ ...PILOTE, schemaVersion: '0.5.0' });
+    mockBase({ ...PILOTE, schemaVersion: '0.99.0' });
     render(<BaseTab project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText(/Cette base est dans un format que cette version de l'application ne sait pas afficher/)).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 4 })).not.toBeInTheDocument();
+  });
+
+  it('base 0.5.0 : les valeurs mises à jour et les anciennes versions retirées des sources, en clair', async () => {
+    const [first, ...others] = PILOTE.base.modifications;
+    const update = { ...first, kind: 'version_update' as const, outcome: 'applied' as const, value_updates: [
+      { subject: 'Elyra Fixe 2 ans, Base', old_value: '0,2018 €', new_value: '0,1952 €', source: {} },
+    ] };
+    mockBase({ ...PILOTE, schemaVersion: '0.5.0', base: { ...PILOTE.base, modifications: [update, ...others], retired_sources: [
+      { document_id: 'doc_v1', document_path: 'jeu.zip/Grille_v1.pdf', card_id: 'card_v', decision_id: 'd1' },
+    ] } });
+    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    expect(await screen.findByText('Grille_v1.pdf : ancienne version, elle n\'est plus une source de cette base.')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Anciennes versions retirées des sources' })).toBeInTheDocument();
+    expect(screen.getByRole('list', { name: 'Valeurs remplacées' })).toHaveTextContent('Elyra Fixe 2 ans, Base : 0,2018 € → 0,1952 €');
+    expect(screen.getAllByText(/Valeurs mises à jour/).length).toBeGreaterThan(0);
   });
 
   it('titre chaque fiche par son premier titre, et chaque section une seule fois (Essai 5)', async () => {
@@ -586,6 +601,29 @@ describe('« À clarifier » : Préparer la nouvelle base', () => {
     render(<CorrectionEntry projectId="p1" analysisId="a1" schemaVersion="0.12.0" cards={CARDS} current={decided('accept_side')}
       onOpenBase={vi.fn()} base={{ mode: 'correct', reason: 'numbered_files', documentIds: ['d1'], briefingExcerpt: null }} />);
     expect(await screen.findByRole('button', { name: 'Préparer la nouvelle base' })).toBeInTheDocument();
+  });
+
+  describe('audit 0.16.0 : une carte de versions sans vraie réponse', () => {
+    const versionCard = { ...CARDS[0], id: 'card_v', nature: 'remplacement_version', analysis: { subject: 'La grille v2 annule et remplace la grille v1', reason: '', proposal: '' } } as ReadingCard;
+    const render16 = (current: ReadonlyMap<string, Decision>) => render(
+      <CorrectionEntry projectId="p1" analysisId="a1" schemaVersion="0.16.0" cards={[versionCard]} current={current} onOpenBase={vi.fn()} />);
+
+    it('sans réponse : le bouton reste grisé, le message nomme la carte', async () => {
+      render16(new Map());
+      expect(await screen.findByRole('button', { name: 'Préparer la nouvelle base' })).toBeDisabled();
+      expect(screen.getByRole('status')).toHaveTextContent('La carte « La grille v2 annule et remplace la grille v1 » attend votre réponse.');
+    });
+
+    it('« Plus tard » ne vaut pas une réponse', async () => {
+      render16(new Map([['card_v', { id: 'x', action: { type: 'later' } } as unknown as Decision]]));
+      expect(await screen.findByRole('button', { name: 'Préparer la nouvelle base' })).toBeDisabled();
+    });
+
+    it('confirmée, la préparation se propose', async () => {
+      render16(new Map([['card_v', { id: 'x', action: { type: 'confirm_replacement' } } as unknown as Decision]]));
+      expect(await screen.findByRole('button', { name: 'Préparer la nouvelle base' })).toBeEnabled();
+      expect(screen.queryByText(/attend votre réponse/)).not.toBeInTheDocument();
+    });
   });
 
   it('compte les cartes bloquantes qui restent, « Plus tard » compris', async () => {

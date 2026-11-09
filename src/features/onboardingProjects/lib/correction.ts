@@ -45,7 +45,9 @@ export const CORRECTABLE_AUDIT_SCHEMAS: readonly string[] = VERSIONS.audits.corr
  * Bases corrigées que l'écran sait afficher, lues dans la copie de `contract-versions.json` du
  * back : 0.1.0 ; 0.2.0, qui ajoute la raison de chaque information en attente ; 0.3.0, qui ajoute
  * les notes de travail et d'image, le sommaire et le chapitre à créer (avec son numéro réservé) ;
- * 0.4.0, qui marque les phrases « À vérifier » et crée un chapitre à partir d'un document importé.
+ * 0.4.0, qui marque les phrases « À vérifier » et crée un chapitre à partir d'un document importé ;
+ * 0.5.0, qui met à jour les valeurs d'un document qui reprend une version remplacée et dit les
+ * anciennes versions retirées des sources.
  */
 export const SUPPORTED_CORRECTION_SCHEMAS: readonly string[] = VERSIONS.corrections.accepted;
 
@@ -111,7 +113,23 @@ export interface CorrectedSheet {
   created_by?:   string | null;
 }
 
-export type ModificationKind = 'dated_change' | 'kept_side' | 'expert_answer' | 'complete' | 'remove' | 'new_chapter';
+export type ModificationKind = 'dated_change' | 'kept_side' | 'expert_answer' | 'complete' | 'remove' | 'new_chapter' | 'version_update';
+
+/** 0.5.0 : une valeur d'un document remplacée par celle de la nouvelle version, avec sa source. */
+export interface VersionValueUpdate {
+  subject:   string;
+  old_value: string;
+  new_value: string;
+  source:    unknown;
+}
+
+/** 0.5.0 : une version remplacée, confirmée par sa carte : elle n'est plus une source. */
+export interface RetiredSource {
+  document_id:   string;
+  document_path: string;
+  card_id:       string;
+  decision_id:   string;
+}
 
 /** 0.4.0 : où le code a placé un chapitre créé. */
 export interface CreatedSheet {
@@ -134,6 +152,8 @@ export interface Modification {
   reasons?:    string[];
   /** 0.4.0, `new_chapter` : le chapitre créé. */
   created_sheet?: CreatedSheet | null;
+  /** 0.5.0, `version_update` : les valeurs remplacées. */
+  value_updates?: VersionValueUpdate[];
 }
 
 export interface Convention { id: string; rule: string; section_keys: string[] }
@@ -163,6 +183,8 @@ export interface BaseCorrection {
   conventions?:   Convention[];
   /** 0.2.0 : chaque carte en attente dit pourquoi ; absente en 0.1.0. */
   pending?:       PendingInformation[];
+  /** 0.5.0 : les anciennes versions retirées des sources ; absent avant. */
+  retired_sources?: RetiredSource[];
 }
 
 /** GET …/corrections/:id/base. */
@@ -354,7 +376,13 @@ export const KIND_LABEL: Record<ModificationKind, string> = {
   complete:      'Complément',
   remove:        'Retrait',
   new_chapter:   'Nouveau chapitre',
+  version_update: 'Valeurs mises à jour',
 };
+
+/** 0.5.0 : les anciennes versions qui ne sont plus des sources, en clair, par leur nom de fichier. */
+export function retiredSourceSentence(source: Pick<RetiredSource, 'document_path'>): string {
+  return `${source.document_path.split('/').pop()} : ancienne version, elle n'est plus une source de cette base.`;
+}
 
 export const kindLabel = (k: string): string => KIND_LABEL[k as ModificationKind] ?? 'Modification';
 

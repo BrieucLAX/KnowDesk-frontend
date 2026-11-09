@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   analyzedDocuments, analyzedDocumentsSummary, citedByText, documentType,
   baseAnnouncement, cardProgress, cardTitle, clarifySummary, describeCardAnswer, describeSummary, firstOpenCard, groupByNature, isBlocking,
-  codeCheck, failedDetections, formatGapValue, isReadingAudit, notYetDetections, readsImageOnly, recommendationOutcome, unreadImagesText,
+  cardAnswers, codeCheck, failedDetections, isVersionCard, rejectedPointLabel, valueGroups, versionCardsWaiting, versionCardWaitingMessage, formatGapValue, isReadingAudit, notYetDetections, readsImageOnly, recommendationOutcome, unreadImagesText,
   missingSide, orderedCards, rejectionReasonLabel, sideDocuments, sidesQuestion, substantiveAnswers, toQuotes, unreadFiles, unreadReasonLabel, unverifiedCounts, unverifiedReasonLabel, type ReadingCard,
 } from './reading';
 import type { Audit } from './audit';
@@ -328,5 +328,44 @@ describe('Documents analysés', () => {
     expect(citedByText(0)).toBe('cité par aucune carte');
     expect(citedByText(1)).toBe('cité par 1 carte');
     expect(citedByText(4)).toBe('cité par 4 cartes');
+  });
+});
+
+describe('Audit 0.16.0 : valeurs regroupées et cartes de versions', () => {
+  it('une carte de versions bloque et se nomme ; « Plus tard » ne vaut pas une réponse', () => {
+    const card = { id: 'v', nature: 'remplacement_version', rank: 1, analysis: { subject: ' X annule et remplace Y ', reason: '', proposal: '' } } as ReadingCard;
+    expect(isVersionCard(card)).toBe(true);
+    expect(isBlocking(card)).toBe(true);
+    expect(versionCardWaitingMessage(card)).toBe('La carte « X annule et remplace Y » attend votre réponse.');
+    expect(versionCardsWaiting([card], new Map())).toEqual([card]);
+    expect(versionCardsWaiting([card], new Map([['v', { action: { type: 'later' } } as Decision]]))).toEqual([card]);
+    expect(versionCardsWaiting([card], new Map([['v', { action: { type: 'confirm_replacement' } } as Decision]]))).toEqual([]);
+    expect(isReadingAudit('0.16.0')).toBe(true);
+  });
+
+  it('la réponse en clair : la valeur retenue, ou la recommandation suivie', () => {
+    const card = { valueGroups: [{ id: 'g1', label: '30 €' }] } as ReadingCard;
+    const name = (id: string) => id;
+    expect(describeCardAnswer({ type: 'retain_value', group: 'g1' }, card, name)).toBe('30 € retenu');
+    expect(describeCardAnswer({ type: 'retain_value', group: 'g9' }, card, name)).toBe('Valeur retenue');
+    expect(describeCardAnswer({ type: 'follow_recommendation', effect: { type: 'retain_value', group: 'g1' } } as unknown as Decision['action'], card, name))
+      .toBe('Recommandation suivie (30 € retenu)');
+    expect(describeCardAnswer({ type: 'confirm_update' }, undefined, name)).toBe('Je confirme');
+    expect(describeCardAnswer({ type: 'document_stays_valid' }, undefined, name)).toBe('Non, ce document reste valable tel quel');
+  });
+
+  it('un point réglé par une carte de version la nomme ; sans la carte, le libellé général', () => {
+    const card = { id: 'v', analysis: { subject: 'X annule et remplace Y' } } as ReadingCard;
+    const r = { reason: 'ranged_under_version', versionCardId: 'v' };
+    expect(rejectedPointLabel(r, [card])).toBe('Réglé par la carte de version « X annule et remplace Y »');
+    expect(rejectedPointLabel(r)).toBe('Réglé par une carte de version');
+  });
+
+  it('une carte du code garde « Retenir <valeur> » avec les réponses de son contrôle', () => {
+    const card = { answers: ['retain_value', 'not_a_problem', 'other_answer', 'later'], check: { kind: 'value_gap', period: null, values: [
+      { side: 'A', value: '1', unit: {} }, { side: 'B', value: '2', unit: {} }] }, valueGroups: [{ id: 'g1', label: '1 €' }, { id: 'g2', label: '2 €' }] } as unknown as ReadingCard;
+    expect(cardAnswers(card)).toContain('retain_value');
+    expect(valueGroups(card)).toHaveLength(2);
+    expect(valueGroups({ answers: ['accept_side'], valueGroups: [{ id: 'g1' }] } as unknown as ReadingCard)).toEqual([]);
   });
 });

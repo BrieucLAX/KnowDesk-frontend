@@ -13,7 +13,7 @@ vi.mock('../../api/onboardingApi', () => ({
 import { onboardingApi } from '../../api/onboardingApi';
 import { AuditTab } from '../audit/AuditTab';
 import { ClarifyQuote, ReadingCardView } from './ReadingCardView';
-import { PRECISION_WARNING } from './CardAnswers';
+import { DECIDES_WARNING, PRECISION_WARNING } from './CardAnswers';
 import { CARD_COMMENT_HINT } from './CardCommentBox';
 import type { Audit, AuditResponse } from '../../lib/audit';
 import { NATURES, orderedCards } from '../../lib/reading';
@@ -25,6 +25,7 @@ import PILOTE_10 from './fixtures/audit-0.10.0-pilote-2.response.json';
 import PILOTE_11 from './fixtures/audit-0.11.0-pilote-banc-v3.response.json';
 import PILOTE_D1 from './fixtures/audit-0.11.0-pilote-d1.response.json';
 import ELYRA_V2 from './fixtures/audit-0.15.0-elyra-v2.response.json';
+import EXEMPLE_16 from './fixtures/audit-0.16.0-elyra-exemple.response.json';
 
 /**
  * Réponses de GET …/audit sur deux audits 0.8.0 rejoués par le pipeline (pilote, lectures 2 et 3),
@@ -1135,5 +1136,129 @@ describe('« Documents analysés » : tout l\'inventaire sous le nombre de docum
     fireEvent.click(await screen.findByRole('button', { name: 'Commencer' }));
     await screen.findByRole('article', { name: /^Carte 1 sur/ });
     expect(screen.queryByText('Documents analysés')).not.toBeInTheDocument();
+  });
+});
+
+describe('À clarifier (audit 0.16.0, plan-construire-v1, lot A)', () => {
+  const EXEMPLE = EXEMPLE_16 as unknown as AuditResponse;
+  const cards = EXEMPLE.reading!.cards;
+  const grouped = cards.find(c => c.recommendationOrigin === 'code')!;
+  const plain = cards.find(c => c.rank === 1)!;
+  const replacement = cards.find(c => c.nature === 'remplacement_version')!;
+  const reuse = cards.find(c => c.nature === 'reprise_version_remplacee')!;
+  const ordered = orderedCards(cards);
+  const articleOf = (card: typeof grouped) => screen.findByRole('article', { name: new RegExp(`^Carte ${ordered.indexOf(card) + 1} sur`) });
+
+  beforeEach(() => {
+    vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(EXEMPLE);
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
+    vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.answerCard).mockReset().mockImplementation(async (_p, _a, body) => answer(body.cardId, body.action as Decision['action']));
+  });
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it('une carte à valeurs : les passages sous leur valeur, « Retenir <valeur> », pas d\'effet sur les sources affiché', async () => {
+    await openSession();
+    goTo(grouped.analysis.subject);
+    const article = await articleOf(grouped);
+    expect(within(article).getByRole('region', { name: '30 €' })).toBeInTheDocument();
+    expect(within(article).getByRole('region', { name: '50 €' })).toBeInTheDocument();
+    expect(within(article).queryByText(/^Côté [AB]/)).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Retenir [AB]/ })).not.toBeInTheDocument();
+    expect(screen.queryByText('Ce que cela fera dans la base')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Retenir 50 €' }));
+    await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalled());
+    expect(vi.mocked(onboardingApi.answerCard).mock.calls[0][2].action).toEqual({ type: 'retain_value', group: 'g2' });
+    expect(await screen.findByText('50 € retenu')).toBeInTheDocument();
+  });
+
+  it('la recommandation écrite par le code, à part de l\'analyse de l\'IA, qui reste sans effet', async () => {
+    await openSession();
+    goTo(grouped.analysis.subject);
+    const article = await articleOf(grouped);
+    const reco = screen.getByRole('group', { name: 'Recommandation' });
+    expect(reco).toHaveTextContent('Recommandation : retenir 30 € (CR Comite Offres, e-mail du 23/09)');
+    expect(reco).not.toHaveTextContent(grouped.analysis.proposal);
+    const ai = within(article).getByRole('complementary', { name: 'Analyse proposée par l\'IA' });
+    expect(ai).toHaveTextContent(grouped.analysis.proposal);
+    fireEvent.click(within(reco).getByRole('button', { name: 'Je suis la recommandation' }));
+    expect(screen.queryByText('Ce que cela fera dans la base')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Confirmer' }));
+    await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalled());
+    expect(vi.mocked(onboardingApi.answerCard).mock.calls[0][2].action).toEqual({ type: 'follow_recommendation', precisions: null });
+  });
+
+  it('une carte sans valeur lisible reste comme avant', async () => {
+    await openSession();
+    goTo(plain.analysis.subject);
+    const article = await articleOf(plain);
+    expect(within(article).getByRole('heading', { name: 'Côté A' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'Recommandation de l\'IA' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Retenir A/ })).toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Retenir une valeur' })).not.toBeInTheDocument();
+  });
+
+  it('une carte de remplacement : l\'affirmation, les dates lues, les différences, exactement ses trois réponses', async () => {
+    await openSession();
+    goTo(replacement.analysis.subject);
+    const article = await articleOf(replacement);
+    expect(within(article).getByRole('heading', { name: replacement.analysis.subject })).toBeInTheDocument();
+    expect(article).toHaveTextContent('date lue : 01/08/2025');
+    expect(article).toHaveTextContent('date lue : 01/09/2026');
+    expect(article).toHaveTextContent('elles ne décident rien');
+    expect(within(article).getByRole('region', { name: 'Les différences entre les deux versions' })).toHaveTextContent('Elyra Fixe 2 ans, Base : 0,2018 € → 0,1952 €');
+    expect(within(article).getByText('0,2018')).toBeInTheDocument();
+    expect(within(article).queryByRole('complementary', { name: 'Analyse proposée par l\'IA' })).not.toBeInTheDocument();
+    const answers = screen.getByRole('group', { name: 'Répondre à la carte' });
+    expect(within(answers).getAllByRole('button').map(b => b.textContent)).toEqual(['Je confirme', 'Autre réponse', 'Plus tard']);
+    expect(screen.queryByRole('group', { name: /Recommandation/ })).not.toBeInTheDocument();
+    // Les cartes rangées dessous se consultent, repliées.
+    const ranged = within(article).getByText('1 carte ligne par ligne rangée sous celle-ci, qui n\'est plus posée').closest('details')!;
+    expect(ranged.open).toBe(false);
+    expect(ranged).toHaveTextContent('Prix de l\'offre Elyra Fixe 2 ans (particuliers)');
+    fireEvent.click(within(answers).getByRole('button', { name: 'Je confirme' }));
+    await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalled());
+    expect(vi.mocked(onboardingApi.answerCard).mock.calls[0][2].action).toEqual({ type: 'confirm_replacement' });
+  });
+
+  it('une carte de reprise : sa phrase, ses valeurs à mettre à jour, exactement ses quatre réponses', async () => {
+    await openSession();
+    goTo(reuse.analysis.subject);
+    const article = await articleOf(reuse);
+    expect(article).toHaveTextContent('Ce document reprend les valeurs d\'une version remplacée ; ses valeurs seront mises à jour avec celles de la nouvelle.');
+    expect(within(article).getByRole('region', { name: 'Les valeurs à mettre à jour' })).toHaveTextContent('Elyra Fixe 2 ans, Base : 0,2018 € → 0,1952 €');
+    const answers = screen.getByRole('group', { name: 'Répondre à la carte' });
+    expect(within(answers).getAllByRole('button').map(b => b.textContent)).toEqual([
+      'Je confirme', 'Non, ce document reste valable tel quel', 'Autre réponse', 'Plus tard']);
+    fireEvent.click(within(answers).getByRole('button', { name: 'Non, ce document reste valable tel quel' }));
+    await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalled());
+    expect(vi.mocked(onboardingApi.answerCard).mock.calls[0][2].action).toEqual({ type: 'document_stays_valid' });
+  });
+
+  it('« Autre réponse » sur une carte de versions : son texte n\'entre dans la base que s\'il tranche', async () => {
+    await openSession();
+    goTo(replacement.analysis.subject);
+    await articleOf(replacement);
+    fireEvent.click(screen.getByRole('button', { name: 'Autre réponse' }));
+    expect(screen.getByText(DECIDES_WARNING)).toBeInTheDocument();
+    expect(screen.queryByText(PRECISION_WARNING)).not.toBeInTheDocument();
+  });
+
+  it('« Points écartés » : un point réglé par une carte de version la nomme, avec ses passages', async () => {
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    const label = await screen.findByText(`Changement daté · Réglé par la carte de version « ${replacement.analysis.subject} »`);
+    expect(label.closest('li')).toHaveTextContent('0,2018');
+  });
+
+  it('un audit 0.15.0 s\'affiche comme avant : ni groupes, ni carte de versions', async () => {
+    vi.mocked(onboardingApi.getAudit).mockResolvedValue(ELYRA_V2 as unknown as AuditResponse);
+    await openSession();
+    expect(screen.queryByRole('group', { name: 'Retenir une valeur' })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Remplacements? de version/)).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /^Retenir [AB]/ }).length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeInTheDocument();
   });
 });

@@ -6,7 +6,7 @@ import { useToast } from '../../../../shared/lib/useToast';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { onboardingApi } from '../../api/onboardingApi';
 import type { Decision } from '../../lib/decisions';
-import { NO_BASE_TO_PREPARE, type ExistingBase, type ReadingCard } from '../../lib/reading';
+import { NO_BASE_TO_PREPARE, versionCardsWaiting, versionCardWaitingMessage, type ExistingBase, type ReadingCard } from '../../lib/reading';
 import {
   blockingCardsLeft, blockingLeftLabel, CORRECTABLE_AUDIT_SCHEMAS, correctionFailureMessage, isCorrectionActive,
   type CorrectionQuota, type OnboardingCorrection,
@@ -26,7 +26,8 @@ interface CorrectionEntryProps {
 /**
  * Sur « À clarifier », sous le résumé : « Préparer la nouvelle base » quand toutes les cartes
  * bloquantes ont une décision (règle du back : la nature seule ; « Plus tard » ne tranche pas),
- * sinon le nombre de cartes qui restent. Une préparation en cours, ou une base prête, y renvoie.
+ * sinon le nombre de cartes qui restent. Une carte de versions sans vraie réponse (audit 0.16.0)
+ * laisse le bouton grisé, avec un message qui la nomme. Une préparation en cours, ou une base prête, y renvoie.
  */
 export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, current, onOpenBase, base = null }: CorrectionEntryProps) {
   const toast = useToast();
@@ -61,6 +62,7 @@ export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, c
   if (corrections === null) return <Skeleton className="obp-arb-entry__loading" />;
 
   const left = blockingCardsLeft(cards, current);
+  const waiting = versionCardsWaiting(cards, current);
   const latest = corrections[0] ?? null;
   const ready = corrections.some(c => c.status === 'succeeded');
   const quotaReached = quota !== null && quota.used >= quota.max;
@@ -93,7 +95,15 @@ export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, c
       {latest?.status === 'failed' && (
         <p className="obp-analysis__error" role="status">{correctionFailureMessage(latest.errorCode)}</p>
       )}
-      {left.left > 0 ? (
+      {waiting.length > 0 ? (
+        <div className="obp-arb-entry obp-correction-entry__waiting">
+          <Button variant="primary" size="md" disabled>Préparer la nouvelle base</Button>
+          <div role="status">
+            {waiting.map(c => <p key={c.id} className="obp-correction-entry__left">{versionCardWaitingMessage(c)}</p>)}
+            {left.left > waiting.length && <p className="obp-correction-entry__left">{blockingLeftLabel(left)}</p>}
+          </div>
+        </div>
+      ) : left.left > 0 ? (
         <p className="obp-correction-entry__left" role="status">{blockingLeftLabel(left)}</p>
       ) : quotaReached ? (
         <p className="obp-muted" role="status">
