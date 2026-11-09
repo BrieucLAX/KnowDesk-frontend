@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   blockingCardsLeft, blockingLeftLabel, correctionFailureMessage, correctionStepStates, firstSentence, itemLabel, originLabel, outcomeLabel,
   partialSummary, pendingSentences, reasonGroups,
-  canCreateChapters, kindLabel, reasonLabel, reviewProgressLabel, toVerifyCounts, toVerifyLabel, type BaseCorrection, type Modification,
+  canCreateChapters, kindLabel, reasonLabel, retiredSourceSentence, reviewProgressLabel, toVerifyCounts, toVerifyLabel, type BaseCorrection, type Modification,
 } from './correction';
 import type { Decision } from './decisions';
 import type { ReadingCard } from './reading';
@@ -195,5 +195,12 @@ describe('correction 0.4.0', () => {
     const pending = [{ card_id: 'c1', card_rank: 1, reason: 'new_chapter' as const, modification_id: 'M4' }];
     expect(pendingSentences(pending, () => 'Téléconsultation')[1]).toMatch(/^La préparation ne crée pas de nouveau chapitre\. /);
     expect(pendingSentences(pending, () => 'Téléconsultation', true)[1]).toMatch(/^Aucun document importé ne porte ce chapitre : la préparation ne l'a pas créé\. Pour ajouter ce contenu/);
+  });
+});
+
+describe('Correction 0.5.0 : libellés en clair', () => {
+  it('une mise à jour de valeurs et une ancienne version retirée des sources', () => {
+    expect(kindLabel('version_update')).toBe('Valeurs mises à jour');
+    expect(retiredSourceSentence({ document_path: 'jeu.zip/Grille_v1.pdf' })).toBe('Grille_v1.pdf : ancienne version, elle n\'est plus une source de cette base.');
   });
 });

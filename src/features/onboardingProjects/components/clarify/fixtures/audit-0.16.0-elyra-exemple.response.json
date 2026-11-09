@@ -1,0 +1,1227 @@
+{
+ "analysisId": "ad795063-ee75-4139-a85d-06a22ea8a37c",
+ "schemaVersion": "0.16.0",
+ "audit": {
+  "run": {
+   "model": "mistral-large-2512",
+   "cost_usd": 0.024711,
+   "prompt_id": "lecture_globale",
+   "prompt_tokens": 24969,
+   "prompt_version": 1,
+   "pipeline_commit": null,
+   "duration_seconds": 0,
+   "estimated_tokens": 18681,
+   "completion_tokens": 8151
+  },
+  "base": {
+   "mode": "build",
+   "reason": "none",
+   "document_ids": [],
+   "briefing_excerpt": null
+  },
+  "cards": [],
+  "inventory": [
+   {
+    "path": "jeudetestsv2.zip/2026-01-14_Bienvenue_promo_janvier.eml",
+    "error": null,
+    "scope": null,
+    "title": "Bienvenue chez Elyra ! Votre parcours d'intégration démarre demain",
+    "format": "eml",
+    "sha256": "9ebe4229af85ddf2febff8d32f0beb5cb81e8d71a78f0c98ebe29a4e1192b3b7",
+    "status": "parsed",
+    "size_bytes": 267057,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_01_14_bienvenue_promo_janvier_eml_4d5af175",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-01-15_Formation_Onboarding_Conseillers_Energie.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Onboarding conseillers – Les fondamentaux de l'énergie",
+    "format": "pptx",
+    "sha256": "f5e5174cbf1b65b6f27d02d76abfbeb995d2dab323a72f10af0cd140c34eda11",
+    "status": "parsed",
+    "size_bytes": 193770,
+    "unit_count": 11,
+    "document_id": "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_pptx_ed141783",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-03-10_Lancement_gamme_particuliers_2026.eml",
+    "error": null,
+    "scope": null,
+    "title": "[Offres] La gamme Particuliers 2026 est en ligne",
+    "format": "eml",
+    "sha256": "274ebef42c33fb1064c7d29f697c8eafab556ce5d53fa9c50a8fd95456f75c86",
+    "status": "parsed",
+    "size_bytes": 150991,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_03_10_lancement_gamme_particuliers_2026_eml_94d730a5",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-03-10_Presentation_Gamme_Particuliers_2026.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Gamme Particuliers 2026",
+    "format": "pptx",
+    "sha256": "824bb95a677254980d471edeb16ba3cbc88f5b0b9b059d237fa35ad393c48152",
+    "status": "parsed",
+    "size_bytes": 103484,
+    "unit_count": 8,
+    "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-03-12_Presentation_Gamme_Professionnels_2026.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Gamme Professionnels 2026",
+    "format": "pptx",
+    "sha256": "6fedc7179558cb0e33ab969a9b46f1cc09de0a9c5159d39cca9a155444525a01",
+    "status": "parsed",
+    "size_bytes": 119627,
+    "unit_count": 7,
+    "document_id": "doc_jeudetestsv2_zip_2026_03_12_presentation_gamme_professionnels_2026_pptx_db0f9ddc",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-04-08_Formation_Lecture_Facture.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Module 2 – Lire et expliquer une facture",
+    "format": "pptx",
+    "sha256": "ddffb4eea36ebfb687956656a62be7129d414c5ef79c777627b919e25580a8dc",
+    "status": "parsed",
+    "size_bytes": 173310,
+    "unit_count": 6,
+    "document_id": "doc_jeudetestsv2_zip_2026_04_08_formation_lecture_facture_pptx_b953d3c7",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-06-02_Formation_Gaz_Fin_TRV_Offres_Marche.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Formation Gaz naturel",
+    "format": "pptx",
+    "sha256": "8d7fa065751f507d3d7a682a7908e65e674b541dc8d7a3d71a0bc1939169d676",
+    "status": "parsed",
+    "size_bytes": 128518,
+    "unit_count": 8,
+    "document_id": "doc_jeudetestsv2_zip_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_8f9b49ba",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-06-04_RE_Question_offre_gaz_indexe.eml",
+    "error": null,
+    "scope": null,
+    "title": "RE: Question offre Gaz Indexé – client qui conteste",
+    "format": "eml",
+    "sha256": "9a4489501c0e62a223dcf71f4d43b140f03951932632e522892fcf94dfcd6baa",
+    "status": "parsed",
+    "size_bytes": 228766,
+    "unit_count": 2,
+    "document_id": "doc_jeudetestsv2_zip_2026_06_04_re_question_offre_gaz_indexe_eml_67d7ea1a",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-07-02_Note_garanties_origine.eml",
+    "error": null,
+    "scope": null,
+    "title": "Électricité verte : comment répondre aux clients",
+    "format": "eml",
+    "sha256": "8dd7d0e3be8901ddf84eccb6cfc84ef4d7078899fba6ed6d8ca37086522571d8",
+    "status": "parsed",
+    "size_bytes": 79848,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_07_02_note_garanties_origine_eml_6b121e5f",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-08-31_Nouvelle_grille_tarifaire_1er_septembre.eml",
+    "error": null,
+    "scope": null,
+    "title": "IMPORTANT – Nouvelle grille tarifaire au 1er septembre 2026",
+    "format": "eml",
+    "sha256": "742f003e6819558e979c0548671d982b4b889e7f05a426ab5bc13ddc724861c3",
+    "status": "parsed",
+    "size_bytes": 179253,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_70589c67",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-09-20_Lancement_Offre_Vert_Local.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Lancement Elyra Vert Local",
+    "format": "pptx",
+    "sha256": "95c42a81d7a63cc91702829aadc9afa66f318435fdff26a895a56a042d37e46d",
+    "status": "parsed",
+    "size_bytes": 90499,
+    "unit_count": 6,
+    "document_id": "doc_jeudetestsv2_zip_2026_09_20_lancement_offre_vert_local_pptx_ec9c6328",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-09-23_Decisions_comite_offres_parrainage_VertLocal.eml",
+    "error": null,
+    "scope": null,
+    "title": "Décisions du comité Offres : parrainage et Vert Local",
+    "format": "eml",
+    "sha256": "487397dea0c5fb6bb1d4a510b6a0c615ccf41e5e33096f84731728e597d0dbc1",
+    "status": "parsed",
+    "size_bytes": 73323,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_918e6ce5",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-10-01_Changement_horaires_service_client.eml",
+    "error": null,
+    "scope": null,
+    "title": "Nouveaux horaires du service client à compter du 2 novembre",
+    "format": "eml",
+    "sha256": "d8428571b1cec9f4f97209226f7b400e016e521c4bd626e614a8c5bf738eac70",
+    "status": "parsed",
+    "size_bytes": 1269,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_2026_10_01_changement_horaires_service_client_eml_b79c4434",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-10-13_RE_Reclamation_Lambert_frais_resiliation.eml",
+    "error": null,
+    "scope": null,
+    "title": "RE: Réclamation M. Lambert – frais de résiliation 50 €",
+    "format": "eml",
+    "sha256": "7ffbd624b2c83dd3fbbb0e30fbd4dc347f35f0a57bd672ea65c44019c1c0180b",
+    "status": "parsed",
+    "size_bytes": 194911,
+    "unit_count": 2,
+    "document_id": "doc_jeudetestsv2_zip_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_c9847f0d",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Argumentaire_Commercial_TPE_Artisans.docx",
+    "error": null,
+    "scope": null,
+    "title": "Argumentaire commercial – TPE et artisans",
+    "format": "docx",
+    "sha256": "ef0de80ca8e52aff6de36470f60f0fde7ef1835a003f4bc37e1cd912efb3693f",
+    "status": "parsed",
+    "size_bytes": 52184,
+    "unit_count": 6,
+    "document_id": "doc_jeudetestsv2_zip_argumentaire_commercial_tpe_artisans_docx_2de2034b",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Brochure_Elyra_Pro_Serenite.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Elyra Pro Sérénité",
+    "format": "pdf",
+    "sha256": "d84a1d67a9092c8711d4d74c84afa4c9a897cc15658d8a6ee8934a94a3f4e94a",
+    "status": "parsed",
+    "size_bytes": 57518,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_brochure_elyra_pro_serenite_pdf_dbccc289",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/CGV_Particuliers_Electricite_Gaz_2026.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Conditions générales de vente – Particuliers",
+    "format": "pdf",
+    "sha256": "7d2de4b6671478b65294393155c02399443f45aef52c056b55922e21cb4f2b60",
+    "status": "parsed",
+    "size_bytes": 57876,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/CGV_Professionnels_2026.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Conditions générales de vente – Professionnels",
+    "format": "pdf",
+    "sha256": "d85c0f07bb6c599215665c0faf983e6ba1f1b1e37558029564d3848e565e68ab",
+    "status": "parsed",
+    "size_bytes": 57658,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_cgv_professionnels_2026_pdf_fea1611b",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/CR_Comite_Offres_2026-09-22.docx",
+    "error": null,
+    "scope": null,
+    "title": "Compte rendu – Comité Offres & Prix du 22 septembre 2026",
+    "format": "docx",
+    "sha256": "6dab866335de802996dbbb0280edda31fd44c08de15c989262a408bbcddac670",
+    "status": "parsed",
+    "size_bytes": 52339,
+    "unit_count": 8,
+    "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Courrier_reclamation_Lambert_2026-10-06.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Courrier_reclamation_Lambert_2026-10-06",
+    "format": "pdf",
+    "sha256": "e135deace7e2c5b1ea3111145542ea8891924fef92ebf2f9c2befb6540f4dfbb",
+    "status": "parsed",
+    "size_bytes": 140691,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_courrier_reclamation_lambert_2026_10_06_pdf_eaff2e7a",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/FAQ_Conseillers_Particuliers_avril2026.docx",
+    "error": null,
+    "scope": null,
+    "title": "FAQ conseillers – Questions fréquentes des particuliers",
+    "format": "docx",
+    "sha256": "d7336c2fcc2dd527ff800f903c8ccef0f572b97bd7deac61cd60a41a1a34f58c",
+    "status": "parsed",
+    "size_bytes": 52343,
+    "unit_count": 15,
+    "document_id": "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Fiche_Offre_Elyra_Fixe_2ans.docx",
+    "error": null,
+    "scope": null,
+    "title": "Fiche offre – Elyra Fixe 2 ans",
+    "format": "docx",
+    "sha256": "c138a96b4d11da622b4459f736833410ab44efc01bb9360e8a6d0b95e46ac3a1",
+    "status": "parsed",
+    "size_bytes": 52140,
+    "unit_count": 8,
+    "document_id": "doc_jeudetestsv2_zip_fiche_offre_elyra_fixe_2ans_docx_7acb5733",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Fiche_Offre_Gaz_Indexe.docx",
+    "error": null,
+    "scope": null,
+    "title": "Fiche offre – Elyra Gaz Indexé",
+    "format": "docx",
+    "sha256": "063b90d8635d03a49419cba6f51b86977b5336b322eaf5f24c0be2703a3794c5",
+    "status": "parsed",
+    "size_bytes": 51757,
+    "unit_count": 5,
+    "document_id": "doc_jeudetestsv2_zip_fiche_offre_gaz_indexe_docx_916894f0",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Flyer_Parrainage_Octobre2026.pptx",
+    "error": null,
+    "scope": null,
+    "title": "Programme de parrainage Elyra",
+    "format": "pptx",
+    "sha256": "f0c7696222fe2f374e3654454c865d62750305e290a3e1644843ead7f4352478",
+    "status": "parsed",
+    "size_bytes": 81164,
+    "unit_count": 4,
+    "document_id": "doc_jeudetestsv2_zip_flyer_parrainage_octobre2026_pptx_97827844",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Grille tarifaire Particuliers",
+    "format": "pdf",
+    "sha256": "dd747d1ac720649a738fe5b2b18ac356e5c831e7389d09f8719142590977af8b",
+    "status": "parsed",
+    "size_bytes": 57529,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Grille tarifaire Particuliers",
+    "format": "pdf",
+    "sha256": "e299f0069a79c6856f1d8fe2ef5da1959dfc23506b9ab36f2e5d1b06f21b8eb9",
+    "status": "parsed",
+    "size_bytes": 129790,
+    "unit_count": 2,
+    "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Guide_Eligibilite_TRVE_Professionnels.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Guide d'éligibilité au tarif réglementé",
+    "format": "pdf",
+    "sha256": "3a79e3edbcdb57b3fe2de4cf0d52149b2b38d5bc6fb61c2b3a937908020b3b62",
+    "status": "parsed",
+    "size_bytes": 114720,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_guide_eligibilite_trve_professionnels_pdf_9258c2ab",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Historique_prix_repere_S1_2026.xlsx",
+    "error": null,
+    "scope": null,
+    "title": null,
+    "format": "xlsx",
+    "sha256": "145c957d8bc82d5759a0d7075e608f95400a1388a704e6d76de896f29b2be7b1",
+    "status": "parsed",
+    "size_bytes": 83098,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_historique_prix_repere_s1_2026_xlsx_cf84cbab",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Note_interne_Garanties_Origine_2026-07-01.pdf",
+    "error": null,
+    "scope": null,
+    "title": "Note interne – Garanties d'origine",
+    "format": "pdf",
+    "sha256": "3abd3da873a661714f733bf45e4848a49870f1f2362002dacd4799ddc0a97a47",
+    "status": "parsed",
+    "size_bytes": 57158,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_note_interne_garanties_origine_2026_07_01_pdf_0c344c53",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Procedure_Demenagement_Clients_Particuliers.docx",
+    "error": null,
+    "scope": null,
+    "title": "Procédure – Déménagement d'un client particulier",
+    "format": "docx",
+    "sha256": "695a0c65b93f26d532cf6425fddcdaadfb37492fe8a282613cf6ddb932f06088",
+    "status": "parsed",
+    "size_bytes": 52145,
+    "unit_count": 6,
+    "document_id": "doc_jeudetestsv2_zip_procedure_demenagement_clients_particuliers_docx_bc1edd10",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Process_Reclamations_et_Mediation.docx",
+    "error": null,
+    "scope": null,
+    "title": "Processus de traitement des réclamations",
+    "format": "docx",
+    "sha256": "6fb1c94e83daee57a72396b12110b25e6f4598badf10b11fd8e93574b953a330",
+    "status": "parsed",
+    "size_bytes": 87609,
+    "unit_count": 7,
+    "document_id": "doc_jeudetestsv2_zip_process_reclamations_et_mediation_docx_b860d4b3",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Script_Appel_Souscription_Particuliers_v4.docx",
+    "error": null,
+    "scope": null,
+    "title": "Script d'appel – Souscription d'un contrat particulier",
+    "format": "docx",
+    "sha256": "d7e0177d2cb972cc87e447191b87b8f6c5da6447d0d0e74a63b94f59cd1469e1",
+    "status": "parsed",
+    "size_bytes": 52550,
+    "unit_count": 8,
+    "document_id": "doc_jeudetestsv2_zip_script_appel_souscription_particuliers_v4_docx_d02e9c6b",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Tableau_comparatif_gamme_2026.xlsx",
+    "error": null,
+    "scope": null,
+    "title": null,
+    "format": "xlsx",
+    "sha256": "2a07a460d515feada3591ca160d20ebb41e7043c2cb9bf613977c78f965c8dfb",
+    "status": "parsed",
+    "size_bytes": 5508,
+    "unit_count": 1,
+    "document_id": "doc_jeudetestsv2_zip_tableau_comparatif_gamme_2026_xlsx_64c695b8",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-01-15_Formation_Onboarding_Conseillers_Energie_1.pptx",
+    "error": "duplicate_file: même contenu que jeudetestsv2.zip/2026-01-15_Formation_Onboarding_Conseillers_Energie.pptx",
+    "scope": null,
+    "title": null,
+    "format": "pptx",
+    "sha256": "f5e5174cbf1b65b6f27d02d76abfbeb995d2dab323a72f10af0cd140c34eda11",
+    "status": "failed",
+    "size_bytes": 193770,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_2026_01_15_formation_onboarding_conseillers_energie_1_pptx_375a8815",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/2026-03-10_Presentation_Gamme_Particuliers_2026_1.pptx",
+    "error": "duplicate_file: même contenu que jeudetestsv2.zip/2026-03-10_Presentation_Gamme_Particuliers_2026.pptx",
+    "scope": null,
+    "title": null,
+    "format": "pptx",
+    "sha256": "824bb95a677254980d471edeb16ba3cbc88f5b0b9b059d237fa35ad393c48152",
+    "status": "failed",
+    "size_bytes": 103484,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_1_pptx_f51e40a9",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/CR_Comite_Offres_2026-09-22_1.docx",
+    "error": "duplicate_file: même contenu que jeudetestsv2.zip/CR_Comite_Offres_2026-09-22.docx",
+    "scope": null,
+    "title": null,
+    "format": "docx",
+    "sha256": "6dab866335de802996dbbb0280edda31fd44c08de15c989262a408bbcddac670",
+    "status": "failed",
+    "size_bytes": 52339,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_1_docx_83010655",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v2_2026-09-01_1.pdf",
+    "error": "duplicate_file: même contenu que jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf",
+    "scope": null,
+    "title": null,
+    "format": "pdf",
+    "sha256": "e299f0069a79c6856f1d8fe2ef5da1959dfc23506b9ab36f2e5d1b06f21b8eb9",
+    "status": "failed",
+    "size_bytes": 129790,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_1_pdf_8bbdb717",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/Note_interne_Garanties_Origine_2026-07-01_1.pdf",
+    "error": "duplicate_file: même contenu que jeudetestsv2.zip/Note_interne_Garanties_Origine_2026-07-01.pdf",
+    "scope": null,
+    "title": null,
+    "format": "pdf",
+    "sha256": "3abd3da873a661714f733bf45e4848a49870f1f2362002dacd4799ddc0a97a47",
+    "status": "failed",
+    "size_bytes": 57158,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_note_interne_garanties_origine_2026_07_01_1_pdf_1d345594",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   },
+   {
+    "path": "jeudetestsv2.zip/graphique_prix_repere.png",
+    "error": "unreferenced_image: image citée par aucun document",
+    "scope": null,
+    "title": null,
+    "format": "other",
+    "sha256": "d08b8210bad1be722ced095cfef47865c3d2bde1976a7dd05b14b9c53a90a60d",
+    "status": "failed",
+    "size_bytes": 82390,
+    "unit_count": 0,
+    "document_id": "doc_jeudetestsv2_zip_graphique_prix_repere_png_07802039",
+    "source_type": null,
+    "version_rank": null,
+    "version_group": null
+   }
+  ],
+  "generated_at": "2026-11-02T16:32:11.246490Z",
+  "reading_date": "2026-11-02",
+  "unread_images": null,
+  "briefing_given": false,
+  "extraction_run": null,
+  "schema_version": "0.16.0",
+  "rejected_points": [],
+  "temporary_notes": [],
+  "extracted_values": [],
+  "unverified_quotes": {
+   "not_found": 1,
+   "wrong_document": 4
+  },
+  "unavailable_detections": [
+   "temporary_notes"
+  ]
+ },
+ "imageIds": [],
+ "cards": null,
+ "conflictsAwaitingReading": null,
+ "extractionNotes": null,
+ "reading": {
+  "readingDate": "2026-11-02",
+  "briefingGiven": false,
+  "cards": [
+   {
+    "id": "card_97f117cc4c93a9bc",
+    "nature": "contradiction",
+    "rank": 1,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+     "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+     "doc_jeudetestsv2_zip_courrier_reclamation_lambert_2026_10_06_pdf_eaff2e7a"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Pour les offres sans engagement, aucun frais. Pour l'offre Elyra Fixe 2 ans, des frais de résiliation anticipée de 50 € TTC s'appliquent si le client part avant 12 mois.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2",
+         "heading_path": [
+          "Résiliation",
+          "Y a-t-il des frais si je résilie ?"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "Aucun frais de résiliation\n\nConformément au code de la consommation, aucun frais ni aucune indemnité ne peut être réclamé au client résidentiel en cas de résiliation, y compris pour les offres à prix fixe.",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_cgv_particuliers_electricite_gaz_2026_pdf_d66d6702",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Frais de résiliation pour l'offre Elyra Fixe 2 ans (particuliers)",
+     "reason": "La FAQ conseillers indique des frais de résiliation de 50 € pour l'offre Elyra Fixe 2 ans si le client part avant 12 mois, alors que les CGV (document juridique de référence) stipulent qu'aucun frais de résiliation ne peut être appliqué à un client particulier, quelle que soit l'offre. Cette contradiction est confirmée par la réclamation d'un client et la réponse du service juridique.",
+     "proposal": "Retirer toute mention de frais de résiliation pour les particuliers dans la FAQ et les supports de formation. Appliquer strictement l'article 11 des CGV Particuliers : aucun frais de résiliation pour les clients résidentiels, y compris pour Elyra Fixe 2 ans."
+    },
+    "answers": [
+     "accept_side",
+     "distinct_cases",
+     "same_meaning",
+     "different_subjects",
+     "example_only",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": {
+     "text": "Retirer toute mention de frais de résiliation pour les particuliers dans la FAQ et les supports de formation. Appliquer strictement l'article 11 des CGV Particuliers : aucun frais de résiliation pour les clients résidentiels, y compris pour Elyra Fixe 2 ans.",
+     "effect": null,
+     "basis": "aucune décision structurée pour la nature contradiction"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null,
+    "recommendationOrigin": "model",
+    "valueGroups": []
+   },
+   {
+    "id": "card_50b7d1e9d7c308a5",
+    "nature": "contradiction",
+    "rank": 2,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_flyer_parrainage_octobre2026_pptx_97827844",
+     "doc_jeudetestsv2_zip_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_918e6ce5",
+     "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "50 € de remise pour le parrain et 50 € pour le filleul",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_flyer_parrainage_octobre2026_pptx_97827844",
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Le marketing proposait 50 € par personne. Le contrôle de gestion a jugé le coût d'acquisition trop élevé au regard de la marge sur les offres fixes. Le comité retient 30 €, avec revue au bout de 6 mois.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+         "heading_path": [
+          "Détail des échanges",
+          "Parrainage"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Montant de la remise de parrainage",
+     "reason": "Le flyer de parrainage (octobre 2026) annonce une remise de 50 € pour le parrain et le filleul, alors que les décisions du comité Offres (22/09/2026) et l'e-mail du 23/09/2026 confirment un montant de 30 € par personne.",
+     "proposal": "Corriger le flyer de parrainage pour indiquer une remise de 30 € pour le parrain et 30 € pour le filleul, conformément aux décisions du comité Offres."
+    },
+    "answers": [
+     "retain_value",
+     "distinct_cases",
+     "same_meaning",
+     "different_subjects",
+     "example_only",
+     "other_answer",
+     "later",
+     "out_of_scope"
+    ],
+    "unverifiedQuotes": [
+     {
+      "side": "A",
+      "document": "jeudetestsv2.zip/Flyer_Parrainage_Octobre2026.pptx",
+      "location": "",
+      "text": "50 €\nofferts au parrain ET au filleul\ndès la 1re facture du filleul",
+      "reason": "not_found"
+     }
+    ],
+    "recommendation": {
+     "text": "Recommandation : retenir 30 € (CR Comite Offres, e-mail du 23/09)",
+     "effect": {
+      "type": "retain_value",
+      "group": "g1"
+     },
+     "basis": "la recommandation écrit la valeur de ce groupe"
+    },
+    "absentReferences": [],
+    "origin": "model",
+    "check": null,
+    "valueGroups": [
+     {
+      "id": "g1",
+      "value": "30",
+      "dimension": "amount",
+      "label": "30 €",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Le marketing proposait 50 € par personne. Le contrôle de gestion a jugé le coût d'acquisition trop élevé au regard de la marge sur les offres fixes. Le comité retient 30 €, avec revue au bout de 6 mois.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+         "heading_path": [
+          "Détail des échanges",
+          "Parrainage"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     },
+     {
+      "id": "g2",
+      "value": "50",
+      "dimension": "amount",
+      "label": "50 €",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "slide": 3,
+         "format": "pptx",
+         "excerpt": "50 € de remise pour le parrain et 50 € pour le filleul",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_flyer_parrainage_octobre2026_pptx_97827844",
+         "excerpt_origin": "source_text"
+        }
+       },
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "zone": "text",
+         "format": "docx",
+         "excerpt": "Le marketing proposait 50 € par personne. Le contrôle de gestion a jugé le coût d'acquisition trop élevé au regard de la marge sur les offres fixes. Le comité retient 30 €, avec revue au bout de 6 mois.",
+         "image_id": null,
+         "block_kind": "paragraph",
+         "table_cell": null,
+         "block_index": 0,
+         "document_id": "doc_jeudetestsv2_zip_cr_comite_offres_2026_09_22_docx_be2102bc",
+         "heading_path": [
+          "Détail des échanges",
+          "Parrainage"
+         ],
+         "excerpt_origin": "source_text"
+        }
+       }
+      ]
+     }
+    ],
+    "recommendedGroup": "g1",
+    "recommendationOrigin": "code"
+   },
+   {
+    "id": "card_replacement",
+    "nature": "remplacement_version",
+    "rank": 90,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,2018 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf annule et remplace Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+     "reason": "Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf annule et remplace Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+     "proposal": "Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf annule et remplace Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf"
+    },
+    "answers": [
+     "confirm_replacement",
+     "other_answer",
+     "later"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": null,
+    "absentReferences": [],
+    "origin": "code",
+    "check": null,
+    "valueGroups": [],
+    "recommendedGroup": null,
+    "recommendationOrigin": null,
+    "replacement": {
+     "replacedDocument": {
+      "documentId": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+      "path": "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+      "dateRead": "2025-08-01"
+     },
+     "replacingDocument": {
+      "documentId": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+      "path": "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf",
+      "dateRead": "2026-09-01"
+     },
+     "differences": [
+      {
+       "subject": "Elyra Fixe 2 ans, Base",
+       "oldValue": "0,2018 €",
+       "oldQuote": {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,2018 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f"
+        }
+       },
+       "newValue": "0,1952 €",
+       "newQuote": {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+        }
+       }
+      },
+      {
+       "subject": "Elyra Indexée, Base",
+       "oldValue": "6 %",
+       "oldQuote": {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "| Elyra Indexée | Base | 15,96 | TRVE HT – 6 % | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f"
+        }
+       },
+       "newValue": "8 %",
+       "newQuote": {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "| Elyra Indexée | Base | 15,96 | TRVE HT – 8 % | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+        }
+       }
+      }
+     ],
+     "rangedCards": [
+      {
+       "cardId": "card_ranged",
+       "rank": 3,
+       "nature": "dated_change",
+       "subject": "Prix de l'offre Elyra Fixe 2 ans (particuliers)",
+       "documentIds": [
+        "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+        "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+       ],
+       "origin": "model"
+      }
+     ]
+    },
+    "versionReuse": null
+   },
+   {
+    "id": "card_reuse",
+    "nature": "reprise_version_remplacee",
+    "rank": 91,
+    "mergedRanks": [],
+    "documentIds": [
+     "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+     "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+    ],
+    "sides": [
+     {
+      "label": "A",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "slide": 3,
+         "zone": "body",
+         "format": "pptx",
+         "excerpt": "• Base 6 kVA : 0,2018 € TTC/kWh · abonnement 16,20 € TTC/mois",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356"
+        }
+       }
+      ]
+     },
+     {
+      "label": "B",
+      "quotes": [
+       {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+        }
+       }
+      ]
+     }
+    ],
+    "analysis": {
+     "subject": "2026-03-10_Presentation_Gamme_Particuliers_2026.pptx reprend les valeurs de Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+     "reason": "2026-03-10_Presentation_Gamme_Particuliers_2026.pptx reprend les valeurs de Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+     "proposal": "2026-03-10_Presentation_Gamme_Particuliers_2026.pptx reprend les valeurs de Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf"
+    },
+    "answers": [
+     "confirm_update",
+     "document_stays_valid",
+     "other_answer",
+     "later"
+    ],
+    "unverifiedQuotes": [],
+    "recommendation": null,
+    "absentReferences": [],
+    "origin": "code",
+    "check": null,
+    "valueGroups": [],
+    "recommendedGroup": null,
+    "recommendationOrigin": null,
+    "replacement": null,
+    "versionReuse": {
+     "document": {
+      "documentId": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356",
+      "path": "jeudetestsv2.zip/2026-03-10_Presentation_Gamme_Particuliers_2026.pptx",
+      "dateRead": "2026-03-10"
+     },
+     "replacedDocument": {
+      "documentId": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f",
+      "path": "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+      "dateRead": "2025-08-01"
+     },
+     "replacingDocument": {
+      "documentId": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7",
+      "path": "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf",
+      "dateRead": "2026-09-01"
+     },
+     "replacementCardId": "card_replacement",
+     "rangedCards": [],
+     "updates": [
+      {
+       "subject": "Elyra Fixe 2 ans, Base",
+       "oldValue": "0,2018 €",
+       "oldQuote": {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "slide": 3,
+         "zone": "body",
+         "format": "pptx",
+         "excerpt": "• Base 6 kVA : 0,2018 € TTC/kWh · abonnement 16,20 € TTC/mois",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_2026_03_10_presentation_gamme_particuliers_2026_pptx_d3050356"
+        }
+       },
+       "newValue": "0,1952 €",
+       "newQuote": {
+        "kind": "document",
+        "excerptRealigned": false,
+        "source": {
+         "page": 1,
+         "zone": "text",
+         "format": "pdf",
+         "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |",
+         "image_id": null,
+         "table_cell": null,
+         "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+        }
+       }
+      }
+     ]
+    }
+   }
+  ],
+  "temporaryNotes": [],
+  "rejectedPoints": [
+   {
+    "rank": 3,
+    "nature": "changement_date",
+    "documents": [
+     "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+     "jeudetestsv2.zip/Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf"
+    ],
+    "reason": "ranged_under_version",
+    "briefingQuotes": [],
+    "unverifiedQuotes": [],
+    "analysis": {
+     "subject": "Prix de l'offre Elyra Fixe 2 ans (particuliers)",
+     "reason": "La grille v2 remplace la grille v1.",
+     "proposal": "Retenir la grille v2."
+    },
+    "endedOn": null,
+    "verifiedQuotes": [
+     {
+      "kind": "document",
+      "excerptRealigned": false,
+      "source": {
+       "page": 1,
+       "zone": "text",
+       "format": "pdf",
+       "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,2018 | – |",
+       "image_id": null,
+       "table_cell": null,
+       "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v1_2025_08_01_pdf_d56d609f"
+      }
+     },
+     {
+      "kind": "document",
+      "excerptRealigned": false,
+      "source": {
+       "page": 1,
+       "zone": "text",
+       "format": "pdf",
+       "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |",
+       "image_id": null,
+       "table_cell": null,
+       "document_id": "doc_jeudetestsv2_zip_grille_tarifaire_particuliers_v2_2026_09_01_pdf_a49307e7"
+      }
+     }
+    ],
+    "origin": "model",
+    "versionCardId": "card_replacement"
+   }
+  ],
+  "unverifiedQuotes": {
+   "not_found": 1,
+   "wrong_document": 4
+  },
+  "unavailableDetections": [
+   "temporary_notes"
+  ],
+  "extractedValues": [],
+  "extractionRun": null,
+  "base": {
+   "mode": "correct",
+   "reason": "faq_documents",
+   "documentIds": [
+    "doc_jeudetestsv2_zip_faq_conseillers_particuliers_avril2026_docx_5085d6b2"
+   ],
+   "briefingExcerpt": null
+  },
+  "unreadImages": null
+ }
+}

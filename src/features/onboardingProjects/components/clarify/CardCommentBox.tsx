@@ -13,7 +13,8 @@ interface CardCommentBoxProps {
 }
 
 /** Ce que dit le champ : une remarque pour l'équipe, jamais une consigne pour la base. */
-export const CARD_COMMENT_HINT = 'Pour l\'équipe Knowdesk seulement : ce commentaire n\'entre jamais dans la base.';
+export const CARD_COMMENT_HINT = 'Pour l\'équipe Knowdesk seulement : ce commentaire n\'entre jamais dans la base. '
+  + 'Ce qui doit entrer dans la base s\'écrit dans « Autre réponse » ou dans la précision.';
 
 const currentOf = (chain: CardComment[]) => [...chain].reverse().find(c => c.cancelledAt === null) ?? null;
 
@@ -72,7 +73,7 @@ export function CardCommentBox({ projectId, analysisId, cardId, editable }: Card
 
   return (
     <div className="obp-clarify-comment">
-      <label htmlFor={id} className="obp-base-label">Un commentaire sur la carte ? (facultatif)</label>
+      <label htmlFor={id} className="obp-base-label">Commentaire (facultatif)</label>
       <textarea id={id} className="obp-base-textarea" rows={2} maxLength={5000} value={text}
         onChange={e => setText(e.target.value)} />
       <p className="obp-muted">{CARD_COMMENT_HINT}</p>

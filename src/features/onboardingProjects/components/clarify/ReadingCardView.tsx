@@ -1,13 +1,14 @@
 import React from 'react';
 import type { Audit } from '../../lib/audit';
 import {
-  cardLabel, checkFacts, codeCheck, isBlocking, isBriefingOnly, isCodeCard, readsImageOnly, sideTitle, sideValue, toQuotes,
-  type ModelAnalysis, type Quote, type ReadingCard,
+  cardLabel, checkFacts, codeCheck, isBlocking, isBriefingOnly, isCodeCard, isVersionCard, readsImageOnly, sideTitle, sideValue, toQuotes, ungroupedQuotes,
+  valueGroups, type ModelAnalysis, type Quote, type ReadingCard,
 } from '../../lib/reading';
 import { joinParagraphLines } from '../../lib/excerpt';
 import { AuditSource } from '../audit/AuditSource';
 import { DocName, DocNames } from '../audit/DocName';
 import { ExcerptText } from '../audit/ExcerptText';
+import { VersionCardBody } from './VersionCardBody';
 
 /**
  * Une citation vérifiée : passage d'un document (nom de fichier, emplacement, extrait verbatim ;
@@ -66,7 +67,33 @@ export function ModelAnalysisBox({ analysis }: { analysis: ModelAnalysis }) {
  */
 export function CodeCheckBox({ card }: { card: ReadingCard }) {
   const check = codeCheck(card);
-  return <CodeFactsBox facts={check ? checkFacts(check) : [card.analysis.reason].filter(Boolean)} />;
+  const facts = check ? checkFacts(check) : [card.analysis.reason].filter(Boolean);
+  // Une carte à valeurs (audit 0.16.0) n'a plus de côtés à montrer : sa valeur est le titre de son groupe.
+  return <CodeFactsBox facts={valueGroups(card).length > 0 ? facts.filter(f => !f.startsWith('Côté ')) : facts} />;
+}
+
+/**
+ * Les passages regroupés par valeur (audit 0.16.0, décision D1) : la valeur en titre, ses citations
+ * vérifiées dessous. Un passage hors de tout groupe reste montré, à part.
+ */
+function ValueGroups({ audit, card }: { audit: Audit; card: ReadingCard }) {
+  const others = ungroupedQuotes(card);
+  return (
+    <div className="obp-clarify-sides obp-clarify-sides--two">
+      {valueGroups(card).map(g => (
+        <section key={g.id} className="obp-clarify-side" aria-label={g.label}>
+          <h5 className="obp-clarify-side__title">{g.label}</h5>
+          {toQuotes(g.quotes).map((q, i) => <ClarifyQuote key={i} audit={audit} quote={q} />)}
+        </section>
+      ))}
+      {others.length > 0 && (
+        <section className="obp-clarify-side" aria-label="Autres passages cités">
+          <h5 className="obp-clarify-side__title">Autres passages cités</h5>
+          {others.map((q, i) => <ClarifyQuote key={i} audit={audit} quote={q} />)}
+        </section>
+      )}
+    </div>
+  );
 }
 
 /** Ce que le code a relevé, en phrases neutres : sur une carte du code, ou un point écarté par lui (audit 0.13.0). */
@@ -138,6 +165,7 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
         <DocNames audit={audit} ids={card.documentIds} />
       </p>
 
+      {isVersionCard(card) ? <VersionCardBody audit={audit} card={card} /> : valueGroups(card).length > 0 ? <ValueGroups audit={audit} card={card} /> : (
       <div className={`obp-clarify-sides${card.sides.length > 1 ? ' obp-clarify-sides--two' : ''}`}>
         {card.sides.map(side => {
           const quotes = toQuotes(side.quotes);
@@ -158,9 +186,10 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
           );
         })}
       </div>
+      )}
 
       <AbsentContent audit={audit} card={card} />
-      {isCodeCard(card) ? <CodeCheckBox card={card} /> : <ModelAnalysisBox analysis={card.analysis} />}
+      {isVersionCard(card) ? null : isCodeCard(card) ? <CodeCheckBox card={card} /> : <ModelAnalysisBox analysis={card.analysis} />}
     </article>
   );
 }

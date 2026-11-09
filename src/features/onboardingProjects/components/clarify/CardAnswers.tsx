@@ -5,9 +5,9 @@ import { TextArea } from '../TextArea';
 import { namedLabel, type DocNaming } from '../../lib/audit';
 import type { Decision } from '../../lib/decisions';
 import {
-  answerLabel, cardAnswers, cardLabel, codeCheck, describeCardAnswer, FOLLOW_BLOCKED_REASON, FOLLOW_RECOMMENDATION_LABEL, FOLLOW_WARNING,
-  followBlocked, followWarned, isBriefingOnly, isCodeCard, missingSide, recommendationOutcome,
-  sideDocuments, sidesQuestion, sideValue, substantiveAnswers, toQuotes, TYPED_ANSWERS, type CardAction, type CardAnswerCode, type ReadingCard,
+  answerLabel, cardAnswers, cardLabel, codeCheck, describeCardAnswer, FOLLOW_BLOCKED_REASON, FOLLOW_WARNING,
+  followBlocked, followLabel, followWarned, isBriefingOnly, isCodeCard, isCodeRecommendation, isVersionCard, missingSide, recommendationOutcome, retainValueLabel,
+  sideDocuments, sidesQuestion, sideValue, substantiveAnswers, toQuotes, TYPED_ANSWERS, valueGroups, type CardAction, type PlainAnswerCode, type ReadingCard,
   type TypedAnswer,
 } from '../../lib/reading';
 
@@ -16,6 +16,8 @@ interface CardAnswersProps {
   current:    Decision | undefined;
   /** Faux pour l'audit d'une analyse précédente : la réponse se lit, sans action. */
   arbitrable: boolean;
+  /** Audit 0.16.0 et plus : le texte saisi est un arbitrage qui entre dans la base (2026-11-09). */
+  arbitrage?: boolean;
   busy:       boolean;
   /** Nom de fichier d'un document, et son chemin pour l'infobulle. */
   docs:       DocNaming;
@@ -33,6 +35,15 @@ const isTyped = (a: string): a is TypedAnswer => (TYPED_ANSWERS as readonly stri
 export const PRECISION_WARNING = 'Ce texte sera repris dans la base comme consigne de rédaction. '
   + 'Une remarque sur la carte elle-même (doublon, côtés mal classés, question sur l\'analyse) va dans le '
   + 'commentaire sur la carte, plus bas : il n\'entre jamais dans la base.';
+
+/**
+ * Sur toute carte d'un audit 0.16.0 et plus (décision du porteur du 2026-11-09) : le texte écrit
+ * dans « Autre réponse » ou dans la précision est un arbitrage ; il entre dans la base pour le
+ * sujet de la carte, « saisi par l'expert le … ». Une remarque pour l'équipe va dans le commentaire.
+ */
+export const ARBITRAGE_WARNING = 'Ce texte est votre arbitrage : il entre dans la base, pour le sujet de cette carte seulement, '
+  + 'avec la mention « saisi par l\'expert le … ». Une remarque pour l\'équipe (doublon, côtés mal classés, question '
+  + 'sur l\'analyse) va dans le champ « Commentaire », plus bas : il n\'entre jamais dans la base.';
 
 /** Réponse courante d'une carte, en clair : la réponse, qui l'a donnée, quand. Un texte saisi est « saisi par X le Y ». */
 export function CurrentAnswer({ card, current, docs }: { card: ReadingCard | undefined; current: Decision; docs: DocNaming }) {
@@ -59,7 +70,7 @@ export function CurrentAnswer({ card, current, docs }: { card: ReadingCard | und
  * juste »), sans les réponses qui comparent deux côtés. Une
  * carte répondue montre sa réponse, « Annuler » (retour à la précédente) et « Changer ».
  */
-export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, onCancel }: CardAnswersProps) {
+export function CardAnswers({ card, current, arbitrable, arbitrage = false, busy, docs, onAnswer, onCancel }: CardAnswersProps) {
   const [editing, setEditing] = useState(false);
   const [typing,  setTyping]  = useState<TypedAnswer | null>(null);
   const [text,    setText]    = useState('');
@@ -91,6 +102,10 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
   // Une carte du code n'a jamais de recommandation, même si un back en rendait une.
   const recommendation = isCodeCard(card) ? null : card.recommendation ?? null;
   const answers = cardAnswers(card);
+  const groups = valueGroups(card);
+  const version = isVersionCard(card);
+  // L'effet sur les sources ne s'affiche jamais dans « À clarifier » sur une carte à valeurs (D1).
+  const warning = arbitrage ? ARBITRAGE_WARNING : PRECISION_WARNING;
 
   if (following && recommendation) {
     return (
@@ -98,19 +113,21 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
         e.preventDefault();
         void submit({ type: 'follow_recommendation', precisions: text.trim() || null });
       }}>
-        <p className="obp-clarify-answer__chosen">{FOLLOW_RECOMMENDATION_LABEL}</p>
+        <p className="obp-clarify-answer__chosen">{followLabel(card)}</p>
         <blockquote className="obp-clarify-reco__text">{recommendation.text}</blockquote>
-        <div className="obp-clarify-reco__outcome" role="note">
-          <p className="obp-clarify-reco__outcome-title">Ce que cela fera dans la base</p>
-          <p>{recommendationOutcome(card, docs.name)}</p>
-          <p className="obp-muted">
-            Le texte de la recommandation n'est jamais recopié tel quel dans la base : il guide sa rédaction.
-          </p>
-        </div>
+        {groups.length === 0 && (
+          <div className="obp-clarify-reco__outcome" role="note">
+            <p className="obp-clarify-reco__outcome-title">Ce que cela fera dans la base</p>
+            <p>{recommendationOutcome(card, docs.name)}</p>
+            <p className="obp-muted">
+              Le texte de la recommandation n'est jamais recopié tel quel dans la base : il guide sa rédaction.
+            </p>
+          </div>
+        )}
         <TextArea id={`obp-card-${card.id}-precision`} label="Ajouter une précision (facultatif)" value={text} rows={3}
           maxLength={5000} onChange={e => setText(e.target.value)} />
         <p className="obp-muted">Votre précision est enregistrée telle quelle, avec votre nom et la date ; elle prime sur la recommandation.</p>
-        <p className="obp-warning obp-clarify-precision__warning">{PRECISION_WARNING}</p>
+        <p className="obp-warning obp-clarify-precision__warning">{warning}</p>
         <div className="obp-decision__actions">
           <Button type="submit" variant="primary" size="sm" loading={busy}>Confirmer</Button>
           <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={() => { setFollowing(false); setText(''); }}>Retour</Button>
@@ -132,7 +149,7 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
         <TextArea id={`obp-card-${card.id}-text`} label={field.field ?? 'Votre réponse'} value={text} rows={3}
           maxLength={5000} onChange={e => setText(e.target.value)} />
         <p className="obp-muted">Votre texte est enregistré tel quel, « saisi par » vous, avec la date.</p>
-        <p className="obp-warning obp-clarify-precision__warning">{PRECISION_WARNING}</p>
+        <p className="obp-warning obp-clarify-precision__warning">{warning}</p>
         {error && <p className="field-error" role="alert">{error}</p>}
         <div className="obp-decision__actions">
           <Button type="submit" variant="primary" size="sm" loading={busy}>Enregistrer</Button>
@@ -142,7 +159,7 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
     );
   }
 
-  const choose = (a: Exclude<CardAnswerCode, 'accept_side'>) => {
+  const choose = (a: PlainAnswerCode) => {
     if (isTyped(a)) { setText(''); setError(null); setTyping(a); return; }
     void submit({ type: a } as CardAction);
   };
@@ -162,12 +179,12 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
       {current && <CurrentAnswer card={card} current={current} docs={docs} />}
 
       {recommendation && (
-        <div className="obp-clarify-reco" role="group" aria-label="Recommandation de l'IA">
-          <p className="obp-clarify-answer__subtitle">Recommandation de l'IA</p>
+        <div className="obp-clarify-reco" role="group" aria-label={isCodeRecommendation(card) ? 'Recommandation' : 'Recommandation de l\'IA'}>
+          <p className="obp-clarify-answer__subtitle">{isCodeRecommendation(card) ? 'Recommandation, écrite à partir de vos documents' : 'Recommandation de l\'IA'}</p>
           <blockquote className="obp-clarify-reco__text">{recommendation.text}</blockquote>
           <div className="obp-decision__actions">
             <Button variant="primary" size="sm" disabled={busy || followBlocked(card)} onClick={() => { setText(''); setFollowing(true); }}>
-              {FOLLOW_RECOMMENDATION_LABEL}
+              {followLabel(card)}
             </Button>
           </div>
           {followBlocked(card) && <p className="obp-muted obp-clarify-reco__blocked">{FOLLOW_BLOCKED_REASON}</p>}
@@ -193,7 +210,20 @@ export function CardAnswers({ card, current, arbitrable, busy, docs, onAnswer, o
         </div>
       )}
 
-      {sides.length === 0 && codeCheck(card) && (
+      {groups.length > 0 && (
+        <div className="obp-clarify-answer__group" role="group" aria-label="Retenir une valeur">
+          <p className="obp-clarify-answer__subtitle">{cardLabel(card)} : {sidesQuestion(card)}</p>
+          <div className="obp-decision__actions">
+            {groups.map(g => (
+              <Button key={g.id} variant="secondary" size="sm" disabled={busy} onClick={() => void submit({ type: 'retain_value', group: g.id })}>
+                {retainValueLabel(g)}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {sides.length === 0 && groups.length === 0 && (codeCheck(card) || version) && (
         <p className="obp-clarify-answer__subtitle">{sidesQuestion(card)}</p>
       )}
       <div className="obp-decision__actions" role="group" aria-label="Répondre à la carte">

@@ -22,20 +22,27 @@ import type { Decision } from './decisions';
  * qui ajoute les courriels et les classeurs, et la base existante repérée (`base`), et 0.13.0 (lot
  * Elyra v2.1) qui ajoute les raisons d'écart « objet non nommé » et « même valeur », et 0.14.0
  * (lot Elyra v2.2) où une valeur d'écart dit ce qu'elle mesure (`unit.measure`), et 0.15.0 (lot
- * « images non disponibles ») qui dit les images non lues (`unreadImages`). Même liste que
+ * « images non disponibles ») qui dit les images non lues (`unreadImages`), et 0.16.0
+ * (plan-construire-v1, lot A) qui regroupe les passages par valeur, écrit la recommandation par le
+ * code quand une valeur est identifiée, et ajoute les cartes de versions. Même liste que
  * `READING_AUDIT_SCHEMAS` du back.
  */
-export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0', '0.12.0', '0.13.0', '0.14.0', '0.15.0'];
+export const READING_AUDIT_SCHEMAS: readonly string[] = ['0.8.0', '0.9.0', '0.10.0', '0.11.0', '0.12.0', '0.13.0', '0.14.0', '0.15.0', '0.16.0'];
 export const isReadingAudit = (version: string): boolean => READING_AUDIT_SCHEMAS.includes(version);
 
 // ── Contrat (GET …/audit, champ `reading`) ────────────────────
 
-export type CardNature = 'dated_change' | 'contradiction' | 'probable_error' | 'incomplete_or_outdated';
+export type CardNature =
+  | 'dated_change' | 'contradiction' | 'probable_error' | 'incomplete_or_outdated'
+  /** Audit 0.16.0 : « X annule et remplace Y », et un document qui reprend les valeurs d'une version remplacée. */
+  | 'remplacement_version' | 'reprise_version_remplacee';
 export type SideLabel = 'A' | 'B';
 
 export type CardAnswerCode =
   | 'accept_side' | 'adjust' | 'distinct_cases' | 'same_meaning' | 'different_subjects' | 'example_only'
-  | 'complete' | 'remove' | 'up_to_date' | 'not_a_problem' | 'out_of_scope' | 'other_answer' | 'later';
+  | 'complete' | 'remove' | 'up_to_date' | 'not_a_problem' | 'out_of_scope' | 'other_answer' | 'later'
+  /** Décision 0.10.0 (audit 0.16.0). */
+  | 'retain_value' | 'confirm_replacement' | 'confirm_update' | 'document_stays_valid';
 
 /** Citation vérifiée : un passage d'un document (son SourceRef), ou de la fiche de cadrage. */
 export type RawQuote =
@@ -47,10 +54,59 @@ export interface ModelAnalysis { subject: string; reason: string; proposal: stri
 export interface UnverifiedQuote { side: SideLabel; document: string; location: string; text: string; reason: string }
 
 /** L'effet de « Je suis la recommandation de l'IA », lu par le pipeline ; null : consigne seule. */
-export type RecommendedEffect = { type: 'accept_side'; side: SideLabel } | { type: 'complete' };
+export type RecommendedEffect = { type: 'accept_side'; side: SideLabel } | { type: 'complete' } | { type: 'retain_value'; group: string };
 
 /** La recommandation d'une carte, telle que le back la recopiera dans la décision. */
 export interface CardRecommendation { text: string; effect: RecommendedEffect | null; basis: string }
+
+/** Audit 0.16.0 : les passages d'une carte qui donnent une même valeur, lue par le code. */
+export interface ValueGroup {
+  id:        string;
+  /** Normalisée : un décimal avec un point, une date ISO ; le code la compare, l'écran montre `label`. */
+  value:     string;
+  dimension: string;
+  /** La valeur telle qu'on la montre, écrite par le code : « 0,1952 € », « 36 mois ». */
+  label:     string;
+  quotes:    RawQuote[];
+}
+
+/** Audit 0.16.0 : un document d'une carte de versions ; sa date lue se montre, elle ne décide rien. */
+export interface VersionDocument { documentId: string; path: string; dateRead: string | null }
+
+/** Une valeur qui diffère entre deux documents, chacune avec sa citation vérifiée. */
+export interface VersionDifference {
+  subject:  string;
+  oldValue: string;
+  oldQuote: RawQuote;
+  newValue: string;
+  newQuote: RawQuote;
+}
+
+/** Une carte ligne par ligne rangée sous une carte de versions : plus posée, toujours consultable. */
+export interface RangedCard {
+  cardId:      string;
+  rank:        number;
+  nature:      string;
+  subject:     string;
+  documentIds: string[];
+  origin:      'model' | 'code';
+}
+
+export interface ReplacementVersion {
+  replacedDocument:  VersionDocument;
+  replacingDocument: VersionDocument;
+  differences:       VersionDifference[];
+  rangedCards:       RangedCard[];
+}
+
+export interface VersionReuse {
+  document:          VersionDocument;
+  replacedDocument:  VersionDocument;
+  replacingDocument: VersionDocument;
+  replacementCardId: string;
+  updates:           VersionDifference[];
+  rangedCards:       RangedCard[];
+}
 
 export interface ReadingCard {
   id:               string;
@@ -73,6 +129,16 @@ export interface ReadingCard {
   origin?:          'model' | 'code';
   /** Audit 0.11.0 : le contrôle du code, tel que le pipeline l'a écrit (lu par codeCheck) ; null sinon. */
   check?:           unknown;
+  /** Audit 0.16.0 : au moins deux groupes ; vide ou absent, pas de valeur lisible, la carte comme avant. */
+  valueGroups?:     ValueGroup[];
+  /** Audit 0.16.0 : le groupe dont la recommandation écrit la valeur. */
+  recommendedGroup?: string | null;
+  /** Audit 0.16.0 : `code`, le texte de `recommendation` est écrit par le code ; le texte du modèle reste dans `analysis.proposal`. */
+  recommendationOrigin?: 'code' | 'model' | null;
+  /** Audit 0.16.0 : la paire de versions d'une carte `remplacement_version`. */
+  replacement?:     ReplacementVersion | null;
+  /** Audit 0.16.0 : le document et la paire reprise d'une carte `reprise_version_remplacee`. */
+  versionReuse?:    VersionReuse | null;
 }
 
 export interface TemporaryNote {
@@ -105,6 +171,8 @@ export interface RejectedPoint {
    * le code (0.13.0, `unnamed_object`), sans « Analyse proposée par l'IA » ; `model` sinon.
    */
   origin?:          'model' | 'code';
+  /** Audit 0.16.0, `ranged_under_version` : la carte de versions qui règle ce point. */
+  versionCardId?:   string | null;
 }
 
 /**
@@ -227,13 +295,16 @@ const isVision = (q: Quote) => q.kind === 'document' && q.source.visionUnverifie
 // ── Natures et réponses ───────────────────────────────────────
 
 /** Ordre d'affichage : les natures qui bloquent la publication d'abord, puis le rang du modèle. */
-export const NATURE_ORDER: readonly CardNature[] = ['contradiction', 'dated_change', 'probable_error', 'incomplete_or_outdated'];
+export const NATURE_ORDER: readonly CardNature[] = ['remplacement_version', 'reprise_version_remplacee', 'contradiction', 'dated_change', 'probable_error', 'incomplete_or_outdated'];
 
 export const NATURES: Readonly<Record<CardNature, { label: string; plural: string; sides: string; blocking: boolean }>> = {
   contradiction:          { label: 'Contradiction',         plural: 'Contradictions',         sides: 'Quel côté est juste ?',                          blocking: true },
   dated_change:           { label: 'Changement daté',       plural: 'Changements datés',      sides: 'Quel côté dit ce qui vaut aujourd\'hui ?',      blocking: true },
   probable_error:         { label: 'Erreur probable',       plural: 'Erreurs probables',      sides: 'Quel côté porte la bonne valeur ?',              blocking: true },
   incomplete_or_outdated: { label: 'Incomplet ou périmé',   plural: 'Incomplets ou périmés',  sides: '',                                               blocking: false },
+  // Audit 0.16.0 : sans vraie réponse, une carte de versions bloque la préparation (décision du 2026-11-04).
+  remplacement_version:      { label: 'Remplacement de version', plural: 'Remplacements de version', sides: 'Confirmez-vous ce remplacement ?', blocking: true },
+  reprise_version_remplacee: { label: 'Reprise d\'une version remplacée', plural: 'Reprises d\'une version remplacée', sides: 'Confirmez-vous cette mise à jour ?', blocking: true },
 };
 
 /** Libellé de la nature, avec un repli pour une valeur inconnue. */
@@ -267,12 +338,15 @@ export function readsImageOnly(card: ReadingCard): boolean {
 export type TypedAnswer = 'adjust' | 'distinct_cases' | 'complete' | 'other_answer';
 export const TYPED_ANSWERS: readonly CardAnswerCode[] = ['adjust', 'distinct_cases', 'complete', 'other_answer'];
 
+/** Toute réponse, hors celles qui se libellent par leur objet : un côté (`accept_side`), une valeur (`retain_value`). */
+export type PlainAnswerCode = Exclude<CardAnswerCode, 'accept_side' | 'retain_value'>;
+
 /**
  * Libellé de chaque réponse de fond, et, pour une réponse saisie, ce qu'on demande de saisir.
  * `accept_side` est libellé par côté (« Retenir A : fichiers ») : la consigne de lecture ne fixe
  * pas encore quel côté est l'ancien ou le cité (plan-lecture-globale.md §3.4).
  */
-export const ANSWERS: Readonly<Record<Exclude<CardAnswerCode, 'accept_side'>, { label: string; field?: string }>> = {
+export const ANSWERS: Readonly<Record<PlainAnswerCode, { label: string; field?: string }>> = {
   adjust:             { label: 'Oui, mais la date ou le périmètre est différent', field: 'Date ou périmètre exacts' },
   distinct_cases:     { label: 'Les deux sont vraies, selon le cas', field: 'Dans quel cas chaque côté s\'applique' },
   same_meaning:       { label: 'Ils disent la même chose' },
@@ -285,7 +359,51 @@ export const ANSWERS: Readonly<Record<Exclude<CardAnswerCode, 'accept_side'>, { 
   out_of_scope:       { label: 'Ce sujet n\'a pas sa place dans la base' },
   other_answer:       { label: 'Autre réponse', field: 'Votre réponse' },
   later:              { label: 'Plus tard' },
+  confirm_replacement:  { label: 'Je confirme' },
+  confirm_update:       { label: 'Je confirme' },
+  document_stays_valid: { label: 'Non, ce document reste valable tel quel' },
 };
+
+/**
+ * Audits où le texte de l'expert (« Autre réponse », précision) est un arbitrage qui entre dans la
+ * base pour le sujet de la carte (décision du porteur du 2026-11-09, audit 0.16.0 et plus). Les
+ * analyses plus anciennes gardent leur fonctionnement.
+ */
+export const ARBITRAGE_AUDIT_SCHEMAS: readonly string[] = ['0.16.0'];
+
+/** Une carte de versions (audit 0.16.0) : une affirmation à confirmer, sans côtés ni analyse de l'IA. */
+export const isVersionCard = (card: Pick<ReadingCard, 'nature'>): boolean =>
+  card.nature === 'remplacement_version' || card.nature === 'reprise_version_remplacee';
+
+/** La phrase d'une carte de reprise, telle que le porteur l'a écrite. */
+export const VERSION_REUSE_SENTENCE =
+  'Ce document reprend les valeurs d\'une version remplacée ; ses valeurs seront mises à jour avec celles de la nouvelle.';
+
+/** Les groupes de valeurs d'une carte qui les propose ; vide : la carte comme avant 0.16.0. */
+export const valueGroups = (card: ReadingCard): ValueGroup[] =>
+  card.answers.includes('retain_value') ? card.valueGroups ?? [] : [];
+
+export const retainValueLabel = (group: Pick<ValueGroup, 'label'>): string => `Retenir ${group.label}`;
+
+/** La recommandation écrite par le code (audit 0.16.0) : le texte du modèle reste sous « Analyse proposée par l'IA ». */
+export const isCodeRecommendation = (card: ReadingCard): boolean =>
+  card.recommendationOrigin === 'code' && Boolean(card.recommendation);
+
+/**
+ * Les passages d'une carte à valeurs qui ne sont dans aucun groupe : rien n'est tu, ils restent
+ * montrés, à part.
+ */
+export function ungroupedQuotes(card: ReadingCard): Quote[] {
+  const key = (q: Quote) => (q.kind === 'document' ? `${q.source.documentId}:${q.source.excerpt}` : `briefing:${q.excerpt}`);
+  const grouped = new Set(valueGroups(card).flatMap(g => toQuotes(g.quotes).map(key)));
+  const seen = new Set<string>();
+  return card.sides.flatMap(s => toQuotes(s.quotes)).filter(q => {
+    const k = key(q);
+    if (grouped.has(k) || seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
 
 /**
  * Côté manquant d'une carte qui compare deux côtés (contradiction, changement daté, erreur
@@ -293,7 +411,7 @@ export const ANSWERS: Readonly<Record<Exclude<CardAnswerCode, 'accept_side'>, { 
  * Null pour une carte complète, ou d'une nature qui n'a pas à comparer deux côtés.
  */
 export function missingSide(card: ReadingCard): SideLabel | null {
-  if (!NATURES[card.nature].blocking || card.sides.length !== 1) return null;
+  if (!NATURES[card.nature].blocking || isVersionCard(card) || card.sides.length !== 1) return null;
   return card.sides[0].label === 'A' ? 'B' : 'A';
 }
 
@@ -303,15 +421,17 @@ const TWO_SIDED: ReadonlySet<CardAnswerCode> = new Set(['distinct_cases', 'same_
 /** Question posée sur une carte qui compare deux côtés, ou sur son seul côté retrouvé. */
 export function sidesQuestion(card: ReadingCard): string {
   const check = codeCheck(card);
+  if (valueGroups(card).length > 0) return 'Quelle valeur est juste ?';
   if (check) return CHECKS[check.kind].question;
   return missingSide(card) ? 'Ce passage est-il juste ?' : NATURES[card.nature].sides;
 }
 
 /** Réponses de fond de la carte, hors côtés, « Autre réponse », « Plus tard » et menu secondaire. */
-export function substantiveAnswers(card: ReadingCard): Array<Exclude<CardAnswerCode, 'accept_side'>> {
-  const secondary = new Set<CardAnswerCode>(['accept_side', 'other_answer', 'later', 'out_of_scope']);
+export function substantiveAnswers(card: ReadingCard): PlainAnswerCode[] {
+  // `follow_recommendation` se propose à part (`recommendation`) : ignorée si un back la rendait parmi les réponses.
+  const secondary = new Set<string>(['follow_recommendation', 'accept_side', 'retain_value', 'other_answer', 'later', 'out_of_scope']);
   const oneSided = missingSide(card) !== null;
-  return cardAnswers(card).filter((a): a is Exclude<CardAnswerCode, 'accept_side'> => !secondary.has(a) && !(oneSided && TWO_SIDED.has(a)));
+  return cardAnswers(card).filter((a): a is PlainAnswerCode => !secondary.has(a) && !(oneSided && TWO_SIDED.has(a)));
 }
 
 /** Noms de fichier des documents d'un côté, sans doublon ; « votre fiche de cadrage » pour une citation de la fiche. */
@@ -507,7 +627,7 @@ export function cardLabel(card: ReadingCard): string {
 /** Réponses de la carte : pour une carte du code, celles de son contrôle seulement. */
 export function cardAnswers(card: ReadingCard): CardAnswerCode[] {
   const check = codeCheck(card);
-  if (check) return card.answers.filter(a => CHECKS[check.kind].answers.includes(a));
+  if (check) return card.answers.filter(a => a === 'retain_value' || CHECKS[check.kind].answers.includes(a));
   return isCodeCard(card) ? card.answers.filter(a => a !== 'out_of_scope') : card.answers;
 }
 
@@ -522,7 +642,7 @@ const CHECK_ANSWER_LABELS: Readonly<Partial<Record<CheckKind, Partial<Record<Car
 };
 
 /** Libellé d'une réponse sur cette carte, et ce qu'on demande de saisir. */
-export function answerLabel(card: ReadingCard | undefined, a: Exclude<CardAnswerCode, 'accept_side'>): { label: string; field?: string } {
+export function answerLabel(card: ReadingCard | undefined, a: PlainAnswerCode): { label: string; field?: string } {
   const check = card ? codeCheck(card) : null;
   return (check && CHECK_ANSWER_LABELS[check.kind]?.[a]) || ANSWERS[a];
 }
@@ -546,8 +666,9 @@ export function sideTitle(card: ReadingCard, side: SideLabel): string {
 export type CardAction =
   | { type: 'follow_recommendation'; precisions: string | null }
   | { type: 'accept_side'; side: SideLabel }
+  | { type: 'retain_value'; group: string }
   | { type: TypedAnswer; text: string }
-  | { type: Exclude<CardAnswerCode, 'accept_side' | TypedAnswer> };
+  | { type: Exclude<PlainAnswerCode, TypedAnswer> };
 
 export type CardStatus = 'open' | 'answered' | 'later';
 
@@ -624,6 +745,10 @@ export function firstOpenCard(ordered: ReadingCard[], current: ReadonlyMap<strin
 }
 
 export const FOLLOW_RECOMMENDATION_LABEL = 'Je suis la recommandation de l\'IA';
+/** Audit 0.16.0 : la recommandation écrite par le code n'est pas celle de l'IA. */
+export const FOLLOW_CODE_RECOMMENDATION_LABEL = 'Je suis la recommandation';
+export const followLabel = (card: ReadingCard): string =>
+  isCodeRecommendation(card) ? FOLLOW_CODE_RECOMMENDATION_LABEL : FOLLOW_RECOMMENDATION_LABEL;
 
 /**
  * « Je suis la recommandation de l'IA » ne peut rien écrire quand le côté qu'elle retient n'a
@@ -678,9 +803,18 @@ const FOLLOWED_EFFECT: Record<string, string> = {
 
 /** La réponse en clair. Un texte saisi est cité entre guillemets ; l'auteur et la date s'affichent à côté. */
 export function describeCardAnswer(action: Decision['action'], card: ReadingCard | undefined, name: (documentId: string) => string): string {
-  const a = action as { type: string; side?: SideLabel; text?: string; precisions?: string | null; effect?: RecommendedEffect | null };
+  const a = action as { type: string; side?: SideLabel; group?: string; text?: string; precisions?: string | null; effect?: RecommendedEffect | null };
+  const groupLabel = (group: string | undefined) => card?.valueGroups?.find(g => g.id === group)?.label ?? null;
+  if (a.type === 'retain_value') {
+    const value = groupLabel(a.group);
+    return value ? `${value} retenu` : 'Valeur retenue';
+  }
   if (a.type === 'follow_recommendation') {
     const effect = a.effect ?? null;
+    if (effect?.type === 'retain_value') {
+      const value = groupLabel(effect.group);
+      return `Recommandation suivie (${value ? `${value} retenu` : 'valeur retenue'})${a.precisions ? ` — précision : « ${a.precisions} »` : ''}`;
+    }
     const what = effect === null ? FOLLOWED_EFFECT.none
       : effect.type === 'complete' ? FOLLOWED_EFFECT.complete
       : card?.nature === 'dated_change' ? FOLLOWED_EFFECT.dated_change
@@ -714,6 +848,9 @@ const REJECTION_REASONS: Readonly<Record<string, string>> = {
   // nommé (aucune carte n'est posée), et une carte dont les deux côtés donnent la même valeur.
   unnamed_object:    'Objet non nommé : ni produit, ni libellé, ni zone',
   same_value:        'Même valeur des deux côtés',
+  // Audit 0.16.0 : un point réglé par une carte de versions, sans sujet quand sa carte est introuvable.
+  ranged_under_version: 'Réglé par une carte de version',
+  version_pair_missing: 'La version remplacée n\'a pas de carte de remplacement',
 };
 export const rejectionReasonLabel = (r: string) => REJECTION_REASONS[r] ?? 'Autre raison';
 
@@ -721,7 +858,11 @@ export const rejectionReasonLabel = (r: string) => REJECTION_REASONS[r] ?? 'Autr
  * La raison d'un point écarté, avec sa date pour une mesure terminée (audit 0.11.0) : « Mesure
  * terminée le 29/09/2026 : elle n'entre pas dans la base ».
  */
-export function rejectedPointLabel(r: Pick<RejectedPoint, 'reason' | 'endedOn'>): string {
+export function rejectedPointLabel(r: Pick<RejectedPoint, 'reason' | 'endedOn' | 'versionCardId'>, cards: readonly ReadingCard[] = []): string {
+  if (r.reason === 'ranged_under_version') {
+    const subject = cards.find(c => c.id === r.versionCardId)?.analysis.subject.trim();
+    if (subject) return `Réglé par la carte de version « ${subject} »`;
+  }
   if (r.reason === 'measure_ended' && r.endedOn) return `Mesure terminée le ${formatDay(r.endedOn)} : elle n'entre pas dans la base`;
   return rejectionReasonLabel(r.reason);
 }
@@ -900,3 +1041,16 @@ export function analyzedDocumentsSummary(docs: AnalyzedDocument[]): string {
 /** Le nombre de cartes qui citent un document lu, 0 compris. */
 export const citedByText = (n: number): string =>
   n === 0 ? 'cité par aucune carte' : `cité par ${n} ${n > 1 ? 'cartes' : 'carte'}`;
+
+// ── Cartes de versions et préparation (audit 0.16.0) ─────────
+
+/**
+ * Les cartes de versions sans vraie réponse (aucune réponse, ou « Plus tard ») : elles bloquent la
+ * préparation de la base, et le message les nomme (décision du porteur du 2026-11-04).
+ */
+export function versionCardsWaiting(cards: ReadingCard[], current: ReadonlyMap<string, Decision>): ReadingCard[] {
+  return orderedCards(cards).filter(c => isVersionCard(c) && cardStatus(current.get(c.id)) !== 'answered');
+}
+
+export const versionCardWaitingMessage = (card: ReadingCard): string =>
+  `La carte « ${card.analysis.subject.trim()} » attend votre réponse.`;
