@@ -48,7 +48,7 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-900);
   margin: 0;
 }
@@ -57,7 +57,7 @@
   display: inline-flex;
   align-items: center;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   padding: 1px 8px;
   border-radius: var(--radius-full);
 }
@@ -90,7 +90,7 @@
   color: var(--neutral-500);
 }
 .article-quality__score {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-700);
 }
 
@@ -138,7 +138,7 @@
   text-align: center;
 }
 .article-quality__item-name {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-900);
   font-size: 13px;
 }

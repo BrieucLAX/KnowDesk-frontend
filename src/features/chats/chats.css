@@ -29,7 +29,7 @@
 .chats-page__row-q { font-style: italic; }
 .chats-page__status {
   padding: 2px 8px; border-radius: var(--radius-full);
-  font-size: 11px; font-weight: 500;
+  font-size: 11px; font-weight: 600;
 }
 .chats-page__status--neutral { background: var(--neutral-100); color: var(--neutral-700); }
 .chats-page__status--success { background: #ecfdf5;            color: #065f46; }
@@ -73,9 +73,9 @@
 .chat-transcript__meta div { display: flex; flex-direction: column; gap: 2px; }
 .chat-transcript__meta dt {
   font-size: 11px; color: var(--neutral-500); text-transform: uppercase;
-  letter-spacing: 0.04em; font-weight: 500;
+  letter-spacing: 0.04em; font-weight: 600;
 }
-.chat-transcript__meta dd { margin: 0; font-size: 13px; color: var(--neutral-800); font-weight: 500; }
+.chat-transcript__meta dd { margin: 0; font-size: 13px; color: var(--neutral-800); font-weight: 600; }
 .chat-transcript__body {
   display: flex; flex-direction: column; gap: 10px;
   max-height: 60vh; overflow-y: auto;

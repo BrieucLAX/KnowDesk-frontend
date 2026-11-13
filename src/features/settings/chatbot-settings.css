@@ -62,7 +62,7 @@
   display: inline-block;
   margin-left: 6px;
   color: var(--brand-600, #5B6CFF);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Prompt système — pill "lecture seule" inline */
@@ -157,7 +157,7 @@
   margin-bottom: -1px;
   font-family: var(--font-ui);
   font-size: 13.5px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-500);
   cursor: pointer;
   white-space: nowrap;

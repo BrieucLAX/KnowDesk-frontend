@@ -70,7 +70,7 @@
 }
 .settings-nav__item:hover { background: var(--neutral-100); color: var(--neutral-900); }
 .settings-nav__item--active {
-  background: var(--brand-50); color: var(--brand-700); font-weight: 500;
+  background: var(--brand-50); color: var(--brand-700); font-weight: 600;
 }
 .settings-nav__danger-dot {
   width: 6px; height: 6px; border-radius: 50%;
@@ -83,7 +83,7 @@
 .settings-section__error { margin-bottom: 12px; }
 .settings-section__header { display: flex; flex-direction: column; gap: 4px; }
 .settings-section__title {
-  font-size: 20px; font-weight: 500; letter-spacing: -0.02em;
+  font-size: 20px; font-weight: 600; letter-spacing: -0.02em;
 }
 .settings-section__title--danger { color: var(--color-danger); }
 .settings-section__desc { font-size: 14px; color: var(--neutral-500); line-height: 1.5; }
@@ -92,7 +92,7 @@
   font-size: 11.5px;
   color: var(--neutral-500);
 }
-.settings-section__last-modified strong { color: var(--neutral-700); font-weight: 500; }
+.settings-section__last-modified strong { color: var(--neutral-700); font-weight: 600; }
 .settings-section--danger .settings-section__header {
   padding-bottom: 20px; border-bottom: 1px solid var(--color-danger-border);
 }
@@ -100,7 +100,7 @@
 .settings-form { display: flex; flex-direction: column; gap: 16px; }
 .settings-form__actions { display: flex; align-items: center; gap: 14px; }
 .settings-form__saved {
-  font-size: 13px; color: #1A6B3C; font-weight: 500;
+  font-size: 13px; color: #1A6B3C; font-weight: 600;
   animation: fade-up 0.2s ease;
 }
 
@@ -113,7 +113,7 @@
 .toggle-row:last-child { border-bottom: none; }
 .toggle-row__text { flex: 1; min-width: 0; }
 .toggle-row__label {
-  font-size: 14px; font-weight: 500; color: var(--neutral-900);
+  font-size: 14px; font-weight: 600; color: var(--neutral-900);
   cursor: pointer; display: block; margin-bottom: 3px;
 }
 .toggle-row__desc { font-size: 13px; color: var(--neutral-500); line-height: 1.4; }
@@ -144,12 +144,12 @@
   border-bottom: 1px solid var(--neutral-100);
 }
 .billing-plan-card__plan {
-  font-size: 16px; font-weight: 500; color: var(--neutral-900); display: block; margin-bottom: 3px;
+  font-size: 16px; font-weight: 600; color: var(--neutral-900); display: block; margin-bottom: 3px;
 }
 .billing-plan-card__renews { font-size: 13px; color: var(--neutral-500); }
 .billing-upgrade-btn {
   padding: 8px 16px; background: var(--brand-600); color: #fff;
-  font-size: 13px; font-weight: 500; border-radius: var(--radius-md);
+  font-size: 13px; font-weight: 600; border-radius: var(--radius-md);
   white-space: nowrap; transition: background var(--t-fast); flex-shrink: 0;
 }
 .billing-upgrade-btn:hover { background: var(--brand-700); }
@@ -160,12 +160,12 @@
   font-size: 13px; color: var(--neutral-700);
 }
 .billing-limit-row:last-child { border-bottom: none; }
-.billing-limit-row__val { font-weight: 500; color: var(--neutral-900); }
+.billing-limit-row__val { font-weight: 600; color: var(--neutral-900); }
 .billing-limit-row__full { color: var(--color-danger); font-weight: 400; }
 
 .billing-invoices { margin-top: 8px; }
 .billing-invoices__title {
-  font-size: 14px; font-weight: 500; color: var(--neutral-700); margin-bottom: 10px;
+  font-size: 14px; font-weight: 600; color: var(--neutral-700); margin-bottom: 10px;
 }
 .billing-invoices__table {
   width: 100%; border-collapse: collapse; font-size: 13px;
@@ -173,7 +173,7 @@
 }
 .billing-invoices__table th {
   padding: 10px 14px; text-align: left; background: var(--neutral-50);
-  font-size: 11px; font-weight: 500; text-transform: uppercase;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
   letter-spacing: .05em; color: var(--neutral-400);
   border-bottom: 1px solid var(--neutral-100);
 }
@@ -183,13 +183,13 @@
 }
 .billing-invoices__table tr:last-child td { border-bottom: none; }
 .billing-invoice-status {
-  font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: var(--radius-full);
+  font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: var(--radius-full);
 }
 .billing-invoice-status--paid { background: #EAF7F0; color: #1A6B3C; }
 .billing-invoice-status--open { background: var(--brand-50); color: var(--brand-600); }
 .billing-invoice-status--void { background: var(--neutral-100); color: var(--neutral-400); }
 .billing-invoice-dl {
-  font-size: 12px; font-weight: 500; color: var(--brand-600);
+  font-size: 12px; font-weight: 600; color: var(--brand-600);
   transition: color var(--t-fast);
 }
 .billing-invoice-dl:hover { color: var(--brand-700); text-decoration: underline; }
@@ -201,7 +201,7 @@
   background: var(--brand-50);
 }
 .billing-upgrade-card__title {
-  font-size: 16px; font-weight: 500; color: var(--brand-900); letter-spacing: -0.01em;
+  font-size: 16px; font-weight: 600; color: var(--brand-900); letter-spacing: -0.01em;
 }
 .billing-upgrade-card__features {
   list-style: none; display: flex; flex-direction: column; gap: 8px;
@@ -211,7 +211,7 @@
   display: flex; align-items: center; gap: 8px;
 }
 .billing-upgrade-card__features li::before {
-  content: '✓'; color: var(--brand-500); font-weight: 500; font-size: 13px;
+  content: '✓'; color: var(--brand-500); font-weight: 600; font-size: 13px;
 }
 
 /* Danger zone */
@@ -224,7 +224,7 @@
   border-bottom: 1px solid var(--color-danger-border);
 }
 .danger-card__title {
-  font-size: 15px; font-weight: 500; color: var(--color-danger); margin-bottom: 6px;
+  font-size: 15px; font-weight: 600; color: var(--color-danger); margin-bottom: 6px;
 }
 .danger-card__desc { font-size: 13px; color: var(--neutral-600); line-height: 1.5; }
 .danger-card__form { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
@@ -243,7 +243,7 @@
   font-size: 12px;
 }
 .plan-badge__label {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-500);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -327,7 +327,7 @@
   border: 1px solid var(--neutral-100);
   border-radius: var(--radius-md);
 }
-.api-key-item__name   { font-size: 14px; font-weight: 500; color: var(--neutral-900); }
+.api-key-item__name   { font-size: 14px; font-weight: 600; color: var(--neutral-900); }
 .api-key-item__prefix { font-size: 12px; font-family: monospace; color: var(--neutral-500); }
 .api-key-item__meta   { font-size: 11px; color: var(--neutral-400); }
 
@@ -377,7 +377,7 @@
   background: var(--neutral-50); border: 1px solid var(--neutral-200);
   border-radius: var(--radius-md);
 }
-.tag-row__label { font-size: 14px; font-weight: 500; color: var(--neutral-900); word-break: break-word; }
+.tag-row__label { font-size: 14px; font-weight: 600; color: var(--neutral-900); word-break: break-word; }
 .tag-row__count { font-size: 12px; color: var(--neutral-500); }
 .tag-row__actions { display: flex; gap: 4px; }
 
@@ -404,7 +404,7 @@
 }
 .ai-glossary__input { flex: 1; min-width: 0; }
 .ai-glossary__arrow {
-  color: var(--neutral-400); font-weight: 500;
+  color: var(--neutral-400); font-weight: 600;
   flex-shrink: 0;
 }
 .ai-glossary__remove {
@@ -438,7 +438,7 @@
   display: flex; flex-direction: column; gap: 8px;
 }
 .ai-stats__breakdown-title {
-  font-size: 12px; color: var(--neutral-600); font-weight: 500;
+  font-size: 12px; color: var(--neutral-600); font-weight: 600;
 }
 .ai-stats__bar {
   display: flex; height: 10px;
@@ -539,7 +539,7 @@
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-md);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-700);
   white-space: nowrap;
   flex-shrink: 0;
@@ -591,7 +591,7 @@
 }
 .ai-models__latency {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   padding: 1px 6px;
   border-radius: 99px;
   background: var(--neutral-100);
@@ -603,7 +603,7 @@
 .ai-models__cost {
   margin-left: auto;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-500);
   font-family: ui-monospace, SFMono-Regular, monospace;
 }
@@ -724,7 +724,7 @@
   cursor: pointer;
   font-family: var(--font-ui);
   font-size: 13.5px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-700);
   text-align: left;
   transition: background var(--t-fast), color var(--t-fast);
@@ -787,7 +787,7 @@
 .settings-nav__subitem--active {
   background: var(--brand-tint, rgba(91, 91, 214, 0.08));
   color: var(--brand-700);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* ── SettingsListSection (S3-T2 mutualisation) ──────────────────── */

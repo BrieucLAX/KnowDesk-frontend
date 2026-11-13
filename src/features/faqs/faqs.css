@@ -16,7 +16,7 @@
 .faqs-page__tab:hover { background: var(--neutral-100); color: var(--neutral-900); }
 .faqs-page__tab--active {
   background: var(--brand-50); color: var(--brand-700);
-  border-color: var(--brand-200); font-weight: 500;
+  border-color: var(--brand-200); font-weight: 600;
 }
 .faqs-list { display: flex; flex-direction: column; gap: 8px; list-style: none; }
 .faq-row {
@@ -36,7 +36,7 @@
 .faq-row__header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .faq-row__category { font-size: 12px; color: var(--neutral-400); }
 .faq-row__question {
-  font-size: 15px; font-weight: 500; color: var(--neutral-900);
+  font-size: 15px; font-weight: 600; color: var(--neutral-900);
   line-height: 1.4; margin: 0;
 }
 .faq-row__meta {
@@ -60,7 +60,7 @@
 
 /* ── Filtre multi-tag (page FAQs) ────────────────────────── */
 .faqs-page__tag-filter-label {
-  color: var(--neutral-600); font-weight: 500;
+  color: var(--neutral-600); font-weight: 600;
   margin-right: 4px; font-size: 12px;
 }
 .faqs-page__tag-clear {
@@ -116,7 +116,7 @@
   display: flex; flex-direction: column; gap: 4px;
 }
 .faqs-table__question {
-  font-weight: 500; color: var(--neutral-900);
+  font-weight: 600; color: var(--neutral-900);
   line-height: 1.4;
 }
 .faqs-table__tags {
@@ -157,7 +157,7 @@
 }
 .faq-editor__back:hover { color: var(--neutral-900); }
 .faq-editor__heading {
-  font-size: 15px; font-weight: 500; color: var(--neutral-900);
+  font-size: 15px; font-weight: 600; color: var(--neutral-900);
   flex: 1; text-align: center;
 }
 .faq-editor__topbar-actions { display: flex; gap: 8px; }
@@ -188,7 +188,7 @@
 }
 .faq-editor__radio input { position: absolute; opacity: 0; pointer-events: none; }
 .faq-editor__radio-title {
-  font-size: 14px; font-weight: 500; color: var(--neutral-900);
+  font-size: 14px; font-weight: 600; color: var(--neutral-900);
   display: flex; align-items: center; gap: 8px;
 }
 .faq-editor__radio-desc { font-size: 12px; color: var(--neutral-500); }
@@ -211,7 +211,7 @@
 }
 .faq-result-expansion__text mark {
   background: var(--brand-100); color: var(--brand-700);
-  font-weight: 500; padding: 0 2px; border-radius: 2px;
+  font-weight: 600; padding: 0 2px; border-radius: 2px;
 }
 .faq-result-expansion__actions {
   display: flex; align-items: center; gap: 8px;
@@ -252,7 +252,7 @@
 .faq-helpful__btn:focus-visible {
   outline: 2px solid var(--brand-500); outline-offset: 1px;
 }
-.faq-helpful__count { font-weight: 500; }
+.faq-helpful__count { font-weight: 600; }
 .faq-helpful__thanks {
   font-size: 12px; color: var(--color-success); font-style: italic;
 }
@@ -264,7 +264,7 @@
 .faq-helpful--readonly {
   display: inline-flex; align-items: center; gap: 4px;
 }
-.faq-helpful__rate { font-weight: 500; color: var(--neutral-700); }
+.faq-helpful__rate { font-weight: 600; color: var(--neutral-700); }
 .faq-helpful__total { color: var(--neutral-400); }
 .faq-helpful__empty { color: var(--neutral-400); }
 
@@ -282,7 +282,7 @@
   letter-spacing: 0.04em;
 }
 .faq-editor__stat-value {
-  font-size: 14px; font-weight: 500; color: var(--neutral-900);
+  font-size: 14px; font-weight: 600; color: var(--neutral-900);
 }
 
 /* ── FAQs à créer (suggesteur sur Analytics) ───────────────── */
@@ -312,7 +312,7 @@
 }
 .faqs-to-create__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .faqs-to-create__query {
-  font-size: 14px; font-weight: 500; color: var(--neutral-900);
+  font-size: 14px; font-weight: 600; color: var(--neutral-900);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .faqs-to-create__meta { font-size: 12px; color: #78350F; }
@@ -336,7 +336,7 @@
   background: var(--neutral-0);
 }
 .faq-history__summary {
-  cursor: pointer; padding: 12px 16px; font-size: 13px; font-weight: 500;
+  cursor: pointer; padding: 12px 16px; font-size: 13px; font-weight: 600;
   color: var(--neutral-700); list-style: none; display: flex; align-items: center; gap: 6px;
 }
 .faq-history__summary::-webkit-details-marker { display: none; }
@@ -363,7 +363,7 @@
 .faq-history__entry--creation { color: var(--neutral-500); padding-top: 10px; border-top: 1px dashed var(--neutral-100); }
 .faq-history__icon { flex-shrink: 0; line-height: 1.4; }
 .faq-history__text { line-height: 1.4; }
-.faq-history__text strong { color: var(--neutral-900); font-weight: 500; }
+.faq-history__text strong { color: var(--neutral-900); font-weight: 600; }
 .faq-history__text time { color: var(--neutral-400); }
 
 
@@ -373,7 +373,7 @@
   min-width: 0;
 }
 .faqs-cell-question__text {
-  font-weight: 500; color: var(--neutral-900);
+  font-weight: 600; color: var(--neutral-900);
 }
 .faqs-cell-question__tags {
   display: flex; flex-wrap: wrap; gap: 4px;

@@ -14,7 +14,7 @@
   animation: bulk-bar-in 0.18s ease-out;
 }
 .bulk-action-bar__count {
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
 }
 .bulk-action-bar__actions {

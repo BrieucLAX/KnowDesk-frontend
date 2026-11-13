@@ -41,7 +41,7 @@
   border: 0;
   padding: 12px 16px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-600);
   cursor: pointer;
   border-bottom: 2px solid transparent;
@@ -143,7 +143,7 @@
 
 .bm-bar__label { display: flex; align-items: center; gap: 4px; font-size: 13px; }
 .bm-bar__star { font-size: 12px; }
-.bm-bar__name { font-weight: 500; }
+.bm-bar__name { font-weight: 600; }
 
 .bm-bar.is-owner .bm-bar__name { color: var(--brand-700); }
 
@@ -273,7 +273,7 @@
   color: var(--neutral-700);
 }
 
-.bm-chip--owner { background: var(--brand-100); color: var(--brand-800); font-weight: 500; }
+.bm-chip--owner { background: var(--brand-100); color: var(--brand-800); font-weight: 600; }
 
 .bm-chip--sentiment-positive { background: #DCFCE7; color: #166534; }
 .bm-chip--sentiment-neutral  { background: #F3F4F6; color: #4B5563; }
@@ -338,7 +338,7 @@
 /* ── Select industry ─────────────────────────────────── */
 
 .bm-select-wrap { display: flex; flex-direction: column; gap: 6px; }
-.bm-select-label { font-size: 13px; font-weight: 500; color: var(--neutral-700); }
+.bm-select-label { font-size: 13px; font-weight: 600; color: var(--neutral-700); }
 .bm-select {
   background: var(--neutral-0);
   border: 1px solid var(--neutral-300);
@@ -445,7 +445,7 @@
   border-color: var(--brand-500);
   background: var(--brand-50);
   color: var(--brand-800);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* ── Recommandations (R-S8) ──────────────────────────── */
@@ -550,7 +550,7 @@
 .bm-alignment-row.is-owner .bm-alignment-row__zero {
   color: var(--color-danger, #b91c1c);
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* ── Sources (Sprint 5b) ─────────────────────────────── */

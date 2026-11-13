@@ -9,7 +9,7 @@
   display: flex; flex-direction: column; gap: 4px;
 }
 .learning-cell-name__text {
-  font-weight: 500; color: var(--neutral-900);
+  font-weight: 600; color: var(--neutral-900);
 }
 .learning-cell-name__desc {
   font-size: 12px; color: var(--neutral-500);
@@ -26,7 +26,7 @@
   display: flex; flex-direction: column; gap: 6px;
 }
 .learning-form__label {
-  font-size: 13px; font-weight: 500; color: var(--neutral-700);
+  font-size: 13px; font-weight: 600; color: var(--neutral-700);
 }
 .learning-form__textarea {
   font-family: var(--font-ui);
@@ -108,7 +108,7 @@
   min-width: 22px;
 }
 .learning-module__name {
-  font-weight: 500; color: var(--neutral-900);
+  font-weight: 600; color: var(--neutral-900);
 }
 .learning-module__actions {
   display: inline-flex; gap: 4px;
@@ -238,7 +238,7 @@
 }
 .module-editor__quiz-item strong {
   display: block; margin-bottom: 6px;
-  color: var(--neutral-900); font-weight: 500;
+  color: var(--neutral-900); font-weight: 600;
 }
 .module-editor__quiz-choices {
   list-style: none; padding-left: 16px; margin: 0;
@@ -249,7 +249,7 @@
 }
 .module-editor__quiz-correct {
   color: var(--color-success, #0a7d3a);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* ── Assign list ─────────────────────────────────────────────── */
@@ -271,7 +271,7 @@
   background: var(--neutral-50);
   border-color: var(--neutral-200);
 }
-.assign-list__name { font-weight: 500; }
+.assign-list__name { font-weight: 600; }
 .assign-list__email { color: var(--neutral-500); font-size: 12px; flex: 1; }
 .assign-list__role {
   font-size: 11px;
@@ -381,7 +381,7 @@
 .learning-player__progress {
   font-size: 13px;
   color: var(--neutral-600);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .learning-player__body {
@@ -553,7 +553,7 @@
 .completions-grid__mod-num {
   color: var(--neutral-400);
   margin-right: 4px;
-  font-weight: 500;
+  font-weight: 600;
 }
 .completions-grid__mod-name {
   display: inline-block;
@@ -566,7 +566,7 @@
   position: sticky; left: 0;
   background: var(--neutral-0);
   text-align: left;
-  font-weight: 500;
+  font-weight: 600;
   z-index: 1;
 }
 .completions-grid__user-name {
@@ -585,7 +585,7 @@
 }
 .completions-grid__badge {
   display: inline-flex; align-items: center; gap: 6px;
-  font-weight: 500;
+  font-weight: 600;
 }
 .completions-grid__icon { font-size: 16px; line-height: 1; }
 .completions-grid__score {
@@ -636,7 +636,7 @@
   font-size: 18px; line-height: 1;
 }
 .template-card__label {
-  font-size: 14px; font-weight: 500;
+  font-size: 14px; font-weight: 600;
   color: var(--neutral-900);
 }
 .template-card__hint {

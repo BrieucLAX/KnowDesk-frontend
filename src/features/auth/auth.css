@@ -9,7 +9,7 @@
   gap: 16px; text-align: center; padding: 8px 0;
 }
 .forgot-success__icon  { font-size: 48px; line-height: 1; }
-.forgot-success__title { font-size: 22px; font-weight: 500; color: var(--neutral-900); letter-spacing: -0.02em; }
+.forgot-success__title { font-size: 22px; font-weight: 600; color: var(--neutral-900); letter-spacing: -0.02em; }
 .forgot-success__desc  { font-size: 14px; color: var(--neutral-500); line-height: 1.5; max-width: 320px; }
 
 
@@ -72,7 +72,7 @@
   background: var(--brand-500);
   border-radius: var(--radius-md);
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 600;
   color: #fff;
   letter-spacing: -0.02em;
 }
@@ -133,7 +133,7 @@
 
 .login-page__app-name {
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-900);
   letter-spacing: -0.02em;
 }
@@ -142,7 +142,7 @@
 
 .login-page__title {
   font-size: 26px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.03em;
   color: var(--neutral-900);
   margin-bottom: 6px;
@@ -227,7 +227,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--brand-600);
   background: none;
   border: none;
@@ -255,7 +255,7 @@
 
 .login-form__link {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--brand-600);
   transition: color var(--t-fast);
 }

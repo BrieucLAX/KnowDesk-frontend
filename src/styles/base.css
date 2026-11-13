@@ -14,10 +14,16 @@ html, body, #root {
   height: 100%;
   font-family: var(--font-ui);
   font-size: 14px;
-  color: var(--neutral-900);
-  background: var(--neutral-0);
+  color: var(--ink);
+  background: var(--surface);
   -webkit-font-smoothing: antialiased;
 }
+
+/* ── Accessibility: focus clavier global ───────────────────── */
+/* :where() ramène la spécificité à zéro : les focus personnalisés
+   (.btn:focus-visible, .field-input { outline: none } + anneau maison…)
+   gardent la main quel que soit l'ordre des feuilles dans le bundle. */
+:where(:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 /* ── Accessibility: reduced motion ─────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
