@@ -145,7 +145,7 @@
 .article-page__action-btn:hover { border-color: var(--neutral-300); color: var(--neutral-700); }
 .article-page__edit-btn {
   padding: 6px 14px; background: var(--neutral-0);
-  border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
+  border: 1px solid var(--neutral-200); border-radius: var(--radius-sm);
   font-size: 12px; font-weight: 600; color: var(--neutral-700);
   transition: all var(--t-fast);
 }

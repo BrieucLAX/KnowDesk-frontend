@@ -46,7 +46,7 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
   const listboxId  = useId();
   const resultIdPrefix = useId();
   const toast      = useToast();
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLFormElement>(null);
 
   const [expandedFaqId, setExpandedFaqId] = useState<string | null>(null);
   // Override local : permet de fermer le dropdown sans vider la query
@@ -158,7 +158,17 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
   }, [state.results]);
 
   return (
-    <div ref={wrapperRef} className={`search-bar ${className ?? ''}`} role="search">
+    <form
+      ref={wrapperRef}
+      className={`search-bar ${className ?? ''}`}
+      role="search"
+      // Entrée sans résultat sélectionné : rien à soumettre (useSearch gère
+      // la navigation au clavier dans les résultats).
+      onSubmit={e => e.preventDefault()}
+    >
+      <label htmlFor="global-search" className="sr-only">
+        Rechercher dans la base de connaissance
+      </label>
       <div
         className="search-bar__combobox"
         role="combobox"
@@ -182,7 +192,6 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
           aria-autocomplete="list"
           aria-controls={listboxId}
           aria-activedescendant={activeResultId}
-          aria-label="Rechercher dans la base de connaissance"
           onChange={e => handleChange(e.target.value)}
           onKeyDown={handleKeyDown}
           onFocus={handleFocusWrapped}
@@ -312,7 +321,7 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
           <p className="search-bar__empty-hint">Essayez d'autres mots-clés ou consultez les catégories.</p>
         </div>
       )}
-    </div>
+    </form>
   );
 }
 

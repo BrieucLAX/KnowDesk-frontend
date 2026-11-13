@@ -1,0 +1,31 @@
+<!-- @dsCard group="Actions" height=150 subtitle="Choix d'un affichage ou d'une période" -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>SegmentedControl</title>
+<style>
+html, body { margin: 0; }
+body { background: var(--surface); }
+.stage { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.cap { font-family: var(--font-sans); font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+
+</style>
+</head>
+<body>
+<div class="cx-root stage">
+<div class="row">
+<div class="cx-segmented" role="group" aria-label="Période">
+<button class="cx-segmented__item" type="button" aria-pressed="false">7 jours</button>
+<button class="cx-segmented__item" type="button" aria-pressed="true">30 jours</button>
+<button class="cx-segmented__item" type="button" aria-pressed="false">90 jours</button>
+</div>
+<div class="cx-segmented" role="group" aria-label="Affichage du texte">
+<button class="cx-segmented__item" type="button" aria-pressed="true">Voir les modifications</button>
+<button class="cx-segmented__item" type="button" aria-pressed="false">Version finale</button>
+</div>
+</div>
+</div>
+</body>
+</html>

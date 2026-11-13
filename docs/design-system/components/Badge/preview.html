@@ -1,0 +1,32 @@
+<!-- @dsCard group="Affichage" height=190 subtitle="Statuts, types et mises en avant" -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Badge</title>
+<style>
+html, body { margin: 0; }
+body { background: var(--surface); }
+.stage { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.cap { font-family: var(--font-sans); font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+
+</style>
+</head>
+<body>
+<div class="cx-root stage">
+<div class="row">
+<span class="cx-badge cx-badge--success"><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Validé</span>
+<span class="cx-badge cx-badge--warning"><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Revue proche</span>
+<span class="cx-badge cx-badge--danger"><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16v.5"/></svg>Revue en retard</span>
+<span class="cx-badge cx-badge--info">En relecture</span>
+<span class="cx-badge cx-badge--neutral">Brouillon</span>
+</div>
+<div class="row">
+<span class="cx-badge cx-badge--primary">Procédure</span>
+<span class="cx-badge cx-badge--primary">Résolution de problème</span>
+<span class="cx-badge cx-badge--accent">Nouveau</span>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!-- @dsCard group="Formulaires" height=330 subtitle="Champ, zone de texte, aide et erreur" -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>TextField</title>
+<style>
+html, body { margin: 0; }
+body { background: var(--surface); }
+.stage { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.cap { font-family: var(--font-sans); font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+
+</style>
+</head>
+<body>
+<div class="cx-root stage">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 760px;">
+<div class="cx-field">
+<label class="cx-label" for="t1">Titre</label>
+<input class="cx-input" id="t1" type="text" value="Comment modifier l'adresse de livraison ?">
+<span class="cx-help">Formulez le titre comme le client poserait la question.</span>
+</div>
+<div class="cx-field cx-field--error">
+<label class="cx-label" for="t2">Catégorie</label>
+<input class="cx-input" id="t2" type="text" placeholder="Choisir une catégorie" aria-invalid="true" aria-describedby="e2">
+<span class="cx-error" id="e2"><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16v.5"/></svg>Choisissez une catégorie pour enregistrer l'article.</span>
+</div>
+<div class="cx-field" style="grid-column: 1 / -1;">
+<label class="cx-label" for="t3">Réponse courte</label>
+<textarea class="cx-input" id="t3">L'adresse peut être modifiée tant que la commande n'est pas expédiée.</textarea>
+</div>
+</div>
+</div>
+</body>
+</html>

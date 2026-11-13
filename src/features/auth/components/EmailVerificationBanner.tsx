@@ -3,6 +3,7 @@ import { useAuthStore } from '../../../store/authStore';
 import { useToast }     from '../../../shared/lib/useToast';
 import { apiClient, ApiError } from '../../../shared/lib/apiClient';
 import './EmailVerificationBanner.css';
+import { StatusIcon } from '../../../shared/components/ui/StatusIcon';
 
 /**
  * Bandeau soft affiché en haut de l'app tant que l'utilisateur n'a pas
@@ -34,8 +35,8 @@ export function EmailVerificationBanner() {
   }, [toast]);
 
   return (
-    <div className="email-verify-banner" role="alert">
-      <span className="email-verify-banner__icon" aria-hidden="true">✉️</span>
+    <div className="email-verify-banner" role="status">
+      <StatusIcon tone="warning" className="email-verify-banner__icon" />
       <span className="email-verify-banner__text">
         Vérifiez votre adresse <strong>{session.user.email}</strong> en cliquant sur le lien que nous vous avons envoyé.
       </span>

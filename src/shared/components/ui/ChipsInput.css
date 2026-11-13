@@ -20,23 +20,29 @@
 }
 .chip__remove:hover { color: var(--color-danger); }
 
+/* Aligné sur la fiche TextField : 48 px, contour line-strong, anneau focus
+   sur tout le champ. */
 .chips-input {
   display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
-  padding: 6px 8px; min-height: 38px;
-  background: var(--surface-raised); border: 1px solid var(--neutral-300);
+  padding: 6px var(--space-4) 6px 12px; min-height: var(--input-h);
+  background: var(--surface-raised); border: 1px solid var(--line-strong);
   border-radius: var(--radius-md);
+  color: var(--ink);
   transition: border-color var(--t-fast);
 }
-.chips-input:focus-within { border-color: var(--brand-500); }
+.chips-input:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
 .chips-input__field {
   flex: 1; min-width: 120px;
   border: none; outline: none; padding: 4px 0;
-  font: inherit; color: inherit; background: transparent;
+  font: inherit; font-size: 15px; color: inherit; background: transparent;
 }
+.chips-input__field::placeholder { color: var(--ink-muted); }
 
 /* Auto-complete dropdown */
 .chips-input-wrap { position: relative; }
-.chips-input--disabled { opacity: 0.7; background: var(--neutral-50); }
+/* Désactivé : pas d'opacité, texte ink-muted (4,5:1 sur surface). */
+.chips-input--disabled { background: var(--surface); color: var(--ink-muted); }
+.chips-input--disabled .chip { color: var(--ink-muted); }
 .chips-input__menu {
   position: absolute; top: calc(100% + 4px); left: 0; right: 0;
   background: var(--neutral-0); border: 1px solid var(--neutral-200);
@@ -46,7 +52,7 @@
   list-style: none; margin: 0; padding: 4px;
 }
 .chips-input__menu-item {
-  padding: 6px 10px; border-radius: 4px;
+  padding: 6px 10px; border-radius: var(--radius-sm);
   font-size: 13px; color: var(--neutral-700); cursor: pointer;
 }
 .chips-input__menu-item--active { background: var(--neutral-100); }

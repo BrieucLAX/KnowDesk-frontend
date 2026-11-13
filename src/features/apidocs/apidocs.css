@@ -96,7 +96,7 @@
 .apidoc-examples__tab   {
   font-size: 12px; padding: 6px 12px;
   background: var(--neutral-200); border: none; cursor: pointer;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   color: var(--neutral-600); font-family: var(--font-ui);
   transition: all var(--t-fast);
 }

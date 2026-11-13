@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { StatusIcon } from './StatusIcon';
 import './NetworkErrorBanner.css';
 
 /**
@@ -24,8 +25,8 @@ export function NetworkErrorBanner() {
   if (!isOffline) return null;
 
   return (
-    <div className="network-banner" role="alert" aria-live="assertive">
-      <span className="network-banner__icon" aria-hidden="true">⚠️</span>
+    <div className="network-banner" role="status">
+      <StatusIcon tone="warning" className="network-banner__icon" />
       Connexion perdue — vos modifications seront synchronisées au retour du réseau.
     </div>
   );

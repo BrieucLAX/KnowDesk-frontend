@@ -61,7 +61,7 @@
   background: var(--brand-50); color: var(--brand-600);
 }
 .sidenav__item--active:hover { background: var(--brand-100); }
-.sidenav__item:focus-visible { outline: 2px solid var(--brand-500); outline-offset: -2px; }
+.sidenav__item:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
 /* Libellé toujours visible, à droite de l'icône. */
 .sidenav__label {
   flex: 1; min-width: 0;
@@ -78,7 +78,7 @@
   margin: 4px;
 }
 .sidenav__avatar:hover { background: var(--brand-200); }
-.sidenav__avatar:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; }
+.sidenav__avatar:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 /* ── TopBar ───────────────────────────────────────────────────── */
 /* Bandeau « Version de test » : organisations de test (module onboarding). */
@@ -92,7 +92,7 @@
 }
 
 .topbar {
-  height: 56px; background: var(--neutral-0);
+  height: var(--topbar-h); background: var(--neutral-0);
   border-bottom: 1px solid var(--neutral-100);
   display: flex; align-items: center;
   padding: 0 40px; position: sticky; top: 0; z-index: 10;
@@ -130,7 +130,7 @@
   font-size: 13px; color: var(--ink-muted);
   background: none; border: none; cursor: pointer;
   font-family: var(--font-ui); padding: 4px 8px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   transition: all var(--t-fast);
 }
 .topbar__logout:hover { background: var(--neutral-100); color: var(--neutral-700); }

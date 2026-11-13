@@ -9,7 +9,7 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: 1px solid transparent;
   background: transparent;
   color: var(--neutral-600);
@@ -30,8 +30,8 @@
   border-color: var(--neutral-300);
 }
 .action-menu__trigger:focus-visible {
-  outline: 2px solid var(--brand-500);
-  outline-offset: 1px;
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
 /* Rendu dans un portal sur document.body (cf ActionMenu.tsx) avec
@@ -68,11 +68,13 @@
   background: var(--neutral-100);
 }
 .action-menu__item:focus-visible {
-  outline: 2px solid var(--brand-500);
-  outline-offset: -1px;
+  /* Décalage intérieur : le menu coupe ce qui déborde. */
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
 }
+/* Désactivé : texte ink-muted, sans opacité (4,5:1 sur blanc). */
 .action-menu__item:disabled {
-  opacity: 0.5;
+  color: var(--ink-muted);
   cursor: not-allowed;
 }
 .action-menu__item--danger {

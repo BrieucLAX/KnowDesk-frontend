@@ -29,7 +29,7 @@ export function EntityCard({
 }: EntityCardProps) {
   return (
     <article
-      className={`entity-card${className ? ' ' + className : ''}`}
+      className={`entity-card${onClick ? ' entity-card--clickable' : ''}${className ? ' ' + className : ''}`}
       aria-label={ariaLabel}
     >
       <div

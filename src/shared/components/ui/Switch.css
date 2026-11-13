@@ -14,7 +14,12 @@
   border-bottom: 1px solid var(--neutral-100);
 }
 .switch-row:last-child { border-bottom: none; }
-.switch-row--disabled { opacity: 0.55; pointer-events: none; }
+.switch-row--disabled { pointer-events: none; }
+/* Désactivé : textes en ink-muted sans opacité (4,5:1), l'interrupteur
+   seul est atténué (ce n'est pas du texte). */
+.switch-row--disabled .switch-row__label,
+.switch-row--disabled .switch-row__desc { color: var(--ink-muted); }
+.switch-row--disabled .switch { opacity: 0.55; }
 .switch-row__text { flex: 1; min-width: 0; }
 .switch-row__label {
   display: block;
@@ -46,7 +51,7 @@
 .switch:disabled { cursor: not-allowed; }
 .switch--on { background: var(--brand-600); }
 .switch:focus-visible {
-  outline: 2px solid var(--brand-500);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 .switch__thumb {

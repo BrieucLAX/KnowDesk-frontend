@@ -1,0 +1,24 @@
+<!-- @dsCard group="Affichage" height=370 subtitle="Information, succès, alerte, erreur" -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Alert</title>
+<style>
+html, body { margin: 0; }
+body { background: var(--surface); }
+.stage { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.cap { font-family: var(--font-sans); font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+
+</style>
+</head>
+<body>
+<div class="cx-root stage">
+<div class="cx-alert cx-alert--info" role="status"><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg><div><p class="cx-alert__title">Cet article est aussi visible des clients</p><p class="cx-alert__text">Le bloc interne reste réservé aux agents.</p></div></div>
+<div class="cx-alert cx-alert--success" role="status"><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg><p class="cx-alert__text"><strong>Article publié.</strong> Il apparaît déjà dans la recherche.</p></div>
+<div class="cx-alert cx-alert--warning" role="status"><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17v.5"/></svg><div><p class="cx-alert__title">À vérifier</p><p class="cx-alert__text">« ou équivalent » n'apparaît dans aucune de vos sources.</p></div></div>
+<div class="cx-alert cx-alert--danger" role="alert"><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16v.5"/></svg><div><p class="cx-alert__title">L'article n'a pas pu être enregistré</p><p class="cx-alert__text">Vérifiez votre connexion puis réessayez. Votre texte est conservé.</p></div></div>
+</div>
+</body>
+</html>

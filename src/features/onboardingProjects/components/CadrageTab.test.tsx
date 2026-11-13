@@ -36,7 +36,7 @@ function renderTab(extra: Partial<React.ComponentProps<typeof CadrageTab>> = {})
   return render(<CadrageTab project={project} onSaved={() => {}} onDirtyChange={() => {}} {...extra} />);
 }
 const saveButton = () => screen.getAllByRole('button', { name: 'Enregistrer une nouvelle version' })[0];
-const toStructured = async () => fireEvent.click(await screen.findByRole('tab', { name: /Formulaire structuré/ }));
+const toStructured = async () => fireEvent.click(await screen.findByRole('button', { name: /Formulaire structuré/ }));
 
 describe('CadrageTab', () => {
   beforeEach(() => {

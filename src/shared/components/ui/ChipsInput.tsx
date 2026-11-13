@@ -11,6 +11,12 @@ export interface ChipsInputProps {
   max?:         number;
   /** Désactive l'édition (mode read-only). */
   disabled?:    boolean;
+  /** id du champ de saisie, pour le relier à un <label htmlFor>. */
+  id?:          string;
+  /** Nom accessible quand aucun <label> visible n'est relié. */
+  ariaLabel?:   string;
+  /** id du message d'aide ou d'erreur relié au champ. */
+  describedBy?: string;
 }
 
 /**
@@ -19,7 +25,7 @@ export interface ChipsInputProps {
  * Si `suggestions` est fourni, un menu d'auto-complétion s'ouvre sous l'input.
  */
 export function ChipsInput({
-  value, onChange, placeholder, suggestions, max, disabled,
+  value, onChange, placeholder, suggestions, max, disabled, id, ariaLabel, describedBy,
 }: ChipsInputProps) {
   const [draft, setDraft] = useState('');
   const [open,  setOpen]  = useState(false);
@@ -92,7 +98,10 @@ export function ChipsInput({
         {!disabled && (
           <input
             ref={inputRef}
+            id={id}
             type="text"
+            aria-label={ariaLabel}
+            aria-describedby={describedBy}
             className="chips-input__field"
             value={draft}
             placeholder={value.length === 0 ? placeholder : ''}

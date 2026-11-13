@@ -29,7 +29,7 @@ const session: AuthSession = {
 };
 
 const tabCount = (name: string) =>
-  within(screen.getByRole('tab', { name: new RegExp(`^${name}`) })).getByText(/^\d+$/).textContent;
+  within(screen.getByRole('button', { name: new RegExp(`^${name}`) })).getByText(/^\d+$/).textContent;
 
 /** Ouvre le menu d'actions de la ligne qui porte ce titre, puis clique sur l'action. */
 function rowAction(title: string, action: string) {
@@ -67,7 +67,7 @@ describe('KnowledgePage : Archiver, onglet Archivés, Désarchiver (plan-article
     expect(tabCount('Archivés')).toBe('1');
     expect(screen.queryByText('Grille tarifaire 2024')).toBeNull();
 
-    fireEvent.click(screen.getByRole('tab', { name: /^Archivés/ }));
+    fireEvent.click(screen.getByRole('button', { name: /^Archivés/ }));
     expect(screen.getByText('Grille tarifaire 2024')).toBeTruthy();
     expect(screen.queryByText('Résiliation infra-annuelle')).toBeNull();
   });
@@ -89,7 +89,7 @@ describe('KnowledgePage : Archiver, onglet Archivés, Désarchiver (plan-article
   it('Désarchiver depuis l\'onglet Archivés remet l\'article en brouillon', async () => {
     vi.mocked(apiClient.put).mockImplementation(replay(UNARCHIVE, 200));
     await renderPage();
-    fireEvent.click(screen.getByRole('tab', { name: /^Archivés/ }));
+    fireEvent.click(screen.getByRole('button', { name: /^Archivés/ }));
 
     rowAction('Grille tarifaire 2024', 'Désarchiver');
 
@@ -104,7 +104,7 @@ describe('KnowledgePage : Archiver, onglet Archivés, Désarchiver (plan-article
     vi.mocked(apiClient.put).mockImplementation(replay(UNARCHIVE_403, 403));
     render(<MemoryRouter><KnowledgePage onOpenArticle={() => {}} /></MemoryRouter>);
     await waitFor(() => expect(tabCount('Archivés')).toBe('2'));
-    fireEvent.click(screen.getByRole('tab', { name: /^Archivés/ }));
+    fireEvent.click(screen.getByRole('button', { name: /^Archivés/ }));
 
     const archived = (respond('/articles?page=2').data as Array<{ title: string; status: string }>).filter(a => a.status === 'archived');
     rowAction(archived[0].title, 'Désarchiver');

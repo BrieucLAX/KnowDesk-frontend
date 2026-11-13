@@ -1,46 +1,55 @@
 .email-verify-banner {
+  /* Fiche Alert, variante warning : fond warning-soft, texte ink, seule
+     l'icône est colorée ; role="status". */
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 16px;
+  padding: 8px 16px;
   background: var(--warning-soft);
   border-bottom: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
-  font-size: 13px;
-  color: var(--warning);
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--ink);
 }
-.email-verify-banner__icon { font-size: 16px; flex-shrink: 0; }
-.email-verify-banner__text { flex: 1; line-height: 1.4; }
+.email-verify-banner__icon { flex-shrink: 0; color: var(--warning); }
+.email-verify-banner__text { flex: 1; }
 .email-verify-banner__text strong { font-weight: 600; }
 
+/* Action : même rendu qu'un Button secondaire, petite taille. */
 .email-verify-banner__action {
+  display: inline-flex; align-items: center;
+  min-height: 36px;
   background: var(--surface-raised);
-  border: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
-  color: var(--warning);
-  font-size: 12px;
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-size: 13px;
   font-weight: 600;
-  padding: 4px 10px;
+  padding: 0 14px;
   border-radius: var(--radius-md);
   cursor: pointer;
   font-family: inherit;
   flex-shrink: 0;
   transition: background var(--t-fast);
 }
-.email-verify-banner__action:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--warning) 10%, var(--warning-soft));
-}
+.email-verify-banner__action:hover:not(:disabled) { background: var(--surface); }
+/* Envoi en cours : pas d'opacité, texte ink-muted (4,5:1 sur blanc). */
 .email-verify-banner__action:disabled {
-  opacity: 0.6;
-  cursor: default;
+  color: var(--ink-muted);
+  cursor: progress;
 }
+.email-verify-banner__action:focus-visible,
+.email-verify-banner__close:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 .email-verify-banner__close {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
   background: none;
   border: none;
-  color: var(--warning);
-  font-size: 18px;
+  border-radius: var(--radius-md);
+  color: var(--ink-muted);
+  font-size: 20px;
   line-height: 1;
-  padding: 0 4px;
   cursor: pointer;
   flex-shrink: 0;
 }
-.email-verify-banner__close:hover { color: color-mix(in srgb, var(--warning) 75%, var(--ink)); }
+.email-verify-banner__close:hover { color: var(--ink); background: color-mix(in srgb, var(--warning) 12%, var(--warning-soft)); }

@@ -9,7 +9,7 @@
 }
 .empty-state__icon {
   width: 48px; height: 48px; margin: 0 auto 12px;
-  background: var(--neutral-100); border-radius: var(--radius-lg);
+  background: var(--neutral-100); border-radius: var(--radius-md);
   display: flex; align-items: center; justify-content: center;
   color: var(--neutral-300);
 }

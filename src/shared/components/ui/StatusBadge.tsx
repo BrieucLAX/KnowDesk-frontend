@@ -7,10 +7,14 @@ interface StatusBadgeProps {
   status: Status;
 }
 
+// Correspondance statut → variante de la fiche Badge : publié = success,
+// brouillon et archivé = neutral (états sans enjeu).
+// TODO(lot 4, icônes) : icône de 14 px devant les statuts success / warning /
+// danger, quand lucide-react sera installé.
 const CONFIG: Record<Status, { label: string; className: string }> = {
-  published: { label: 'Publié',   className: 'badge badge--success' },
-  draft:     { label: 'Brouillon', className: 'badge badge--secondary' },
-  archived:  { label: 'Archivé',  className: 'badge badge--warning' },
+  published: { label: 'Publié',    className: 'badge badge--success' },
+  draft:     { label: 'Brouillon', className: 'badge badge--neutral' },
+  archived:  { label: 'Archivé',   className: 'badge badge--neutral' },
 };
 
 /**

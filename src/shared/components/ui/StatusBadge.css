@@ -1,15 +1,23 @@
 /* ─────────────────────────────────────────────────────────────
    StatusBadge (Badge) — composant partagé.
+   Aligné sur la fiche Badge du design system CX (cx-badge).
+   Les classes .badge / .badge--* servent aussi directement dans les écrans.
    ───────────────────────────────────────────────────────────── */
 
-/* Badge */
 .badge {
-  display: inline-flex; align-items: center;
-  font-size: 11px; font-weight: 600; letter-spacing: .01em;
-  padding: 2px 8px; border-radius: var(--radius-full);
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 13px; line-height: 18px; font-weight: 600;
+  padding: 2px var(--space-2); border-radius: var(--radius-sm);
   white-space: nowrap;
 }
+/* État sans enjeu : brouillon, archivé. `--secondary` est l'ancien nom. */
+.badge--neutral,
+.badge--secondary { border: 1px solid var(--line-strong); color: var(--ink-muted); padding: 1px 7px; }
 .badge--success   { background: var(--success-soft); color: var(--success); }
-.badge--secondary { background: var(--neutral-100); color: var(--neutral-500); }
 .badge--warning   { background: var(--warning-soft); color: var(--warning); }
-.badge--info      { background: var(--brand-50); color: var(--brand-700); }
+.badge--danger    { background: var(--danger-soft);  color: var(--danger); }
+.badge--info      { background: var(--info-soft);    color: var(--info); }
+/* Type ou catégorie. */
+.badge--primary   { background: var(--primary-soft); color: var(--primary); }
+/* « Nouveau » : seule mise en avant chaleureuse. */
+.badge--accent    { background: var(--accent-soft);  color: var(--accent); }

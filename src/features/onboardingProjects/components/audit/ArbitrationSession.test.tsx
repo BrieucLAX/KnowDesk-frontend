@@ -213,7 +213,7 @@ describe('Arbitrage (F-F3b)', () => {
   it('cas à confirmer : deux cas distincts préremplis, refusés tant qu\'une condition manque', async () => {
     vi.mocked(onboardingApi.decide).mockImplementation(async (_p, _a, body) => decision(body.questionId, body.action));
     await startSession();
-    fireEvent.click(screen.getByRole('tab', { name: /Cas à confirmer/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Cas à confirmer/ }));
     const block = questionBlock('q4');
     expect(block.closest('article')).toHaveTextContent('Condition qui séparerait les cas : zone : Corse / Métropole');
 

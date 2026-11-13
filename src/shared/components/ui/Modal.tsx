@@ -115,12 +115,16 @@ export function Modal({
   return (
     <div
       className="modal-overlay"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={titleId}
+      role="presentation"
       onClick={handleBackdropClick}
     >
-      <div ref={modalRef} className={cn('modal', `modal--${size}`, className)}>
+      <div
+        ref={modalRef}
+        className={cn('modal', `modal--${size}`, className)}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
         <div className="modal__header">
           <h2 id={titleId} className="modal__title">{title}</h2>
           {showCloseButton && (

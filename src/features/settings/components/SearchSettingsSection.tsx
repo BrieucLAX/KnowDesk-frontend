@@ -90,7 +90,7 @@ function SynonymItem({
 
       {editing ? (
         <div className="synonym-item__edit">
-          <ChipsInput value={draft} onChange={setDraft} placeholder="Ajouter un synonyme…" />
+          <ChipsInput value={draft} onChange={setDraft} placeholder="Ajouter un synonyme…" ariaLabel={`Synonymes de ${item.term}`} />
           <div className="synonym-item__actions">
             <Button variant="ghost" size="sm" onClick={cancel} disabled={saving}>Annuler</Button>
             <Button variant="primary" size="sm" onClick={save} loading={saving} disabled={draft.length === 0}>
@@ -168,8 +168,8 @@ function CreateSynonymModal({
         autoFocus
       />
       <div className="field">
-        <label className="field-label">Synonymes</label>
-        <ChipsInput value={synonyms} onChange={setSynonyms} placeholder="ex. résiliation, désabonnement…" />
+        <label htmlFor="synonym-group-new" className="field-label">Synonymes</label>
+        <ChipsInput id="synonym-group-new" value={synonyms} onChange={setSynonyms} placeholder="ex. résiliation, désabonnement…" />
         <p className="field-helper">
           Le matching est bidirectionnel : une recherche sur n'importe lequel de ces termes
           remontera tous les contenus contenant un autre terme du groupe.

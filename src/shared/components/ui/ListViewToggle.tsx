@@ -30,18 +30,20 @@ export function ListViewToggle({ value, onChange, storageKey }: ListViewTogglePr
         className={`list-view-toggle__btn ${value === 'table' ? 'list-view-toggle__btn--active' : ''}`}
         onClick={() => handle('table')}
         aria-pressed={value === 'table'}
+        aria-label="Vue tableau"
         title="Vue tableau"
       >
-        ☰
+        <span aria-hidden="true">☰</span>
       </button>
       <button
         type="button"
         className={`list-view-toggle__btn ${value === 'cards' ? 'list-view-toggle__btn--active' : ''}`}
         onClick={() => handle('cards')}
         aria-pressed={value === 'cards'}
+        aria-label="Vue cartes"
         title="Vue cartes"
       >
-        ▦
+        <span aria-hidden="true">▦</span>
       </button>
     </div>
   );

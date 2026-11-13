@@ -6,7 +6,7 @@
 .knowledge-page-wrap {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 56px);
+  min-height: calc(100vh - var(--topbar-h));
 }
 /* PageHeader hérite de la padding standard de .app-layout__content
  * (32px 40px) — pas d'override, pour aligner avec le Dashboard. */
@@ -101,7 +101,7 @@
 }
 .knowledge-page__toolbar-sort-select {
   padding: 5px 10px; padding-right: 24px;
-  border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
+  border: 1px solid var(--neutral-200); border-radius: var(--radius-sm);
   background: var(--neutral-0); color: var(--neutral-900);
   font-size: 12px; font-family: var(--font-ui); cursor: pointer;
   appearance: none;

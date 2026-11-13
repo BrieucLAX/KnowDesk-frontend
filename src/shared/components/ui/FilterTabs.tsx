@@ -15,23 +15,24 @@ interface FilterTabsProps<T extends string> {
 }
 
 /**
- * Onglets de filtre (typiquement « statut » : Tous / Publiés / Brouillons…).
+ * Filtres d'une liste (typiquement « statut » : Tous / Publiés / Brouillons…).
  *
  * Factorisé depuis FaqsPage pour réutilisation sur Articles + Trees.
  * Le composant ne gère ni les compteurs (calculés par la page appelante)
- * ni la persistance — uniquement le rendu + l'a11y (role=tablist).
+ * ni la persistance — uniquement le rendu + l'a11y.
+ * Fiche SegmentedControl du design system CX : role="group" + aria-label,
+ * un seul bouton à aria-pressed="true".
  */
 export function FilterTabs<T extends string>({
   options, value, onChange, ariaLabel,
 }: FilterTabsProps<T>) {
   return (
-    <div className="filter-tabs" role="tablist" aria-label={ariaLabel}>
+    <div className="filter-tabs" role="group" aria-label={ariaLabel}>
       {options.map(t => (
         <button
           key={t.id}
           type="button"
-          role="tab"
-          aria-selected={value === t.id}
+          aria-pressed={value === t.id}
           className={`filter-tabs__tab ${value === t.id ? 'filter-tabs__tab--active' : ''}`}
           onClick={() => onChange(t.id)}
         >

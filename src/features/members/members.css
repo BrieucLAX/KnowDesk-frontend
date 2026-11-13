@@ -55,9 +55,12 @@
 /* Member row */
 .member-row { transition: background var(--t-fast); }
 .member-row:hover { background: var(--neutral-50); }
-.member-row--mutating { opacity: 0.6; pointer-events: none; }
-.member-row--disabled { opacity: 0.55; }
-.member-row--disabled .member-avatar { opacity: 0.4; }
+/* En cours : sans opacité, les textes secondaires passaient sous 4,5:1 (lot 3). */
+.member-row--mutating { pointer-events: none; cursor: progress; }
+/* Désactivé : texte ink-muted sans opacité (4,5:1, lot 3). */
+.member-row--disabled,
+.member-row--disabled .member-row__name { color: var(--ink-muted); }
+.member-row--disabled .member-avatar { background: var(--surface); color: var(--ink-muted); }
 .member-row__cell {
   padding: 14px 16px; border-bottom: 1px solid var(--neutral-100); vertical-align: middle;
 }

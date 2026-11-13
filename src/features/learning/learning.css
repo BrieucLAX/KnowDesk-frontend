@@ -299,7 +299,8 @@
 }
 .my-learning-card--renew { border-left: 4px solid var(--warning); }
 .my-learning-card--todo  { border-left: 4px solid var(--brand-500); }
-.my-learning-card--done  { border-left: 4px solid var(--success); opacity: 0.85; }
+/* Terminé : plus d'opacité sur le texte (4,5:1, lot 3). */
+.my-learning-card--done  { border-left: 4px solid var(--success); }
 
 .my-learning-card__head {
   display: flex; align-items: flex-start; justify-content: space-between;

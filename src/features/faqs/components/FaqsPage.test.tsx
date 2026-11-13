@@ -20,7 +20,7 @@ const session: AuthSession = {
 };
 
 const tabCount = (name: string) =>
-  within(screen.getByRole('tab', { name: new RegExp(`^${name}`) })).getByText(/^\d+$/).textContent;
+  within(screen.getByRole('button', { name: new RegExp(`^${name}`) })).getByText(/^\d+$/).textContent;
 
 describe('FaqsPage : toutes les FAQ, au-delà de 100 (réponses réelles du back, plan-articles-v1, lot 0)', () => {
   beforeEach(() => {

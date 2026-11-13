@@ -133,9 +133,10 @@
   background: var(--surface-raised);
   border-color: var(--brand-300);
 }
+/* Désactivé : texte ink-muted sans opacité (4,5:1, lot 3). */
 .article-rework-card__tier:disabled {
   cursor: default;
-  opacity: 0.6;
+  color: var(--ink-muted);
 }
 .article-rework-card__tier.is-expanded {
   background: var(--surface-raised);

@@ -85,12 +85,13 @@
   --font-mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* Sizing */
-  --radius-sm:  4px;
-  --radius-md:  8px;
-  --radius-lg:  12px;
-  --radius-xl:  16px;
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --radius-xl:  20px;
   --radius-full: 9999px;
-  --input-h:    42px;
+  --input-h:    48px;
+  --topbar-h:   68px;   /* barre du haut : recherche de 52 px + 8 px de marge */
   --sidebar-w:  420px;
   --sidenav-w:  216px;   /* barre de navigation principale, libellés visibles */
 

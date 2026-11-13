@@ -1,20 +1,17 @@
 /* ─────────────────────────────────────────────────────────────
-   ImpersonateBanner — bandeau orange affiché en mode impersonation.
+   ImpersonateBanner — bandeau affiché en mode impersonation.
+   Fiche Alert, variante warning : fond warning-soft, texte ink, seule
+   l'icône est colorée ; role="status". « Quitter » = Button secondaire.
    ───────────────────────────────────────────────────────────── */
 
 .impersonate-banner {
   position: fixed; top: 0; left: 0; right: 0;
-  background: var(--warning); color: var(--on-primary);
-  padding: 10px 20px; font-size: 13px; font-weight: 600;
-  display: flex; align-items: center; gap: 10px;
+  background: var(--warning-soft); color: var(--ink);
+  border-bottom: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
+  padding: 8px 20px; font-size: 15px; line-height: 24px;
+  display: flex; align-items: center; gap: 12px;
   z-index: 9999;
 }
-.impersonate-banner__icon { font-size: 16px; }
+.impersonate-banner__icon { flex-shrink: 0; color: var(--warning); }
 .impersonate-banner__text { flex: 1; }
-.impersonate-banner__quit {
-  background: color-mix(in srgb, var(--ink) 20%, transparent); border: none; cursor: pointer;
-  font-family: var(--font-ui); font-size: 12px; font-weight: 600;
-  padding: 4px 12px; border-radius: var(--radius-md);
-  color: var(--on-primary); transition: background var(--t-fast);
-}
-.impersonate-banner__quit:hover { background: color-mix(in srgb, var(--ink) 32%, transparent); }
+.impersonate-banner__quit { flex-shrink: 0; }
