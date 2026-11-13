@@ -2,6 +2,10 @@ import React from 'react';
 import { Input } from '../../../../shared/components/ui/Input';
 import type { ChatbotTabContext } from './types';
 
+// Couleur par défaut du widget chatbot, affiché sur le site du client :
+// donnée de produit, hors design system de l'app. Gardée volontairement.
+const DEFAULT_CHAT_COLOR = '#5B6CFF';
+
 /**
  * Tab "Apparence" — couleur primaire, logo URL, domaines autorisés.
  * Désactivée visuellement quand chat_enabled=false (cf fieldset parent).
@@ -16,14 +20,14 @@ export function ChatbotAppearanceTab({ ctx }: { ctx: ChatbotTabContext }) {
           <input
             id="chat-color"
             type="color"
-            value={form.chat_primary_color || '#5B6CFF'}
+            value={form.chat_primary_color || DEFAULT_CHAT_COLOR}
             onChange={e => setForm(f => ({ ...f, chat_primary_color: e.target.value }))}
             className="chatbot-settings__color-preview"
           />
           <Input
             id="chat-color-hex"
             value={form.chat_primary_color ?? ''}
-            placeholder="#5B6CFF"
+            placeholder={DEFAULT_CHAT_COLOR}
             onChange={e => setForm(f => ({ ...f, chat_primary_color: e.target.value }))}
             helperText=""
           />

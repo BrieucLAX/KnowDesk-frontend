@@ -88,8 +88,8 @@ html, body, #root {
    pages list (/knowledge, /faqs, /trees) tant qu'on n'a pas de vraie
    pagination UI. Style cohérent avec badge--warning. */
 .list-limit-banner {
-  background: #FEF6E7; color: #7A4800;
-  border: 1px solid #FBBF24;
+  background: var(--warning-soft); color: var(--warning);
+  border: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
   border-radius: var(--radius-md);
   padding: 8px 12px;
   font-size: 13px;

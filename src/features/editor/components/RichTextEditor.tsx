@@ -387,7 +387,7 @@ function BubbleMenuToolbar({ editor, onLinkClick }: { editor: Editor; onLinkClic
       <ToolBtn label="Italique"  active={editor.isActive('italic')}    onClick={() => editor.chain().focus().toggleItalic().run()}><em>I</em></ToolBtn>
       <ToolBtn label="Souligné"  active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()}><u>U</u></ToolBtn>
       <ToolBtn label="Code"      active={editor.isActive('code')}      onClick={() => editor.chain().focus().toggleCode().run()}>{'<>'}</ToolBtn>
-      <ToolBtn label="Surligner" active={editor.isActive('highlight')} onClick={() => editor.chain().focus().toggleHighlight({ color: '#fef3c7' }).run()}>✏︎</ToolBtn>
+      <ToolBtn label="Surligner" active={editor.isActive('highlight')} onClick={() => editor.chain().focus().toggleHighlight({ color: HIGHLIGHT_COLORS[0].color }).run()}>✏︎</ToolBtn>
       <ToolBtn label="Lien"      active={editor.isActive('link')}      onClick={onLinkClick}>🔗</ToolBtn>
     </div>
   );
@@ -419,6 +419,9 @@ function ToolBtn({
   );
 }
 
+// Couleurs de surlignage : elles sont écrites dans le HTML de l'article
+// (style en ligne) et relues hors de l'app (chatbot, extension), où les
+// variables du design system n'existent pas. Gardées volontairement en dur.
 const HIGHLIGHT_COLORS = [
   { color: '#fef3c7', label: 'Jaune'  },
   { color: '#dcfce7', label: 'Vert'   },

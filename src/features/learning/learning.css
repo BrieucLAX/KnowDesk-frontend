@@ -142,9 +142,9 @@
 .module-editor__type {
   flex-shrink: 0;
 }
-.module-editor__type--article  { background: #EFF6FF; color: #1E40AF; }
-.module-editor__type--faq      { background: #FFF7E6; color: #92400E; }
-.module-editor__type--tree     { background: #ECFDF5; color: #065F46; }
+.module-editor__type--article  { background: var(--primary-soft); color: var(--primary); }
+.module-editor__type--faq      { background: var(--primary-soft); color: var(--primary); }
+.module-editor__type--tree     { background: var(--primary-soft); color: var(--primary); }
 .module-editor__title {
   flex: 1; font-size: 14px; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -163,7 +163,7 @@
   background: var(--neutral-0);
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-md);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  box-shadow: var(--shadow-sm);
   padding: 4px;
 }
 .resource-picker__empty {
@@ -214,7 +214,7 @@
 }
 .resource-picker__option-add {
   font-size: 18px; line-height: 1;
-  color: var(--neutral-400);
+  color: var(--ink-muted);
   width: 20px; text-align: center;
 }
 .resource-picker__option:hover .resource-picker__option-add {
@@ -248,7 +248,7 @@
   padding: 2px 0;
 }
 .module-editor__quiz-correct {
-  color: var(--color-success, #0a7d3a);
+  color: var(--success);
   font-weight: 600;
 }
 
@@ -297,9 +297,9 @@
   border-radius: var(--radius-lg);
   padding: 20px 24px;
 }
-.my-learning-card--renew { border-left: 4px solid #F59E0B; }
+.my-learning-card--renew { border-left: 4px solid var(--warning); }
 .my-learning-card--todo  { border-left: 4px solid var(--brand-500); }
-.my-learning-card--done  { border-left: 4px solid #0a7d3a; opacity: 0.85; }
+.my-learning-card--done  { border-left: 4px solid var(--success); opacity: 0.85; }
 
 .my-learning-card__head {
   display: flex; align-items: flex-start; justify-content: space-between;
@@ -341,11 +341,11 @@
   border-radius: var(--radius-sm);
 }
 .my-learning-mod--completed   { color: var(--neutral-500); }
-.my-learning-mod--completed .my-learning-mod__icon { color: #0a7d3a; }
+.my-learning-mod--completed .my-learning-mod__icon { color: var(--success); }
 .my-learning-mod--in_progress { background: var(--brand-50); }
 .my-learning-mod--in_progress .my-learning-mod__icon { color: var(--brand-700); }
-.my-learning-mod--outdated    { background: #FEF6E7; }
-.my-learning-mod--outdated .my-learning-mod__icon { color: #92400E; }
+.my-learning-mod--outdated    { background: var(--warning-soft); }
+.my-learning-mod--outdated .my-learning-mod__icon { color: var(--warning); }
 .my-learning-mod__icon { font-size: 14px; min-width: 16px; }
 .my-learning-mod__name { flex: 1; }
 .my-learning-mod__score, .my-learning-mod__expires {
@@ -402,7 +402,6 @@
   background: var(--neutral-0);
   border-radius: var(--radius-lg);
   padding: 32px 40px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 .learning-player__type {
   display: inline-block;
@@ -426,7 +425,6 @@
   background: var(--neutral-0);
   border-radius: var(--radius-lg);
   padding: 32px 40px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 .learning-player__quiz-meta {
   color: var(--neutral-600);
@@ -476,8 +474,8 @@
   font-size: 15px; color: var(--neutral-600);
   margin: 6px 0;
 }
-.learning-player__done--ok h1 { color: #0a7d3a; }
-.learning-player__done--ko h1 { color: #92400E; }
+.learning-player__done--ok h1 { color: var(--success); }
+.learning-player__done--ko h1 { color: var(--warning); }
 .learning-player__done .btn {
   margin-top: 20px;
 }
@@ -506,7 +504,7 @@
 }
 .completions-summary strong { color: var(--neutral-900); }
 .completions-summary__sep   { color: var(--neutral-300); }
-.completions-summary__warn  { color: #92400E; }
+.completions-summary__warn  { color: var(--warning); }
 
 .completions-grid-wrap {
   overflow-x: auto;
@@ -551,7 +549,7 @@
   max-width: 180px;
 }
 .completions-grid__mod-num {
-  color: var(--neutral-400);
+  color: var(--ink-muted);
   margin-right: 4px;
   font-weight: 600;
 }
@@ -592,10 +590,10 @@
   font-size: 12px;
   color: var(--neutral-600);
 }
-.completions-grid__cell--completed   .completions-grid__icon { color: #0a7d3a; }
+.completions-grid__cell--completed   .completions-grid__icon { color: var(--success); }
 .completions-grid__cell--in_progress .completions-grid__icon { color: var(--brand-600); }
-.completions-grid__cell--outdated    .completions-grid__icon { color: #92400E; }
-.completions-grid__cell--pending     .completions-grid__icon { color: var(--neutral-400); }
+.completions-grid__cell--outdated    .completions-grid__icon { color: var(--warning); }
+.completions-grid__cell--pending     .completions-grid__icon { color: var(--ink-muted); }
 
 /* ── Template picker (modale création parcours) ───────────────── */
 .template-picker {
@@ -629,7 +627,7 @@
 }
 .template-card--active {
   border-color: var(--brand-500);
-  background: var(--brand-50, #EFF6FF);
+  background: var(--brand-50);
   box-shadow: 0 0 0 1px var(--brand-500) inset;
 }
 .template-card__icon {

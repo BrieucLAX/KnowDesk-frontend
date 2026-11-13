@@ -4,7 +4,7 @@
 
 .impersonate-banner {
   position: fixed; top: 0; left: 0; right: 0;
-  background: #F59E0B; color: #1A1917;
+  background: var(--warning); color: var(--on-primary);
   padding: 10px 20px; font-size: 13px; font-weight: 600;
   display: flex; align-items: center; gap: 10px;
   z-index: 9999;
@@ -12,9 +12,9 @@
 .impersonate-banner__icon { font-size: 16px; }
 .impersonate-banner__text { flex: 1; }
 .impersonate-banner__quit {
-  background: rgba(0,0,0,0.15); border: none; cursor: pointer;
+  background: color-mix(in srgb, var(--ink) 20%, transparent); border: none; cursor: pointer;
   font-family: var(--font-ui); font-size: 12px; font-weight: 600;
   padding: 4px 12px; border-radius: var(--radius-md);
-  color: #1A1917; transition: background var(--t-fast);
+  color: var(--on-primary); transition: background var(--t-fast);
 }
-.impersonate-banner__quit:hover { background: rgba(0,0,0,0.25); }
+.impersonate-banner__quit:hover { background: color-mix(in srgb, var(--ink) 32%, transparent); }

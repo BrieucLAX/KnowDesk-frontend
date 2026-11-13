@@ -36,7 +36,7 @@
 .settings-nav__search-input:focus {
   outline: none;
   border-color: var(--brand-500);
-  background: var(--neutral-0, #fff);
+  background: var(--neutral-0);
 }
 .settings-nav__search-input::-webkit-search-cancel-button { cursor: pointer; }
 .settings-nav__search-kbd {
@@ -100,7 +100,7 @@
 .settings-form { display: flex; flex-direction: column; gap: 16px; }
 .settings-form__actions { display: flex; align-items: center; gap: 14px; }
 .settings-form__saved {
-  font-size: 13px; color: #1A6B3C; font-weight: 600;
+  font-size: 13px; color: var(--success); font-weight: 600;
   animation: fade-up 0.2s ease;
 }
 
@@ -127,7 +127,7 @@
 .toggle--on { background: var(--brand-600); }
 .toggle__thumb {
   position: absolute; top: 3px; left: 3px;
-  width: 16px; height: 16px; border-radius: 50%; background: #fff;
+  width: 16px; height: 16px; border-radius: 50%; background: var(--on-primary);
   transition: transform 0.2s ease;
 }
 .toggle--on .toggle__thumb { transform: translateX(18px); }
@@ -148,7 +148,7 @@
 }
 .billing-plan-card__renews { font-size: 13px; color: var(--neutral-500); }
 .billing-upgrade-btn {
-  padding: 8px 16px; background: var(--brand-600); color: #fff;
+  padding: 8px 16px; background: var(--brand-600); color: var(--on-primary);
   font-size: 13px; font-weight: 600; border-radius: var(--radius-md);
   white-space: nowrap; transition: background var(--t-fast); flex-shrink: 0;
 }
@@ -174,7 +174,7 @@
 .billing-invoices__table th {
   padding: 10px 14px; text-align: left; background: var(--neutral-50);
   font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .05em; color: var(--neutral-400);
+  letter-spacing: .05em; color: var(--ink-muted);
   border-bottom: 1px solid var(--neutral-100);
 }
 .billing-invoices__table td {
@@ -185,15 +185,15 @@
 .billing-invoice-status {
   font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: var(--radius-full);
 }
-.billing-invoice-status--paid { background: #EAF7F0; color: #1A6B3C; }
+.billing-invoice-status--paid { background: var(--success-soft); color: var(--success); }
 .billing-invoice-status--open { background: var(--brand-50); color: var(--brand-600); }
-.billing-invoice-status--void { background: var(--neutral-100); color: var(--neutral-400); }
+.billing-invoice-status--void { background: var(--neutral-100); color: var(--ink-muted); }
 .billing-invoice-dl {
   font-size: 12px; font-weight: 600; color: var(--brand-600);
   transition: color var(--t-fast);
 }
 .billing-invoice-dl:hover { color: var(--brand-700); text-decoration: underline; }
-.billing-no-invoices { font-size: 13px; color: var(--neutral-400); padding: 8px 0; }
+.billing-no-invoices { font-size: 13px; color: var(--ink-muted); padding: 8px 0; }
 
 .billing-upgrade-card {
   border: 2px solid var(--brand-200); border-radius: var(--radius-lg);
@@ -254,15 +254,15 @@
   color: var(--neutral-900);
 }
 .plan-badge--pro {
-  background: var(--brand-tint, rgba(91, 91, 214, 0.08));
-  border-color: var(--brand-200, #C7C5F0);
+  background: var(--brand-tint);
+  border-color: var(--brand-200);
 }
 .plan-badge--pro .plan-badge__value { color: var(--brand-700); }
 .plan-badge--enterprise {
-  background: #FAF5E8;
-  border-color: #E8DCB8;
+  background: var(--primary-soft);
+  border-color: var(--primary);
 }
-.plan-badge--enterprise .plan-badge__value { color: #94781E; }
+.plan-badge--enterprise .plan-badge__value { color: var(--primary); }
 
 /* ── Mobile nav sélecteur natif (S4-T4) ─────────────────────── */
 .settings-page__mobile-nav {
@@ -295,27 +295,27 @@
 
 /* ── API Keys section ───────────────────────────────────────── */
 .api-key-reveal {
-  background: #FEF3C7; border: 1px solid #F59E0B;
+  background: var(--warning-soft); border: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
   border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 20px;
 }
 .api-key-reveal__header {
   display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
 }
-.api-key-reveal__title  { font-size: 13px; font-weight: 600; color: #92400E; }
+.api-key-reveal__title  { font-size: 13px; font-weight: 600; color: var(--warning); }
 .api-key-reveal__dismiss {
   background: none; border: none; cursor: pointer; font-size: 18px;
-  color: #92400E; padding: 0 4px; line-height: 1;
+  color: var(--warning); padding: 0 4px; line-height: 1;
 }
-.api-key-reveal__desc   { font-size: 12px; color: #92400E; margin-bottom: 12px; }
+.api-key-reveal__desc   { font-size: 12px; color: var(--warning); margin-bottom: 12px; }
 .api-key-reveal__key    { display: flex; align-items: center; gap: 8px; }
 .api-key-reveal__code   {
-  flex: 1; font-size: 12px; background: #FFF; padding: 8px 12px;
-  border-radius: var(--radius-md); border: 1px solid #F59E0B;
-  word-break: break-all; font-family: monospace;
+  flex: 1; font-size: 12px; background: var(--surface-raised); padding: 8px 12px;
+  border-radius: var(--radius-md); border: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
+  word-break: break-all; font-family: var(--font-mono);
 }
 
 .api-keys-list  { display: flex; flex-direction: column; gap: 8px; list-style: none; margin-top: 16px; }
-.api-keys-empty { padding: 24px; text-align: center; color: var(--neutral-400); font-size: 13px; }
+.api-keys-empty { padding: 24px; text-align: center; color: var(--ink-muted); font-size: 13px; }
 
 .api-key-item {
   display: grid;
@@ -328,8 +328,8 @@
   border-radius: var(--radius-md);
 }
 .api-key-item__name   { font-size: 14px; font-weight: 600; color: var(--neutral-900); }
-.api-key-item__prefix { font-size: 12px; font-family: monospace; color: var(--neutral-500); }
-.api-key-item__meta   { font-size: 11px; color: var(--neutral-400); }
+.api-key-item__prefix { font-size: 12px; font-family: var(--font-mono); color: var(--neutral-500); }
+.api-key-item__meta   { font-size: 11px; color: var(--ink-muted); }
 
 /* ── Settings → Recherche (synonymes) ───────────────────────── */
 .synonyms-list {
@@ -404,7 +404,7 @@
 }
 .ai-glossary__input { flex: 1; min-width: 0; }
 .ai-glossary__arrow {
-  color: var(--neutral-400); font-weight: 600;
+  color: var(--ink-muted); font-weight: 600;
   flex-shrink: 0;
 }
 .ai-glossary__remove {
@@ -415,9 +415,9 @@
   transition: all var(--t-fast);
 }
 .ai-glossary__remove:hover {
-  background: var(--color-danger-bg, oklch(0.95 0.05 25));
-  border-color: var(--color-danger, oklch(0.55 0.2 25));
-  color:        var(--color-danger, oklch(0.55 0.2 25));
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+  color:        var(--color-danger);
 }
 
 /* ───── Phase D — bandeau Chatbot avec décomposition fermées ───── */
@@ -432,7 +432,7 @@
 .ai-stats__breakdown {
   margin-top: 12px;
   padding: 12px 14px;
-  background: var(--neutral-50, #f8f9fb);
+  background: var(--neutral-50);
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-lg);
   display: flex; flex-direction: column; gap: 8px;
@@ -445,9 +445,9 @@
   background: var(--neutral-200); border-radius: 999px; overflow: hidden;
 }
 .ai-stats__bar-seg { height: 100%; transition: width 0.4s ease; }
-.ai-stats__bar-seg--resolved   { background: #10b981; }
-.ai-stats__bar-seg--escalated  { background: #f59e0b; }
-.ai-stats__bar-seg--unresolved { background: #ef4444; }
+.ai-stats__bar-seg--resolved   { background: var(--success); }
+.ai-stats__bar-seg--escalated  { background: var(--warning); }
+.ai-stats__bar-seg--unresolved { background: var(--danger); }
 .ai-stats__breakdown-legend {
   display: flex; flex-wrap: wrap; gap: 16px; row-gap: 6px;
   font-size: 12.5px; color: var(--neutral-800);
@@ -463,9 +463,9 @@
   width: 10px; height: 10px; border-radius: 50%;
   flex-shrink: 0;
 }
-.ai-stats__legend-dot--resolved   { background: #10b981; }
-.ai-stats__legend-dot--escalated  { background: #f59e0b; }
-.ai-stats__legend-dot--unresolved { background: #ef4444; }
+.ai-stats__legend-dot--resolved   { background: var(--success); }
+.ai-stats__legend-dot--escalated  { background: var(--warning); }
+.ai-stats__legend-dot--unresolved { background: var(--danger); }
 
 
 /* ── Modèles IA — Section "ai-models" ───────────────────────────── */
@@ -597,15 +597,15 @@
   background: var(--neutral-100);
   color: var(--neutral-600);
 }
-.ai-models__latency--fast   { background: #dcfce7; color: #166534; }
-.ai-models__latency--medium { background: #fef9c3; color: #854d0e; }
-.ai-models__latency--slow   { background: #fee2e2; color: #991b1b; }
+.ai-models__latency--fast   { background: var(--success-soft); color: var(--success); }
+.ai-models__latency--medium { background: var(--warning-soft); color: var(--warning); }
+.ai-models__latency--slow   { background: var(--danger-soft); color: var(--danger); }
 .ai-models__cost {
   margin-left: auto;
   font-size: 11px;
   font-weight: 600;
   color: var(--neutral-500);
-  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-family: var(--font-mono);
 }
 .ai-models__choice-desc {
   margin: 0;
@@ -683,7 +683,7 @@
   padding: 4px 8px;
   cursor: pointer;
   transition: background var(--t-fast), border-color var(--t-fast);
-  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-family: var(--font-mono);
 }
 .prompt-vars-panel__btn:hover {
   background: var(--brand-50);
@@ -741,7 +741,7 @@
   display: inline-block;
   width: 12px;
   font-size: 10px;
-  color: var(--neutral-400);
+  color: var(--ink-muted);
   transition: transform var(--t-fast);
 }
 .settings-nav__chevron--open {
@@ -785,22 +785,22 @@
   color: var(--neutral-900);
 }
 .settings-nav__subitem--active {
-  background: var(--brand-tint, rgba(91, 91, 214, 0.08));
+  background: var(--brand-tint);
   color: var(--brand-700);
   font-weight: 600;
 }
 
 /* ── SettingsListSection (S3-T2 mutualisation) ──────────────────── */
 .settings-list  { display: flex; flex-direction: column; gap: 8px; list-style: none; margin-top: 16px; }
-.settings-list__empty { padding: 24px; text-align: center; color: var(--neutral-400); font-size: 13px; }
+.settings-list__empty { padding: 24px; text-align: center; color: var(--ink-muted); font-size: 13px; }
 
 /* ── Auditeur qualité (Sprint A — Settings → IA → Auditeur qualité) ── */
 .article-quality-stats {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: linear-gradient(180deg, #f5f3ff 0%, #faf5ff 100%);
-  border: 1px solid #ddd6fe;
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: 16px;
 }
@@ -827,8 +827,8 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.article-quality-stat--flag .article-quality-stat__value { color: #92400e; }
-.article-quality-stat--muted .article-quality-stat__value { color: var(--neutral-400); }
+.article-quality-stat--flag .article-quality-stat__value { color: var(--warning); }
+.article-quality-stat--muted .article-quality-stat__value { color: var(--ink-muted); }
 .article-quality-stats__last {
   font-size: 12px;
   color: var(--neutral-500);
@@ -837,6 +837,6 @@
 }
 
 /* ── Tier variants pour Stat (Sprint A — 3 paliers qualité) ── */
-.article-quality-stat--ok   .article-quality-stat__value { color: #166534; }
-.article-quality-stat--warn .article-quality-stat__value { color: #92400e; }
-.article-quality-stat--bad  .article-quality-stat__value { color: #b91c1c; }
+.article-quality-stat--ok   .article-quality-stat__value { color: var(--success); }
+.article-quality-stat--warn .article-quality-stat__value { color: var(--warning); }
+.article-quality-stat--bad  .article-quality-stat__value { color: var(--danger); }

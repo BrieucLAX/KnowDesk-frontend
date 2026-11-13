@@ -4,7 +4,7 @@
   align-items: center;
   gap: 16px;
   padding: 14px 16px;
-  background: var(--neutral-0, #fff);
+  background: var(--surface-raised);
   border: 1px solid var(--neutral-100);
   border-radius: var(--radius-lg);
   text-align: left;
@@ -14,7 +14,6 @@
 .entity-row--clickable { cursor: pointer; }
 .entity-row--clickable:hover {
   border-color: var(--brand-300, var(--brand-500));
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 .entity-row--clickable:focus-visible {
   outline: 2px solid var(--brand-500);

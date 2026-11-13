@@ -34,7 +34,7 @@
 }
 .faq-row__main:disabled { cursor: default; }
 .faq-row__header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.faq-row__category { font-size: 12px; color: var(--neutral-400); }
+.faq-row__category { font-size: 12px; color: var(--ink-muted); }
 .faq-row__question {
   font-size: 15px; font-weight: 600; color: var(--neutral-900);
   line-height: 1.4; margin: 0;
@@ -44,15 +44,15 @@
   font-size: 12px; color: var(--neutral-500);
 }
 .faq-row__tags { display: flex; gap: 4px; flex-wrap: wrap; }
-.faq-row__tags-more { font-size: 11px; color: var(--neutral-400); }
+.faq-row__tags-more { font-size: 11px; color: var(--ink-muted); }
 .faq-row__actions { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; }
 
 /* Variante chip extra-small pour la liste des FAQs */
 .chip--xs { font-size: 11px; padding: 1px 6px; height: 18px; }
 .chip--active {
-  background: var(--brand-50, #eef0ff);
-  color: var(--brand-600, #5B6CFF);
-  border-color: var(--brand-500, #5B6CFF);
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary);
   cursor: pointer;
 }
 .chip--readonly { cursor: pointer; }
@@ -65,7 +65,7 @@
 }
 .faqs-page__tag-clear {
   background: transparent; border: none;
-  color: var(--brand-600, #5B6CFF);
+  color: var(--primary);
   font-size: 12px; cursor: pointer; padding: 2px 6px;
   text-decoration: underline; font-family: inherit;
 }
@@ -74,7 +74,7 @@
 .faqs-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: var(--surface-raised);
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -84,7 +84,7 @@
 .faqs-table__th {
   text-align: left;
   padding: 10px 12px;
-  background: var(--neutral-50, #f8f9fb);
+  background: var(--surface);
   border-bottom: 1px solid var(--neutral-200);
   font-size: 11.5px; font-weight: 600;
   color: var(--neutral-600);
@@ -106,7 +106,7 @@
 }
 .faqs-table__row:last-child { border-bottom: none; }
 .faqs-table__row--clickable { cursor: pointer; }
-.faqs-table__row--clickable:hover { background: var(--neutral-50, #f8f9fb); }
+.faqs-table__row--clickable:hover { background: var(--neutral-50); }
 .faqs-table__td {
   padding: 10px 12px;
   vertical-align: middle;
@@ -134,7 +134,7 @@
 .faqs-table__status-cell {
   display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
 }
-.faqs-table__muted { color: var(--neutral-400); }
+.faqs-table__muted { color: var(--ink-muted); }
 /* Les emojis sont rendus plus grands que la font-size par défaut sur
    beaucoup d'OS — on les ramène à une taille discrète, alignée
    verticalement avec les chiffres. */
@@ -171,7 +171,7 @@
   resize: vertical; min-height: 120px; font-family: var(--font-ui);
   line-height: 1.5; padding: 12px 14px;
 }
-.faq-editor__textarea--warning { border-color: #F59E0B; }
+.faq-editor__textarea--warning { border-color: var(--warning); }
 
 .faq-editor__visibility {
   display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
@@ -265,8 +265,8 @@
   display: inline-flex; align-items: center; gap: 4px;
 }
 .faq-helpful__rate { font-weight: 600; color: var(--neutral-700); }
-.faq-helpful__total { color: var(--neutral-400); }
-.faq-helpful__empty { color: var(--neutral-400); }
+.faq-helpful__total { color: var(--ink-muted); }
+.faq-helpful__empty { color: var(--ink-muted); }
 
 /* Stats bar dans l'éditeur (mode édition) */
 .faq-editor__stats {
@@ -278,7 +278,7 @@
   display: flex; flex-direction: column; gap: 2px;
 }
 .faq-editor__stat-label {
-  font-size: 11px; color: var(--neutral-400); text-transform: uppercase;
+  font-size: 11px; color: var(--ink-muted); text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 .faq-editor__stat-value {
@@ -287,17 +287,17 @@
 
 /* ── FAQs à créer (suggesteur sur Analytics) ───────────────── */
 .faqs-to-create {
-  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
-  border: 1px solid #F59E0B; border-left: 4px solid #D97706;
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--accent-soft)); border-left: 4px solid var(--accent);
   border-radius: var(--radius-lg);
   padding: 20px 24px; margin-bottom: 24px;
 }
 .faqs-to-create__header { margin-bottom: 12px; }
 .faqs-to-create__title {
-  font-size: 16px; font-weight: 600; color: #78350F; margin: 0 0 4px 0;
+  font-size: 16px; font-weight: 600; color: var(--ink); margin: 0 0 4px 0;
 }
 .faqs-to-create__desc {
-  font-size: 13px; color: #92400E; line-height: 1.5; margin: 0;
+  font-size: 13px; color: var(--ink-muted); line-height: 1.5; margin: 0;
 }
 .faqs-to-create__list {
   list-style: none; display: flex; flex-direction: column; gap: 6px;
@@ -306,8 +306,8 @@
 .faqs-to-create__item {
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px; padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(217, 119, 6, 0.2);
+  background: color-mix(in srgb, var(--surface-raised) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
   border-radius: var(--radius-md);
 }
 .faqs-to-create__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -315,19 +315,19 @@
   font-size: 14px; font-weight: 600; color: var(--neutral-900);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.faqs-to-create__meta { font-size: 12px; color: #78350F; }
+.faqs-to-create__meta { font-size: 12px; color: var(--ink-muted); }
 
 /* ── FAQ stale banner (dans l'éditeur, mode édition uniquement) ── */
 .faq-editor__stale-banner {
-  background: #FEF6E7; border: 1px solid #F5C842; border-left: 4px solid #F59E0B;
+  background: var(--warning-soft); border: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft)); border-left: 4px solid var(--warning);
   border-radius: var(--radius-md); padding: 14px 18px;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
 .faq-editor__stale-banner strong {
-  font-size: 14px; color: #78350F; display: block; margin-bottom: 2px;
+  font-size: 14px; color: var(--warning); display: block; margin-bottom: 2px;
 }
 .faq-editor__stale-banner p {
-  font-size: 13px; color: #92400E; margin: 0; line-height: 1.4;
+  font-size: 13px; color: var(--ink); margin: 0; line-height: 1.4;
 }
 
 /* ── FAQ history (audit log dans l'éditeur) ────────────────── */
@@ -341,12 +341,12 @@
 }
 .faq-history__summary::-webkit-details-marker { display: none; }
 .faq-history__summary::before {
-  content: '▸'; color: var(--neutral-400);
+  content: '▸'; color: var(--ink-muted);
   transition: transform var(--t-fast);
 }
 .faq-history[open] .faq-history__summary::before { transform: rotate(90deg); }
 .faq-history__summary:hover { background: var(--neutral-50); }
-.faq-history__count { color: var(--neutral-400); font-weight: 400; }
+.faq-history__count { color: var(--ink-muted); font-weight: 400; }
 
 .faq-history__body {
   padding: 4px 16px 14px; border-top: 1px solid var(--neutral-100);
@@ -364,7 +364,7 @@
 .faq-history__icon { flex-shrink: 0; line-height: 1.4; }
 .faq-history__text { line-height: 1.4; }
 .faq-history__text strong { color: var(--neutral-900); font-weight: 600; }
-.faq-history__text time { color: var(--neutral-400); }
+.faq-history__text time { color: var(--ink-muted); }
 
 
 /* FaqsPage — cellules du DataTable */
@@ -382,7 +382,7 @@
   font-size: 11px; color: var(--neutral-500);
 }
 .faqs-cell-muted {
-  color: var(--neutral-400);
+  color: var(--ink-muted);
 }
 .faqs-cell-status {
   display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap;

@@ -14,7 +14,7 @@
   height: 42px;
   border-radius: var(--radius-md);
   border: 1px solid var(--neutral-200);
-  background: var(--neutral-0, #fff);
+  background: var(--surface-raised);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -49,7 +49,7 @@
   align-items: center;
   gap: 12px;
   margin: 8px 0 4px;
-  color: var(--neutral-400);
+  color: var(--ink-muted);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.05em;

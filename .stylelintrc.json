@@ -31,6 +31,33 @@
     "declaration-property-value-keyword-no-deprecated": null,
     "no-duplicate-selectors": null,
     "no-duplicate-at-import-rules": true,
-    "declaration-block-no-duplicate-properties": [true, { "ignore": ["consecutive-duplicates-with-different-values"] }]
-  }
+    "declaration-block-no-duplicate-properties": [
+      true,
+      {
+        "ignore": [
+          "consecutive-duplicates-with-different-values"
+        ]
+      }
+    ],
+    "color-no-hex": true,
+    "function-disallowed-list": [
+      "rgb",
+      "rgba",
+      "hsl",
+      "hsla"
+    ],
+    "color-named": "never"
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/styles/tokens.css"
+      ],
+      "rules": {
+        "color-no-hex": null,
+        "function-disallowed-list": null,
+        "color-named": null
+      }
+    }
+  ]
 }

@@ -5,8 +5,8 @@
 .network-banner {
   position: fixed;
   top: 0; left: 0; right: 0;
-  background: #7A4800;
-  color: #fff;
+  background: var(--warning);
+  color: var(--on-primary);
   padding: 10px 20px;
   font-size: 13px;
   font-weight: 600;

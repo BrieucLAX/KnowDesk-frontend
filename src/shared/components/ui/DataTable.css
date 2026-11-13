@@ -1,6 +1,6 @@
 .data-table {
   width: 100%;
-  background: var(--neutral-0, #fff);
+  background: var(--surface-raised);
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -52,7 +52,7 @@
   background: var(--brand-50);
 }
 .data-table__row--selected:hover {
-  background: var(--brand-100, #DBE4FF);
+  background: var(--brand-100);
 }
 
 .data-table__sort {
@@ -82,7 +82,7 @@
 }
 .data-table__sort-icon {
   font-size: 11px;
-  color: var(--neutral-400);
+  color: var(--ink-muted);
   transition: color var(--t-fast);
 }
 .data-table__sort:hover .data-table__sort-icon {

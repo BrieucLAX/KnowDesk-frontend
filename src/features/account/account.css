@@ -26,8 +26,8 @@
 .account-form__saved     { font-size: 13px; color: var(--color-success); }
 .account-success {
   padding: 16px;
-  background: var(--color-success-bg, #EAF7F0);
-  color: var(--color-success, #1A6B3C);
+  background: var(--color-success-bg);
+  color: var(--color-success);
   border-radius: var(--radius-md);
   font-size: 14px;
 }

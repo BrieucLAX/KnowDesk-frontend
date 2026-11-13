@@ -9,7 +9,7 @@
   padding: 2px 8px; border-radius: var(--radius-full);
   white-space: nowrap;
 }
-.badge--success   { background: #EAF7F0; color: #1A6B3C; }
+.badge--success   { background: var(--success-soft); color: var(--success); }
 .badge--secondary { background: var(--neutral-100); color: var(--neutral-500); }
-.badge--warning   { background: #FEF6E7; color: #7A4800; }
+.badge--warning   { background: var(--warning-soft); color: var(--warning); }
 .badge--info      { background: var(--brand-50); color: var(--brand-700); }

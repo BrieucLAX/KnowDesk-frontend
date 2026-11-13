@@ -5,8 +5,8 @@
    ───────────────────────────────────────────────────────────── */
 
 .article-rework-card {
-  background: linear-gradient(180deg, #f5f3ff 0%, #faf5ff 100%);
-  border: 1px solid #ddd6fe;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 16px 20px;
   margin: 16px 0 24px;
@@ -25,8 +25,8 @@
   margin: 0 0 4px;
 }
 .article-rework-card__badge {
-  background: #ede9fe;
-  color: #6d28d9;
+  background: var(--primary-soft);
+  color: var(--primary);
   font-size: 12px;
   font-weight: 600;
   padding: 1px 8px;
@@ -53,7 +53,7 @@
   flex-direction: column;
   gap: 6px;
   padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--surface);
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -62,8 +62,8 @@
   transition: border-color var(--t-fast), background var(--t-fast);
 }
 .article-rework-card__btn:hover {
-  background: #fff;
-  border-color: #c4b5fd;
+  background: var(--surface-raised);
+  border-color: var(--brand-300);
 }
 .article-rework-card__main {
   display: flex;
@@ -88,8 +88,8 @@
 .article-rework-card__chip {
   display: inline-block;
   font-size: 11px;
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--warning-soft);
+  color: var(--warning);
   padding: 1px 8px;
   border-radius: var(--radius-full);
 }
@@ -100,12 +100,12 @@
   border-color: var(--neutral-200);
 }
 .article-rework-card--ok {
-  background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 100%);
-  border-color: #bbf7d0;
+  background: var(--success-soft);
+  border-color: color-mix(in srgb, var(--success) 35%, var(--success-soft));
 }
 .article-rework-card__badge--ok {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--success-soft);
+  color: var(--success);
 }
 
 /* ── 3 paliers de qualité ─────────────────────────────────── */
@@ -121,7 +121,7 @@
   align-items: flex-start;
   gap: 2px;
   padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--surface);
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -130,16 +130,16 @@
   transition: border-color var(--t-fast), background var(--t-fast);
 }
 .article-rework-card__tier:hover:not(:disabled) {
-  background: #fff;
-  border-color: #c4b5fd;
+  background: var(--surface-raised);
+  border-color: var(--brand-300);
 }
 .article-rework-card__tier:disabled {
   cursor: default;
   opacity: 0.6;
 }
 .article-rework-card__tier.is-expanded {
-  background: #fff;
-  border-color: #8b5cf6;
+  background: var(--surface-raised);
+  border-color: var(--primary);
 }
 .article-rework-card__tier-emoji {
   font-size: 14px;
@@ -157,14 +157,14 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.article-rework-card__tier--perfect .article-rework-card__tier-count { color: #166534; }
-.article-rework-card__tier--good    .article-rework-card__tier-count { color: #92400e; }
-.article-rework-card__tier--rework  .article-rework-card__tier-count { color: #b91c1c; }
+.article-rework-card__tier--perfect .article-rework-card__tier-count { color: var(--success); }
+.article-rework-card__tier--good    .article-rework-card__tier-count { color: var(--warning); }
+.article-rework-card__tier--rework  .article-rework-card__tier-count { color: var(--danger); }
 
 .article-rework-card__expanded {
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px dashed #ddd6fe;
+  border-top: 1px dashed var(--line);
 }
 .article-rework-card__loading {
   padding: 12px;

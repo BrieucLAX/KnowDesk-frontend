@@ -153,7 +153,7 @@
 
 .obp-doc-picks { display: flex; flex-direction: column; gap: 4px; max-height: 220px; overflow-y: auto; }
 .obp-doc-pick { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--neutral-700); cursor: pointer; }
-.obp-doc-pick.is-taken { color: var(--neutral-400); cursor: default; }
+.obp-doc-pick.is-taken { color: var(--ink-muted); cursor: default; }
 
 /* ── Historique des versions ─────────────────────────────────── */
 .obp-history { display: flex; flex-direction: column; gap: 4px; }

@@ -5,7 +5,7 @@
    feuilles puissent référencer les variables.
    ───────────────────────────────────────────────────────────── */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 :root {
   /* ── Design system CX (lot 1 : socle) ─────────────────────── */
@@ -32,6 +32,7 @@
   --info-soft: #e3ebf8;
   --shadow-sm: 0 2px 8px rgba(39,33,28,0.08);
   --shadow-lg: 0 16px 48px rgba(39,33,28,0.18);
+  --overlay: rgba(39, 33, 28, 0.45);
   --space-2: 8px;
   --space-4: 16px;
   --space-6: 24px;

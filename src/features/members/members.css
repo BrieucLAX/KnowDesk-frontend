@@ -34,7 +34,7 @@
 }
 .members-tab--active {
   background: var(--neutral-0); color: var(--neutral-900);
-  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 6%, transparent);
 }
 
 /* Table */
@@ -47,7 +47,7 @@
 }
 .members-th {
   padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: .05em; color: var(--neutral-400);
+  text-transform: uppercase; letter-spacing: .05em; color: var(--ink-muted);
   background: var(--neutral-50); border-bottom: 1px solid var(--neutral-100);
   white-space: nowrap;
 }
@@ -72,8 +72,8 @@
 }
 .member-row__name-wrap { display: flex; flex-direction: column; gap: 2px; }
 .member-row__name      { font-size: 13px; font-weight: 600; color: var(--neutral-900); }
-.member-row__you       { font-size: 12px; font-weight: 400; color: var(--neutral-400); }
-.member-row__email     { font-size: 12px; color: var(--neutral-400); }
+.member-row__you       { font-size: 12px; font-weight: 400; color: var(--ink-muted); }
+.member-row__email     { font-size: 12px; color: var(--ink-muted); }
 
 .member-row__role-static { font-size: 13px; color: var(--neutral-600); }
 .member-row__role-select {
@@ -89,13 +89,13 @@
   display: inline-block; font-size: 11px; font-weight: 600;
   padding: 2px 8px; border-radius: var(--radius-full);
 }
-.member-status--active   { background: #EAF7F0; color: #1A6B3C; }
+.member-status--active   { background: var(--success-soft); color: var(--success); }
 .member-status--invited  { background: var(--brand-50); color: var(--brand-600); }
 .member-status--expired  { background: var(--color-danger-bg); color: var(--color-danger); }
-.member-status--disabled { background: var(--neutral-100); color: var(--neutral-400); }
+.member-status--disabled { background: var(--neutral-100); color: var(--ink-muted); }
 
-.member-row__date      { font-size: 12px; color: var(--neutral-400); white-space: nowrap; }
-.member-row__invited-at { color: var(--neutral-400); }
+.member-row__date      { font-size: 12px; color: var(--ink-muted); white-space: nowrap; }
+.member-row__invited-at { color: var(--ink-muted); }
 .member-row__actions   { white-space: nowrap; }
 .member-row__spinner {
   display: inline-block; width: 16px; height: 16px;
@@ -114,8 +114,8 @@
 .member-action--resend:hover { border-color: var(--brand-300); background: var(--brand-50); }
 .member-action--danger { color: var(--color-danger); border-color: var(--color-danger-border); }
 .member-action--danger:hover { background: var(--color-danger-bg); }
-.member-action--reactivate { color: #0a7d3a; border-color: #b7e0c5; }
-.member-action--reactivate:hover { background: #ecfdf5; border-color: #0a7d3a; }
+.member-action--reactivate { color: var(--success); border-color: color-mix(in srgb, var(--success) 35%, var(--success-soft)); }
+.member-action--reactivate:hover { background: var(--success-soft); border-color: var(--success); }
 
 /* Skeleton rows */
 .member-sk-avatar  { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; }
