@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 
 vi.mock('../../../shared/lib/apiClient', () => ({
   ApiError: class extends Error {},
@@ -49,5 +49,42 @@ describe('Éditeur de parcours : le sélecteur trouve les ressources au-delà de
       '/articles published 200 1', '/articles published 200 2',
       '/faqs published 100 1', '/faqs published 100 2',
     ]);
+  });
+});
+
+describe('Éditeur de parcours : supprimer un module demande une confirmation', () => {
+  beforeEach(() => {
+    vi.mocked(apiClient.get).mockImplementation(async (path: string) => respond(path).data as never);
+    vi.mocked(apiClient.getWithMeta).mockImplementation(async (path: string) => respond(path) as never);
+    vi.mocked(apiClient.delete).mockReset();
+    vi.mocked(apiClient.delete).mockResolvedValue({ message: 'ok' } as never);
+  });
+
+  async function askDelete() {
+    render(<LearningPathEditor pathId={LEARNING_PATH_ID} onBack={() => {}} />);
+    const [deleteButton] = await screen.findAllByRole('button', { name: 'Supprimer' });
+    fireEvent.click(deleteButton);
+    return screen.findByRole('dialog', { name: 'Supprimer ce module ?' });
+  }
+
+  it('ouvre la confirmation sans rien supprimer', async () => {
+    const dialog = await askDelete();
+    expect(dialog).toHaveTextContent('Cette action est définitive.');
+    expect(apiClient.delete).not.toHaveBeenCalled();
+  });
+
+  it('« Annuler » ferme la confirmation sans supprimer', async () => {
+    await askDelete();
+    fireEvent.click(screen.getByRole('button', { name: 'Annuler' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(apiClient.delete).not.toHaveBeenCalled();
+  });
+
+  it('« Supprimer le module » envoie la suppression du module et ferme la confirmation', async () => {
+    await askDelete();
+    fireEvent.click(screen.getByRole('button', { name: 'Supprimer le module' }));
+    await waitFor(() => expect(apiClient.delete).toHaveBeenCalledTimes(1));
+    expect(vi.mocked(apiClient.delete).mock.calls[0][0]).toMatch(/^\/learning\/modules\/[^/]+$/);
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 });

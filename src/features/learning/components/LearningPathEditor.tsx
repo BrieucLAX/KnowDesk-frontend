@@ -40,6 +40,9 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
 
   // Module en cours d'édition (modal expanded)
   const [editingModule, setEditingModule] = useState<LearningModule | null>(null);
+  // Module dont la suppression attend une confirmation.
+  const [moduleToDelete, setModuleToDelete] = useState<LearningModule | null>(null);
+  const [deletingModule, setDeletingModule] = useState(false);
 
   // Modale ajout module
   const [showAddModule, setShowAddModule] = useState(false);
@@ -104,12 +107,16 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
 
   const handleDeleteModule = useCallback(async (moduleId: string) => {
     if (!path) return;
+    setDeletingModule(true);
     try {
       await learningApi.deleteModule(moduleId);
       setPath(p => p ? { ...p, modules: p.modules.filter(m => m.id !== moduleId) } : p);
       toast.success('Module supprimé.');
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : 'Suppression impossible.');
+    } finally {
+      setDeletingModule(false);
+      setModuleToDelete(null);
     }
   }, [path, toast]);
 
@@ -259,7 +266,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
                   </div>
                   <div className="learning-module__actions">
                     <Button variant="ghost" size="sm" onClick={() => setEditingModule(m)}>Éditer</Button>
-                    <Button variant="danger" size="sm" onClick={() => handleDeleteModule(m.id)}>Supprimer</Button>
+                    <Button variant="danger" size="sm" onClick={() => setModuleToDelete(m)}>Supprimer</Button>
                   </div>
                 </li>
               ))}
@@ -267,6 +274,17 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
           )}
         </section>
       </div>
+
+      {moduleToDelete && (
+        <ConfirmDialog
+          title="Supprimer ce module ?"
+          description={`« ${moduleToDelete.name} » sera retiré du parcours, avec ses ressources, son quiz et la progression des membres. Cette action est définitive.`}
+          confirmLabel="Supprimer le module"
+          loading={deletingModule}
+          onConfirm={() => handleDeleteModule(moduleToDelete.id)}
+          onCancel={() => setModuleToDelete(null)}
+        />
+      )}
     </>
   );
 }
