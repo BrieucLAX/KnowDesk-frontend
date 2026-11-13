@@ -12,7 +12,7 @@ export const SIDEBAR_SECTIONS: SidebarSection[] = [
       { href: '#auth',       label: 'Authentification' },
       { href: '#errors',     label: 'Erreurs' },
       { href: '#pagination', label: 'Pagination' },
-      { href: '#scope',      label: 'Périmètre & Chatbot' },
+      { href: '#scope',      label: 'Périmètre et chatbot' },
     ],
   },
   {

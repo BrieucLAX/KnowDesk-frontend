@@ -38,12 +38,12 @@ interface SideNavProps {
 const NAV_ITEMS: NavItem[] = [
   { id: 'dashboard', label: 'Accueil',   href: '/',           icon: <House size={20} />, module: 'dashboard' },
   { id: 'knowledge', label: 'Articles',  href: '/knowledge',  icon: <BookOpen size={20} />, module: 'knowledge' },
-  { id: 'faqs',      label: 'FAQs',      href: '/faqs',       icon: <CircleHelp size={20} />,  module: 'faqs' },
+  { id: 'faqs',      label: 'FAQ',       href: '/faqs',       icon: <CircleHelp size={20} />,  module: 'faqs' },
   { id: 'trees',     label: 'Processus', href: '/trees',      icon: <ListOrdered size={20} />, module: 'trees' },
   { id: 'learning',  label: 'Formations', href: '/learning',   icon: <GraduationCap size={20} />, module: 'learning' },
   { id: 'analytics', label: 'Analyse',       href: '/analytics',  icon: <ChartColumn size={20} />, adminOnly: true, module: 'analytics' },
   { id: 'chats',     label: 'Conversations', href: '/chats',      icon: <MessageCircle size={20} />,  adminOnly: true, module: 'chats' },
-  { id: 'brand-monitoring', label: 'Brand monitoring', href: '/brand-monitoring', icon: <Radar size={20} />, adminOnly: true, module: 'brand_monitoring' },
+  { id: 'brand-monitoring', label: 'Suivi de marque', href: '/brand-monitoring', icon: <Radar size={20} />, adminOnly: true, module: 'brand_monitoring' },
   { id: 'onboarding', label: 'Onboarding', href: '/onboarding', icon: <FileSearch size={20} />, adminOnly: true, module: 'onboarding' },
 ];
 

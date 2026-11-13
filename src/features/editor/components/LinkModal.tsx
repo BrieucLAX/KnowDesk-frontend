@@ -48,7 +48,7 @@ export function LinkModal({ onInsert, onClose, selectedText }: LinkModalProps) {
   const handleInsert = useCallback(() => {
     if (tab === 'external') {
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        setUrlError('L\'URL doit commencer par http:// ou https://');
+        setUrlError('Saisissez une adresse complète, qui commence par http:// ou https://.');
         return;
       }
       onInsert(url, text || url, false);
@@ -73,7 +73,7 @@ export function LinkModal({ onInsert, onClose, selectedText }: LinkModalProps) {
             variant="primary" size="md"
             disabled={tab === 'external' ? !url || url === 'https://' : !selectedArt}
           >
-            Insérer
+            Insérer le lien
           </Button>
         </>
       }

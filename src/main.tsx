@@ -33,7 +33,7 @@ function ErrorFallback() {
     }}>
       <h1 style={{ fontSize: 22, marginBottom: 12 }}>Une erreur s'est produite</h1>
       <p style={{ fontSize: 14, color: 'var(--ink-muted)', lineHeight: 1.5, marginBottom: 20 }}>
-        L'équipe technique a été automatiquement notifiée. Recharge la page pour réessayer.
+        L'équipe technique a été prévenue automatiquement. Rechargez la page pour réessayer.
       </p>
       <button
         type="button"

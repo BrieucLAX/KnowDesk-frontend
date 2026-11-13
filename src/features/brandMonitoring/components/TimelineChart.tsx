@@ -29,7 +29,7 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
     setLoading(true);
     brandMonitoringApi.timeline(projectId, bucket, rangeDays)
       .then(d => { if (!cancel) setData(d); })
-      .catch(err => toast.error((err as Error).message ?? 'Chargement timeline impossible.'))
+      .catch(err => toast.error((err as Error).message ?? "L'évolution dans le temps n'a pas pu être chargée. Rechargez la page."))
       .finally(() => { if (!cancel) setLoading(false); });
     return () => { cancel = true; };
   }, [projectId, bucket, rangeDays, toast]);
@@ -68,7 +68,7 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
       <div className="bm-timeline__head">
         <div>
           <h3 className="bm-card__title">Évolution dans le temps</h3>
-          <p className="bm-card__sub">Part de voix par marque, en % des mentions cumulées par bucket.</p>
+          <p className="bm-card__sub">Part de voix par marque, en % des mentions cumulées sur chaque période.</p>
         </div>
         <div className="bm-timeline__controls">
           <label className="bm-timeline__ctrl">
@@ -94,8 +94,8 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
 
       {!loading && chartData.length === 0 && (
         <p className="bm-empty-data">
-          Pas encore assez de données pour cette période. Lance plusieurs runs au fil des semaines
-          pour voir l'évolution de ta part de voix.
+          Pas encore assez de données pour cette période. Lancez plusieurs analyses au fil des semaines
+          pour voir l'évolution de votre part de voix.
         </p>
       )}
 

@@ -13,7 +13,7 @@ export function useTags() {
     let alive = true;
     tagsApi.list()
       .then(data => { if (alive) setItems(data); })
-      .catch(err => { if (alive) setError(err instanceof ApiError ? err.message : 'Erreur de chargement.'); })
+      .catch(err => { if (alive) setError(err instanceof ApiError ? err.message : 'Les tags n\'ont pas pu être chargés. Rechargez la page.'); })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, []);
@@ -30,7 +30,7 @@ export function useTags() {
       toast.success('Tag renommé.');
       return true;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Renommage impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Le tag n\'a pas été renommé. Réessayez.');
       return false;
     }
   }, [toast]);
@@ -43,7 +43,7 @@ export function useTags() {
       toast.success('Tag supprimé.');
     } catch (err) {
       setItems(previous);
-      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Le tag n\'a pas été supprimé. Réessayez.');
     }
   }, [items, toast]);
 

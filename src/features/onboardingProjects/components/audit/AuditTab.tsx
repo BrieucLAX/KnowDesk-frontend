@@ -65,7 +65,7 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
       .catch(err => {
         if (cancelled) return;
         setAnalyses([]);
-        toast.error(err instanceof Error ? err.message : 'Impossible de charger les analyses.');
+        toast.error(err instanceof Error ? err.message : 'Impossible de charger les analyses. Rechargez la page.');
       });
     return () => { cancelled = true; };
   }, [project.id, toast]);
@@ -95,7 +95,7 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
       .catch(err => {
         if (cancelled) return;
         setLoaded({ state: 'error' });
-        toast.error(err instanceof Error ? err.message : 'Impossible de charger l\'audit.');
+        toast.error(err instanceof Error ? err.message : 'Impossible de charger l\'audit. Rechargez la page.');
       });
     return () => { cancelled = true; };
   }, [project.id, selected, toast]);

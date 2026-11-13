@@ -19,17 +19,17 @@ export function ActivationChecklist({ items }: ActivationChecklistProps) {
   const pct = Math.round((completedCount / items.length) * 100);
 
   return (
-    <section className="checklist" aria-label="Checklist d'activation">
+    <section className="checklist" aria-label="Étapes de démarrage">
       <div className="checklist__header">
         <div>
           <h2 className="checklist__title">Démarrer avec KnowDesk</h2>
-          <p className="checklist__sub">{completedCount} sur {items.length} tâches complétées</p>
+          <p className="checklist__sub">{completedCount} étapes terminées sur {items.length}</p>
         </div>
         <span className="checklist__pct">{pct}%</span>
       </div>
 
       {/* Progress bar */}
-      <div className="checklist__progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={`${pct}% complété`}>
+      <div className="checklist__progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={`${pct} % terminé`}>
         <div className="checklist__progress-fill" style={{ width: `${pct}%` }} />
       </div>
 

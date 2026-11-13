@@ -92,8 +92,8 @@ export function CardAnswers({ card, current, arbitrable, arbitrage = false, busy
       <div className="obp-decision">
         <CurrentAnswer card={card} current={current} docs={docs} />
         <div className="obp-decision__actions">
-          <Button variant="ghost" size="sm" loading={busy} onClick={() => void onCancel()}>Annuler</Button>
-          <Button variant="ghost" size="sm" disabled={busy} onClick={() => setEditing(true)}>Changer</Button>
+          <Button variant="ghost" size="sm" loading={busy} onClick={() => void onCancel()}>Annuler la réponse</Button>
+          <Button variant="ghost" size="sm" disabled={busy} onClick={() => setEditing(true)}>Changer la réponse</Button>
         </div>
       </div>
     );
@@ -129,7 +129,7 @@ export function CardAnswers({ card, current, arbitrable, arbitrage = false, busy
         <p className="obp-muted">Votre précision est enregistrée telle quelle, avec votre nom et la date ; elle prime sur la recommandation.</p>
         <p className="obp-warning obp-clarify-precision__warning">{warning}</p>
         <div className="obp-decision__actions">
-          <Button type="submit" variant="primary" size="sm" loading={busy}>Confirmer</Button>
+          <Button type="submit" variant="primary" size="sm" loading={busy}>Enregistrer la réponse</Button>
           <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={() => { setFollowing(false); setText(''); }}>Retour</Button>
         </div>
       </form>
@@ -152,7 +152,7 @@ export function CardAnswers({ card, current, arbitrable, arbitrage = false, busy
         <p className="obp-warning obp-clarify-precision__warning">{warning}</p>
         {error && <p className="field-error" role="alert">{error}</p>}
         <div className="obp-decision__actions">
-          <Button type="submit" variant="primary" size="sm" loading={busy}>Enregistrer</Button>
+          <Button type="submit" variant="primary" size="sm" loading={busy}>Enregistrer la réponse</Button>
           <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={() => { setTyping(null); setError(null); }}>Retour</Button>
         </div>
       </form>

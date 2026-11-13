@@ -78,11 +78,11 @@ export function AcceptInvitationPage({ token, onSuccess }: AcceptInvitationPageP
       <Frame quote="Bienvenue dans votre base de connaissance.">
         <div className="invitation-success">
           <div className="invitation-success__icon" aria-hidden="true"><CircleCheck size={24} /></div>
-          <h1 className="invitation-success__title">{existing ? `Vous avez rejoint ${info.orgName}` : 'Compte créé !'}</h1>
+          <h1 className="invitation-success__title">{existing ? `Vous avez rejoint ${info.orgName}` : 'Compte créé'}</h1>
           <p className="invitation-success__desc">
             {existing
               ? 'Connectez-vous avec votre mot de passe habituel.'
-              : 'Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.'}
+              : 'Votre compte a été créé. Vous pouvez maintenant vous connecter.'}
           </p>
           <Button variant="primary" size="lg" fullWidth onClick={onSuccess}>
             Se connecter
@@ -129,7 +129,7 @@ export function AcceptInvitationPage({ token, onSuccess }: AcceptInvitationPageP
             type="button"
             className="login-form__toggle-password"
             onClick={togglePassword}
-            aria-label={showPassword ? 'Masquer' : 'Afficher'}
+            aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
           >
             {showPassword ? 'Masquer' : 'Afficher'}
           </button>
@@ -157,7 +157,7 @@ export function AcceptInvitationPage({ token, onSuccess }: AcceptInvitationPageP
 
         <Button type="submit" variant="primary" size="lg" fullWidth loading={isLoading}>
           {existing
-            ? (isLoading ? 'Connexion à l\'espace…' : 'Rejoindre l\'espace')
+            ? (isLoading ? 'Connexion à l\'organisation…' : 'Rejoindre l\'organisation')
             : (isLoading ? 'Création du compte…' : 'Créer mon compte')}
         </Button>
       </form>

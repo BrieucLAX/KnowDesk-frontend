@@ -22,7 +22,7 @@ export function useFaq(faqId?: string) {
     faqsApi.get(faqId, { noTrack: true })
       .then(data => { if (alive) setFaq(data); })
       .catch(err => {
-        if (alive) toast.error(err instanceof ApiError ? err.message : 'Impossible de charger la FAQ.');
+        if (alive) toast.error(err instanceof ApiError ? err.message : 'Impossible de charger la FAQ. Rechargez la page.');
       })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
@@ -35,7 +35,7 @@ export function useFaq(faqId?: string) {
       toast.success(data.status === 'published' ? 'FAQ publiée.' : 'FAQ enregistrée en brouillon.');
       return created;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Création impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Création de la FAQ impossible. Réessayez dans un instant.');
       return null;
     } finally {
       setSaving(false);
@@ -50,7 +50,7 @@ export function useFaq(faqId?: string) {
       toast.success('FAQ mise à jour.');
       return updated;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Mise à jour impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Mise à jour de la FAQ impossible. Réessayez dans un instant.');
       return null;
     } finally {
       setSaving(false);
@@ -65,7 +65,7 @@ export function useFaq(faqId?: string) {
       toast.success('FAQ marquée comme à jour.');
       return true;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Action impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'La FAQ n\'a pas pu être marquée comme à jour. Réessayez dans un instant.');
       return false;
     } finally {
       setSaving(false);
@@ -78,7 +78,7 @@ export function useFaq(faqId?: string) {
       setFaq(prev => prev ? { ...prev, tags: result.tags } : prev);
       return true;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Sauvegarde des tags impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Enregistrement des tags impossible. Réessayez dans un instant.');
       return false;
     }
   }, [toast]);

@@ -28,7 +28,7 @@ describe('AcceptInvitationPage', () => {
     fireEvent.change(screen.getByLabelText(/^Mot de passe/), { target: { value: 'NouveauMdp123' } });
     fireEvent.change(screen.getByLabelText(/Confirmer le mot de passe/), { target: { value: 'NouveauMdp123' } });
     fireEvent.click(screen.getByRole('button', { name: 'Créer mon compte' }));
-    expect(await screen.findByRole('heading', { name: 'Compte créé !' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Compte créé' })).toBeInTheDocument();
     expect(apiClient.post).toHaveBeenCalledWith('/members/invitations/t1/accept', { password: 'NouveauMdp123' });
   });
 
@@ -40,7 +40,7 @@ describe('AcceptInvitationPage', () => {
     expect(screen.getByText(/il ne sera pas modifié/)).toBeInTheDocument();
     expect(screen.queryByLabelText(/Confirmer le mot de passe/)).not.toBeInTheDocument();
     fireEvent.change(screen.getByLabelText(/Mot de passe actuel/), { target: { value: 'MonMdpActuel1' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Rejoindre l\'espace' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Rejoindre l\'organisation' }));
     expect(await screen.findByRole('heading', { name: 'Vous avez rejoint Prospect SA' })).toBeInTheDocument();
   });
 
@@ -49,7 +49,7 @@ describe('AcceptInvitationPage', () => {
     vi.mocked(apiClient.post).mockRejectedValue(new Error('Un compte existe déjà pour cette adresse : saisissez son mot de passe actuel pour rejoindre l\'espace.'));
     render(<AcceptInvitationPage token="t3" onSuccess={() => {}} />);
     fireEvent.change(await screen.findByLabelText(/Mot de passe actuel/), { target: { value: 'Mauvais123' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Rejoindre l\'espace' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Rejoindre l\'organisation' }));
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('mot de passe actuel'));
   });
 

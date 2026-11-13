@@ -111,7 +111,7 @@ describe('CadrageTab', () => {
     expect(await screen.findByDisplayValue('Mon texte libre')).toBeInTheDocument();
 
     fireEvent.click(await screen.findByRole('button', { name: 'Partir du rendu de la fiche structurée' }));
-    fireEvent.click(await screen.findByRole('button', { name: 'Remplacer' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Remplacer le texte' }));
     await waitFor(() => expect(screen.getByLabelText(/Texte de la fiche/)).toHaveValue(v1.markdown));
   });
 
@@ -139,7 +139,7 @@ describe('CadrageTab', () => {
     fireEvent.click(await screen.findByRole('button', { name: '+ Ajouter une offre' }));
     expect(onDirtyChange).toHaveBeenLastCalledWith(true);
     fireEvent.click(saveButton());
-    expect(await screen.findByText('Champ requis.')).toBeInTheDocument();
+    expect(await screen.findByText('Renseignez ce champ.')).toBeInTheDocument();
     expect(onboardingApi.saveCadrage).not.toHaveBeenCalled();
 
     fireEvent.change(screen.getByLabelText('Nom'), { target: { value: ' Box fibre ' } });

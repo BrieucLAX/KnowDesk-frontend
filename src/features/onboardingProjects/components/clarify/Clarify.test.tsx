@@ -260,7 +260,7 @@ describe('À clarifier (audit 0.8.0)', () => {
       cardId: dated.id, expectedCurrentId: null, action: { type: 'accept_side', side: 'B' },
     }));
     expect(await screen.findByText('Côté B retenu : email-3-changement-tarifaire.docx')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Annuler' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Annuler la réponse' })).toBeInTheDocument();
   });
 
   it('« Ce sujet n\'a pas sa place dans la base » : dans un menu secondaire seulement', async () => {
@@ -278,12 +278,12 @@ describe('À clarifier (audit 0.8.0)', () => {
     vi.mocked(onboardingApi.answerCard).mockResolvedValue(answer(dated.id, { type: 'other_answer', text: 'Voir la direction.' }));
     await openSession();
     fireEvent.click(screen.getByRole('button', { name: 'Autre réponse' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Enregistrer la réponse' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Saisissez votre réponse.');
     expect(onboardingApi.answerCard).not.toHaveBeenCalled();
 
     fireEvent.change(screen.getByLabelText('Votre réponse'), { target: { value: '  Voir la direction. ' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Enregistrer la réponse' }));
     await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalledWith('p1', 'a1', expect.objectContaining({
       action: { type: 'other_answer', text: 'Voir la direction.' },
     })));
@@ -327,7 +327,7 @@ describe('À clarifier (audit 0.8.0)', () => {
     await screen.findByRole('article', { name: /^Carte 1 sur/ });
     expect(screen.getByText('Ils disent la même chose')).toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Répondre à la carte' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Annuler' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Annuler la réponse' })).not.toBeInTheDocument();
   });
 
   it('détails de l\'analyse : points écartés avec leur raison, citations non vérifiées comptées, jamais citées', async () => {
@@ -426,7 +426,7 @@ describe('À clarifier (audit 0.8.0)', () => {
         'Ce que cela fera dans la baseLe changement daté sera retenu : la base suivra le côté B (email-3-changement-tarifaire.docx).',
       );
       fireEvent.change(screen.getByLabelText('Ajouter une précision (facultatif)'), { target: { value: '  Seulement pour les souscriptions 2027. ' } });
-      fireEvent.click(screen.getByRole('button', { name: 'Confirmer' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Enregistrer la réponse' }));
       await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalledWith('p1', 'a1', {
         cardId: dated.id, expectedCurrentId: null,
         action: { type: 'follow_recommendation', precisions: 'Seulement pour les souscriptions 2027.' },
@@ -469,7 +469,7 @@ describe('À clarifier (audit 0.8.0)', () => {
       await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(incomplete) + 1} sur 9` });
       fireEvent.click(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' }));
       expect(screen.getByRole('note')).toHaveTextContent('Le passage sera complété dans la base, en suivant la recommandation.');
-      fireEvent.click(screen.getByRole('button', { name: 'Confirmer' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Enregistrer la réponse' }));
       await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalledWith('p1', 'a1', {
         cardId: incomplete.id, expectedCurrentId: null, action: { type: 'follow_recommendation', precisions: null },
       }));
@@ -1186,7 +1186,7 @@ describe('À clarifier (audit 0.16.0, plan-construire-v1, lot A)', () => {
     expect(ai).toHaveTextContent(grouped.analysis.proposal);
     fireEvent.click(within(reco).getByRole('button', { name: 'Je suis la recommandation' }));
     expect(screen.queryByText('Ce que cela fera dans la base')).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Confirmer' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Enregistrer la réponse' }));
     await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalled());
     expect(vi.mocked(onboardingApi.answerCard).mock.calls[0][2].action).toEqual({ type: 'follow_recommendation', precisions: null });
   });

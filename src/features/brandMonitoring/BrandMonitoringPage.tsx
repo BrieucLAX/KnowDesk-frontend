@@ -16,8 +16,8 @@ import { Tabs, TabPanel } from '../../shared/components/ui/Tabs';
 type Tab = 'dashboard' | 'prompts' | 'responses' | 'settings';
 
 const TABS: ReadonlyArray<{ id: Tab; label: string }> = [
-  { id: 'dashboard', label: 'Dashboard' },
-  { id: 'prompts',   label: 'Prompts' },
+  { id: 'dashboard', label: 'Tableau de bord' },
+  { id: 'prompts',   label: 'Questions suivies' },
   { id: 'responses', label: 'Réponses' },
   { id: 'settings',  label: 'Paramètres' },
 ];
@@ -40,7 +40,7 @@ export function BrandMonitoringPage() {
       const detail = await brandMonitoringApi.getProject(list[0].id);
       setProject(detail);
     } catch (err) {
-      toast.error((err as Error).message ?? 'Impossible de charger le projet brand monitoring.');
+      toast.error((err as Error).message ?? "Le projet de suivi de marque n'a pas pu être chargé. Rechargez la page.");
     } finally {
       setLoading(false);
     }
@@ -50,16 +50,16 @@ export function BrandMonitoringPage() {
 
   const handleCreate = async () => {
     const name = newName.trim();
-    if (name.length < 2) { toast.error('Donne un nom de marque (au moins 2 caractères).'); return; }
+    if (name.length < 2) { toast.error("Saisissez un nom de projet d'au moins 2 caractères."); return; }
     setCreating(true);
     try {
       await brandMonitoringApi.createProject(name);
-      toast.success(`Projet « ${name} » créé. Configure les marques et les prompts dans l'onglet Paramètres.`);
+      toast.success(`Projet « ${name} » créé. Configurez les marques et les questions suivies dans l'onglet Paramètres.`);
       setNewName('');
       await loadProject();
       setTab('settings');
     } catch (err) {
-      toast.error((err as Error).message ?? 'Création impossible.');
+      toast.error((err as Error).message ?? "Le projet n'a pas pu être créé. Réessayez.");
     } finally {
       setCreating(false);
     }
@@ -79,11 +79,11 @@ export function BrandMonitoringPage() {
       <div className="brand-monitoring-page brand-monitoring-page--empty">
         <div className="bm-empty">
           <div className="bm-empty__icon" aria-hidden="true"><ChartColumn size={24} /></div>
-          <h2 className="bm-empty__title">Brand monitoring — créer un projet</h2>
+          <h2 className="bm-empty__title">Créer un projet de suivi de marque</h2>
           <p className="bm-empty__desc">
-            Suis ta visibilité de marque dans les LLM (Mistral en V1) vs tes concurrents.
-            Donne un nom à ton projet (ex : « Auchan »), puis configure les marques
-            surveillées et les prompts dans l'onglet Paramètres.
+            Suivez la visibilité de votre marque dans les réponses des IA (Mistral pour l'instant),
+            face à vos concurrents. Donnez un nom à votre projet (par exemple « Auchan »), puis
+            configurez les marques suivies et les questions suivies dans l'onglet Paramètres.
           </p>
           <div className="bm-empty__form">
             <Input
@@ -109,12 +109,12 @@ export function BrandMonitoringPage() {
         <div>
           <h1 className="bm-header__title">{project.name}</h1>
           <p className="bm-header__meta">
-            {project.brandsCount ?? 0} marque{(project.brandsCount ?? 0) > 1 ? 's' : ''} surveillée{(project.brandsCount ?? 0) > 1 ? 's' : ''}
-            {' · '}{project.promptsCount ?? 0} prompt{(project.promptsCount ?? 0) > 1 ? 's' : ''}
-            {' · '}{project.runsCount ?? 0} run{(project.runsCount ?? 0) > 1 ? 's' : ''}
+            {project.brandsCount ?? 0} marque{(project.brandsCount ?? 0) > 1 ? 's' : ''} suivie{(project.brandsCount ?? 0) > 1 ? 's' : ''}
+            {' · '}{project.promptsCount ?? 0} question{(project.promptsCount ?? 0) > 1 ? 's' : ''} suivie{(project.promptsCount ?? 0) > 1 ? 's' : ''}
+            {' · '}{project.runsCount ?? 0} analyse{(project.runsCount ?? 0) > 1 ? 's' : ''}
             {project.quotaRemaining != null && project.monthlyQuota != null && (
               <> · <span className={(project.quotaRemaining / project.monthlyQuota) < 0.1 ? 'bm-quota--low' : ''}>
-                quota {project.quotaRemaining}/{project.monthlyQuota} ce mois
+                quota : {project.quotaRemaining}/{project.monthlyQuota} ce mois-ci
               </span></>
             )}
           </p>
@@ -126,7 +126,7 @@ export function BrandMonitoringPage() {
         items={TABS}
         value={tab}
         onChange={setTab}
-        ariaLabel="Sections brand monitoring"
+        ariaLabel="Sections du suivi de marque"
       />
 
       <TabPanel id="bm-sections" value={tab} className="bm-main">

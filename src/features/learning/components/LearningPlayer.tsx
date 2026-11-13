@@ -99,7 +99,7 @@ export function LearningPlayer({ moduleId, onBack }: LearningPlayerProps) {
         // on l'affiche depuis le store /learning/my qui contient les modules)
         // Pour V1 simple, on affiche "Module" si pas dispo.
       } catch (err) {
-        toast.error(err instanceof ApiError ? err.message : 'Erreur de chargement.');
+        toast.error(err instanceof ApiError ? err.message : 'Impossible de charger le module. Rechargez la page.');
       } finally {
         if (alive) setLoading(false);
       }
@@ -133,7 +133,7 @@ export function LearningPlayer({ moduleId, onBack }: LearningPlayerProps) {
       const passed = result?.status === 'completed';
       setStep({ kind: 'done', score, passed });
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Erreur.');
+      toast.error(err instanceof ApiError ? err.message : 'Vos réponses n\'ont pas été enregistrées. Réessayez dans un instant.');
     } finally {
       setSubmitting(false);
     }
@@ -222,7 +222,7 @@ export function LearningPlayer({ moduleId, onBack }: LearningPlayerProps) {
           <div className={`learning-player__done ${step.passed ? 'learning-player__done--ok' : 'learning-player__done--ko'}`}>
             {step.passed ? (
               <>
-                <h1 className="icon-label"><PartyPopper size={24} className="learning-player__done-icon" />Module complété !</h1>
+                <h1 className="icon-label"><PartyPopper size={24} className="learning-player__done-icon" />Module complété</h1>
                 {step.score !== null && (
                   <p>Score : <strong>{step.score}%</strong></p>
                 )}
@@ -251,7 +251,7 @@ export function LearningPlayer({ moduleId, onBack }: LearningPlayerProps) {
               <Button variant="primary" onClick={handleNext}>
                 {step.idx + 1 < resources.length
                   ? <>Suivant<ArrowRight size={20} /></>
-                  : (quiz ? <>Passer au quiz<ArrowRight size={20} /></> : 'Terminer')}
+                  : (quiz ? <>Passer au quiz<ArrowRight size={20} /></> : 'Terminer le module')}
               </Button>
             </>
           )}

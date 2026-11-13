@@ -35,7 +35,7 @@ export function DocumentsTab({ project, onChanged }: DocumentsTabProps) {
       .catch(err => {
         if (!alive) return;
         setDocuments([]);
-        toast.error(err instanceof Error ? err.message : 'Impossible de charger les documents.');
+        toast.error(err instanceof Error ? err.message : 'Impossible de charger les documents. Rechargez la page.');
       });
     return () => { alive = false; };
   }, [project.id, toast]);
@@ -48,7 +48,7 @@ export function DocumentsTab({ project, onChanged }: DocumentsTabProps) {
   const reloadNotice = useCallback(() => {
     onboardingApi.getNotice()
       .then(setNotice)
-      .catch(err => toast.error(err instanceof Error ? err.message : 'Impossible de charger le texte d\'information.'));
+      .catch(err => toast.error(err instanceof Error ? err.message : 'Impossible de charger le texte d\'information. Rechargez la page.'));
   }, [toast]);
 
   /**
@@ -65,7 +65,7 @@ export function DocumentsTab({ project, onChanged }: DocumentsTabProps) {
       toast.success(`« ${removing.filename} » a été retiré.`);
       onChanged();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Retrait impossible.');
+      toast.error(err instanceof Error ? err.message : 'Le document n\'a pas pu être retiré. Réessayez.');
     } finally {
       setDeleting(false);
       setRemoving(null);
@@ -122,7 +122,7 @@ export function DocumentsTab({ project, onChanged }: DocumentsTabProps) {
         <ConfirmDialog
           title="Retirer ce document ?"
           description={`« ${removing.filename} » sera supprimé du projet. Vous pourrez l'importer à nouveau.`}
-          confirmLabel="Retirer"
+          confirmLabel="Retirer le document"
           variant="danger"
           loading={deleting}
           onConfirm={confirmRemove}

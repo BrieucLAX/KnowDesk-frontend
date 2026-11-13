@@ -11,9 +11,9 @@ interface CreateTestOrgModalProps {
 }
 
 const EMAIL_STATUS: Record<TestOrgCreated['email'], string> = {
-  sent:               'L\'invitation a été envoyée par email.',
-  skipped_no_api_key: 'Aucun email n\'est parti : l\'envoi d\'emails n\'est pas configuré sur le back. Transmettez le lien vous-même.',
-  failed:             'L\'envoi de l\'email a échoué. Transmettez le lien vous-même.',
+  sent:               'L\'invitation a été envoyée par e-mail.',
+  skipped_no_api_key: 'Aucun e-mail n\'est parti : l\'envoi d\'e-mails n\'est pas configuré sur le serveur. Transmettez le lien vous-même.',
+  failed:             'L\'envoi de l\'e-mail a échoué. Transmettez le lien vous-même.',
 };
 
 /**
@@ -31,7 +31,7 @@ export function CreateTestOrgModal({ onCreate, onClose }: CreateTestOrgModalProp
 
   const submit = async () => {
     if (!name.trim() || !adminEmail.trim()) {
-      setError('Le nom de l\'organisation et l\'email de son admin sont requis.');
+      setError('Saisissez le nom de l\'organisation et l\'adresse e-mail de son administrateur.');
       return;
     }
     setSubmitting(true);
@@ -39,7 +39,7 @@ export function CreateTestOrgModal({ onCreate, onClose }: CreateTestOrgModalProp
     try {
       setCreated(await onCreate(name.trim(), adminEmail.trim()));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Création impossible.');
+      setError(err instanceof Error ? err.message : 'L\'organisation n\'a pas pu être créée. Réessayez.');
     } finally {
       setSubmitting(false);
     }
@@ -64,7 +64,7 @@ export function CreateTestOrgModal({ onCreate, onClose }: CreateTestOrgModalProp
       >
         <div className="sa-test-org">
           <p>
-            <strong>{created.organization.name}</strong> ({created.organization.slug}) — admin invité :{' '}
+            <strong>{created.organization.name}</strong> ({created.organization.slug}) — administrateur invité :{' '}
             {created.invitation.email}.
           </p>
           <p className={created.email === 'sent' ? 'sa-test-org__ok' : 'sa-test-org__warn'} role="status">
@@ -80,7 +80,7 @@ export function CreateTestOrgModal({ onCreate, onClose }: CreateTestOrgModalProp
               helperText={`Valable jusqu'au ${formatFull(created.invitation.expiresAt)}.`}
             />
             <Button variant="secondary" size="md" onClick={copyLink}>
-              {copied ? 'Copié' : 'Copier'}
+              {copied ? 'Lien copié' : 'Copier le lien'}
             </Button>
           </div>
           {error && <p className="sa-test-org__error" role="alert">{error}</p>}
@@ -106,7 +106,7 @@ export function CreateTestOrgModal({ onCreate, onClose }: CreateTestOrgModalProp
     >
       <div className="sa-test-org">
         <p className="sa-test-org__desc">
-          L'organisation n'aura que le module Onboarding. Son admin reçoit une invitation par le parcours habituel.
+          L'organisation n'aura que le module Onboarding. Son administrateur reçoit une invitation par le parcours habituel.
         </p>
         <Input
           id="sa-test-org-name"
@@ -118,7 +118,7 @@ export function CreateTestOrgModal({ onCreate, onClose }: CreateTestOrgModalProp
         />
         <Input
           id="sa-test-org-email"
-          label="Email de l'admin"
+          label="Adresse e-mail de l'administrateur"
           type="email"
           value={adminEmail}
           onChange={e => setAdminEmail(e.target.value)}

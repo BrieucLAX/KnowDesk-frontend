@@ -77,7 +77,7 @@ export function ArticleEditor({ articleId, onSaved, onCancel }: ArticleEditorPro
     setCurrentArticleId(article.id);
     return article.id;
   } catch (err) {
-    toast.error(err instanceof ApiError ? err.message : 'Impossible de créer l\'article.');
+    toast.error(err instanceof ApiError ? err.message : 'Impossible de créer l\'article. Réessayez dans un instant.');
     return null;
   }
 }, [currentArticleId, form, toast]);
@@ -87,7 +87,7 @@ export function ArticleEditor({ articleId, onSaved, onCancel }: ArticleEditorPro
   useEffect(() => {
     apiClient.get<Category[]>('/categories')
       .then(setCategories)
-      .catch(err => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les catégories.'));
+      .catch(err => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les catégories. Rechargez la page.'));
   }, [toast]);
 
   // Charger l'article existant en mode édition
@@ -106,7 +106,7 @@ export function ArticleEditor({ articleId, onSaved, onCancel }: ArticleEditorPro
           tags,
         });
       })
-      .catch(err => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger l\'article.'));
+      .catch(err => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger l\'article. Rechargez la page.'));
   }, [articleId, toast]);
 
   /** Persiste les tags si — et seulement si — ils ont changé depuis le dernier save. */
@@ -118,7 +118,7 @@ export function ArticleEditor({ articleId, onSaved, onCancel }: ArticleEditorPro
       const res = await tagsApi.setForArticle(id, tags);
       lastSavedTagsRef.current = res.tags;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Sauvegarde des tags impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Enregistrement des tags impossible. Réessayez dans un instant.');
     }
   }, [toast]);
 
@@ -170,7 +170,7 @@ export function ArticleEditor({ articleId, onSaved, onCancel }: ArticleEditorPro
           visibility: form.visibility,
         });
         await syncTagsIfChanged(articleId!, form.tags);
-        toast.success("Brouillon sauvegardé."); onSaved(articleId!);
+        toast.success("Brouillon enregistré."); onSaved(articleId!);
       } else {
         const article = await apiClient.post<any>('/articles', {
           title:      form.title || 'Sans titre',
@@ -179,10 +179,10 @@ export function ArticleEditor({ articleId, onSaved, onCancel }: ArticleEditorPro
           visibility: form.visibility,
         });
         await syncTagsIfChanged(article.id, form.tags);
-        toast.success("Brouillon sauvegardé."); onSaved(article.id);
+        toast.success("Brouillon enregistré."); onSaved(article.id);
       }
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Sauvegarde du brouillon impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Enregistrement du brouillon impossible. Réessayez dans un instant.');
     } finally {
       setIsSavingDraft(false);
     }
@@ -206,7 +206,7 @@ if (!isEdit) {
     visibility: form.visibility,
   });
   await syncTagsIfChanged(article.id, form.tags);
-  toast.success('Article publié avec succès !');
+  toast.success('Article publié.');
   onSaved(article.id);
   return;
 } else {
@@ -220,9 +220,9 @@ if (!isEdit) {
       }
 
       await apiClient.put(`/articles/${id}/publish`, { summary: 'Publication' });
-      toast.success("Article publié avec succès !"); onSaved(id!);
+      toast.success('Article publié.'); onSaved(id!);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Publication impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Publication impossible. Réessayez dans un instant.');
     } finally {
       setIsPublishing(false);
     }
@@ -238,7 +238,7 @@ if (!isEdit) {
       setConfirmArchive(false);
       toast.success('Article archivé.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Archivage impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Archivage impossible. Réessayez dans un instant.');
     } finally {
       setIsArchiving(false);
     }
@@ -252,7 +252,7 @@ if (!isEdit) {
       setForm(f => ({ ...f, status: updated.status }));
       toast.success('Article désarchivé : il est de nouveau en brouillon.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Désarchivage impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Désarchivage impossible. Réessayez dans un instant.');
     } finally {
       setIsArchiving(false);
     }
@@ -266,7 +266,7 @@ if (!isEdit) {
         <ConfirmDialog
           title="Archiver cet article ?"
           description={`« ${form.title} » ne sera plus visible des conseillers ni du chatbot. Vous pourrez le désarchiver ; il reviendra en brouillon.`}
-          confirmLabel="Archiver"
+          confirmLabel="Archiver l'article"
           loading={isArchiving}
           onConfirm={handleArchive}
           onCancel={() => setConfirmArchive(false)}
@@ -296,10 +296,10 @@ if (!isEdit) {
             </Button>
           )}
           <Button variant="ghost" size="sm" onClick={handleSaveDraft} loading={isSavingDraft}>
-            Garder en brouillon
+            Enregistrer le brouillon
           </Button>
           <Button variant="primary" size="sm" loading={isPublishing} onClick={handlePublish}>
-            {form.status === 'published' ? 'Mettre à jour' : 'Publier'}
+            {form.status === 'published' ? 'Publier les modifications' : 'Publier l\'article'}
           </Button>
         </div>
       </div>
@@ -337,7 +337,7 @@ if (!isEdit) {
               value={form.tags}
               onChange={tags => updateField('tags', tags)}
             />
-            <p className="field-hint">10 tags max. Entrée ou virgule pour valider chaque tag.</p>
+            <p className="field-hint">10 tags au maximum. Appuyez sur Entrée ou tapez une virgule après chaque tag.</p>
           </div>
           <div className="field">
             <label htmlFor="visibility-select" className="field-label">Visibilité</label>
@@ -348,10 +348,10 @@ if (!isEdit) {
               onChange={e => updateField('visibility', e.target.value as 'internal' | 'public')}
             >
               <option value="internal">Interne — réservé aux conseillers</option>
-              <option value="public">Public — exposé au chatbot client</option>
+              <option value="public">Public — utilisable par le chatbot de votre site</option>
             </select>
             <p className="field-hint">
-              Les articles « Public » sont consultables par le chatbot embarqué sur le site web client (s'il est activé).
+              Le chatbot de votre site, s'il est activé, peut s'appuyer sur les articles publics.
             </p>
           </div>
         </div>

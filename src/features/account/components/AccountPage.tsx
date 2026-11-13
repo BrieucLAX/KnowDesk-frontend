@@ -22,10 +22,10 @@ export function AccountPage() {
     setResettingOnboarding(true);
     try {
       await resetOnboarding();
-      toast.success('L\'onboarding va se relancer.');
+      toast.success('Le tutoriel d\'arrivée va se relancer.');
       // L'app détectera onboardingDone=false au prochain render et affichera la wizard.
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Impossible de relancer l\'onboarding.');
+      toast.error(err instanceof ApiError ? err.message : 'Le tutoriel d\'arrivée n\'a pas pu être relancé. Réessayez dans quelques instants.');
     } finally {
       setResettingOnboarding(false);
     }
@@ -82,7 +82,7 @@ export function AccountPage() {
       });
       setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (err) {
-      setPasswordError(err instanceof Error ? err.message : 'Erreur.');
+      setPasswordError(err instanceof Error ? err.message : 'Le mot de passe n\'a pas pu être changé. Réessayez dans quelques instants.');
     } finally {
       setPasswordLoading(false);
     }
@@ -105,7 +105,7 @@ export function AccountPage() {
     <div className="account-page">
       <PageHeader
         title="Mon compte"
-        subtitle="Votre profil, votre mot de passe et votre adresse email."
+        subtitle="Votre profil, votre mot de passe et votre adresse e-mail."
       />
       <div className="account-page__body">
       {/* Profil */}
@@ -134,7 +134,7 @@ export function AccountPage() {
           </div>
           <div className="account-form__actions">
             <Button type="submit" variant="primary" size="md" loading={profileLoading}>
-              Enregistrer
+              Enregistrer le profil
             </Button>
             {profileSaved && (
               <span className="account-form__saved icon-label" role="status"><Check size={16} />Enregistré</span>
@@ -146,15 +146,15 @@ export function AccountPage() {
       {/* Changer l'email */}
       <section className="account-section">
         <div className="account-section__header">
-          <h2 className="account-section__title">Adresse email</h2>
+          <h2 className="account-section__title">Adresse e-mail</h2>
           <p className="account-section__desc">
-            Un email de confirmation sera envoyé à la nouvelle adresse.
+            Un e-mail de confirmation sera envoyé à la nouvelle adresse.
           </p>
         </div>
         {emailSent ? (
           <div className="account-success" role="status">
             <CircleCheck size={20} className="account-success__icon" />
-            Email de confirmation envoyé à <strong>{emailForm.newEmail}</strong>.
+            E-mail de confirmation envoyé à <strong>{emailForm.newEmail}</strong>.
             Vérifiez votre boîte de réception.
           </div>
         ) : (
@@ -162,14 +162,14 @@ export function AccountPage() {
             <Input
               id="newEmail"
               type="email"
-              label="Nouvelle adresse email"
+              label="Nouvelle adresse e-mail"
               placeholder={profile?.email}
               value={emailForm.newEmail}
               onChange={e => setEmailForm({ newEmail: e.target.value })}
             />
             <div className="account-form__actions">
               <Button type="submit" variant="primary" size="md" loading={emailLoading}>
-                Changer l'email
+                Changer l'adresse e-mail
               </Button>
             </div>
           </form>
@@ -216,10 +216,10 @@ export function AccountPage() {
       {role === 'admin' && canRunSetupWizard(organization) && (
         <section className="account-section">
           <div className="account-section__header">
-            <h2 className="account-section__title">Onboarding</h2>
+            <h2 className="account-section__title">Tutoriel d'arrivée</h2>
             <p className="account-section__desc">
-              Si vous avez sauté trop vite, vous pouvez rejouer le tutoriel d'arrivée pour
-              inviter votre équipe et créer votre première catégorie.
+              Relancez le tutoriel d'arrivée pour inviter votre équipe et créer votre
+              première catégorie.
             </p>
           </div>
           <div className="account-form__actions">
@@ -230,7 +230,7 @@ export function AccountPage() {
               onClick={handleResetOnboarding}
               loading={resettingOnboarding}
             >
-              <RotateCcw size={20} />Refaire l'onboarding
+              <RotateCcw size={20} />Relancer le tutoriel d'arrivée
             </Button>
           </div>
         </section>

@@ -236,7 +236,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
         setLoadingArticles(false);
       })
       .catch(err => {
-        toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les articles.');
+        toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les articles. Rechargez la page.');
         setLoadingArticles(false);
       });
   }, [selectedCatId, sort, toast, reloadCounter]);
@@ -307,7 +307,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
       await reloadCategories();
       toast.success('Catégorie renommée.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Renommage impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Renommage impossible. Réessayez dans un instant.');
     }
   }, [reloadCategories, toast]);
 
@@ -335,7 +335,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
       toast.success(moveTargetId ? 'Catégorie déplacée.' : 'Catégorie remontée à la racine.');
       setMoveCat(null);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Déplacement impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Déplacement impossible. Réessayez dans un instant.');
     } finally {
       setMoveLoading(false);
     }
@@ -350,7 +350,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
       if (selectedCatId === confirmDeleteCat.id) setSelectedCatId(null);
       toast.success('Catégorie supprimée.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible. Réessayez dans un instant.');
     } finally {
       setConfirmDeleteCat(null);
     }
@@ -383,7 +383,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
         if (cats.length > 0 && !selectedCatId) setSelectedCatId(cats[0].id);
       });
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Création de la catégorie impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Création de la catégorie impossible. Réessayez dans un instant.');
     } finally {
       setNewCatLoading(false);
     }
@@ -439,7 +439,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
         actions={isAdmin && (
           <>
             <Button variant="ghost" size="md" onClick={() => setShowImportModal(true)}>
-              Importer
+              Importer un document
             </Button>
             <Button variant="primary" size="md" onClick={onNewArticle}>
               <Plus size={20} />Nouvel article
@@ -492,8 +492,8 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
           onMouseDown={onResizeStart}
           role="separator"
           aria-orientation="vertical"
-          aria-label="Redimensionner la sidebar"
-          title="Glisser pour redimensionner"
+          aria-label="Redimensionner le panneau des catégories"
+          title="Faites glisser pour redimensionner"
         />
       </aside>
 
@@ -505,7 +505,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
           <div className="knowledge-page__main-header">
             <div className="knowledge-page__main-header-left">
               {breadcrumb.length > 1 && (
-                <nav className="knowledge-page__breadcrumb" aria-label="Fil d'ariane">
+                <nav className="knowledge-page__breadcrumb" aria-label="Fil d'Ariane">
                   {breadcrumb.slice(0, -1).map((c, idx) => (
                     <React.Fragment key={c.id}>
                       <button
@@ -553,7 +553,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
                   aria-label="Trier les articles"
                 >
                   <option value="updated">Mis à jour</option>
-                  <option value="alpha">A → Z</option>
+                  <option value="alpha">De A à Z</option>
                   <option value="popular">Plus consultés</option>
                 </select>
               </label>
@@ -641,7 +641,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
                   onClick={() => setActiveTags([])}
                   className="knowledge-page__tag-filter-clear"
                 >
-                  Effacer
+                  Effacer les tags
                 </button>
               )}
             </div>
@@ -718,7 +718,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
                 Annuler
               </Button>
               <Button type="submit" variant="primary" size="md" loading={newCatLoading} disabled={!newCatName.trim()}>
-                Créer
+                Créer la catégorie
               </Button>
             </>
           }
@@ -740,7 +740,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
               value={newCatParentId ?? ''}
               onChange={e => setNewCatParentId(e.target.value || null)}
             >
-              <option value="">— Aucune (catégorie racine) —</option>
+              <option value="">— Aucune (catégorie de premier niveau) —</option>
               {flattenForSelect(categories).map(({ id, indentedName }) => (
                 <option key={id} value={id}>{indentedName}</option>
               ))}
@@ -765,7 +765,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
                 Annuler
               </Button>
               <Button type="submit" variant="primary" size="md" loading={moveLoading}>
-                Déplacer
+                Déplacer la catégorie
               </Button>
             </>
           }
@@ -779,7 +779,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
               onChange={e => setMoveTargetId(e.target.value || null)}
               autoFocus
             >
-              <option value="">— Aucune (catégorie racine) —</option>
+              <option value="">— Aucune (catégorie de premier niveau) —</option>
               {/* Exclut la cat elle-même + ses descendants pour anti-cycle */}
               {flattenForSelect(categories)
                 .filter(c => !collectDescendantIds(categories, moveCat.id).has(c.id))
@@ -798,11 +798,11 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
       {/* Confirmation de suppression */}
       {confirmDeleteCat && (
         <ConfirmDialog
-          title={`Supprimer « ${confirmDeleteCat.name} » ?`}
+          title={`Supprimer la catégorie « ${confirmDeleteCat.name} » ?`}
           description={confirmDeleteCat.children.length > 0
-            ? `Cette catégorie contient ${confirmDeleteCat.children.length} sous-catégorie${confirmDeleteCat.children.length > 1 ? 's' : ''} qui seront aussi supprimées. Les articles attachés perdront leur catégorisation. Cette action est irréversible.`
-            : 'Les articles attachés perdront leur catégorisation. Cette action est irréversible.'}
-          confirmLabel="Supprimer"
+            ? `Ses ${confirmDeleteCat.children.length} sous-catégorie${confirmDeleteCat.children.length > 1 ? 's' : ''} seront aussi supprimée${confirmDeleteCat.children.length > 1 ? 's' : ''}. Les articles de ces catégories n'auront plus de catégorie. Cette action est définitive.`
+            : 'Les articles qu\'elle contient n\'auront plus de catégorie. Cette action est définitive.'}
+          confirmLabel="Supprimer la catégorie"
           variant="danger"
           onConfirm={handleConfirmDelete}
           onCancel={() => setConfirmDeleteCat(null)}
@@ -955,13 +955,13 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
         toast.success(`${res.deleted.length} article${res.deleted.length > 1 ? 's' : ''} supprimé${res.deleted.length > 1 ? 's' : ''}.`);
       } else if (res.deleted.length > 0 && res.blocked.length > 0) {
         toast.success(
-          `${res.deleted.length} supprimé${res.deleted.length > 1 ? 's' : ''}. ${res.blocked.length} bloqué${res.blocked.length > 1 ? 's' : ''} (utilisé${res.blocked.length > 1 ? 's' : ''} dans des parcours de formation).`,
+          `${res.deleted.length} article${res.deleted.length > 1 ? 's' : ''} supprimé${res.deleted.length > 1 ? 's' : ''}. ${res.blocked.length} article${res.blocked.length > 1 ? 's' : ''} utilisé${res.blocked.length > 1 ? 's' : ''} dans des parcours ${res.blocked.length > 1 ? 'sont conservés : retirez-les' : 'est conservé : retirez-le'} d'abord de ces parcours.`,
         );
       } else {
-        toast.error(`Aucun article supprimé : ${res.blocked.length} bloqué${res.blocked.length > 1 ? 's' : ''} par des parcours de formation.`);
+        toast.error(`Aucun article supprimé : ${res.blocked.length > 1 ? 'ils sont utilisés' : 'il est utilisé'} dans des parcours. Retirez-${res.blocked.length > 1 ? 'les' : 'le'} d'abord de ces parcours.`);
       }
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Suppression en masse impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Suppression en masse impossible. Réessayez dans un instant.');
     } finally {
       setBulkDeleting(false);
     }
@@ -977,7 +977,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       toast.success('Article archivé.');
       setConfirmArchive(null);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Archivage impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Archivage impossible. Réessayez dans un instant.');
     } finally {
       setArchiving(false);
     }
@@ -989,7 +989,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       setArticles(prev => prev.map(a => a.id === updated.id ? { ...a, status: updated.status } : a));
       toast.success('Article désarchivé : il est de nouveau en brouillon.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Désarchivage impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Désarchivage impossible. Réessayez dans un instant.');
     }
   };
 
@@ -1002,7 +1002,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       toast.success('Article supprimé.');
       setConfirmDelete(null);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible. Réessayez dans un instant.');
     } finally {
       setDeleting(false);
     }
@@ -1130,8 +1130,8 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       {bulkConfirmOpen && (
         <ConfirmDialog
           title={`Supprimer ${selectedIds.size} article${selectedIds.size > 1 ? 's' : ''} ?`}
-          description="Cette action est irréversible."
-          confirmLabel="Supprimer"
+          description="Les articles sélectionnés seront supprimés, sauf ceux utilisés dans des parcours. Cette action est définitive."
+          confirmLabel={selectedIds.size > 1 ? 'Supprimer les articles' : 'Supprimer l\'article'}
           variant="danger"
           loading={bulkDeleting}
           onConfirm={handleBulkDelete}
@@ -1142,7 +1142,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
         <ConfirmDialog
           title="Archiver cet article ?"
           description={`« ${confirmArchive.title} » ne sera plus visible des conseillers ni du chatbot. Vous pourrez le désarchiver depuis l'onglet Archivés ; il reviendra en brouillon.`}
-          confirmLabel="Archiver"
+          confirmLabel="Archiver l'article"
           loading={archiving}
           onConfirm={handleArchive}
           onCancel={() => setConfirmArchive(null)}
@@ -1151,8 +1151,8 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       {confirmDelete && (
         <ConfirmDialog
           title="Supprimer cet article ?"
-          description={`« ${confirmDelete.title} » sera définitivement supprimé.`}
-          confirmLabel="Supprimer"
+          description={`« ${confirmDelete.title} » sera supprimé. Cette action est définitive ; pour le retirer sans le perdre, archivez-le plutôt.`}
+          confirmLabel="Supprimer l'article"
           variant="danger"
           loading={deleting}
           onConfirm={handleDelete}
@@ -1164,7 +1164,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
         subtitle="Articles de référence pour vos équipes."
         actions={isAdmin && (
           <>
-            <Button variant="ghost" size="md" onClick={onOpenImport}>Importer</Button>
+            <Button variant="ghost" size="md" onClick={onOpenImport}>Importer un document</Button>
             <Button variant="primary" size="md" onClick={onNewArticle}><Plus size={20} />Nouvel article</Button>
           </>
         )}
@@ -1223,7 +1223,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
                 <div className="knowledge-list__title-cell">
                   <div className="knowledge-list__title">
                     {a.visibility === 'internal' && (
-                      <span className="visibility-icon" title="Interne — non exposé au chatbot public"><Lock size={16} role="img" aria-label="Article interne" /></span>
+                      <span className="visibility-icon" title="Interne — non utilisé par le chatbot de votre site"><Lock size={16} role="img" aria-label="Article interne" /></span>
                     )}
                     {a.title}
                   </div>
@@ -1244,11 +1244,11 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
               render: a => (
                 <div className="knowledge-list__status-cell">
                   <StatusBadge status={a.status} />
-                  {a.isStale && <span className="badge badge--warning" title="Non modifié depuis > 6 mois"><StatusIcon tone="warning" size={14} className="badge__icon" />À réviser</span>}
+                  {a.isStale && <span className="badge badge--warning" title="Non modifié depuis plus de 6 mois"><StatusIcon tone="warning" size={14} className="badge__icon" />À réviser</span>}
                 </div>
               ),
             },
-            { key: 'views',      label: 'Vues 30j', sortable: true, align: 'right', width: '90px',
+            { key: 'views',      label: 'Vues 30 j', sortable: true, align: 'right', width: '90px',
               render: a => a.viewsCount > 0 ? a.viewsCount : <span className="knowledge-list__muted">0</span> },
             { key: 'updated_at', label: 'Mis à jour', sortable: true, width: '140px',
               render: a => formatRelative(a.updatedAt) },

@@ -40,7 +40,7 @@ export function TestDataModal({ org, listProjects, purge, onClose }: TestDataMod
     try {
       setProjects(await listProjects(org.id));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Chargement impossible.');
+      setError(err instanceof Error ? err.message : 'Les projets n\'ont pas pu être chargés. Fermez puis rouvrez cette fenêtre.');
     }
   }, [listProjects, org.id]);
 
@@ -69,8 +69,8 @@ export function TestDataModal({ org, listProjects, purge, onClose }: TestDataMod
     return (
       <ConfirmDialog
         title={pending.kind === 'org'
-          ? `Supprimer toutes les données de test de « ${org.name} »`
-          : `Supprimer le projet ${pending.rank} de « ${org.name} »`}
+          ? `Supprimer toutes les données de test de « ${org.name} » ?`
+          : `Supprimer le projet ${pending.rank} de « ${org.name} » ?`}
         description={
           (pending.kind === 'org'
             ? 'Tous les projets, documents, fiches de cadrage, analyses, audits, images, décisions et acceptations du texte d\'information de cette organisation sont supprimés, en base et dans le stockage, '
@@ -78,7 +78,7 @@ export function TestDataModal({ org, listProjects, purge, onClose }: TestDataMod
             : `Ce projet (${plural(pending.project.documents, 'document')}), ses fiches, analyses, audits, images et décisions sont supprimés, en base et dans le stockage. `)
           + 'L\'organisation et ses comptes restent. C\'est définitif.'
         }
-        confirmLabel="Supprimer"
+        confirmLabel={pending.kind === 'org' ? 'Supprimer les données de test' : 'Supprimer le projet'}
         variant="danger"
         loading={purging}
         onConfirm={confirm}

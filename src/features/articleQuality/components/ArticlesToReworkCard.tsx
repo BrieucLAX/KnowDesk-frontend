@@ -15,7 +15,7 @@ interface ArticlesToReworkCardProps {
 }
 
 /**
- * Carte « KB Health Score IA » — auditeur qualité IA en 3 paliers.
+ * Carte « Qualité des articles (IA) » — auditeur qualité IA en 3 paliers.
  *
  * États :
  *   - chargement → skeleton
@@ -41,7 +41,7 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
     setLoading(true);
     articleQualityApi.stats()
       .then(st => { if (alive) setStats(st); })
-      .catch(err => { if (alive) setError(err?.message ?? 'Erreur de chargement.'); })
+      .catch(err => { if (alive) setError(err?.message ?? "L'analyse de la qualité n'a pas pu être chargée. Rechargez la page."); })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, []);
@@ -64,7 +64,7 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
   if (loading) {
     return (
       <section className="article-rework-card article-rework-card--loading">
-        <h2 className="article-rework-card__title">KB Health Score IA</h2>
+        <h2 className="article-rework-card__title">Qualité des articles (IA)</h2>
         <p className="article-rework-card__desc">Chargement de l'analyse IA…</p>
       </section>
     );
@@ -77,14 +77,14 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
   if (stats && stats.scored === 0) {
     return (
       <section className="article-rework-card article-rework-card--empty">
-        <h2 className="article-rework-card__title">KB Health Score IA</h2>
+        <h2 className="article-rework-card__title">Qualité des articles (IA)</h2>
         <p className="article-rework-card__desc">
-          Aucun article scoré pour l'instant. Le scoring IA tourne automatiquement à
-          chaque modif d'article + 1× par semaine.
+          Aucun article évalué pour l'instant. L'IA évalue automatiquement chaque article
+          à chaque modification, et tous les articles une fois par semaine.
           {' '}
-          Pour ne pas attendre, lance un scoring complet depuis
+          Pour ne pas attendre, lancez une évaluation complète depuis les paramètres, rubrique
           {' '}
-          <strong>Settings → Intelligence artificielle → Auditeur qualité</strong>.
+          <strong>Auditeur qualité</strong>.
         </p>
       </section>
     );
@@ -93,8 +93,8 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
   if (error || !stats) {
     return (
       <section className="article-rework-card">
-        <h2 className="article-rework-card__title">KB Health Score IA</h2>
-        <p className="article-rework-card__desc">{error ?? 'Erreur de chargement.'}</p>
+        <h2 className="article-rework-card__title">Qualité des articles (IA)</h2>
+        <p className="article-rework-card__desc">{error ?? "L'analyse de la qualité n'a pas pu être chargée. Rechargez la page."}</p>
       </section>
     );
   }
@@ -109,14 +109,14 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
     <section className="article-rework-card">
       <header className="article-rework-card__header">
         <h2 className="article-rework-card__title">
-          KB Health Score IA
+          Qualité des articles (IA)
           <InfoTooltip
             title="Auditeur qualité IA"
             rows={[
-              { label: 'Quoi',    text: 'l\'IA score chaque article publié sur 6 dimensions : Clarté, Actionnable, Titre↔contenu, Structure, Fraîcheur, Vocabulaire.' },
-              { label: 'Paliers', text: '✓ Parfaits = 0 dimension à revoir · ⚠️ Bons = 1-2 dimensions à revoir · ❌ À retravailler = 3 dimensions ou plus à revoir.' },
+              { label: 'Quoi',    text: "l'IA évalue chaque article publié sur 6 dimensions : Clarté, Actionnable, Titre et contenu, Structure, Fraîcheur, Vocabulaire." },
+              { label: 'Paliers', text: 'Parfaits : aucune dimension à revoir · Bons : 1 ou 2 dimensions à revoir · À retravailler : 3 dimensions ou plus à revoir.' },
               { label: 'Action',  text: 'cliquez sur un palier pour voir la liste des articles concernés. Cliquez sur un article pour ouvrir l\'éditeur et voir le détail dimension par dimension.' },
-              { label: 'Scoring', text: 'tourne au PATCH article (30 s après save) + cron hebdo. Pour rescorer maintenant : Settings → IA → Auditeur qualité → « Scorer tous les articles publiés ».' },
+              { label: 'Évaluation', text: "a lieu 30 s après chaque enregistrement d'un article, et une fois par semaine pour tous. Pour tout réévaluer maintenant, utilisez la rubrique « Auditeur qualité » des paramètres." },
             ]}
           />
         </h2>
@@ -165,7 +165,7 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
                       <span className="article-rework-card__name">{a.title}</span>
                       <span className="article-rework-card__meta">
                         {a.categoryName ?? 'Sans catégorie'} · {a.authorName}
-                        {a.checkedAt && <> · scoré {formatRelative(a.checkedAt)}</>}
+                        {a.checkedAt && <> · évalué {formatRelative(a.checkedAt)}</>}
                       </span>
                     </span>
                     {a.flaggedDimensions.length > 0 && (

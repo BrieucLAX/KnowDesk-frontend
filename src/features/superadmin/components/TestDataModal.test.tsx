@@ -33,10 +33,10 @@ describe('TestDataModal', () => {
     const { purge, listProjects } = setup();
     await screen.findByText('Projet 1');
     fireEvent.click(screen.getAllByRole('button', { name: 'Supprimer' })[0]);
-    expect(screen.getByText('Supprimer le projet 1 de « Prospect SA »')).toBeInTheDocument();
+    expect(screen.getByText('Supprimer le projet 1 de « Prospect SA » ?')).toBeInTheDocument();
     expect(purge).not.toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Supprimer le projet' }));
     await waitFor(() => expect(purge).toHaveBeenCalledWith('org_t', 'p1'));
     expect(await screen.findByRole('status')).toHaveTextContent('Projet 1 supprimé : 3 fichiers et 3 lignes supprimés.');
     expect(listProjects).toHaveBeenCalledTimes(2);
@@ -48,7 +48,7 @@ describe('TestDataModal', () => {
     await screen.findByText('Projet 1');
     fireEvent.click(screen.getByRole('button', { name: 'Supprimer toutes les données de test' }));
     expect(screen.getByText(/L'organisation et ses comptes restent/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Supprimer les données de test' }));
     await waitFor(() => expect(purge).toHaveBeenCalledWith('org_t', undefined));
     expect(await screen.findByRole('status')).toHaveTextContent('Données de test supprimées');
     expect(screen.getByText(/Aucun projet/)).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe('TestDataModal', () => {
     setup({ projects: [[P1], []], purge: async () => withKb });
     await screen.findByText('Projet 1');
     fireEvent.click(screen.getByRole('button', { name: 'Supprimer toutes les données de test' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Supprimer les données de test' }));
     expect(await screen.findByRole('status')).toHaveTextContent('Données de test supprimées : 6 fichiers et 12 lignes supprimés.');
   });
 
@@ -88,7 +88,7 @@ describe('TestDataModal', () => {
     setup({ purge: async () => { throw new Error('La purge n\'a pas pu aller au bout. Nous sommes prévenus ; elle peut être relancée.'); } });
     await screen.findByText('Projet 1');
     fireEvent.click(screen.getByRole('button', { name: 'Supprimer toutes les données de test' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Supprimer les données de test' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('elle peut être relancée');
   });
 });

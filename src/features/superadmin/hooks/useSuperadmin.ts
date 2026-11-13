@@ -28,7 +28,7 @@ async function saFetch<T>(path: string, token: string, options?: RequestInit): P
     },
   });
   const body = await res.json();
-  if (!res.ok) throw new Error(body.error?.message ?? body.error ?? 'Erreur serveur.');
+  if (!res.ok) throw new Error(body.error?.message ?? body.error ?? 'Le serveur a renvoyé une erreur. Réessayez.');
   return body.data as T;
 }
 
@@ -68,12 +68,12 @@ export function useSuperadmin() {
         body:    JSON.stringify({ email, password }),
       });
       const body = await res.json();
-      if (!res.ok) throw new Error(body.error?.message ?? body.error ?? 'Identifiants invalides.');
+      if (!res.ok) throw new Error(body.error?.message ?? body.error ?? 'Adresse e-mail ou mot de passe incorrect. Vérifiez votre saisie, puis réessayez.');
       const s: SuperadminSession = body.data;
       sessionStorage.setItem(SA_TOKEN_KEY, s.accessToken);
       setSession(s);
     } catch (err) {
-      setLoginErr(err instanceof Error ? err.message : 'Erreur de connexion.');
+      setLoginErr(err instanceof Error ? err.message : 'La connexion a échoué. Réessayez.');
     } finally {
       setLoading(false);
     }
@@ -92,7 +92,7 @@ export function useSuperadmin() {
       const data = await saFetch<OrgRow[]>('/organizations', token);
       setOrgs(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur.');
+      setError(err instanceof Error ? err.message : 'Les organisations n\'ont pas pu être chargées. Rechargez la page.');
     } finally {
       setLoading(false);
     }
@@ -139,7 +139,7 @@ export function useSuperadmin() {
       });
       window.location.href = '/';
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur.');
+      setError(err instanceof Error ? err.message : 'L\'accès à l\'organisation a échoué. Réessayez.');
     }
   }, [session, orgs, setImpersonating, setSessionStore]);
 
@@ -149,7 +149,7 @@ export function useSuperadmin() {
    * main si l'email n'est pas parti.
    */
   const createTestOrg = useCallback(async (name: string, adminEmail: string): Promise<TestOrgCreated> => {
-    if (!session) throw new Error('Non connecté.');
+    if (!session) throw new Error('Vous n\'êtes plus connecté. Reconnectez-vous.');
     const data = await saFetch<TestOrgCreated>('/test-organizations', session.accessToken, {
       method: 'POST',
       body:   JSON.stringify({ name, adminEmail }),
@@ -172,7 +172,7 @@ export function useSuperadmin() {
 
   /** Projets d'onboarding d'une organisation de test, pour choisir quoi purger. */
   const listOnboardingProjects = useCallback(async (orgId: string): Promise<OnboardingProjectRow[]> => {
-    if (!session) throw new Error('Non connecté.');
+    if (!session) throw new Error('Vous n\'êtes plus connecté. Reconnectez-vous.');
     return saFetch<OnboardingProjectRow[]>(`/organizations/${orgId}/onboarding-projects`, session.accessToken);
   }, [session]);
 
@@ -182,7 +182,7 @@ export function useSuperadmin() {
    * d'organisation pose onboarding_purged_at.
    */
   const purgeTestData = useCallback(async (orgId: string, projectId?: string): Promise<PurgeReport> => {
-    if (!session) throw new Error('Non connecté.');
+    if (!session) throw new Error('Vous n\'êtes plus connecté. Reconnectez-vous.');
     const path = projectId
       ? `/organizations/${orgId}/onboarding/projects/${projectId}/purge`
       : `/organizations/${orgId}/onboarding/purge`;
@@ -204,7 +204,7 @@ export function useSuperadmin() {
    * Utile après une migration qui ajoute un champ aux documents indexés.
    */
   const reindexSearch = useCallback(async (orgId?: string): Promise<ReindexResult> => {
-    if (!session) throw new Error('Non connecté.');
+    if (!session) throw new Error('Vous n\'êtes plus connecté. Reconnectez-vous.');
     return saFetch<ReindexResult>('/search/reindex', session.accessToken, {
       method: 'POST',
       body:   JSON.stringify(orgId ? { orgId } : {}),
@@ -218,7 +218,7 @@ export function useSuperadmin() {
    * Renvoie le nombre traité dans CE batch (limit=200 par appel par défaut).
    */
   const recomputeResolutions = useCallback(async (orgId?: string, limit = 200): Promise<RecomputeResult> => {
-    if (!session) throw new Error('Non connecté.');
+    if (!session) throw new Error('Vous n\'êtes plus connecté. Reconnectez-vous.');
     return saFetch<RecomputeResult>('/recompute-resolutions', session.accessToken, {
       method: 'POST',
       body:   JSON.stringify({ ...(orgId ? { orgId } : {}), limit }),

@@ -38,7 +38,7 @@ export function CadrageHistory({ projectId, versions, latest, dirty, onRestore }
     try {
       setOpened(await onboardingApi.getCadrage(projectId, version));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Impossible d\'ouvrir cette version.');
+      toast.error(err instanceof Error ? err.message : 'Impossible d\'ouvrir cette version. Réessayez.');
     } finally {
       setLoading(null);
     }

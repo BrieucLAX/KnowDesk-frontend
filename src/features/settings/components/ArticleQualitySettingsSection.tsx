@@ -36,7 +36,7 @@ export function ArticleQualitySettingsSection() {
       setEnabled(feat.enabled);
       setStats(st);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Impossible de charger l\'état de l\'auditeur.');
+      toast.error(err instanceof ApiError ? err.message : 'L\'état de l\'auditeur n\'a pas pu être chargé. Rechargez la page.');
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ export function ArticleQualitySettingsSection() {
       setEnabled(newVal);
       toast.success(newVal ? 'Auditeur qualité activé.' : 'Auditeur qualité désactivé.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Échec de la mise à jour.');
+      toast.error(err instanceof ApiError ? err.message : 'Le paramètre n\'a pas été modifié. Réessayez.');
     } finally {
       setToggling(false);
     }
@@ -64,13 +64,13 @@ export function ArticleQualitySettingsSection() {
       const { enqueued } = await articleQualityApi.rescoreAll();
       toast.success(
         enqueued === 0
-          ? 'Aucun article publié à scorer.'
+          ? 'Aucun article publié à évaluer.'
           : `${enqueued} article${enqueued > 1 ? 's' : ''} mis en file d'attente.`,
       );
       // Re-fetch stats après quelques secondes pour montrer la progression
       setTimeout(reload, 3000);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Lancement du scoring impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'L\'évaluation n\'a pas pu être lancée. Réessayez.');
     } finally {
       setRescoring(false);
     }
@@ -80,7 +80,7 @@ export function ArticleQualitySettingsSection() {
     return (
       <section className="settings-section">
         <div className="settings-section__header">
-          <h2 className="settings-section__title icon-label"><Sparkles size={20} />Auditeur qualité articles</h2>
+          <h2 className="settings-section__title icon-label"><Sparkles size={20} />Auditeur qualité des articles</h2>
         </div>
         <Skeleton className="sk-p" />
       </section>
@@ -91,14 +91,14 @@ export function ArticleQualitySettingsSection() {
     <section className="settings-section" aria-labelledby="article-quality-title">
       <div className="settings-section__header">
         <h2 id="article-quality-title" className="settings-section__title icon-label">
-          <Sparkles size={20} />Auditeur qualité articles
+          <Sparkles size={20} />Auditeur qualité des articles
         </h2>
         <p className="settings-section__desc">
-          L'IA analyse vos articles publiés sur 6 dimensions
-          (Clarté, Actionnable, Titre↔contenu, Structure, Fraîcheur, Vocabulaire)
-          et remonte ceux à retravailler dans Analytics. Le scoring s'exécute
-          automatiquement à chaque modification d'article (~30 s plus tard) et un
-          batch hebdomadaire couvre les articles non scorés.
+          L'IA évalue vos articles publiés sur 6 dimensions
+          (Clarté, Actionnable, Titre et contenu, Structure, Fraîcheur, Vocabulaire)
+          et signale ceux à retravailler dans l'écran Analyse. L'évaluation se lance
+          automatiquement environ 30 secondes après chaque modification d'un article, et une
+          évaluation hebdomadaire couvre les articles pas encore évalués.
         </p>
       </div>
 
@@ -107,8 +107,8 @@ export function ArticleQualitySettingsSection() {
           id="article-quality-enabled"
           label="Auditeur qualité activé"
           description={isAdmin
-            ? 'Quand désactivé, plus aucun scoring n\'est déclenché. Les analyses existantes restent visibles dans l\'éditeur (read-only).'
-            : 'Seul un administrateur peut modifier ce réglage.'}
+            ? 'Désactivé, aucune nouvelle évaluation n\'est lancée. Les évaluations existantes restent visibles dans l\'éditeur, en lecture seule.'
+            : 'Seul un administrateur peut modifier ce paramètre.'}
           checked={enabled ?? false}
           onChange={handleToggle}
           disabled={!isAdmin || toggling}
@@ -120,17 +120,17 @@ export function ArticleQualitySettingsSection() {
         <div className="article-quality-stats">
           <div className="article-quality-stats__row">
             <Stat label="Articles publiés"  value={stats.published} />
-            <Stat label="Scorés"            value={stats.scored} />
-            <Stat label="Non scorés"        value={stats.notScored} muted={stats.notScored === 0} />
+            <Stat label="Évalués"           value={stats.scored} />
+            <Stat label="Non évalués"       value={stats.notScored} muted={stats.notScored === 0} />
             <Stat label="Parfaits"        icon={<CircleCheck size={16} />} value={stats.perfect}  variant="ok" />
             <Stat label="Bons"           icon={<TriangleAlert size={16} />} value={stats.good}     variant="warn" highlight={stats.good > 0} />
             <Stat label="À retravailler" icon={<CircleAlert size={16} />} value={stats.toRework} variant="bad"  highlight={stats.toRework > 0} />
           </div>
           {stats.lastChecked && (
             <p className="article-quality-stats__last">
-              Dernier scoring : {formatRelative(stats.lastChecked)}
+              Dernière évaluation : {formatRelative(stats.lastChecked)}
               {' · '}
-              <span title="Un article peut avoir 1 ou 2 dimensions à revoir et rester dans « Bons » — il n'est marqué « À retravailler » qu'à partir de 3 dimensions flagged.">
+              <span title="Un article peut avoir 1 ou 2 dimensions à revoir et rester dans « Bons ». Il passe en « À retravailler » à partir de 3 dimensions à revoir.">
                 Comment ces paliers sont-ils calculés ?
               </span>
             </p>
@@ -148,19 +148,19 @@ export function ArticleQualitySettingsSection() {
           disabled={!enabled || rescoring || !stats || stats.published === 0}
           loading={rescoring}
           title={!enabled
-            ? 'Activez l\'auditeur pour lancer un scoring.'
+            ? 'Activez l\'auditeur pour lancer une évaluation.'
             : stats?.published === 0
               ? 'Aucun article publié dans cette organisation.'
-              : 'Met en file tous les articles publiés. Latence ~10 s/article (worker concurrent).'}
+              : 'Place tous les articles publiés en file d\'attente. Comptez environ 10 secondes par article.'}
           leftIcon={<RotateCw size={20} />}
         >
-          Scorer tous les articles publiés maintenant
+          Évaluer tous les articles publiés maintenant
         </Button>
       </div>
 
       <p className="field-helper">
-        Coût indicatif : ~1 500 tokens par article × Mistral Small (≈ 0,01 € pour 50 articles).
-        Le worker traite 2 articles en parallèle, soit environ 5 minutes pour 60 articles.
+        Coût indicatif : environ 1 500 tokens par article avec Mistral Small, soit environ 0,01 € pour 50 articles.
+        Deux articles sont traités en parallèle, soit environ 5 minutes pour 60 articles.
       </p>
     </section>
   );

@@ -308,7 +308,7 @@ function Toolbar({ editor, onLinkClick, onImageClick, hasImage }: {
         <ToolBtn label="Italique (⌘I)"    active={editor.isActive('italic')}      onClick={() => editor.chain().focus().toggleItalic().run()}><em>I</em></ToolBtn>
         <ToolBtn label="Souligné (⌘U)"    active={editor.isActive('underline')}   onClick={() => editor.chain().focus().toggleUnderline().run()}><u>U</u></ToolBtn>
         <ToolBtn label="Barré"            active={editor.isActive('strike')}      onClick={() => editor.chain().focus().toggleStrike().run()}><s>S</s></ToolBtn>
-        <ToolBtn label="Code inline"      active={editor.isActive('code')}        onClick={() => editor.chain().focus().toggleCode().run()}>{'<>'}</ToolBtn>
+        <ToolBtn label="Code dans le texte"      active={editor.isActive('code')}        onClick={() => editor.chain().focus().toggleCode().run()}>{'<>'}</ToolBtn>
       </ToolGroup>
 
       <ToolGroup>
@@ -324,7 +324,7 @@ function Toolbar({ editor, onLinkClick, onImageClick, hasImage }: {
 
       <ToolGroup>
         <ToolBtn label="Citation"   active={editor.isActive('blockquote')}  onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote size={16} /></ToolBtn>
-        <ToolBtn label="Bloc code"  active={editor.isActive('codeBlock')}   onClick={() => editor.chain().focus().toggleCodeBlock().run()}>{'{ }'}</ToolBtn>
+        <ToolBtn label="Bloc de code"active={editor.isActive('codeBlock')}   onClick={() => editor.chain().focus().toggleCodeBlock().run()}>{'{ }'}</ToolBtn>
         <div className="rte__dropdown" onMouseLeave={() => setShowCalloutMenu(false)}>
           <ToolBtn label="Encadré coloré" active={editor.isActive('callout')} onClick={() => setShowCalloutMenu(s => !s)}><Megaphone size={16} /></ToolBtn>
           {showCalloutMenu && (

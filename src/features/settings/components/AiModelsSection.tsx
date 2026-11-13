@@ -28,7 +28,7 @@ export function AiModelsSection() {
     aiModelsApi.list()
       .then(payload => { setData(payload); setLoading(false); })
       .catch(err => {
-        toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les modèles IA.');
+        toast.error(err instanceof ApiError ? err.message : 'Les modèles d\'IA n\'ont pas pu être chargés. Rechargez la page.');
         setLoading(false);
       });
   }, [toast]);
@@ -47,7 +47,7 @@ export function AiModelsSection() {
       } : prev);
       toast.success('Modèle du chatbot mis à jour.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Échec de la mise à jour du modèle.');
+      toast.error(err instanceof ApiError ? err.message : 'Le modèle n\'a pas été modifié. Réessayez.');
     } finally {
       setSaving(false);
     }
@@ -56,7 +56,7 @@ export function AiModelsSection() {
   if (loading) {
     return (
       <section className="settings-section">
-        <h2 className="settings-section__title">Modèles IA</h2>
+        <h2 className="settings-section__title">Modèles d'IA</h2>
         <Skeleton className="ai-models-sk" />
         <Skeleton className="ai-models-sk" />
       </section>
@@ -66,9 +66,9 @@ export function AiModelsSection() {
   if (!data) {
     return (
       <section className="settings-section">
-        <h2 className="settings-section__title">Modèles IA</h2>
+        <h2 className="settings-section__title">Modèles d'IA</h2>
         <p className="settings-section__error" role="alert">
-          Données indisponibles.
+          Les modèles d'IA n'ont pas pu être chargés. Rechargez la page.
         </p>
       </section>
     );
@@ -78,21 +78,21 @@ export function AiModelsSection() {
     <section className="settings-section ai-models">
       <header className="settings-section__header">
         <h2 className="settings-section__title">
-          Modèles IA
+          Modèles d'IA
           <HelpPopover content={
             <>
-              Le coût relatif est estimé par rapport au modèle de référence
+              Le coût relatif est estimé par rapport au modèle de référence{' '}
               <code>Mistral Small</code> (×1). Un modèle ×10 coûte 10 fois plus
-              en consommation par requête. La latence affichée est indicative —
-              la perception côté visiteur dépend aussi de la longueur de la
+              par requête. La rapidité affichée est indicative : le temps
+              d'attente du visiteur dépend aussi de la longueur de la
               réponse générée.
             </>
           } />
         </h2>
         <p className="settings-section__desc">
           Cette plateforme utilise plusieurs services d'intelligence artificielle.
-          Vous pouvez choisir le modèle utilisé par le chatbot ci-dessous. Les autres
-          services restent sur le modèle par défaut en V1.
+          Vous pouvez choisir ci-dessous le modèle utilisé par le chatbot. Les autres
+          services utilisent le modèle par défaut.
         </p>
         <LastModifiedBadge actions={['org.chat_model.changed']} />
       </header>
@@ -179,7 +179,7 @@ function ServiceCard({ service, availableModels, saving, onChangeModel }: Servic
             {service.modelLabel ?? currentMeta?.label ?? service.model}
           </span>
           {!service.modifiable && (
-            <span className="ai-models__lock" title="Non modifiable en V1">
+            <span className="ai-models__lock" title="Non modifiable pour l'instant">
               <LockKeyhole size={16} role="img" aria-label="Verrouillé" />
             </span>
           )}

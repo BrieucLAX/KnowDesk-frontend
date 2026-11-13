@@ -98,12 +98,12 @@ export function useOnboarding(onComplete: (data: OnboardingData) => void): UseOn
         try {
           await apiClient.post('/categories', { name: final.firstCategory.trim(), parentId: null });
         } catch (err) {
-          failures.push('Catégorie non créée');
+          failures.push('catégorie non créée');
         }
       }
 
       if (failures.length > 0) {
-        toast.error(`Configuration partielle : ${failures.join(', ')}.`);
+        toast.error(`Configuration incomplète : ${failures.join(', ')}. Réessayez depuis les écrans Équipe ou Articles.`);
       }
     } finally {
       setIsSubmitting(false);

@@ -13,7 +13,7 @@ import { LoginPage } from './LoginPage';
 describe('LoginPage', () => {
   it('ne propose pas de créer un compte', () => {
     render(<LoginPage onLoginSuccess={() => {}} />);
-    expect(screen.queryByText(/Créer un espace/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Créer une organisation/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Pas encore de compte/)).not.toBeInTheDocument();
   });
 

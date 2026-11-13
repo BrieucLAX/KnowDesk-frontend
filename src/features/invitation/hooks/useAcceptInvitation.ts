@@ -57,7 +57,7 @@ export function useAcceptInvitation(token: string) {
       setIsSuccess(true);
     } catch (err) {
       setErrors({
-        general: err instanceof Error ? err.message : 'Lien invalide ou expiré.',
+        general: err instanceof Error ? err.message : 'Ce lien est invalide ou a expiré. Demandez une nouvelle invitation.',
       });
     } finally {
       setIsLoading(false);

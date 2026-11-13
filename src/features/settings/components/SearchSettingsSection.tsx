@@ -15,17 +15,17 @@ export function SearchSettingsSection() {
 
   return (
     <SettingsListSection<Synonym>
-      title="Recherche"
+      title="Synonymes"
       titleId="search-title"
       description={
         <>Définissez des synonymes propres à votre organisation. Une recherche sur un terme
-        remontera aussi les contenus contenant ses synonymes (et vice-versa).</>
+        remontera aussi les contenus contenant ses synonymes, et inversement.</>
       }
       createCta={{ label: 'Ajouter un synonyme', onClick: () => setShowCreate(true) }}
       loading={loading}
       error={error}
       items={items}
-      emptyMessage="Aucun synonyme configuré. Ajoutez-en un par exemple pour relier « annulation » et « résiliation »."
+      emptyMessage="Aucun synonyme pour l'instant. Ajoutez-en un, par exemple pour relier « annulation » et « résiliation »."
       listClassName="synonyms-list"
       renderItem={item => (
         <SynonymItem
@@ -39,8 +39,8 @@ export function SearchSettingsSection() {
       {confirmDelete && (
         <ConfirmDialog
           title={`Supprimer « ${confirmDelete.term} » ?`}
-          description="Ce synonyme sera supprimé de votre configuration de recherche. Cette action est irréversible."
-          confirmLabel="Supprimer"
+          description="Ce terme et ses synonymes ne seront plus pris en compte par la recherche. Cette action est irréversible."
+          confirmLabel="Supprimer le synonyme"
           variant="danger"
           onConfirm={() => { remove(confirmDelete.id); setConfirmDelete(null); }}
           onCancel={() => setConfirmDelete(null)}
@@ -153,7 +153,7 @@ function CreateSynonymModal({
         <>
           <Button type="button" variant="ghost" size="md" onClick={onClose}>Annuler</Button>
           <Button type="submit" variant="primary" size="md" loading={saving} disabled={!canSubmit}>
-            Ajouter
+            Ajouter le synonyme
           </Button>
         </>
       }
@@ -164,15 +164,15 @@ function CreateSynonymModal({
         label="Terme principal"
         value={term}
         onChange={e => setTerm(e.target.value)}
-        placeholder="ex. annulation"
+        placeholder="Par exemple : annulation"
         autoFocus
       />
       <div className="field">
         <label htmlFor="synonym-group-new" className="field-label">Synonymes</label>
-        <ChipsInput id="synonym-group-new" value={synonyms} onChange={setSynonyms} placeholder="ex. résiliation, désabonnement…" />
+        <ChipsInput id="synonym-group-new" value={synonyms} onChange={setSynonyms} placeholder="Par exemple : résiliation, désabonnement…" />
         <p className="field-helper">
-          Le matching est bidirectionnel : une recherche sur n'importe lequel de ces termes
-          remontera tous les contenus contenant un autre terme du groupe.
+          La correspondance fonctionne dans les deux sens : une recherche sur l'un de ces termes
+          remontera aussi les contenus qui contiennent les autres termes du groupe.
         </p>
       </div>
       {error && <p className="field-error" role="alert">{error}</p>}

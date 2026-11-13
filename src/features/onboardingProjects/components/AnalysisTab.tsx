@@ -60,7 +60,7 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
   useEffect(() => {
     load().catch(err => {
       setAnalyses([]);
-      toast.error(err instanceof Error ? err.message : 'Impossible de charger les analyses.');
+      toast.error(err instanceof Error ? err.message : 'Impossible de charger les analyses. Rechargez la page.');
     });
   }, [load, toast]);
 
@@ -108,7 +108,7 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
     } catch (err) {
       // Corpus trop grand : un message qui reste, avec quoi faire, plutôt qu'un toast.
       if (err instanceof ApiError && err.code === 'CORPUS_TOO_LARGE') setLaunchError(err.message);
-      else toast.error(err instanceof Error ? err.message : 'Impossible de lancer l\'analyse.');
+      else toast.error(err instanceof Error ? err.message : 'Impossible de lancer l\'analyse. Réessayez.');
     } finally {
       setLaunching(false);
       setConfirming(false);
@@ -123,8 +123,8 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
   const blocker =
     project.documentsCount === 0 ? 'Importez au moins un document pour lancer l\'analyse.'
     : project.cadrageVersion === null ? 'Enregistrez la fiche de cadrage pour lancer l\'analyse.'
-    : remaining === 0 ? `Votre espace a atteint son nombre d'analyses (${quota!.max}). Contactez-nous pour en obtenir d'autres.`
-    : isCorpusTooLarge(project) ? 'Les documents dépassent le volume de texte qu\'une analyse peut lire : retirez-en dans « Vos documents ».'
+    : remaining === 0 ? `Votre organisation a atteint son nombre d'analyses (${quota!.max}). Contactez-nous pour en obtenir d'autres.`
+    : isCorpusTooLarge(project) ? 'Les documents dépassent le volume de texte qu\'une analyse peut lire : retirez-en dans l\'onglet « Documents ».'
     : null;
   const history = analyses.slice(1);
 

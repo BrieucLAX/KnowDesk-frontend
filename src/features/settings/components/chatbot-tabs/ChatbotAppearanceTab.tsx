@@ -45,11 +45,11 @@ export function ChatbotAppearanceTab({ ctx }: { ctx: ChatbotTabContext }) {
         maxLength={500}
         placeholder="https://votre-site.fr/logo.png"
         onChange={e => setForm(f => ({ ...f, chat_logo_url: e.target.value }))}
-        helperText="Image carrée ≤ 64×64 px recommandée. Affichée dans le header du widget."
+        helperText="Image carrée de 64 × 64 px maximum recommandée. Affichée dans l'en-tête du chatbot."
       />
 
       <div className="field">
-        <label htmlFor="chat-domains" className="field-label icon-label">Domaines autorisés <TriangleAlert size={16} className="chatbot-settings__label-warning" role="img" aria-label="attention" /></label>
+        <label htmlFor="chat-domains" className="field-label icon-label">Domaines autorisés <TriangleAlert size={16} className="chatbot-settings__label-warning" role="img" aria-label="Attention" /></label>
         <textarea
           id="chat-domains"
           className="field-input"
@@ -59,8 +59,8 @@ export function ChatbotAppearanceTab({ ctx }: { ctx: ChatbotTabContext }) {
           placeholder={'acme.fr\nstaging.acme.fr\nlocalhost'}
         />
         <p className="field-helper">
-          Un domaine par ligne (ou séparés par virgule). Le widget ne se charge <strong>que</strong> depuis ces
-          domaines — sinon le serveur refuse la requête. Indispensable pour éviter qu'un site tiers détourne votre chatbot.
+          Un domaine par ligne, ou séparés par des virgules. Le chatbot ne se charge <strong>que</strong> sur ces
+          domaines : le serveur refuse les autres. Cette liste empêche un site tiers de détourner votre chatbot.
         </p>
       </div>
     </>

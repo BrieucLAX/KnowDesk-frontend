@@ -25,7 +25,7 @@ export function useArticleVersions(articleId: string) {
       const data = await apiClient.get<ArticleVersion[]>(`/articles/${articleId}/versions`);
       setVersions(data);
     } catch {
-      toast.error('Impossible de charger les versions.');
+      toast.error('Impossible de charger l\'historique des versions. Rechargez la page.');
     } finally {
       setLoading(false);
     }
@@ -45,7 +45,7 @@ export function useArticleVersions(articleId: string) {
       setOpen(false);
       return article.content ?? null;
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Erreur lors de la restauration.');
+      toast.error(err instanceof Error ? err.message : 'Restauration impossible. Réessayez dans un instant.');
       return null;
     }
   }, [articleId, toast]);

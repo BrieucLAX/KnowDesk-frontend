@@ -47,7 +47,7 @@ export function SuperadminApp() {
     try {
       await endTest(endTestTarget.id);
     } catch (err) {
-      setEndTestError(err instanceof Error ? err.message : 'Impossible de terminer le test.');
+      setEndTestError(err instanceof Error ? err.message : 'Le test n\'a pas pu être terminé. Réessayez.');
     } finally {
       setEndTestLoading(false);
       setEndTestTarget(null);
@@ -61,11 +61,11 @@ export function SuperadminApp() {
       const r = await reindexSearch();
       const total = r.articles + r.trees + r.faqs;
       setReindexState('done');
-      setReindexInfo(`Meilisearch réindexé : ${r.articles} article${r.articles !== 1 ? 's' : ''}, ${r.trees} processus, ${r.faqs} FAQ${r.faqs !== 1 ? 's' : ''} (${total} documents au total).`);
+      setReindexInfo(`Meilisearch réindexé : ${r.articles} article${r.articles !== 1 ? 's' : ''}, ${r.trees} processus, ${r.faqs} FAQ (${total} documents au total).`);
       setTimeout(() => setReindexState('idle'), 8000);
     } catch (err) {
       setReindexState('error');
-      setReindexInfo(err instanceof Error ? err.message : 'Réindexation impossible.');
+      setReindexInfo(err instanceof Error ? err.message : 'La réindexation a échoué. Réessayez dans quelques instants.');
     }
   };
 
@@ -78,7 +78,7 @@ export function SuperadminApp() {
   const runRecompute = async () => {
     setRecomputeConfirm(false);
     setRecomputeState('running');
-    setRecomputeInfo('Recalcul en cours… cela peut prendre quelques minutes pour des historiques importants.');
+    setRecomputeInfo('Recalcul en cours. Cela peut prendre quelques minutes pour un historique important.');
     try {
       let totalProcessed = 0;
       let totalFailed    = 0;
@@ -97,7 +97,7 @@ export function SuperadminApp() {
       setTimeout(() => setRecomputeState('idle'), 12000);
     } catch (err) {
       setRecomputeState('error');
-      setRecomputeInfo(err instanceof Error ? err.message : 'Recalcul impossible.');
+      setRecomputeInfo(err instanceof Error ? err.message : 'Le recalcul a échoué. Relancez-le pour traiter les conversations restantes.');
     }
   };
 
@@ -115,7 +115,7 @@ export function SuperadminApp() {
           {loginErr && <div className="sa-login__error" role="alert">{loginErr}</div>}
           <form className="sa-login__form" onSubmit={e => { e.preventDefault(); login(email, password); }}>
             <div className="field">
-              <label htmlFor="sa-email" className="field-label">Email</label>
+              <label htmlFor="sa-email" className="field-label">Adresse e-mail</label>
               <input
                 id="sa-email" type="email" className="field-input"
                 value={email} onChange={e => setEmail(e.target.value)}
@@ -162,7 +162,7 @@ export function SuperadminApp() {
             loading={reindexState === 'running'}
             disabled={reindexState === 'running'}
             onClick={runReindex}
-            title="Réindexer Meilisearch (toutes les orgs)"
+            title="Réindexer Meilisearch (toutes les organisations)"
           >
             <RotateCw size={16} />Réindexer
           </Button>
@@ -172,7 +172,7 @@ export function SuperadminApp() {
             loading={recomputeState === 'running'}
             disabled={recomputeState === 'running'}
             onClick={() => setRecomputeConfirm(true)}
-            title="Phase D — rejoue resolveStatus + LLM judge sur les conversations sans resolution_reason"
+            title="Rejoue resolveStatus et le juge LLM sur les conversations sans resolution_reason"
           >
             <RotateCw size={16} />Recalculer les statuts
           </Button>
@@ -202,8 +202,8 @@ export function SuperadminApp() {
         {/* Métriques globales */}
         <div className="sa-metrics">
           {[
-            { label: 'Espaces actifs',   value: activeOrgs },
-            { label: 'Espaces total',    value: totalOrgs },
+            { label: 'Organisations actives', value: activeOrgs },
+            { label: 'Organisations au total', value: totalOrgs },
             { label: 'Membres actifs',   value: totalMembers },
             { label: 'Articles publiés', value: totalArticles },
           ].map(m => (
@@ -238,7 +238,7 @@ export function SuperadminApp() {
                     <th>Membres actifs</th>
                     <th>Membres désactivés</th>
                     <th>Articles</th>
-                    <th>Créé</th>
+                    <th>Créée</th>
                     <th>Statut</th>
                     <th>Actions</th>
                   </tr>
@@ -311,13 +311,13 @@ export function SuperadminApp() {
       {/* Modal de confirmation */}
       {confirm && (
         <ConfirmDialog
-          title={confirm.action === 'disable' ? 'Désactiver l\'espace' : 'Réactiver l\'espace'}
+          title={confirm.action === 'disable' ? 'Désactiver cette organisation ?' : 'Réactiver cette organisation ?'}
           description={
             confirm.action === 'disable'
-              ? 'Les utilisateurs de cet espace ne pourront plus se connecter.'
-              : 'Les utilisateurs de cet espace pourront à nouveau se connecter.'
+              ? 'Ses membres ne pourront plus se connecter. Vous pourrez la réactiver ensuite.'
+              : 'Ses membres pourront de nouveau se connecter.'
           }
-          confirmLabel={confirm.action === 'disable' ? 'Désactiver' : 'Réactiver'}
+          confirmLabel={confirm.action === 'disable' ? 'Désactiver l\'organisation' : 'Réactiver l\'organisation'}
           variant={confirm.action === 'disable' ? 'danger' : 'primary'}
           onConfirm={async () => {
             if (confirm.action === 'disable') await disableOrg(confirm.orgId);
@@ -334,7 +334,7 @@ export function SuperadminApp() {
 
       {endTestTarget && (
         <ConfirmDialog
-          title={`Terminer le test de « ${endTestTarget.name} »`}
+          title={`Terminer le test de « ${endTestTarget.name} » ?`}
           description={endTestDescription(new Date())}
           confirmLabel="Terminer le test"
           variant="danger"
@@ -356,13 +356,13 @@ export function SuperadminApp() {
       {/* Phase D — confirmation recalcul rétroactif */}
       {recomputeConfirm && (
         <ConfirmDialog
-          title="Recalculer tous les statuts conversation"
+          title="Recalculer les statuts des conversations ?"
           description={
-            'Pour chaque conversation close sans resolution_reason, KnowDesk va '
-          + 'rejouer resolveStatus + un appel Mistral (LLM judge) afin d\'aligner '
-          + 'les statuts sur les nouvelles règles métier (Phase D). '
-          + 'Coût estimé : ~80 tokens par conversation. '
-          + 'Le traitement est itératif (batch de 200) et peut prendre quelques minutes.'
+            'Pour chaque conversation close sans resolution_reason, KnowDesk '
+          + 'rejoue resolveStatus et un appel Mistral (juge LLM) pour aligner '
+          + 'les statuts sur les règles métier actuelles. '
+          + 'Coût estimé : environ 80 tokens par conversation. '
+          + 'Le traitement se fait par lots de 200 et peut prendre quelques minutes.'
           }
           confirmLabel="Lancer le recalcul"
           variant="primary"

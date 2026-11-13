@@ -27,9 +27,9 @@ export function EmailVerificationBanner() {
     setResending(true);
     try {
       await apiClient.post('/auth/resend-verification', {});
-      toast.success('Email envoyé. Vérifiez votre boîte de réception.');
+      toast.success('E-mail envoyé. Vérifiez votre boîte de réception.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Impossible de renvoyer le lien.');
+      toast.error(err instanceof ApiError ? err.message : 'Le lien n\'a pas pu être renvoyé. Réessayez dans quelques instants.');
     } finally {
       setResending(false);
     }

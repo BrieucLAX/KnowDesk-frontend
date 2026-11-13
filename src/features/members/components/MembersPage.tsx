@@ -90,7 +90,7 @@ export function MembersPage() {
             size="md"
             onClick={() => setShowInvite(true)}
             disabled={atLimit}
-            title={atLimit ? `Limite de ${PLAN_LIMIT} membres atteinte — passez au plan Pro` : undefined}
+            title={atLimit ? `Vous avez atteint la limite de ${PLAN_LIMIT} membres. Passez au plan Pro pour en inviter d'autres.` : undefined}
           >
             <Plus size={20} />Inviter un membre
           </Button>
@@ -112,7 +112,7 @@ export function MembersPage() {
       {/* Error */}
       {error && (
         <Alert tone="danger" className="members-page__error">
-          Impossible de charger l'équipe. {error}
+          L'équipe n'a pas pu être chargée. Rechargez la page. {error}
         </Alert>
       )}
 
@@ -184,10 +184,10 @@ export function MembersPage() {
       {/* Empty state */}
       {!loading && filteredMembers.length === 0 && (
         <EmptyState
-          title={searchQuery ? 'Aucun résultat' : 'Aucun membre dans cette catégorie'}
+          title={searchQuery ? 'Aucun résultat' : 'Aucun membre pour ce filtre'}
           description={searchQuery
-            ? `Aucun membre ne correspond à "${searchQuery}".`
-            : 'Invitez des collègues pour qu\'ils rejoignent votre espace.'}
+            ? `Aucun membre ne correspond à « ${searchQuery} ».`
+            : 'Invitez des collègues pour qu\'ils rejoignent votre organisation.'}
           ctaLabel={!searchQuery ? 'Inviter un membre' : undefined}
           ctaHref={undefined}
         />

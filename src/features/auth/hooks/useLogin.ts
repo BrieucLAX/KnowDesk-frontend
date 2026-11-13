@@ -80,7 +80,7 @@ export function useLogin(
     } catch (err) {
       const message = err instanceof Error
         ? err.message
-        : 'Une erreur inattendue est survenue. Réessayez.';
+        : 'La connexion a échoué. Réessayez dans quelques instants.';
 
       setErrors({ general: message });
     } finally {

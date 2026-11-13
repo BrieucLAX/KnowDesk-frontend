@@ -39,10 +39,10 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
         const fresh = await importsApi.get(item.id);
         setItem(fresh);
         if (fresh.status === 'completed') {
-          toast.success(`Import terminé — ${fresh.articles_created} article${fresh.articles_created > 1 ? 's' : ''} créé${fresh.articles_created > 1 ? 's' : ''} en brouillon.`);
+          toast.success(`Import terminé : ${fresh.articles_created} article${fresh.articles_created > 1 ? 's' : ''} créé${fresh.articles_created > 1 ? 's' : ''} en brouillon.`);
           onCompleted?.(fresh);
         } else if (fresh.status === 'failed') {
-          toast.error(fresh.error_message ?? 'L\'import a échoué.');
+          toast.error(fresh.error_message ?? 'L\'import a échoué. Vérifiez le fichier, puis réessayez.');
         }
       } catch { /* silencieux : on re-tentera au prochain tick */ }
     }, 2000);
@@ -51,12 +51,12 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
 
   const handleFile = (f: File) => {
     if (f.size > MAX_SIZE_MB * 1024 * 1024) {
-      toast.error(`Fichier trop lourd (${(f.size / 1024 / 1024).toFixed(1)} MB). Max ${MAX_SIZE_MB} MB.`);
+      toast.error(`Ce fichier pèse ${(f.size / 1024 / 1024).toFixed(1)} Mo, au-delà de la limite de ${MAX_SIZE_MB} Mo. Choisissez un fichier plus léger.`);
       return;
     }
     const lname = f.name.toLowerCase();
     if (!ACCEPTED_EXTENSIONS.some(ext => lname.endsWith(ext))) {
-      toast.error('Format non supporté. Formats acceptés : PDF, DOCX, PPTX.');
+      toast.error('Ce format n\'est pas pris en charge. Choisissez un fichier PDF, DOCX ou PPTX.');
       return;
     }
     setFile(f);
@@ -81,7 +81,7 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
       const created = await importsApi.upload(file, splitMode);
       setItem(created);
     } catch (err) {
-      toast.error((err as Error).message ?? 'Upload impossible.');
+      toast.error((err as Error).message ?? 'Envoi du fichier impossible. Vérifiez votre connexion, puis réessayez.');
     } finally {
       setUploading(false);
     }
@@ -103,7 +103,7 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
           </Button>
           {!item && (
             <Button type="button" variant="primary" size="md" onClick={submit} loading={uploading} disabled={!file}>
-              Importer
+              Importer le document
             </Button>
           )}
         </div>
@@ -113,10 +113,10 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
         {!item && (
           <>
             <p className="import-modal__intro">
-              Convertis un document existant (<strong>PDF</strong>, <strong>DOCX</strong> ou <strong>PPTX</strong>)
-              en articles brouillon dans ta base. Les articles seront créés
-              dans une catégorie temporaire <strong>📥 Imports — date du jour</strong>,
-              prêts à être révisés et publiés.
+              Convertissez un document existant (<strong>PDF</strong>, <strong>DOCX</strong> ou <strong>PPTX</strong>)
+              en articles brouillons dans votre base. Les articles seront créés
+              dans une catégorie temporaire <strong>« Imports »</strong>,
+              prêts à être relus et publiés.
             </p>
 
             <div
@@ -139,14 +139,14 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
               {!file ? (
                 <>
                   <div className="import-modal__dropzone-icon" aria-hidden="true"><Upload size={24} /></div>
-                  <p className="import-modal__dropzone-title">Glisse un fichier PDF, DOCX ou PPTX ici</p>
-                  <p className="import-modal__dropzone-hint">ou clique pour le sélectionner — max {MAX_SIZE_MB} MB</p>
+                  <p className="import-modal__dropzone-title">Déposez un fichier PDF, DOCX ou PPTX ici</p>
+                  <p className="import-modal__dropzone-hint">ou cliquez pour le choisir ({MAX_SIZE_MB} Mo maximum)</p>
                 </>
               ) : (
                 <>
                   <div className="import-modal__file-icon" aria-hidden="true"><FileText size={24} /></div>
                   <p className="import-modal__file-name">{file.name}</p>
-                  <p className="import-modal__file-meta">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                  <p className="import-modal__file-meta">{(file.size / 1024 / 1024).toFixed(2)} Mo</p>
                   <button
                     type="button"
                     className="import-modal__file-clear"
@@ -180,13 +180,13 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
                   onChange={() => setSplitMode('split_by_section')}
                 />
                 <span>
-                  <strong>Découper en articles (recommandé pour les gros docs)</strong>
+                  <strong>Découper en plusieurs articles (recommandé pour les longs documents)</strong>
                   <small>
-                    KnowDesk analyse le document avec un modèle vision pour détecter les
-                    articles distincts (y compris quand un titre est sur une page et son
-                    contenu sur la suivante). Si un seul article est trouvé, on retombe
-                    naturellement sur un import unique. <em>Pour PPTX : chaque slide devient
-                    un article ; pour DOCX : on repère les titres Word.</em>
+                    KnowDesk analyse les pages du document avec un modèle d'IA pour repérer les
+                    articles distincts, même quand un titre et son contenu sont sur deux pages.
+                    S'il ne trouve qu'un article, le document devient un seul article.
+                    <em> Pour un PPTX, chaque diapositive devient un article ; pour un DOCX,
+                    les titres Word servent au découpage.</em>
                   </small>
                 </span>
               </label>
@@ -212,7 +212,7 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
                     : 'Analyse du document en cours… Cela peut prendre quelques secondes.'}
                 </p>
                 <p className="import-modal__status-hint">
-                  Tu peux fermer cette fenêtre — l'import continuera en arrière-plan.
+                  Vous pouvez fermer cette fenêtre : l'import continue en arrière-plan.
                 </p>
               </>
             )}
@@ -225,7 +225,7 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
                   {item.category_name && <> dans <strong>{item.category_name}</strong></>}.
                 </p>
                 <p className="import-modal__status-hint">
-                  Les articles sont en <strong>brouillon</strong> — relis-les, ajuste les titres, fusionne les doublons, puis publie quand tu es prêt.
+                  Les articles sont en <strong>brouillon</strong>. Relisez-les, ajustez les titres et fusionnez les doublons, puis publiez-les.
                 </p>
               </>
             )}
@@ -236,7 +236,7 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
                 <p className="import-modal__status-text">
                   L'import a échoué.
                 </p>
-                <p className="import-modal__status-error">{item.error_message ?? 'Erreur inconnue.'}</p>
+                <p className="import-modal__status-error">{item.error_message ?? 'Aucun détail n\'a été transmis. Réessayez, ou importez un autre fichier.'}</p>
               </>
             )}
           </div>

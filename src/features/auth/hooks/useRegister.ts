@@ -25,16 +25,16 @@ interface RegisterErrors {
 
 function validate(form: RegisterForm): RegisterErrors {
   const errors: RegisterErrors = {};
-  if (!form.firstName.trim())        errors.firstName = 'Le prénom est requis.';
-  if (!form.lastName.trim())         errors.lastName  = 'Le nom est requis.';
-  if (!form.orgName.trim())          errors.orgName  = 'Le nom de l\'organisation est requis.';
-  if (!form.email.trim())            errors.email    = 'L\'email est requis.';
+  if (!form.firstName.trim())        errors.firstName = 'Saisissez votre prénom.';
+  if (!form.lastName.trim())         errors.lastName  = 'Saisissez votre nom.';
+  if (!form.orgName.trim())          errors.orgName  = 'Saisissez le nom de votre organisation.';
+  if (!form.email.trim())            errors.email    = 'Saisissez votre adresse e-mail.';
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-                                     errors.email    = 'Email invalide.';
+                                     errors.email    = 'Saisissez une adresse e-mail valide, par exemple nom@entreprise.fr.';
   if (form.password.length < 8)      errors.password = 'Le mot de passe doit contenir au moins 8 caractères.';
   if (form.password !== form.confirmPassword)
                                      errors.confirmPassword = 'Les mots de passe ne correspondent pas.';
-  if (!form.gdprAccepted)            errors.gdprAccepted = 'Vous devez accepter les CGU et la politique de confidentialité.';
+  if (!form.gdprAccepted)            errors.gdprAccepted = 'Acceptez la politique de confidentialité pour créer votre organisation.';
   return errors;
 }
 
@@ -81,7 +81,7 @@ export function useRegister(onSuccess: (session: AuthSession) => void) {
     } catch (err) {
       setErrors({ general: err instanceof ApiError || err instanceof Error
         ? err.message
-        : 'Erreur lors de la création du compte.' });
+        : 'Votre organisation n\'a pas pu être créée. Réessayez dans quelques instants.' });
     } finally {
       setIsLoading(false);
     }

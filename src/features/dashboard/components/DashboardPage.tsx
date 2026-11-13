@@ -65,7 +65,7 @@ export function DashboardPage({ onArticleClick, onNewArticle }: DashboardPagePro
       {/* ── Error state ── */}
       {isError && (
         <div className="dashboard__error" role="alert">
-          <p>Impossible de charger le tableau de bord.</p>
+          <p>Le tableau de bord n'a pas pu être chargé. Vérifiez votre connexion, puis réessayez.</p>
           <button className="dashboard__retry" onClick={refetch}>Réessayer</button>
         </div>
       )}
@@ -81,7 +81,7 @@ export function DashboardPage({ onArticleClick, onNewArticle }: DashboardPagePro
       {/* ── Stats row ── */}
       <div className="dashboard__stats" role="region" aria-label="Statistiques">
         <StatCard label="Articles publiés" value={data?.stats.publishedArticles ?? 0} loading={isLoading} />
-        <StatCard label="Total articles"   value={data?.stats.totalArticles     ?? 0} loading={isLoading} />
+        <StatCard label="Articles au total"  value={data?.stats.totalArticles     ?? 0} loading={isLoading} />
         <StatCard label="FAQ créées"        value={data?.stats.totalFaqs         ?? 0} loading={isLoading} />
         <StatCard label="Membres actifs"    value={data?.stats.teamMembers       ?? 0} loading={isLoading} />
       </div>
@@ -114,7 +114,7 @@ export function DashboardPage({ onArticleClick, onNewArticle }: DashboardPagePro
 
             {!isLoading && data?.recentItems.length === 0 && (
               <EmptyState
-                title="Aucun article encore"
+                title="Aucun article pour l'instant"
                 description={isAdmin
                   ? 'Créez votre premier article pour démarrer.'
                   : 'Votre équipe prépare le contenu. Revenez bientôt.'}

@@ -97,7 +97,7 @@ function GoogleSignInButton({ onSuccess, mode }: {
         aria-busy={loading}
       >
         <GoogleIcon />
-        {loading ? 'Connexion…' : (mode === 'register' ? 'Créer un espace avec Google' : 'Continuer avec Google')}
+        {loading ? 'Connexion…' : (mode === 'register' ? 'Créer une organisation avec Google' : 'Continuer avec Google')}
       </button>
       {error && <p className="oauth-buttons__error" role="alert">{error}</p>}
     </>
@@ -167,7 +167,7 @@ function MicrosoftSignInButton({ onSuccess, mode }: {
         aria-busy={loading}
       >
         <MicrosoftIcon />
-        {loading ? 'Connexion…' : (mode === 'register' ? 'Créer un espace avec Microsoft' : 'Continuer avec Microsoft')}
+        {loading ? 'Connexion…' : (mode === 'register' ? 'Créer une organisation avec Microsoft' : 'Continuer avec Microsoft')}
       </button>
       {error && <p className="oauth-buttons__error" role="alert">{error}</p>}
     </>

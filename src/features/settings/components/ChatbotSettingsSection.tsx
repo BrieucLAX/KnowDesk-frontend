@@ -24,8 +24,8 @@ import { ChatbotIntegrationTab } from './chatbot-tabs/ChatbotIntegrationTab';
 import type { ChatbotTabId, ChatbotTabContext } from './chatbot-tabs/types';
 import { Sparkles } from 'lucide-react';
 
-const DEFAULT_WELCOME  = 'Bonjour 👋 Comment puis-je vous aider ?';
-const DEFAULT_FALLBACK = 'Désolé, je n\'ai pas la réponse précise à cette question. Vous pouvez nous joindre par email à contact@example.com ou par téléphone au 09 99 99 99 99.';
+const DEFAULT_WELCOME  = 'Bonjour, comment puis-je vous aider ?';
+const DEFAULT_FALLBACK = 'Désolé, je n\'ai pas la réponse précise à cette question. Vous pouvez nous joindre par e-mail à contact@example.com ou par téléphone au 09 99 99 99 99.';
 
 const TONE_OPTIONS: Array<{ value: AiTone; label: string; hint: string }> = [
   { value: 'professional', label: 'Professionnelle', hint: 'Neutre, factuelle' },
@@ -135,7 +135,7 @@ export function ChatbotSettingsSection() {
     const silent = options?.silent ?? false;
     if (widgetMounted) return;
     if (!orgSlug) {
-      if (!silent) toast.error('Slug d\'organisation introuvable. Reconnecte-toi et réessaye.');
+      if (!silent) toast.error('L\'identifiant de votre organisation est introuvable. Reconnectez-vous, puis réessayez.');
       return;
     }
     const script = document.createElement('script');
@@ -149,19 +149,19 @@ export function ChatbotSettingsSection() {
     // Si on ne reçoit rien sous 5s, c'est que le script ne s'est pas exécuté.
     const onReady = () => {
       cleanup();
-      if (!silent) toast.success('Widget chargé — il est en bas à droite.');
+      if (!silent) toast.success('Le widget est chargé en bas à droite de la page.');
     };
     const onError = (e: Event) => {
       cleanup();
       const reason = (e as CustomEvent).detail?.reason ?? 'unknown';
       const status = (e as CustomEvent).detail?.status;
       const messages: Record<string, string> = {
-        'domain-not-allowed': `Ce domaine (${window.location.host}) n'est pas dans la liste blanche. Ajoutez-le et enregistrez avant de retester.`,
-        'org-not-found':      'Organisation introuvable côté serveur (incohérence ?).',
-        'network':            'Impossible de joindre le serveur. Vérifie que tu as bien enregistré la config et que le backend est en ligne.',
-        'server-error':       'Erreur serveur. Vérifiez les logs Railway.',
+        'domain-not-allowed': `Le domaine ${window.location.host} ne fait pas partie des domaines autorisés. Ajoutez-le dans l'onglet Apparence, enregistrez, puis réessayez.`,
+        'org-not-found':      'Le serveur ne trouve pas votre organisation. Reconnectez-vous, puis réessayez.',
+        'network':            'Le serveur ne répond pas. Vérifiez que les paramètres sont enregistrés et que votre connexion fonctionne, puis réessayez.',
+        'server-error':       'Le serveur a rencontré une erreur. Réessayez dans quelques instants.',
         'already-loaded':     'Le widget est déjà chargé sur cette page.',
-        'unknown':            `Erreur ${status ?? '?'} — vérifie la console navigateur pour les détails.`,
+        'unknown':            `Le widget n'a pas pu se charger (erreur ${status ?? 'inconnue'}). Réessayez ; si le problème persiste, consultez la console du navigateur.`,
       };
       toast.error(messages[reason] ?? messages.unknown);
       // En cas d'erreur, retire les éléments injectés pour permettre un nouveau test
@@ -171,7 +171,7 @@ export function ChatbotSettingsSection() {
     };
     const timer = window.setTimeout(() => {
       cleanup();
-      toast.error('Le widget n\'a pas répondu sous 5s — vérifie la console navigateur (F12 → Console / Network).');
+      toast.error('Le widget n\'a pas répondu en 5 secondes. Rechargez-le ; si le problème persiste, consultez la console du navigateur (touche F12).');
     }, 5000);
     function cleanup() {
       window.removeEventListener('knowdesk-chat:ready', onReady);
@@ -376,7 +376,7 @@ export function ChatbotSettingsSection() {
       });
       toast.success('Paramètres enregistrés');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Sauvegarde impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Les paramètres du chatbot n\'ont pas été enregistrés. Réessayez.');
     } finally {
       setSaving(false);
     }
@@ -399,7 +399,7 @@ export function ChatbotSettingsSection() {
         }
         setRetentionConfirm({ days: newRetention, count: preview.count, loading: false });
       } catch (err) {
-        toast.error(err instanceof ApiError ? err.message : 'Impossible d\'estimer le nombre de conversations à supprimer.');
+        toast.error(err instanceof ApiError ? err.message : 'Le nombre de conversations à supprimer n\'a pas pu être calculé. Réessayez.');
       }
       return;
     }
@@ -475,10 +475,10 @@ export function ChatbotSettingsSection() {
   return (
     <section className="settings-section" aria-labelledby="chatbot-title">
       <div className="settings-section__header">
-        <h2 id="chatbot-title" className="settings-section__title icon-label"><Sparkles size={20} />IA chatbot</h2>
+        <h2 id="chatbot-title" className="settings-section__title icon-label"><Sparkles size={20} />Chatbot public</h2>
         <p className="settings-section__desc">
-          Activez et personnalisez le chatbot embarquable que vos clients peuvent utiliser depuis votre site web.
-          Il répond <strong>uniquement</strong> à partir des FAQs, articles et processus marqués comme « Public ».
+          Activez et personnalisez le chatbot que vos clients utilisent sur votre site web.
+          Il répond <strong>uniquement</strong> à partir des FAQ, articles et processus marqués « Public ».
         </p>
         <LastModifiedBadge actions={['org.chat_settings_updated', 'org.chat_model.changed']} />
       </div>
@@ -533,14 +533,14 @@ export function ChatbotSettingsSection() {
 
       {retentionConfirm && (
         <ConfirmDialog
-          title="Réduire la durée de conservation"
+          title="Réduire la durée de conservation ?"
           description={
             `${retentionConfirm.count} conversation${retentionConfirm.count > 1 ? 's' : ''} `
           + `de plus de ${retentionConfirm.days} jours `
           + `${retentionConfirm.count > 1 ? 'seront supprimées' : 'sera supprimée'} définitivement `
-          + `lors de la prochaine purge quotidienne. Cette action est irréversible.`
+          + `lors de la prochaine suppression automatique, qui a lieu chaque jour. Cette action est irréversible.`
           }
-          confirmLabel="Confirmer"
+          confirmLabel="Réduire la durée"
           variant="danger"
           loading={retentionConfirm.loading}
           onConfirm={confirmRetentionChange}
@@ -555,14 +555,14 @@ export function ChatbotSettingsSection() {
 }
 
 const TABS: { id: ChatbotTabId; label: string }[] = [
-  { id: 'messages',    label: 'Activation & messages' },
+  { id: 'messages',    label: 'Activation et messages' },
   { id: 'appearance',  label: 'Apparence' },
   { id: 'ai-perso',    label: 'Personnalisation IA' },
-  { id: 'prompt',      label: 'Prompt système' },
-  { id: 'handoff',     label: 'Handoff humain' },
+  { id: 'prompt',      label: 'Consigne système' },
+  { id: 'handoff',     label: 'Passage à un humain' },
   { id: 'privacy',     label: 'Confidentialité (RGPD)' },
-  { id: 'retention',   label: 'Rétention' },
-  { id: 'integration', label: 'Test & intégrer' },
+  { id: 'retention',   label: 'Conservation' },
+  { id: 'integration', label: 'Tester et intégrer' },
 ];
 
 // ── Tout le JSX legacy (~530 lignes) a été extrait dans `chatbot-tabs/`.

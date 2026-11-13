@@ -40,7 +40,7 @@ React.useEffect(() => {
   }, [onLoginSuccess]);
 
   const handleRegisterSuccess = useCallback((session: AuthSession) => {
-    toast.success(`Bienvenue sur KnowDesk, ${session.user.firstName ?? ''} !`.trim());
+    toast.success(session.user.firstName ? `Bienvenue sur KnowDesk, ${session.user.firstName}.` : 'Bienvenue sur KnowDesk.');
     onLoginSuccess(session);
   }, [onLoginSuccess, toast]);
 
@@ -101,7 +101,7 @@ React.useEffect(() => {
 {REGISTRATION_OPEN && mode === 'register' && (
   <>
     <div className="login-page__header">
-      <h1 className="login-page__title">Créer un espace</h1>
+      <h1 className="login-page__title">Créer une organisation</h1>
       <p className="login-page__subtitle">
         Configurez votre base de connaissance en quelques secondes.
       </p>
@@ -124,7 +124,7 @@ React.useEffect(() => {
     <div className="login-page__header">
       <h1 className="login-page__title">Mot de passe oublié</h1>
       <p className="login-page__subtitle">
-        Saisis ton email et on t'envoie un lien de réinitialisation.
+        Saisissez votre adresse e-mail : nous vous enverrons un lien de réinitialisation.
       </p>
     </div>
     <ForgotPasswordForm onBack={() => setMode('login')} />
@@ -135,7 +135,7 @@ React.useEffect(() => {
     <div className="login-page__header">
       <h1 className="login-page__title">Nouveau mot de passe</h1>
       <p className="login-page__subtitle">
-        Choisis un mot de passe sécurisé d'au moins 8 caractères.
+        Choisissez un mot de passe sécurisé d'au moins 8 caractères.
       </p>
     </div>
     <ResetPasswordForm

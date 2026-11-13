@@ -78,8 +78,8 @@ export function DecisionActions({
       <div className="obp-decision">
         <CurrentDecision question={question} current={current} />
         <div className="obp-decision__actions">
-          <Button variant="ghost" size="sm" loading={busy} onClick={() => void onCancel()}>Annuler</Button>
-          <Button variant="ghost" size="sm" disabled={busy} onClick={() => setEditing(true)}>Changer</Button>
+          <Button variant="ghost" size="sm" loading={busy} onClick={() => void onCancel()}>Annuler la décision</Button>
+          <Button variant="ghost" size="sm" disabled={busy} onClick={() => setEditing(true)}>Changer la décision</Button>
         </div>
       </div>
     );
@@ -148,7 +148,7 @@ export function DecisionActions({
         <ConfirmDialog
           title="Passer cette question ?"
           description="Elle sera enregistrée comme « non applicable ». Rien n'est supprimé, et vous pourrez annuler."
-          confirmLabel="Passer"
+          confirmLabel="Passer la question"
           variant="primary"
           loading={busy}
           onConfirm={async () => { await submit({ ok: true, action: { type: 'skip' } }); setSkipping(false); }}

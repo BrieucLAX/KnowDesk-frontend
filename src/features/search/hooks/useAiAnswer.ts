@@ -133,7 +133,7 @@ async function runAiStream(
         } else if (eventName === 'disabled') {
           setState(s => ({ ...s, status: 'disabled' }));
         } else if (eventName === 'error') {
-          setState(s => ({ ...s, status: 'error', error: data.message ?? 'Erreur IA' }));
+          setState(s => ({ ...s, status: 'error', error: data.message ?? 'La réponse de l\'IA n\'a pas pu être générée. Réessayez dans un instant.' }));
         } else if (eventName === 'done') {
           setState(s => ({
             ...s,
@@ -153,7 +153,7 @@ async function runAiStream(
       status:  'error',
       sources: [],
       answer:  '',
-      error:   err instanceof Error ? err.message : 'Erreur IA',
+      error:   err instanceof Error ? err.message : 'La réponse de l\'IA n\'a pas pu être générée. Réessayez dans un instant.',
     }));
   }
 }

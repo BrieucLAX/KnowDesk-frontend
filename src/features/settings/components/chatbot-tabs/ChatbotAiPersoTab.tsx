@@ -25,8 +25,8 @@ export function ChatbotAiPersoTab({ ctx }: { ctx: ChatbotTabContext }) {
   return (
     <>
       <p className="settings-section__desc">
-        <strong>Ces valeurs sont partagées avec la section ✨ IA recherche</strong> — les modifier
-        ici les met aussi à jour pour la Réponse IA conseiller.
+        <strong>Ces valeurs sont partagées avec la section Recherche interne</strong> : les modifier
+        ici les modifie aussi pour la réponse IA des conseillers.
       </p>
 
       <Input
@@ -34,9 +34,9 @@ export function ChatbotAiPersoTab({ ctx }: { ctx: ChatbotTabContext }) {
         label="Secteur d'activité"
         value={form.industry ?? ''}
         maxLength={80}
-        placeholder="ex. Telecom, Banque, Retail, Santé…"
+        placeholder="Par exemple : télécoms, banque, commerce, santé…"
         onChange={e => setForm(f => ({ ...f, industry: e.target.value }))}
-        helperText="Personnalise l'identité de l'assistant. Vide → formulation générique."
+        helperText="Personnalise la présentation du chatbot. Laissez vide pour une formulation générique."
       />
 
       <div className="field">
@@ -83,17 +83,17 @@ export function ChatbotAiPersoTab({ ctx }: { ctx: ChatbotTabContext }) {
           Glossaire
           <HelpPopover content={
             <>
-              Le glossaire est <strong>injecté dans le prompt système</strong>
-              à chaque requête. Au-delà de 10 paires, le coût en tokens
-              augmente sensiblement. Limitez aux termes vraiment spécifiques
-              à votre métier (jamais des synonymes génériques, qui sont
-              gérés dans <code>Recherche → Synonymes</code>).
+              Le glossaire est <strong>ajouté à la consigne système</strong>{' '}
+              à chaque question. Au-delà de 10 paires, le coût de chaque réponse
+              augmente sensiblement. Limitez-le aux termes propres à votre
+              métier. Les synonymes génériques se gèrent dans la section
+              Synonymes des paramètres.
             </>
           } />
         </label>
         <p className="field-helper chatbot-settings__field-helper-tight">
-          Liste de termes que l'IA doit utiliser à la place du vocabulaire générique.
-          Ex. « abonné » à la place de « client ».
+          Termes que l'IA doit utiliser à la place du vocabulaire générique,
+          par exemple « abonné » à la place de « client ».
         </p>
         <div className="ai-glossary">
           {(form.ai_glossary?.length ?? 0) === 0 && (
@@ -124,8 +124,8 @@ export function ChatbotAiPersoTab({ ctx }: { ctx: ChatbotTabContext }) {
                 type="button"
                 className="ai-glossary__remove"
                 onClick={() => removeGlossaryRow(i)}
-                aria-label="Supprimer"
-                title="Supprimer"
+                aria-label="Supprimer ce terme"
+                title="Supprimer ce terme"
               >
                 <X size={16} />
               </button>

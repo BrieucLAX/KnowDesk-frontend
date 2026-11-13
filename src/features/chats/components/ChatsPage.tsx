@@ -33,14 +33,14 @@ const STATUS_LABEL: Record<ChatStatus, { label: string; tone: 'neutral' | 'succe
 
 /** Libellé humain de resolution_reason (Phase D). */
 const REASON_LABEL: Record<string, string> = {
-  handoff:           'Demande humain',
+  handoff:           'Demande à parler à un humain',
   positive_signal:   'Emoji positif',
   negative_signal:   'Emoji négatif',
-  csat_high:         'CSAT élevé',
-  csat_low:          'CSAT bas',
+  csat_high:         'Satisfaction élevée',
+  csat_low:          'Satisfaction basse',
   llm_positive:      'Analyse IA positive',
   llm_negative:      'Analyse IA négative',
-  fallback_message:  'Bot a ré-orienté',
+  fallback_message:  'Chatbot sans réponse, visiteur réorienté',
   short_answered:    'Réponse rapide',
   no_signal:         'Aucun signal exploitable',
   no_interaction:    'Aucune interaction',
@@ -77,7 +77,7 @@ export function ChatsPage() {
       })
       .catch(err => {
         if (!alive) return;
-        toast.error(err?.message ?? 'Impossible de charger la liste des chats.');
+        toast.error(err?.message ?? 'Impossible de charger les conversations. Rechargez la page.');
       })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
@@ -89,7 +89,7 @@ export function ChatsPage() {
     <section className="chats-page">
       <PageHeader
         title="Conversations"
-        subtitle={`Conversations menées par le chatbot embarqué — ${total} ${total === 1 ? 'conversation' : 'conversations'}`}
+        subtitle={`Conversations menées par le chatbot de votre site — ${total} ${total === 1 ? 'conversation' : 'conversations'}`}
       />
 
       <PageToolbar
@@ -112,8 +112,8 @@ export function ChatsPage() {
               id="chats-search"
               value={searchInput}
               onChange={setSearchInput}
-              placeholder="Rechercher dans les transcripts…"
-              ariaLabel="Rechercher dans les transcripts"
+              placeholder="Rechercher dans les conversations…"
+              ariaLabel="Rechercher dans les conversations"
               onSubmit={() => { setPage(1); setQ(searchInput.trim()); }}
             />
             <Button
@@ -149,8 +149,8 @@ export function ChatsPage() {
           title={q ? 'Aucune conversation trouvée' : 'Aucune conversation pour le moment'}
           description={
             q
-              ? 'Essaye un autre mot-clé ou élargis les filtres.'
-              : 'Les conversations menées via le widget apparaîtront ici dès qu\'un visiteur posera une question.'
+              ? 'Essayez un autre mot-clé ou élargissez les filtres.'
+              : 'Les conversations menées par le chatbot de votre site apparaîtront ici dès qu\'un visiteur posera une question.'
           }
         />
       ) : (
@@ -183,7 +183,7 @@ export function ChatsPage() {
                           {c.turnsCount} {c.turnsCount === 1 ? 'message' : 'messages'}
                         </span>
                         {c.csat !== null && (
-                          <span className="chats-page__row-csat" title={`CSAT ${c.csat}/5`}>
+                          <span className="chats-page__row-csat" title={`Satisfaction : ${c.csat}/5`}>
                             <StarRating value={c.csat} />
                           </span>
                         )}

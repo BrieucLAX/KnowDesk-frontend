@@ -11,13 +11,13 @@ export function validateLoginForm(values: LoginFormState): LoginFormErrors {
   const errors: LoginFormErrors = {};
 
   if (!values.email.trim()) {
-    errors.email = 'L\'adresse email est requise.';
+    errors.email = 'Saisissez votre adresse e-mail.';
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-    errors.email = 'L\'adresse email n\'est pas valide.';
+    errors.email = 'Saisissez une adresse e-mail valide, par exemple nom@entreprise.fr.';
   }
 
   if (!values.password) {
-    errors.password = 'Le mot de passe est requis.';
+    errors.password = 'Saisissez votre mot de passe.';
   } else if (values.password.length < 6) {
     errors.password = 'Le mot de passe doit contenir au moins 6 caractères.';
   }

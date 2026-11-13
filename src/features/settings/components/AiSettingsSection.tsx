@@ -67,7 +67,7 @@ export function AiSettingsSection() {
       setInitialForm(form);
       toast.success('Paramètres enregistrés');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Sauvegarde impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Les paramètres n\'ont pas été enregistrés. Réessayez.');
     } finally {
       setSaving(false);
     }
@@ -102,11 +102,11 @@ export function AiSettingsSection() {
   return (
     <section className="settings-section" aria-labelledby="ai-title">
       <div className="settings-section__header">
-        <h2 id="ai-title" className="settings-section__title icon-label"><Sparkles size={20} />IA recherche</h2>
+        <h2 id="ai-title" className="settings-section__title icon-label"><Sparkles size={20} />Recherche interne</h2>
         <p className="settings-section__desc">
-          Configuration de la <strong>Réponse IA</strong> qui apparaît au-dessus des résultats
-          de la recherche interne (vue conseiller). Réponses générées par Mistral à partir
-          de votre base uniquement.
+          Paramètres de la <strong>réponse IA</strong> affichée aux conseillers au-dessus des résultats
+          de la recherche interne. Les réponses sont générées par Mistral, uniquement à partir
+          de votre base.
         </p>
         <LastModifiedBadge actions={['org.ai_settings_updated']} />
       </div>
@@ -120,8 +120,8 @@ export function AiSettingsSection() {
                 Recherche IA activée
               </label>
               <p className="toggle-row__desc">
-                Quand désactivée, la SearchBar fonctionne en mode classique (Meilisearch
-                seulement) — pas de carte « Réponse IA » ni de sparkle.
+                Désactivée, la barre de recherche affiche seulement les résultats
+                classiques, sans carte « Réponse IA ».
               </p>
             </div>
             <button
@@ -148,9 +148,9 @@ export function AiSettingsSection() {
             label="Secteur d'activité"
             value={form.industry ?? ''}
             maxLength={80}
-            placeholder="ex. Telecom, Banque, Retail, Santé…"
+            placeholder="Par exemple : télécoms, banque, commerce, santé…"
             onChange={e => setForm(f => ({ ...f, industry: e.target.value }))}
-            helperText="Personnalise l'identité de l'assistant (« assistant pour un service client dans le secteur X »). Laissez vide pour une formulation générique."
+            helperText="Précise le contexte donné à l'IA (« assistant pour un service client dans le secteur X »). Laissez vide pour une formulation générique."
           />
 
           {/* Tonalité */}
@@ -216,8 +216,8 @@ export function AiSettingsSection() {
           <div className="field">
             <label className="field-label">Glossaire</label>
             <p className="field-helper" style={{ marginTop: 0, marginBottom: 8 }}>
-              Liste de termes que l'IA doit utiliser à la place du vocabulaire générique.
-              Ex. « abonné » à la place de « client ».
+              Termes que l'IA doit utiliser à la place du vocabulaire générique,
+              par exemple « abonné » à la place de « client ».
             </p>
             <div className="ai-glossary">
               {form.ai_glossary.length === 0 && (
@@ -249,7 +249,7 @@ export function AiSettingsSection() {
                     className="ai-glossary__remove"
                     onClick={() => removeGlossaryRow(i)}
                     aria-label="Supprimer cette correspondance"
-                    title="Supprimer"
+                    title="Supprimer cette correspondance"
                   >
                     <X size={16} />
                   </button>

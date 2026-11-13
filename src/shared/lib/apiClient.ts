@@ -61,7 +61,7 @@ async function request<T>(
       throw refresh.error;
     } else {
       useAuthStore.getState().clearSession();
-      throw new ApiError('TOKEN_EXPIRED', 'Session expirée. Reconnectez-vous.', 401);
+      throw new ApiError('TOKEN_EXPIRED', 'Votre session a expiré. Reconnectez-vous.', 401);
     }
   }
 
@@ -102,14 +102,14 @@ async function parseResponse<T>(res: Response, withMeta = false): Promise<T> {
   // d'onboarding, POST /events…) : pas de corps à lire (R15).
   const text = await res.text();
   if (!text) {
-    if (!res.ok) throw new ApiError('UNKNOWN_ERROR', 'Une erreur est survenue.', res.status);
+    if (!res.ok) throw new ApiError('UNKNOWN_ERROR', 'Une erreur est survenue. Réessayez dans quelques instants.', res.status);
     return undefined as T;
   }
   const body = JSON.parse(text);
   if (!res.ok || body.error) {
     throw new ApiError(
       body.error?.code    ?? 'UNKNOWN_ERROR',
-      body.error?.message ?? 'Une erreur est survenue.',
+      body.error?.message ?? 'Une erreur est survenue. Réessayez dans quelques instants.',
       res.status,
     );
   }
@@ -144,7 +144,7 @@ async function doRefresh(): Promise<RefreshResult> {
     const body = await res.json().catch(() => null);
     const code = body?.error?.code;
     return code
-      ? { ok: false, error: new ApiError(code, body.error.message ?? 'Une erreur est survenue.', res.status) }
+      ? { ok: false, error: new ApiError(code, body.error.message ?? 'Une erreur est survenue. Réessayez dans quelques instants.', res.status) }
       : { ok: false };
   } catch {
     return { ok: false };

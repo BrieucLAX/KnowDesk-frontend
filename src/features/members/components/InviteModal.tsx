@@ -13,9 +13,9 @@ interface InviteModalProps {
 function validate(form: InviteFormState): InviteFormErrors {
   const errors: InviteFormErrors = {};
   if (!form.email.trim())
-    errors.email = 'L\'adresse email est requise.';
+    errors.email = 'Saisissez l\'adresse e-mail de la personne à inviter.';
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-    errors.email = 'Adresse email invalide.';
+    errors.email = 'Saisissez une adresse e-mail valide, par exemple nom@entreprise.fr.';
   return errors;
 }
 
@@ -50,7 +50,7 @@ export function InviteModal({ onInvite, onClose, isLoading }: InviteModalProps) 
       <Input
         id="invite-email"
         type="email"
-        label="Adresse email"
+        label="Adresse e-mail"
         placeholder="prenom.nom@entreprise.fr"
         autoFocus
         required
@@ -73,7 +73,7 @@ export function InviteModal({ onInvite, onClose, isLoading }: InviteModalProps) 
         >
           <option value="advisor">Conseiller — lecture seule</option>
           <option value="manager">Manager — peut modifier les articles</option>
-          <option value="admin">Admin — accès complet</option>
+          <option value="admin">Administrateur — accès complet</option>
         </select>
         <p className="field-helper">
           {form.role === 'advisor'

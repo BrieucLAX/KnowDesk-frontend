@@ -27,7 +27,7 @@ export function NetworkErrorBanner() {
   return (
     <div className="network-banner" role="status">
       <StatusIcon tone="warning" className="network-banner__icon" />
-      Connexion perdue — vos modifications seront synchronisées au retour du réseau.
+      Connexion perdue. Vos modifications seront synchronisées au retour du réseau.
     </div>
   );
 }

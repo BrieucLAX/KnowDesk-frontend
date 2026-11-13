@@ -20,7 +20,7 @@ describe('Éditeur de parcours : le sélecteur trouve les ressources au-delà de
 
   async function openModule() {
     render(<LearningPathEditor pathId={LEARNING_PATH_ID} onBack={() => {}} />);
-    fireEvent.click(await screen.findByRole('button', { name: 'Éditer' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Modifier' }));
     return screen.findByPlaceholderText(/Ajouter une ressource/);
   }
 

@@ -63,7 +63,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
         ? 'Aucun problème détecté.'
         : `${flagged} dimension${flagged > 1 ? 's' : ''} à revoir.`);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Échec du scoring IA.');
+      toast.error(err instanceof ApiError ? err.message : "L'évaluation par l'IA a échoué. Réessayez dans quelques instants.");
     } finally {
       setRecheck(false);
     }
@@ -74,7 +74,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
       const { dismissed } = await articleQualityApi.dismissDimension(articleId, dim);
       setData(prev => prev ? { ...prev, dismissed } : prev);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Action impossible.');
+      toast.error(err instanceof ApiError ? err.message : "La dimension n'a pas pu être marquée comme conforme. Réessayez.");
     }
   }, [articleId, toast]);
 
@@ -88,9 +88,9 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
           <h3 className="article-quality__title icon-label"><Sparkles size={16} />Suggestions IA</h3>
         </header>
         <div className="article-quality__empty">
-          <p>Aucun scoring disponible pour cet article.</p>
+          <p>Cet article n'a pas encore été évalué.</p>
           <Button variant="ghost" size="sm" onClick={handleRecheck} loading={recheck}>
-            Lancer un scoring
+            Lancer l'évaluation
           </Button>
         </div>
       </section>
@@ -127,12 +127,12 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
           <h3 className="article-quality__title icon-label">
             <Sparkles size={16} />Suggestions IA
             {allOk
-              ? <span className="article-quality__badge article-quality__badge--ok">Tout OK</span>
+              ? <span className="article-quality__badge article-quality__badge--ok">Rien à revoir</span>
               : <span className="article-quality__badge article-quality__badge--flag">{visibleFlagged.length} à revoir</span>}
           </h3>
         </button>
         <div className="article-quality__head-actions">
-          {stale && <span className="article-quality__stale" title="L'article a évolué depuis le dernier scoring">Modif depuis</span>}
+          {stale && <span className="article-quality__stale" title="L'article a été modifié depuis la dernière évaluation">Modifié depuis</span>}
           <Button variant="ghost" size="sm" onClick={handleRecheck} loading={recheck}>
             <RotateCw size={16} />Réévaluer
           </Button>
@@ -142,9 +142,9 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
       {open && (
         <>
           <p className="article-quality__meta">
-            Dernier scoring : {checkedAt ? formatRelative(checkedAt) : '—'}
+            Dernière évaluation : {checkedAt ? formatRelative(checkedAt) : '—'}
             {' · '}
-            <span className="article-quality__score">{quality.score}/6 dimensions OK</span>
+            <span className="article-quality__score">{quality.score}/6 dimensions conformes</span>
           </p>
 
           <ul className="article-quality__list">
@@ -162,7 +162,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
                       {status === 'flagged' && !isDismissed ? <TriangleAlert size={16} /> : <CircleCheck size={16} />}
                     </span>
                     <span className="article-quality__item-name">{DIMENSION_LABEL[d]}</span>
-                    {isDismissed && <span className="article-quality__dismissed">marqué OK</span>}
+                    {isDismissed && <span className="article-quality__dismissed">marquée conforme</span>}
                   </div>
                   {status === 'flagged' && !isDismissed && (
                     <>
@@ -179,7 +179,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
                           onClick={() => handleDismiss(d)}
                           title={DIMENSION_HELP[d]}
                         >
-                          Marquer comme OK
+                          Marquer comme conforme
                         </button>
                       </div>
                     </>

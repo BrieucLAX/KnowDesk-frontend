@@ -109,7 +109,7 @@ describe('AnalysisTab', () => {
     ]));
     render(<AnalysisTab project={project()} onChanged={() => {}} onOpenAudit={() => {}} />);
     expect(await screen.findByText(/Les documents dépassent le volume de texte/)).toBeInTheDocument();
-    expect(screen.getByText(/Retirez des documents dans « Vos documents »/)).toBeInTheDocument();
+    expect(screen.getByText(/Retirez des documents dans l'onglet « Documents »/)).toBeInTheDocument();
     expect(screen.queryByText(/vous pouvez la relancer/)).not.toBeInTheDocument();
   });
 

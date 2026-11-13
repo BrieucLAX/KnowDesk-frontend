@@ -24,21 +24,21 @@ export function ChatbotPromptTab({ ctx }: { ctx: ChatbotTabContext }) {
     <>
       <p className="settings-section__desc">
         Instructions complètes envoyées à Mistral à chaque message du chatbot.
-        Le prompt utilise des <strong>variables Mustache</strong> (ex: <code className="km-mono">{`{{industry}}`}</code>)
-        qui sont remplacées par leurs valeurs au moment de l'envoi. Tu peux réorganiser
-        ou réécrire le prompt en gardant ces variables — elles continueront de refléter
-        tes réglages (tonalité, glossaire, etc.) sans devoir tout réécrire à chaque
-        changement. Pour repartir du template par défaut, clique sur « Restaurer le défaut ».
+        La consigne contient des <strong>variables</strong> (par exemple <code className="km-mono">{`{{industry}}`}</code>),
+        remplacées par leur valeur au moment de l'envoi. Vous pouvez réorganiser
+        ou réécrire la consigne en gardant ces variables : elles suivront vos
+        paramètres (tonalité, glossaire…) sans que vous ayez à tout réécrire à chaque
+        changement. Pour repartir de la consigne par défaut, cliquez sur « Restaurer la consigne par défaut ».
         {hasCustomPrompt && (
           <span className="chatbot-settings__prompt-active">
-            Prompt personnalisé actif.
+            Consigne personnalisée active.
           </span>
         )}
       </p>
 
       <div className="field">
         <label htmlFor="chat-system-prompt" className="field-label">
-          Prompt utilisé par le chatbot
+          Consigne utilisée par le chatbot
           {!editPrompt && (
             <span className="chatbot-settings__prompt-readonly">
               · lecture seule
@@ -49,8 +49,8 @@ export function ChatbotPromptTab({ ctx }: { ctx: ChatbotTabContext }) {
         {editPrompt && !promptDraft.includes('{{response_modes}}') && (
           <Alert tone="warning" role="alert" className="chatbot-settings__prompt-warning">
             La variable <code className="km-mono">{`{{response_modes}}`}</code> n'est pas dans
-            ton prompt. Sans elle, les garde-fous anti-jailbreak et le mode "fallback" sont
-            désactivés. Pense à la réinsérer si tu l'as supprimée par erreur.
+            votre consigne. Sans elle, les protections contre le détournement du chatbot et le
+            message de repli sont désactivés. Réinsérez-la si vous l'avez supprimée par erreur.
           </Alert>
         )}
 
@@ -72,8 +72,8 @@ export function ChatbotPromptTab({ ctx }: { ctx: ChatbotTabContext }) {
         <div className="chatbot-settings__prompt-footer">
           <p className="field-helper chatbot-settings__prompt-footer-helper">
             {editPrompt
-              ? <>Min. 50 caractères. {promptDraft.length} / 8000.</>
-              : <>Le prompt est verrouillé pour éviter les manipulations erronées. Clique sur « Modifier » pour le débloquer.</>
+              ? <>50 caractères minimum. {promptDraft.length} / 8 000.</>
+              : <>La consigne est verrouillée pour éviter les modifications par erreur. Cliquez sur « Modifier la consigne » pour la déverrouiller.</>
             }
           </p>
           {!editPrompt ? (
@@ -86,7 +86,7 @@ export function ChatbotPromptTab({ ctx }: { ctx: ChatbotTabContext }) {
                 setEditPrompt(true);
               }}
             >
-              <Pencil size={16} />Modifier
+              <Pencil size={16} />Modifier la consigne
             </Button>
           ) : (
             <div className="chatbot-settings__prompt-actions">
@@ -109,7 +109,7 @@ export function ChatbotPromptTab({ ctx }: { ctx: ChatbotTabContext }) {
                 onClick={restorePromptDefault}
                 disabled={promptDraft.trim() === defaultPrompt.trim() && !hasCustomPrompt}
               >
-                <RotateCcw size={16} />Restaurer le défaut
+                <RotateCcw size={16} />Restaurer la consigne par défaut
               </Button>
             </div>
           )}

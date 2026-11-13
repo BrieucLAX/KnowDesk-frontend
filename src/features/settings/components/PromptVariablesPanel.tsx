@@ -30,7 +30,7 @@ export function PromptVariablesPanel({ onInsert }: PromptVariablesPanelProps) {
     apiClient.get<{ variables: PromptVariable[] }>('/settings/org/chat/prompt-variables')
       .then(r => { setVariables(r.variables); setLoading(false); })
       .catch(err => {
-        setError(err instanceof ApiError ? err.message : 'Variables indisponibles.');
+        setError(err instanceof ApiError ? err.message : 'Les variables n\'ont pas pu être chargées. Rechargez la page.');
         setLoading(false);
       });
   }, []);
@@ -40,8 +40,8 @@ export function PromptVariablesPanel({ onInsert }: PromptVariablesPanelProps) {
       <header className="prompt-vars-panel__header">
         <h4 className="prompt-vars-panel__title">Variables disponibles</h4>
         <p className="prompt-vars-panel__hint">
-          Clique pour insérer dans le prompt. Les valeurs seront remplacées au
-          moment de l'envoi à Mistral.
+          Cliquez sur une variable pour l'insérer dans la consigne. Elle sera
+          remplacée par sa valeur au moment de l'envoi à Mistral.
         </p>
       </header>
 

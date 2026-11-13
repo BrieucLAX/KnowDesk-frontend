@@ -108,7 +108,7 @@ export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, c
         <p className="obp-correction-entry__left" role="status">{blockingLeftLabel(left)}</p>
       ) : quotaReached ? (
         <p className="obp-muted" role="status">
-          Votre espace a atteint son nombre de préparations ({quota!.max}). Contactez-nous pour en obtenir d'autres.
+          Votre organisation a atteint son nombre de préparations ({quota!.max}). Contactez-nous pour en obtenir d'autres.
         </p>
       ) : (
         <div className="obp-arb-entry">

@@ -60,7 +60,7 @@ export function FreeCadrageEditor({
     try {
       content = (await readAsText(file)).replace(/^\uFEFF/, '');
     } catch {
-      setImportNote(`« ${file.name} » n'a pas pu être lu.`);
+      setImportNote(`« ${file.name} » n'a pas pu être lu. Importez-le de nouveau, ou collez son texte.`);
       return;
     }
     // Signalements sur le contenu du fichier ; le texte reste modifiable avant l'enregistrement.

@@ -49,7 +49,7 @@ export function QuestionTreePage({ treeId, onBack, onViewArticle }: QuestionTree
   if (!currentNode) {
     return (
       <div className="tree-page tree-page--error">
-        <p className="tree-error">Aucun nœud trouvé dans ce processus.</p>
+        <p className="tree-error">Ce processus ne contient encore aucune étape.</p>
         <Button variant="ghost" size="sm" onClick={onBack} leftIcon={<ArrowLeft size={16} />}>Retour</Button>
       </div>
     );

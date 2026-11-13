@@ -15,7 +15,7 @@ export const ALL_DIMENSIONS: QualityDimension[] = [
 export const DIMENSION_LABEL: Record<QualityDimension, string> = {
   clarity:     'Clarté',
   actionable:  'Actionnable',
-  title_match: 'Titre↔contenu',
+  title_match: 'Titre et contenu',
   structure:   'Structure',
   freshness:   'Fraîcheur',
   vocabulary:  'Vocabulaire',
@@ -25,8 +25,8 @@ export const DIMENSION_HELP: Record<QualityDimension, string> = {
   clarity:     'Un conseiller comprend sans ambigüité quoi faire ?',
   actionable:  'Étapes concrètes ou politique claire ?',
   title_match: 'Le titre annonce-t-il fidèlement le contenu ?',
-  structure:   'Sections / listes / tableaux pour les longs articles ?',
-  freshness:   'Mention de prix / délai / URL externe à vérifier régulièrement.',
+  structure:   'Sections, listes ou tableaux pour les articles longs ?',
+  freshness:   'Mention de prix, de délai ou de lien externe à vérifier régulièrement.',
   vocabulary:  'Glossaire de l\'organisation respecté ?',
 };
 

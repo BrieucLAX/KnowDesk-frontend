@@ -13,7 +13,7 @@ export function useSynonyms() {
     let alive = true;
     apiClient.get<Synonym[]>('/synonyms')
       .then(data => { if (alive) setItems(data); })
-      .catch(err => { if (alive) setError(err instanceof ApiError ? err.message : 'Erreur de chargement.'); })
+      .catch(err => { if (alive) setError(err instanceof ApiError ? err.message : 'Les synonymes n\'ont pas pu être chargés. Rechargez la page.'); })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, []);
@@ -25,7 +25,7 @@ export function useSynonyms() {
       toast.success('Synonyme créé.');
       return true;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Création impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Le synonyme n\'a pas été créé. Réessayez.');
       return false;
     }
   }, [toast]);
@@ -37,7 +37,7 @@ export function useSynonyms() {
       toast.success('Synonyme mis à jour.');
       return true;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Mise à jour impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Le synonyme n\'a pas été mis à jour. Réessayez.');
       return false;
     }
   }, [toast]);
@@ -50,7 +50,7 @@ export function useSynonyms() {
       toast.success('Synonyme supprimé.');
     } catch (err) {
       setItems(previous);
-      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Le synonyme n\'a pas été supprimé. Réessayez.');
     }
   }, [items, toast]);
 

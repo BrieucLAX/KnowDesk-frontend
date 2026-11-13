@@ -75,7 +75,7 @@ export function OnboardingProjectPage({
       setProject(await onboardingApi.getProject(projectId));
     } catch (err) {
       setMissing(true);
-      toast.error(err instanceof Error ? err.message : 'Impossible de charger le projet.');
+      toast.error(err instanceof Error ? err.message : 'Impossible de charger le projet. Rechargez la page.');
     }
   }, [projectId, toast]);
 

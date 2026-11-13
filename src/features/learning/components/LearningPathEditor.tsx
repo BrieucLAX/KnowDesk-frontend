@@ -64,7 +64,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
         setHeaderMandatory(p.mandatory);
         setHeaderRenewal(p.renewal_months);
       })
-      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Erreur de chargement.'))
+      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger le parcours. Rechargez la page.'))
       .finally(() => setLoading(false));
   }, [pathId, toast]);
 
@@ -83,7 +83,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
       setPath(p => p ? { ...p, ...updated } : p);
       toast.success('Parcours mis à jour.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Sauvegarde impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Enregistrement du parcours impossible. Réessayez dans un instant.');
     } finally {
       setSavingHeader(false);
     }
@@ -101,7 +101,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
       setShowAddModule(false);
       toast.success('Module ajouté.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Ajout impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Ajout du module impossible. Réessayez dans un instant.');
     }
   }, [path, newModuleName, toast]);
 
@@ -113,7 +113,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
       setPath(p => p ? { ...p, modules: p.modules.filter(m => m.id !== moduleId) } : p);
       toast.success('Module supprimé.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Suppression du module impossible. Réessayez dans un instant.');
     } finally {
       setDeletingModule(false);
       setModuleToDelete(null);
@@ -140,7 +140,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
           footer={
             <>
               <Button type="button" variant="ghost" size="md" onClick={() => setShowAddModule(false)}>Annuler</Button>
-              <Button type="submit" variant="primary" size="md" disabled={!newModuleName.trim()}>Ajouter</Button>
+              <Button type="submit" variant="primary" size="md" disabled={!newModuleName.trim()}>Ajouter le module</Button>
             </>
           }
         >
@@ -185,12 +185,12 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
       <div className="learning-page">
         <PageHeader
           title={path.name}
-          subtitle="Édition d'un parcours de formation"
+          subtitle="Modification du parcours"
           actions={(
             <>
               <Button variant="ghost" size="md" onClick={onBack} leftIcon={<ArrowLeft size={20} />}>Retour</Button>
-              <Button variant="ghost" size="md" onClick={() => setShowCompletions(true)}>Suivi</Button>
-              <Button variant="ghost" size="md" onClick={() => setShowAssign(true)}>Assigner</Button>
+              <Button variant="ghost" size="md" onClick={() => setShowCompletions(true)}>Voir le suivi</Button>
+              <Button variant="ghost" size="md" onClick={() => setShowAssign(true)}>Assigner le parcours</Button>
             </>
           )}
         />
@@ -240,7 +240,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
             </div>
             <div className="learning-form__actions">
               <Button variant="primary" size="sm" onClick={saveHeader} loading={savingHeader}>
-                Sauvegarder
+                Enregistrer les modifications
               </Button>
             </div>
           </div>
@@ -265,7 +265,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
                     <span className="learning-module__name">{m.name}</span>
                   </div>
                   <div className="learning-module__actions">
-                    <Button variant="ghost" size="sm" onClick={() => setEditingModule(m)}>Éditer</Button>
+                    <Button variant="ghost" size="sm" onClick={() => setEditingModule(m)}>Modifier</Button>
                     <Button variant="danger" size="sm" onClick={() => setModuleToDelete(m)}>Supprimer</Button>
                   </div>
                 </li>
@@ -331,7 +331,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
         setTrees(ts.map(t => ({ id: t.id, title: t.title })));
         setQuiz(q);
       })
-      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Erreur de chargement.'))
+      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger le module. Réessayez dans un instant.'))
       .finally(() => { if (alive) setLoadingRes(false); });
     return () => { alive = false; };
   }, [module.id, toast]);
@@ -344,7 +344,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
       onRename(name.trim());
       toast.success('Module renommé.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Erreur.');
+      toast.error(err instanceof ApiError ? err.message : 'Renommage du module impossible. Réessayez dans un instant.');
     } finally {
       setSavingName(false);
     }
@@ -361,7 +361,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
       resource_type: r.resource_type, resource_id: r.resource_id, position: r.position,
     })))
       .then(setResources)
-      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Erreur.'));
+      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Ajout de la ressource impossible. Réessayez dans un instant.'));
   }, [resources, module.id, toast]);
 
   const removeResource = useCallback((id: string) => {
@@ -371,7 +371,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
       resource_type: r.resource_type, resource_id: r.resource_id, position: r.position,
     })))
       .then(setResources)
-      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Erreur.'));
+      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Retrait de la ressource impossible. Réessayez dans un instant.'));
   }, [resources, module.id, toast]);
 
   const generateQuiz = useCallback(async () => {
@@ -387,7 +387,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
       setQuiz(saved);
       toast.success('Quiz généré par l\'IA.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Génération IA indisponible.');
+      toast.error(err instanceof ApiError ? err.message : 'Génération du quiz impossible pour le moment. Réessayez dans un instant.');
     } finally {
       setGenerating(false);
     }
@@ -397,7 +397,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
     // Pas d'endpoint DELETE explicite : on peut juste laisser le quiz, ou
     // sauver un tableau vide → mais notre validation impose ≥ 1 question.
     // Pour V1 : on garde le quiz, possibilité d'éditer manuellement plus tard.
-    toast.error('Pour supprimer un quiz, regénérez-le ou éditez-le manuellement.');
+    toast.error('Un quiz ne peut pas être supprimé. Vous pouvez le régénérer à la place.');
   }, [toast]);
 
   // Titre lookup helpers
@@ -427,7 +427,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
               onChange={e => setName(e.target.value)}
             />
             <Button variant="ghost" size="sm" onClick={saveName} loading={savingName} disabled={name === module.name}>
-              Renommer
+              Renommer le module
             </Button>
           </div>
         </div>
@@ -445,7 +445,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
                     {r.resource_type === 'article' ? 'Article' : r.resource_type === 'faq' ? 'FAQ' : 'Processus'}
                   </span>
                   <span className="module-editor__title">{resourceTitle(r)}</span>
-                  <Button variant="ghost" size="sm" onClick={() => removeResource(r.id)}><X size={16} /></Button>
+                  <Button variant="ghost" size="sm" onClick={() => removeResource(r.id)} aria-label="Retirer la ressource"><X size={16} /></Button>
                 </li>
               ))}
             </ul>
@@ -458,7 +458,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
               onPick={addResource}
             />
             <p className="module-editor__picker-hint">
-              Tapez pour filtrer articles, FAQs et processus.
+              Tapez quelques lettres pour trouver un article, une FAQ ou un processus.
             </p>
           </>
         )}
@@ -468,7 +468,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
           <>
             <p className="module-editor__quiz-meta">
               {quiz.questions.length} questions · seuil de réussite : {quiz.passing_score}% ·{' '}
-              {quiz.generated_by === 'ai' ? 'Généré par IA' : 'Saisi manuellement'}
+              {quiz.generated_by === 'ai' ? 'Généré par l\'IA' : 'Saisi manuellement'}
             </p>
             <ul className="module-editor__quiz-list">
               {quiz.questions.map((q, i) => (
@@ -580,7 +580,7 @@ function ResourcePicker({ articles, faqs, trees, alreadyAdded, onPick }: {
         label="Ajouter une ressource"
         labelHidden
         type="text"
-        placeholder="+ Ajouter une ressource — article, FAQ ou processus…"
+        placeholder="Ajouter une ressource : article, FAQ ou processus…"
         value={query}
         onChange={e => { setQuery(e.target.value); setOpen(true); }}
         onFocus={() => setOpen(true)}
@@ -609,7 +609,7 @@ function ResourcePicker({ articles, faqs, trees, alreadyAdded, onPick }: {
               {groups.faq.length > 0 && (
                 <ResourcePickerSection
                   type="faq"
-                  label="FAQs"
+                  label="FAQ"
                   items={groups.faq}
                   onPick={pick}
                 />
@@ -685,7 +685,7 @@ function AssignUsersModal({ pathId, onClose }: { pathId: string; onClose: () => 
         })));
         setAssigned(new Set(a.map(x => x.user_id)));
       })
-      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Erreur de chargement.'))
+      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les membres. Réessayez dans un instant.'))
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, [pathId, toast]);
@@ -701,7 +701,7 @@ function AssignUsersModal({ pathId, onClose }: { pathId: string; onClose: () => 
         setAssigned(prev => new Set(prev).add(userId));
       }
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Erreur.');
+      toast.error(err instanceof ApiError ? err.message : 'Modification de l\'assignation impossible. Réessayez dans un instant.');
     } finally {
       setSaving(false);
     }
@@ -750,7 +750,7 @@ function CompletionsModal({ pathId, onClose }: { pathId: string; onClose: () => 
     let alive = true;
     learningApi.pathCompletions(pathId)
       .then(d => { if (alive) setData(d); })
-      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Erreur de chargement.'))
+      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger le suivi. Réessayez dans un instant.'))
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, [pathId, toast]);
@@ -778,7 +778,7 @@ function CompletionsModal({ pathId, onClose }: { pathId: string; onClose: () => 
     >
       {loading ? <Skeleton className="sk-card" /> : !data ? null : data.assignments.length === 0 ? (
         <p className="learning-empty">
-          Aucun conseiller n'est encore assigné à ce parcours. Cliquez sur « Assigner » pour en ajouter.
+          Aucun conseiller n'est encore assigné à ce parcours. Cliquez sur « Assigner le parcours » pour en ajouter.
         </p>
       ) : (
         <>
