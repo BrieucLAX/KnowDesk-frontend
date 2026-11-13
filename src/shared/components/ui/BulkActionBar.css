@@ -9,7 +9,7 @@
   background: var(--neutral-900);
   color: var(--neutral-0);
   border-radius: var(--radius-lg);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow-sm);
   font-size: 13px;
   animation: bulk-bar-in 0.18s ease-out;
 }
@@ -22,22 +22,22 @@
 }
 .bulk-action-bar__actions .btn {
   /* Bouton ghost / danger sur fond foncé : on force les couleurs lisibles */
-  background: rgba(255,255,255,0.08);
+  background: color-mix(in srgb, var(--surface-raised) 8%, transparent);
   color: var(--neutral-0);
-  border-color: rgba(255,255,255,0.16);
+  border-color: color-mix(in srgb, var(--surface-raised) 16%, transparent);
 }
 .bulk-action-bar__actions .btn:hover:not(:disabled) {
-  background: rgba(255,255,255,0.16);
-  border-color: rgba(255,255,255,0.24);
+  background: color-mix(in srgb, var(--surface-raised) 16%, transparent);
+  border-color: color-mix(in srgb, var(--surface-raised) 24%, transparent);
 }
 .bulk-action-bar__actions .btn--danger {
   background: var(--color-danger);
   border-color: var(--color-danger);
-  color: white;
+  color: var(--on-primary);
 }
 .bulk-action-bar__actions .btn--danger:hover:not(:disabled) {
-  background: #c52323;
-  border-color: #c52323;
+  background: color-mix(in srgb, var(--danger) 85%, var(--ink));
+  border-color: color-mix(in srgb, var(--danger) 85%, var(--ink));
 }
 
 @keyframes bulk-bar-in {

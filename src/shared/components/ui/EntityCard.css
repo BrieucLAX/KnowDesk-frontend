@@ -3,14 +3,13 @@
   flex-direction: column;
   gap: 12px;
   padding: 20px;
-  background: var(--neutral-0, #fff);
+  background: var(--surface-raised);
   border: 1px solid var(--neutral-100);
   border-radius: var(--radius-lg);
   transition: border-color var(--t-fast), box-shadow var(--t-fast);
 }
 .entity-card:hover {
   border-color: var(--brand-300, var(--brand-500));
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .entity-card__main {

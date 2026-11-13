@@ -27,9 +27,9 @@
   to   { opacity: 1; transform: translateX(0); }
 }
 
-.toast--success { background: #EAF7F0; color: #1A6B3C; border: 1px solid #BBDFC8; }
+.toast--success { background: var(--success-soft); color: var(--success); border: 1px solid color-mix(in srgb, var(--success) 35%, var(--success-soft)); }
 .toast--error   { background: var(--color-danger-bg); color: var(--color-danger); border: 1px solid var(--color-danger-border); }
-.toast--warning { background: #FEF6E7; color: #7A4800; border: 1px solid #F5C842; }
+.toast--warning { background: var(--warning-soft); color: var(--warning); border: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft)); }
 .toast--info    { background: var(--brand-50); color: var(--brand-700); border: 1px solid var(--brand-200); }
 .toast__icon    { flex-shrink: 0; }
 .toast__message { flex: 1; line-height: 1.4; }

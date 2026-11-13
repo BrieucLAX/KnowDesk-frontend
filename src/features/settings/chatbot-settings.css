@@ -49,9 +49,9 @@
 .chatbot-settings__prompt-warning {
   margin-bottom: 10px;
   padding: 8px 12px;
-  background: var(--color-danger-bg, #FEE);
-  border: 1px solid var(--color-danger-border, #FCC);
-  color: var(--color-danger, #C0392B);
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  color: var(--color-danger);
   border-radius: 8px;
   font-size: 12.5px;
   line-height: 1.5;
@@ -61,7 +61,7 @@
 .chatbot-settings__prompt-active {
   display: inline-block;
   margin-left: 6px;
-  color: var(--brand-600, #5B6CFF);
+  color: var(--brand-600);
   font-weight: 600;
 }
 
@@ -75,15 +75,15 @@
 
 /* Prompt système — textarea long */
 .chatbot-settings__prompt-textarea {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 12.5px;
   line-height: 1.5;
   height: auto;
   padding: 12px 14px;
   resize: vertical;
 }
-.chatbot-settings__prompt-textarea--editable { background: white; cursor: text; }
-.chatbot-settings__prompt-textarea--readonly { background: var(--neutral-50, #f8f9fb); cursor: default; }
+.chatbot-settings__prompt-textarea--editable { background: var(--surface-raised); cursor: text; }
+.chatbot-settings__prompt-textarea--readonly { background: var(--neutral-50); cursor: default; }
 
 /* Prompt système — bandeau footer (helper texte + boutons à droite) */
 .chatbot-settings__prompt-footer {
@@ -114,11 +114,11 @@
 
 /* Embed snippet — bloc de code copiable */
 .chatbot-settings__embed-snippet {
-  background: var(--neutral-50, #F8F9FB);
+  background: var(--neutral-50);
   border: 1px solid var(--neutral-200);
   border-radius: 6px;
   padding: 14px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--neutral-900);
@@ -129,8 +129,8 @@
 
 /* Test live — bandeau pré-requis (ajoute le domaine à la liste blanche) */
 .chatbot-settings__test-prerequisite {
-  background: oklch(0.97 0.04 250);
-  border: 1px solid oklch(0.85 0.06 250);
+  background: var(--info-soft);
+  border: 1px solid color-mix(in srgb, var(--info) 35%, var(--info-soft));
   border-radius: var(--radius-md);
   padding: 14px;
   font-size: 13px;

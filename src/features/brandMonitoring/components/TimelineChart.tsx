@@ -4,13 +4,16 @@ import { brandMonitoringApi } from '../api/brandMonitoringApi';
 import { useToast } from '../../../shared/lib/useToast';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import type { Timeline } from '../types';
+import { CHART_SERIES, CHART_GRID, CHART_AXIS } from '../../../shared/lib/chartColors';
 
 interface TimelineChartProps {
   projectId: string;
 }
 
-// Palette stable, owner force d'abord sur la couleur primaire brand
-const PALETTE = ['#5B6CFF', '#FB923C', '#10B981', '#F59E0B', '#EC4899', '#8B5CF6', '#06B6D4'];
+// La marque du client prend toujours la première couleur (--primary) ; les
+// concurrents se partagent les cinq suivantes. Au-delà de cinq concurrents,
+// les couleurs se répètent (le trait épais et l'étoile distinguent le client).
+const [OWNER_COLOR, ...COMPETITOR_COLORS] = CHART_SERIES;
 
 type Bucket = 'day' | 'week';
 
@@ -46,7 +49,8 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
       if (!a.isOwner && b.isOwner) return 1;
       return a.name.localeCompare(b.name);
     });
-    const brandsWithColor = orderedBrands.map((b, i) => ({ ...b, color: b.isOwner ? PALETTE[0] : PALETTE[(i + 1) % PALETTE.length] }));
+    const ownerCount = orderedBrands.filter(b => b.isOwner).length;
+    const brandsWithColor = orderedBrands.map((b, i) => ({ ...b, color: b.isOwner ? OWNER_COLOR : COMPETITOR_COLORS[(i - ownerCount) % COMPETITOR_COLORS.length] }));
     const chartData = data.series.map(point => {
       const row: Record<string, string | number> = {
         bucket: formatBucketLabel(point.bucket, bucket),
@@ -97,17 +101,17 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
         <div className="bm-timeline__chart">
           <ResponsiveContainer width="100%" height={320}>
             <LineChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#eaecef" />
-              <XAxis dataKey="bucket" fontSize={11} stroke="#6b7280" />
+              <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID} />
+              <XAxis dataKey="bucket" fontSize={11} stroke={CHART_AXIS} />
               <YAxis
                 fontSize={11}
-                stroke="#6b7280"
+                stroke={CHART_AXIS}
                 tickFormatter={(v: number) => `${v}%`}
                 domain={[0, 'dataMax']}
               />
               <Tooltip
                 formatter={(v: number) => `${v.toFixed(1)}%`}
-                contentStyle={{ fontSize: 12, borderRadius: 8 }}
+                contentStyle={{ fontSize: 12, borderRadius: 8, background: 'var(--surface-raised)', borderColor: 'var(--line)', color: 'var(--ink)' }}
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               {brands.map(b => (

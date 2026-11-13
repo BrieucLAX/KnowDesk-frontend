@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import type { Endpoint, Lang } from '../utils/types';
 import { CodeBlock } from './CodeBlock';
 
+// Méthodes HTTP : lecture = succès, création = info, modification = avertissement,
+// suppression = danger. Texte du badge en --on-primary (apidocs.css).
 const METHOD_COLORS: Record<string, string> = {
-  GET:    '#10B981',
-  POST:   '#3B82F6',
-  PUT:    '#F59E0B',
-  PATCH:  '#F59E0B',
-  DELETE: '#EF4444',
+  GET:    'var(--success)',
+  POST:   'var(--info)',
+  PUT:    'var(--warning)',
+  PATCH:  'var(--warning)',
+  DELETE: 'var(--danger)',
 };
 
 const LANG_LABELS: Record<Lang, string> = {

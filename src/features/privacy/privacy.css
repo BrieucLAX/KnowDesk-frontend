@@ -2,15 +2,15 @@
   max-width: 820px;
   margin: 0 auto;
   padding: 48px 24px 96px;
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: var(--neutral-900, #1f2937);
+  font-family: var(--font-sans);
+  color: var(--neutral-900);
   line-height: 1.6;
 }
 
 .privacy-page__header {
   margin-bottom: 40px;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--neutral-200, #e5e7eb);
+  border-bottom: 1px solid var(--neutral-200);
 }
 
 .privacy-page__title {
@@ -22,7 +22,7 @@
 
 .privacy-page__subtitle {
   font-size: 14px;
-  color: var(--neutral-500, #6b7280);
+  color: var(--neutral-500);
   margin: 0;
 }
 
@@ -34,7 +34,7 @@
   font-size: 19px;
   font-weight: 600;
   margin: 0 0 12px;
-  color: var(--brand-700, #4655E0);
+  color: var(--brand-700);
 }
 
 .privacy-page__section p {
@@ -53,19 +53,19 @@
 }
 
 .privacy-page__section code {
-  font-family: 'SF Mono', Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 13px;
-  background: var(--neutral-100, #f3f4f6);
+  background: var(--neutral-100);
   padding: 1px 5px;
   border-radius: 3px;
-  color: var(--neutral-800, #1f2937);
+  color: var(--neutral-800);
 }
 
 .privacy-page__section a {
-  color: var(--brand-600, #5B6CFF);
+  color: var(--brand-600);
   text-decoration: underline;
 }
 
 .privacy-page__section a:hover {
-  color: var(--brand-700, #4655E0);
+  color: var(--brand-700);
 }

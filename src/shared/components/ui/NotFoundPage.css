@@ -34,7 +34,7 @@
 .not-found__btn {
   display: inline-flex; align-items: center;
   padding: 10px 20px;
-  background: var(--brand-600); color: #fff;
+  background: var(--brand-600); color: var(--on-primary);
   font-family: var(--font-ui); font-size: 14px; font-weight: 600;
   border: none; border-radius: var(--radius-md);
   cursor: pointer;

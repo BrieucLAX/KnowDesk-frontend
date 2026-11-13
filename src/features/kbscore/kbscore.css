@@ -4,7 +4,7 @@
 
 /* ───── Phase C — KB Health Score ───── */
 .kbscore {
-  background: white;
+  background: var(--surface-raised);
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-xl);
   padding: 22px 24px;
@@ -30,18 +30,18 @@
   padding: 14px 22px; border-radius: var(--radius-lg);
   flex-shrink: 0;
 }
-.kbscore__hero--critical  { background: #fee2e2; color: #991b1b; }
-.kbscore__hero--warning   { background: #fef3c7; color: #92400e; }
-.kbscore__hero--good      { background: #ecfdf5; color: #065f46; }
-.kbscore__hero--excellent { background: #ddd6fe; color: #5b21b6; }
+.kbscore__hero--critical  { background: var(--danger-soft); color: var(--danger); }
+.kbscore__hero--warning   { background: var(--warning-soft); color: var(--warning); }
+.kbscore__hero--good      { background: var(--success-soft); color: var(--success); }
+.kbscore__hero--excellent { background: var(--success-soft); color: var(--success); }
 .kbscore__hero-num   { font-size: 56px; font-weight: 700; line-height: 1; }
 .kbscore__hero-meta  { display: flex; flex-direction: column; gap: 4px; }
-.kbscore__hero-label { font-size: 13px; opacity: 0.7; }
+.kbscore__hero-label { font-size: 13px; }
 .kbscore__band {
   font-size: 12px; font-weight: 600; text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 3px 10px; border-radius: var(--radius-full);
-  background: rgba(255,255,255,0.6);
+  background: color-mix(in srgb, var(--surface-raised) 60%, transparent);
   display: inline-block; width: fit-content;
 }
 .kbscore__dims {
@@ -51,7 +51,7 @@
 }
 .kbscore__dim {
   padding: 12px 14px;
-  background: var(--neutral-50, #f8f9fb);
+  background: var(--surface);
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-lg);
   display: flex; flex-direction: column; gap: 6px;
@@ -61,8 +61,9 @@
    se cascade dans le stacking context CSS, rendant la bulle tooltip
    translucide alors que c'est précisément à ce moment qu'il faut la lire. */
 .kbscore__dim--na .kbscore__dim-score,
-.kbscore__dim--na .kbscore__dim-bar,
-.kbscore__dim--na .kbscore__dim-detail { opacity: 0.6; }
+.kbscore__dim--na .kbscore__dim-bar { opacity: 0.6; }
+/* Le détail reste lisible (4,5:1) : texte secondaire plein, sans opacité. */
+.kbscore__dim--na .kbscore__dim-detail { color: var(--ink-muted); }
 .kbscore__dim-top {
   display: flex; align-items: baseline; justify-content: space-between;
 }
@@ -73,20 +74,20 @@
   font-size: 22px; font-weight: 700; color: var(--neutral-900);
   line-height: 1;
 }
-.kbscore__dim--critical  .kbscore__dim-score { color: #991b1b; }
-.kbscore__dim--warning   .kbscore__dim-score { color: #92400e; }
-.kbscore__dim--good      .kbscore__dim-score { color: #065f46; }
-.kbscore__dim--excellent .kbscore__dim-score { color: #5b21b6; }
+.kbscore__dim--critical  .kbscore__dim-score { color: var(--danger); }
+.kbscore__dim--warning   .kbscore__dim-score { color: var(--warning); }
+.kbscore__dim--good      .kbscore__dim-score { color: var(--success); }
+.kbscore__dim--excellent .kbscore__dim-score { color: var(--success); }
 .kbscore__dim-bar {
   height: 6px; background: var(--neutral-200); border-radius: 3px; overflow: hidden;
 }
 .kbscore__dim-bar-fill {
   height: 100%; transition: width 0.4s ease;
 }
-.kbscore__dim-bar-fill--critical  { background: #ef4444; }
-.kbscore__dim-bar-fill--warning   { background: #f59e0b; }
-.kbscore__dim-bar-fill--good      { background: #10b981; }
-.kbscore__dim-bar-fill--excellent { background: #8b5cf6; }
+.kbscore__dim-bar-fill--critical  { background: var(--danger); }
+.kbscore__dim-bar-fill--warning   { background: var(--warning); }
+.kbscore__dim-bar-fill--good      { background: color-mix(in srgb, var(--success) 60%, var(--success-soft)); }
+.kbscore__dim-bar-fill--excellent { background: var(--success); }
 .kbscore__dim-bar-fill--na        { background: var(--neutral-300); }
 .kbscore__dim-detail {
   font-size: 11.5px; color: var(--neutral-700); line-height: 1.4;
@@ -111,15 +112,14 @@
   display: flex; align-items: center; gap: 12px;
   width: 100%;
   padding: 10px 14px;
-  background: white; border: 1px solid var(--neutral-200);
+  background: var(--surface-raised); border: 1px solid var(--neutral-200);
   border-radius: var(--radius-md);
   font-family: inherit; text-align: left;
   cursor: pointer;
   transition: border-color var(--t-fast), box-shadow var(--t-fast);
 }
 .kbscore__reco-btn:hover:not(:disabled) {
-  border-color: var(--brand-500, #5B6CFF);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  border-color: var(--primary);
 }
 .kbscore__reco-btn:disabled { cursor: default; }
 .kbscore__reco-text {
@@ -128,7 +128,7 @@
 .kbscore__reco-impact {
   flex-shrink: 0;
   font-size: 11px; font-weight: 600;
-  background: var(--brand-50, #eef0ff); color: var(--brand-600, #5B6CFF);
+  background: var(--primary-soft); color: var(--primary);
   padding: 3px 10px; border-radius: var(--radius-full);
 }
 

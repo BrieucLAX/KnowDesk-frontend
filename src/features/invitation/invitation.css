@@ -14,8 +14,8 @@
 .invitation-success__icon {
   width: 56px; height: 56px;
   border-radius: 50%;
-  background: #EAF7F0;
-  color: #1A6B3C;
+  background: var(--success-soft);
+  color: var(--success);
   font-size: 24px;
   display: flex;
   align-items: center;

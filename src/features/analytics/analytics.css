@@ -42,7 +42,7 @@
 .analytics-card__desc  { font-size: 12px; color: var(--neutral-500); }
 .analytics-card__body  { flex: 1; }
 .analytics-card__empty {
-  font-size: 13px; color: var(--neutral-400); padding: 16px 0; text-align: center;
+  font-size: 13px; color: var(--ink-muted); padding: 16px 0; text-align: center;
 }
 
 .analytics-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; max-height: 280px; overflow-y: auto; }
@@ -60,7 +60,7 @@
 }
 .analytics-list__btn:hover { background: var(--neutral-50); }
 .analytics-list__title { font-size: 13px; font-weight: 600; color: var(--neutral-800); }
-.analytics-list__meta  { font-size: 11px; color: var(--neutral-400); }
+.analytics-list__meta  { font-size: 11px; color: var(--ink-muted); }
 .analytics-list__counter { font-size: 13px; font-weight: 600; color: var(--neutral-700); }
 .analytics-list__counter-recent { font-size: 11px; color: var(--neutral-500); font-weight: 400; }
 
@@ -83,15 +83,15 @@
 }
 
 /* Champ hint discret sous un input */
-.field-hint { font-size: 12px; color: var(--neutral-400); margin-top: 4px; }
+.field-hint { font-size: 12px; color: var(--ink-muted); margin-top: 4px; }
 
 /* Variante warning du field-helper (compteur de caractères qui dépasse soft) */
-.field-helper--warning { color: #92400E; }
+.field-helper--warning { color: var(--warning); }
 
 /* ── AnalyticsPage — Réponse IA ──────────────────────────────── */
 .ai-stats {
-  background: linear-gradient(135deg, oklch(0.98 0.02 290), var(--neutral-0));
-  border: 1px solid oklch(0.85 0.06 290);
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 20px 24px;
   margin: 24px 0;
@@ -99,7 +99,7 @@
 .ai-stats__header { margin-bottom: 16px; }
 .ai-stats__title {
   font-size: 16px; font-weight: 600;
-  color: oklch(0.4 0.16 290);
+  color: var(--primary);
   margin: 0;
 }
 .ai-stats__row {
@@ -161,7 +161,7 @@
 
 /* ── Word cloud (verbatims chatbot) ─────────────────────────── */
 .word-cloud {
-  background: var(--neutral-0, #fff);
+  background: var(--surface-raised);
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-lg);
   padding: 20px 24px;
@@ -200,9 +200,9 @@
 }
 .word-cloud__toggle-btn:hover { color: var(--neutral-900); }
 .word-cloud__toggle-btn--active {
-  background: var(--neutral-0, #fff);
+  background: var(--surface-raised);
   color: var(--brand-700);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  box-shadow: var(--shadow-sm);
   font-weight: 600;
 }
 

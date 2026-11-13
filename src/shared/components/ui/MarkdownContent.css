@@ -23,7 +23,7 @@
   background: var(--neutral-100);
   border-radius: var(--radius-sm);
   padding: 1px 6px;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.9em;
 }
 .markdown-content pre {
@@ -31,7 +31,7 @@
   border-radius: var(--radius-sm);
   padding: 8px 12px;
   overflow-x: auto;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.5;
 }

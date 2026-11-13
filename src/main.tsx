@@ -29,17 +29,17 @@ function ErrorFallback() {
   return (
     <div role="alert" style={{
       maxWidth: 520, margin: '80px auto', padding: '32px 28px',
-      fontFamily: 'system-ui, sans-serif', textAlign: 'center',
+      fontFamily: 'var(--font-sans)', textAlign: 'center',
     }}>
       <h1 style={{ fontSize: 22, marginBottom: 12 }}>Une erreur s'est produite</h1>
-      <p style={{ fontSize: 14, color: '#555', lineHeight: 1.5, marginBottom: 20 }}>
+      <p style={{ fontSize: 14, color: 'var(--ink-muted)', lineHeight: 1.5, marginBottom: 20 }}>
         L'équipe technique a été automatiquement notifiée. Recharge la page pour réessayer.
       </p>
       <button
         type="button"
         onClick={() => window.location.reload()}
         style={{
-          padding: '10px 22px', background: '#5B6CFF', color: 'white',
+          padding: '10px 22px', background: 'var(--primary)', color: 'var(--on-primary)',
           border: 0, borderRadius: 8, cursor: 'pointer', fontSize: 14,
         }}
       >

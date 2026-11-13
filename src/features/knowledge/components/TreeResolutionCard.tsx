@@ -76,8 +76,8 @@ export function TreeResolutionCard({
 function CheckIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" fill="#EAF7F0" stroke="#1A6B3C" strokeWidth="1.5"/>
-      <path d="M7 12.5l3.5 3.5 6.5-7" stroke="#1A6B3C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="12" cy="12" r="10" fill="var(--success-soft)" stroke="var(--success)" strokeWidth="1.5"/>
+      <path d="M7 12.5l3.5 3.5 6.5-7" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
