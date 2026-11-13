@@ -5,7 +5,7 @@
 .audit-page { display: flex; flex-direction: column; max-width: 1100px; }
 
 .audit-page__filter-select {
-  padding: 6px 10px; border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
+  padding: 6px 10px; border: 1px solid var(--neutral-200); border-radius: var(--radius-sm);
   font-family: inherit; font-size: 13px; background: var(--surface-raised);
 }
 .audit-page__filter-date {
@@ -13,13 +13,13 @@
   font-size: 12px; color: var(--neutral-600);
 }
 .audit-page__filter-date input {
-  padding: 5px 8px; border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
+  padding: 5px 8px; border: 1px solid var(--neutral-200); border-radius: var(--radius-sm);
   font-family: inherit; font-size: 12px; background: var(--surface-raised);
 }
 .audit-page__filter-reset {
   background: transparent; border: 0; color: var(--primary);
   font-size: 12px; cursor: pointer; padding: 4px 8px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
 }
 .audit-page__filter-reset:hover { background: var(--primary-soft); }
 .audit-page__count {
@@ -48,7 +48,7 @@
 .audit-table__detail-btn {
   background: transparent; border: 0; color: var(--primary);
   font-size: 12px; cursor: pointer; padding: 4px 10px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
 }
 .audit-table__detail-btn:hover { background: var(--primary-soft); }
 

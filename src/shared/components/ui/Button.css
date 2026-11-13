@@ -1,75 +1,81 @@
 /* ─────────────────────────────────────────────────────────────
    Button — composant atom partagé (Button.tsx).
-   Importé via Button.tsx (co-localisé).
+   Aligné sur la fiche Button du design system CX
+   (docs/design-system/components/Button, classes de référence cx-btn).
    ───────────────────────────────────────────────────────────── */
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: var(--space-2);
   font-family: var(--font-ui);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  line-height: 1;
   border-radius: var(--radius-md);
-  border: 1.5px solid transparent;
-  transition: background var(--t-fast), border-color var(--t-fast), opacity var(--t-fast);
+  border: 1px solid transparent;
+  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
   white-space: nowrap;
   user-select: none;
 }
 
 .btn:focus-visible {
-  outline: 2.5px solid var(--brand-500);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
 .btn:active:not(.btn-disabled) { transform: scale(0.985); }
 
-/* Sizes */
-.btn-sm  { height: 32px; padding: 0 12px; font-size: 12px; }
-.btn-md  { height: 38px; padding: 0 16px; font-size: 13px; }
-.btn-lg  { height: var(--input-h); padding: 0 20px; font-size: 14px; }
+/* Tailles : normale 44 px (cible tactile), petite 36 px, grande = hauteur
+   d'un champ. */
+.btn-sm  { min-height: 36px; padding: 0 14px; font-size: 13px; }
+.btn-md  { min-height: 44px; padding: 0 20px; font-size: 15px; }
+.btn-lg  { min-height: var(--input-h); padding: 0 24px; font-size: 15px; }
 .btn-full { width: 100%; }
 
-/* Variants */
+/* Bouton icône : carré, une seule icône, aria-label obligatoire (Button.tsx). */
+.btn-icon-only { padding: 0; }
+.btn-icon-only.btn-sm { width: 36px; }
+.btn-icon-only.btn-md { width: 44px; }
+.btn-icon-only.btn-lg { width: var(--input-h); }
+
+/* Variantes */
 .btn-primary {
-  background: var(--brand-600);
-  color: var(--neutral-0);
-  border-color: var(--brand-600);
+  background: var(--primary);
+  color: var(--on-primary);
 }
-.btn-primary:hover:not(.btn-disabled) {
-  background: var(--brand-700);
-  border-color: var(--brand-700);
-}
+.btn-primary:hover:not(.btn-disabled) { background: var(--ink); }
 
 .btn-secondary {
-  background: var(--neutral-0);
-  color: var(--neutral-700);
-  border-color: var(--neutral-200);
+  background: var(--surface-raised);
+  color: var(--ink);
+  border-color: var(--line-strong);
 }
-.btn-secondary:hover:not(.btn-disabled) {
-  background: var(--neutral-50);
-  border-color: var(--neutral-300);
-}
+.btn-secondary:hover:not(.btn-disabled) { background: var(--surface); }
 
 .btn-ghost {
   background: transparent;
-  color: var(--neutral-500);
-  border-color: transparent;
+  color: var(--primary);
 }
-.btn-ghost:hover:not(.btn-disabled) {
-  background: var(--neutral-100);
-  color: var(--neutral-700);
-}
+.btn-ghost:hover:not(.btn-disabled) { background: var(--primary-soft); }
 
 .btn-danger {
-  background: var(--color-danger-bg);
-  color: var(--color-danger);
-  border-color: var(--color-danger-border);
+  background: var(--danger);
+  color: var(--on-primary);
 }
-.btn-danger:hover:not(.btn-disabled) { filter: brightness(0.97); }
+.btn-danger:hover:not(.btn-disabled) {
+  background: color-mix(in srgb, var(--danger) 85%, var(--ink));
+}
 
-.btn-disabled { opacity: 0.4; cursor: not-allowed; }
+/* Désactivé : fond line, texte ink-muted, sans opacité (contraste 4,5:1). */
+.btn-disabled:not([aria-busy="true"]) {
+  background: var(--line);
+  color: var(--ink-muted);
+  border-color: transparent;
+}
+.btn-disabled { cursor: not-allowed; }
+/* En cours de chargement : la variante garde ses couleurs, seul le curseur change. */
+.btn-disabled[aria-busy="true"] { cursor: progress; }
 
 /* Loading spinner inside button */
 .btn-spinner {

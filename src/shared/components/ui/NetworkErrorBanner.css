@@ -1,25 +1,28 @@
 /* ─────────────────────────────────────────────────────────────
    NetworkErrorBanner — bandeau d'alerte réseau en haut d'écran.
+   Fiche Alert, variante warning : fond warning-soft, texte ink, seule
+   l'icône est colorée ; role="status".
    ───────────────────────────────────────────────────────────── */
 
 .network-banner {
   position: fixed;
   top: 0; left: 0; right: 0;
-  background: var(--warning);
-  color: var(--on-primary);
-  padding: 10px 20px;
-  font-size: 13px;
-  font-weight: 600;
+  background: var(--warning-soft);
+  border-bottom: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
+  color: var(--ink);
+  padding: 12px 20px;
+  font-size: 15px;
+  line-height: 24px;
   text-align: center;
   z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
   animation: slide-down 0.2s ease;
 }
 @keyframes slide-down {
   from { transform: translateY(-100%); }
   to   { transform: translateY(0); }
 }
-.network-banner__icon { font-size: 16px; }
+.network-banner__icon { flex-shrink: 0; color: var(--warning); }

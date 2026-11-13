@@ -1,5 +1,7 @@
 import React from 'react';
 import { useAuthStore } from '../../../store/authStore';
+import { Button } from './Button';
+import { StatusIcon } from './StatusIcon';
 import './ImpersonateBanner.css';
 
 export function ImpersonateBanner() {
@@ -32,18 +34,20 @@ const handleReturn = async () => {
 };
 
   return (
-    <div className="impersonate-banner" role="alert">
-      <span className="impersonate-banner__icon">👁</span>
+    <div className="impersonate-banner" role="status">
+      <StatusIcon tone="warning" className="impersonate-banner__icon" />
       <span className="impersonate-banner__text">
         Mode impersonnification — Espace : <strong>{impersonating.orgName}</strong>
       </span>
-      <button
+      <Button
         type="button"
+        variant="secondary"
+        size="sm"
         className="impersonate-banner__quit"
         onClick={handleReturn}
       >
         Quitter
-      </button>
+      </Button>
     </div>
   );
 }

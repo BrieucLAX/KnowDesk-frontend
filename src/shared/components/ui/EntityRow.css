@@ -4,19 +4,22 @@
   align-items: center;
   gap: 16px;
   padding: 14px 16px;
+  /* Carte de liste, fiche Card : contour line, radius-lg, pas d'ombre ;
+     line-strong au survol si cliquable. */
   background: var(--surface-raised);
-  border: 1px solid var(--neutral-100);
+  color: var(--ink);
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   text-align: left;
   font-family: var(--font-ui);
-  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  transition: border-color var(--t-fast);
 }
 .entity-row--clickable { cursor: pointer; }
 .entity-row--clickable:hover {
-  border-color: var(--brand-300, var(--brand-500));
+  border-color: var(--line-strong);
 }
 .entity-row--clickable:focus-visible {
-  outline: 2px solid var(--brand-500);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 .entity-row__main {

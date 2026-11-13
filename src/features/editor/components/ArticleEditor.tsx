@@ -315,6 +315,8 @@ if (!isEdit) {
             <select
               id="cat-select"
               className={`field-input ${errors.categoryId ? 'field-input--error' : ''}`}
+              aria-invalid={!!errors.categoryId}
+              aria-describedby={errors.categoryId ? 'cat-select-error' : undefined}
               value={form.categoryId}
               onChange={e => updateField('categoryId', e.target.value)}
             >
@@ -325,11 +327,12 @@ if (!isEdit) {
                 </option>
               ))}
             </select>
-            {errors.categoryId && <p className="field-error">{errors.categoryId}</p>}
+            {errors.categoryId && <p id="cat-select-error" className="field-error">{errors.categoryId}</p>}
           </div>
           <div className="field">
-            <label className="field-label">Tags</label>
+            <label htmlFor="article-tags" className="field-label">Tags</label>
             <TagsInput
+              id="article-tags"
               value={form.tags}
               onChange={tags => updateField('tags', tags)}
             />

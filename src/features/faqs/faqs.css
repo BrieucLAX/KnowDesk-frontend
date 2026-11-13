@@ -8,7 +8,7 @@
 
 .faqs-page__tabs { display: flex; gap: 4px; flex-wrap: wrap; }
 .faqs-page__tab {
-  padding: 6px 12px; border-radius: var(--radius-md);
+  padding: 6px 12px; border-radius: var(--radius-sm);
   background: none; border: 1px solid transparent; cursor: pointer;
   font-size: 13px; color: var(--neutral-500); font-family: var(--font-ui);
   transition: all var(--t-fast);
@@ -240,7 +240,8 @@
 .faq-helpful__btn:hover:not(:disabled) {
   background: var(--neutral-50); border-color: var(--neutral-300);
 }
-.faq-helpful__btn:disabled { cursor: default; opacity: 0.6; }
+/* Désactivé : texte ink-muted sans opacité (4,5:1, lot 3). */
+.faq-helpful__btn:disabled { cursor: default; color: var(--ink-muted); }
 .faq-helpful__btn--active {
   background: var(--brand-50); border-color: var(--brand-300); color: var(--brand-700);
   opacity: 1;

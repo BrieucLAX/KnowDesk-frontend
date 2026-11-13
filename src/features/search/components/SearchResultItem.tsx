@@ -5,9 +5,10 @@ import { sanitizeHighlight } from '../../../shared/lib/sanitize';
 import type { SearchResult } from '../types';
 
 const TYPE_CONFIG = {
-  article: { label: 'Article',  className: 'badge badge--success'   },
-  faq:     { label: 'FAQ',      className: 'badge badge--secondary'  },
-  tree:    { label: 'Processus', className: 'badge badge--info'      },
+  // Type de contenu : variante primary de la fiche Badge (pas une couleur d'état).
+  article: { label: 'Article',  className: 'badge badge--primary' },
+  faq:     { label: 'FAQ',      className: 'badge badge--primary' },
+  tree:    { label: 'Processus', className: 'badge badge--primary' },
 } as const;
 
 interface SearchResultItemProps {

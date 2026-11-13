@@ -123,8 +123,9 @@
   border-color: color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
   background: var(--warning-soft);
 }
+/* Point validé : plus d'opacité sur le texte (4,5:1, lot 3). */
 .article-quality__item--ok {
-  opacity: 0.75;
+  background: var(--surface);
 }
 
 .article-quality__item-head {
@@ -174,7 +175,7 @@
 .article-quality__dismiss-btn {
   background: transparent;
   border: 1px solid var(--neutral-200);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-size: 11px;
   padding: 2px 8px;
   color: var(--neutral-700);

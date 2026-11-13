@@ -18,9 +18,10 @@
      restent scrollables au lieu de déborder en dessous de l'écran. */
   max-height: calc(100vh - 48px);
   display: flex; flex-direction: column;
-  background: var(--neutral-0);
-  border: 1px solid var(--neutral-200);
-  border-radius: var(--radius-xl);
+  background: var(--surface-raised);
+  color: var(--ink);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
   animation: fade-up 0.2s ease;
 }
@@ -35,14 +36,15 @@
 }
 .modal__title { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
 .modal__close {
-  width: 28px; height: 28px;
+  width: 36px; height: 36px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   background: none; border: none; cursor: pointer;
   color: var(--neutral-500);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   transition: all var(--t-fast);
 }
-.modal__close:hover { background: var(--neutral-100); color: var(--neutral-900); }
+.modal__close:hover { background: var(--surface); color: var(--ink); }
+.modal__close:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 .modal__body {
   display: flex; flex-direction: column; gap: 16px;
@@ -55,18 +57,18 @@
   min-height: 0;
 }
 .modal__actions {
-  display: flex; justify-content: flex-end; gap: 8px;
+  display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2);
   padding-top: 8px; margin-top: 4px;
-  border-top: 1px solid var(--neutral-100);
+  border-top: 1px solid var(--line);
   /* Sticky bottom : actions toujours visibles même si on scrolle au
      milieu du body. Plus pratique pour les longues modales (quiz). */
   position: sticky;
   bottom: -24px;
-  background: var(--neutral-0);
+  background: var(--surface-raised);
   padding-bottom: 16px;
   margin-bottom: -8px;
 }
 
 /* ConfirmDialog — variante étroite de Modal. */
 .confirm-dialog { max-width: 380px; }
-.confirm-dialog__desc { margin: 0; font-size: 14px; line-height: 1.5; color: var(--neutral-600); }
+.confirm-dialog__desc { margin: 0; font-size: 15px; line-height: 24px; color: var(--ink); }

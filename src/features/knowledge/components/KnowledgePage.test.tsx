@@ -21,7 +21,7 @@ const session: AuthSession = {
 
 /** Le compteur d'un onglet de statut. */
 const tabCount = (name: string) =>
-  within(screen.getByRole('tab', { name: new RegExp(`^${name}`) })).getByText(/^\d+$/).textContent;
+  within(screen.getByRole('button', { name: new RegExp(`^${name}`) })).getByText(/^\d+$/).textContent;
 
 describe('KnowledgePage : tous les articles, au-delà de 200 (réponses réelles du back, plan-articles-v1, lot 0)', () => {
   beforeEach(() => {
@@ -50,7 +50,7 @@ describe('KnowledgePage : tous les articles, au-delà de 200 (réponses réelles
     // Les 5 plus anciens, rendus seulement par la page 2 du back : les archivés sous leur onglet.
     const page2 = respond('/articles?page=2').data as Array<{ title: string; status: string }>;
     for (const a of page2.filter(a => a.status !== 'archived')) expect(await screen.findByText(a.title)).toBeTruthy();
-    fireEvent.click(screen.getByRole('tab', { name: /^Archivés/ }));
+    fireEvent.click(screen.getByRole('button', { name: /^Archivés/ }));
     for (const a of page2.filter(a => a.status === 'archived')) expect(await screen.findByText(a.title)).toBeTruthy();
   });
 });

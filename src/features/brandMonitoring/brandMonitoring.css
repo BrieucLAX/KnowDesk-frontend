@@ -351,7 +351,8 @@
   max-width: 320px;
 }
 .bm-select:focus { outline: 2px solid var(--brand-300); outline-offset: 1px; }
-.bm-select:disabled { opacity: 0.6; cursor: not-allowed; }
+/* Désactivé : texte ink-muted sans opacité (4,5:1, lot 3). */
+.bm-select:disabled { color: var(--ink-muted); background: var(--surface); cursor: not-allowed; }
 
 /* ── Providers checkboxes (R-S3) ─────────────────────── */
 
@@ -381,10 +382,14 @@
   background: var(--brand-50);
 }
 
+/* Désactivé : texte ink-muted sans opacité (4,5:1, lot 3). */
+.bm-provider.is-disabled,
+.bm-provider.is-disabled * {
+  color: var(--ink-muted);
+}
 .bm-provider.is-disabled {
-  opacity: 0.55;
+  background: var(--surface);
   cursor: not-allowed;
-  background: var(--neutral-50);
 }
 
 .bm-provider input[type="checkbox"] {

@@ -537,7 +537,7 @@
   padding: 4px 10px;
   background: var(--neutral-50);
   border: 1px solid var(--neutral-200);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
   color: var(--neutral-700);
@@ -574,7 +574,8 @@
   border-color: var(--brand-500);
   background: var(--brand-50);
 }
-.ai-models__choice--saving { cursor: wait; opacity: 0.7; }
+/* En cours : sans opacité, les textes secondaires passaient sous 4,5:1 (lot 3). */
+.ai-models__choice--saving { cursor: wait; }
 .ai-models__choice-input { position: absolute; opacity: 0; pointer-events: none; }
 .ai-models__choice-body { display: flex; flex-direction: column; gap: 6px; }
 .ai-models__choice-head {

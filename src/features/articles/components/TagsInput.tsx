@@ -7,6 +7,9 @@ interface TagsInputProps {
   onChange: (next: string[]) => void;
   max?:     number;
   disabled?: boolean;
+  /** id du champ, pour le relier au <label htmlFor> de l'écran. */
+  id?:       string;
+  describedBy?: string;
 }
 
 /**
@@ -14,7 +17,7 @@ interface TagsInputProps {
  * au montage pour proposer une auto-complétion via le ChipsInput partagé.
  * Si l'API échoue, on tombe en mode saisie libre sans suggestions.
  */
-export function TagsInput({ value, onChange, max = 10, disabled }: TagsInputProps) {
+export function TagsInput({ value, onChange, max = 10, disabled, id, describedBy }: TagsInputProps) {
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
@@ -33,6 +36,8 @@ export function TagsInput({ value, onChange, max = 10, disabled }: TagsInputProp
       suggestions={suggestions}
       max={max}
       disabled={disabled}
+      id={id}
+      describedBy={describedBy}
     />
   );
 }

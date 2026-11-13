@@ -5,13 +5,18 @@ import './Button.css';
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 export type ButtonSize    = 'sm' | 'md' | 'lg';
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonBaseProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:  ButtonVariant;
   size?:     ButtonSize;
   loading?:  boolean;
   fullWidth?: boolean;
   leftIcon?:  React.ReactNode;
 }
+
+/** Bouton icône (carré, une seule icône) : un `aria-label` est obligatoire. */
+export type ButtonProps =
+  | (ButtonBaseProps & { iconOnly?: false })
+  | (ButtonBaseProps & { iconOnly: true; 'aria-label': string });
 
 const variantClass: Record<ButtonVariant, string> = {
   primary:   'btn-primary',
@@ -27,7 +32,7 @@ const sizeClass: Record<ButtonSize, string> = {
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'secondary', size = 'md', loading, fullWidth, leftIcon, children, className, disabled, ...rest }, ref) => {
+  ({ variant = 'secondary', size = 'md', loading, fullWidth, leftIcon, iconOnly, children, className, disabled, ...rest }, ref) => {
     const isDisabled = disabled || loading;
 
     return (
@@ -38,6 +43,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           variantClass[variant],
           sizeClass[size],
           fullWidth && 'btn-full',
+          iconOnly && 'btn-icon-only',
           isDisabled && 'btn-disabled',
           className,
         )}

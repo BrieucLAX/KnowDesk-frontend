@@ -23,13 +23,13 @@
 .tree-editor__title {
   font-size: 15px; font-weight: 600; color: var(--neutral-900);
   background: none; border: none; cursor: pointer;
-  font-family: var(--font-ui); padding: 4px 8px; border-radius: var(--radius-md);
+  font-family: var(--font-ui); padding: 4px 8px; border-radius: var(--radius-sm);
 }
 .tree-editor__title:hover { background: var(--neutral-100); }
 .tree-editor__title-edit { display: flex; align-items: center; gap: 8px; }
 .tree-editor__title-input {
   font-size: 15px; font-weight: 600; padding: 4px 8px;
-  border: 1px solid var(--brand-300); border-radius: var(--radius-md);
+  border: 1px solid var(--brand-300); border-radius: var(--radius-sm);
   font-family: var(--font-ui); min-width: 240px;
 }
 .tree-editor__topbar-actions { display: flex; gap: 8px; }
@@ -90,7 +90,7 @@
 
 .tree-add-child, .tree-add-root {
   font-size: 12px; color: var(--brand-600); background: none;
-  border: 1px dashed var(--brand-300); border-radius: var(--radius-md);
+  border: 1px dashed var(--brand-300); border-radius: var(--radius-sm);
   cursor: pointer; font-family: var(--font-ui); padding: 6px 12px;
   margin-top: 8px; display: block; width: 100%;
   transition: all var(--t-fast);
@@ -147,7 +147,7 @@
 /* Breadcrumb trail */
 .tree-breadcrumb {
   padding: 6px 10px; background: var(--neutral-50);
-  border-radius: var(--radius-md); border: 1px solid var(--neutral-100);
+  border-radius: var(--radius-sm); border: 1px solid var(--neutral-100);
 }
 .tree-breadcrumb__label { font-size: 12px; color: var(--ink-muted); }
 

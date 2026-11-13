@@ -229,9 +229,9 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
         </div>
 
         <div className="field">
-          <label className="field-label">Tags</label>
-          <TagsInput value={tags} onChange={setLocalTags} max={10} />
-          <p className="field-helper">Tapez Entrée ou virgule après chaque tag (max 10).</p>
+          <label htmlFor="faq-tags" className="field-label">Tags</label>
+          <TagsInput id="faq-tags" describedBy="faq-tags-helper" value={tags} onChange={setLocalTags} max={10} />
+          <p id="faq-tags-helper" className="field-helper">Tapez Entrée ou virgule après chaque tag (max 10).</p>
         </div>
 
         {faqId && <FaqHistoryPanel faqId={faqId} />}

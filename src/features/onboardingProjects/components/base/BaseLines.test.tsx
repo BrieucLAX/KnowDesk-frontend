@@ -35,10 +35,12 @@ describe('Image de la base agrandie', () => {
 
   it('se referme par un clic sur le fond, pas sur l\'image', async () => {
     const image = open();
+    // La boîte (role="dialog") porte l'image ; le fond est son parent.
     const dialog = screen.getByRole('dialog');
-    fireEvent.click(dialog.querySelector('.obp-base-zoom')!);
-    expect(screen.getByRole('dialog')).toBeTruthy();
+    expect(dialog).toHaveClass('obp-base-zoom');
     fireEvent.click(dialog);
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    fireEvent.click(dialog.parentElement!);
     await closed(image);
   });
 });

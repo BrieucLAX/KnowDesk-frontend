@@ -49,7 +49,8 @@
 .sa-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .sa-table th { padding: 12px 16px; text-align: left; font-weight: 600; color: var(--neutral-500); border-bottom: 1px solid var(--neutral-100); white-space: nowrap; }
 .sa-table td { padding: 14px 16px; border-bottom: 1px solid var(--neutral-50); vertical-align: middle; }
-.sa-table__row--disabled td { opacity: 0.5; }
+/* Désactivé : texte ink-muted sans opacité (4,5:1, lot 3). */
+.sa-table__row--disabled td { color: var(--ink-muted); }
 .sa-table tr:last-child td { border-bottom: none; }
 .sa-table tr:hover td { background: var(--neutral-50); }
 
