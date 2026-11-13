@@ -26,6 +26,7 @@ import PILOTE_11 from './fixtures/audit-0.11.0-pilote-banc-v3.response.json';
 import PILOTE_D1 from './fixtures/audit-0.11.0-pilote-d1.response.json';
 import ELYRA_V2 from './fixtures/audit-0.15.0-elyra-v2.response.json';
 import EXEMPLE_16 from './fixtures/audit-0.16.0-elyra-exemple.response.json';
+import ELYRA_LECTURE_V2 from './fixtures/audit-0.16.0-elyra-v2-lecture-4.response.json';
 
 /**
  * Réponses de GET …/audit sur deux audits 0.8.0 rejoués par le pipeline (pilote, lectures 2 et 3),
@@ -1271,5 +1272,91 @@ describe('À clarifier (audit 0.16.0, plan-construire-v1, lot A)', () => {
     expect(screen.queryByText(/Remplacements? de version/)).not.toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: /^Retenir [AB]/ }).length).toBeGreaterThan(0);
     expect(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeInTheDocument();
+  });
+});
+
+/**
+ * Lecture v2 réelle (décision du porteur du 2026-11-13) : l'audit 0.16.0 d'Elyra rendu par le
+ * pipeline en `lecture_globale` v2 (brouillon 6, contrôle des paires B, lecture 4 rejouée), stocké
+ * par le worker du back et relu par sa route GET …/audit, en local. Rien n'est réécrit à la main.
+ */
+describe('Lecture v2 réelle d\'Elyra (audit 0.16.0) : de bout en bout', () => {
+  const RESPONSE = ELYRA_LECTURE_V2 as unknown as AuditResponse;
+  const cards = RESPONSE.reading!.cards;
+  const replacement = cards.find(c => c.nature === 'remplacement_version')!;
+  const reuses = cards.filter(c => c.nature === 'reprise_version_remplacee');
+  const formation = reuses.find(c => c.analysis.subject.startsWith('2026-01-15_Formation_Onboarding'))!;
+  const tableau = reuses.find(c => c.analysis.subject.startsWith('Tableau_comparatif_gamme_2026'))!;
+  const ordered = orderedCards(cards);
+  const articleOf = (card: typeof replacement) => screen.findByRole('article', { name: new RegExp(`^Carte ${ordered.indexOf(card) + 1} sur`) });
+
+  beforeEach(() => {
+    vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
+    vi.mocked(onboardingApi.getAudit).mockReset().mockResolvedValue(RESPONSE);
+    vi.mocked(onboardingApi.listDecisions).mockReset().mockResolvedValue(state([]));
+    vi.mocked(onboardingApi.cardHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.cardCommentHistory).mockReset().mockResolvedValue([]);
+    vi.mocked(onboardingApi.answerCard).mockReset().mockImplementation(async (_p, _a, body) => answer(body.cardId, body.action as Decision['action']));
+  });
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it('l\'audit réel porte un remplacement et trois reprises de la grille v1', () => {
+    expect(replacement.analysis.subject).toBe(
+      'Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf (1er septembre 2026) annule et remplace Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf (1er août 2025)');
+    expect(reuses).toHaveLength(3);
+  });
+
+  it('la carte de remplacement : l\'affirmation, les dates lues, les différences, les cartes rangées dessous, ses trois réponses', async () => {
+    await openSession();
+    goTo(replacement.analysis.subject);
+    const article = await articleOf(replacement);
+    expect(within(article).getByRole('heading', { name: replacement.analysis.subject })).toBeInTheDocument();
+    expect(article).toHaveTextContent('date lue : 01/08/2025');
+    expect(article).toHaveTextContent('date lue : 01/09/2026');
+    const differences = within(article).getByRole('region', { name: 'Les différences entre les deux versions' });
+    expect(differences).toHaveTextContent('Elyra Fixe 2 ans · Base · kWh € TTC (Base ou HP) : 0,2018 € → 0,1952 €');
+    expect(differences).toHaveTextContent('Elyra Gaz Fixe 1 an · kWh € TTC : 0,1189 € → 0,1124 €');
+    expect(within(article).queryByRole('complementary', { name: 'Analyse proposée par l\'IA' })).not.toBeInTheDocument();
+    const ranged = within(article).getByText('2 cartes ligne par ligne rangées sous celle-ci, qui ne sont plus posées').closest('details')!;
+    expect(ranged.open).toBe(false);
+    expect(ranged).toHaveTextContent('Prix de l\'offre Elyra Fixe 2 ans dans la grille tarifaire v1');
+    const answers = screen.getByRole('group', { name: 'Répondre à la carte' });
+    expect(within(answers).getAllByRole('button').map(b => b.textContent)).toEqual(['Je confirme', 'Autre réponse', 'Plus tard']);
+    fireEvent.click(within(answers).getByRole('button', { name: 'Je confirme' }));
+    await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalled());
+    expect(vi.mocked(onboardingApi.answerCard).mock.calls[0][2]).toMatchObject({ cardId: replacement.id, action: { type: 'confirm_replacement' } });
+  });
+
+  it('une carte de reprise : sa phrase, la valeur à mettre à jour, la carte rangée dessous, ses quatre réponses', async () => {
+    await openSession();
+    goTo(formation.analysis.subject);
+    const article = await articleOf(formation);
+    expect(article).toHaveTextContent('Ce document reprend les valeurs d\'une version remplacée ; ses valeurs seront mises à jour avec celles de la nouvelle.');
+    expect(within(article).getByRole('region', { name: 'Les valeurs à mettre à jour' })).toHaveTextContent('TRVE HT – 8 %');
+    const ranged = within(article).getByText('1 carte ligne par ligne rangée sous celle-ci, qui n\'est plus posée').closest('details')!;
+    expect(ranged).toHaveTextContent('Mention du tarif réglementé du gaz dans la formation onboarding');
+    const answers = screen.getByRole('group', { name: 'Répondre à la carte' });
+    expect(within(answers).getAllByRole('button').map(b => b.textContent)).toEqual([
+      'Je confirme', 'Non, ce document reste valable tel quel', 'Autre réponse', 'Plus tard']);
+    fireEvent.click(within(answers).getByRole('button', { name: 'Je confirme' }));
+    await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalled());
+    expect(vi.mocked(onboardingApi.answerCard).mock.calls[0][2]).toMatchObject({ cardId: formation.id, action: { type: 'confirm_update' } });
+  });
+
+  it('la reprise du tableau comparatif : ses valeurs à mettre à jour, « Non, ce document reste valable tel quel »', async () => {
+    await openSession();
+    goTo(tableau.analysis.subject);
+    const article = await articleOf(tableau);
+    expect(within(article).getByRole('region', { name: 'Les valeurs à mettre à jour' })).toHaveTextContent('Elyra Fixe 2 ans · Base · kWh € TTC (Base ou HP) : 0,2018 € → 0,1952 €');
+    const answers = screen.getByRole('group', { name: 'Répondre à la carte' });
+    fireEvent.click(within(answers).getByRole('button', { name: 'Non, ce document reste valable tel quel' }));
+    await waitFor(() => expect(onboardingApi.answerCard).toHaveBeenCalled());
+    expect(vi.mocked(onboardingApi.answerCard).mock.calls[0][2].action).toEqual({ type: 'document_stays_valid' });
+  });
+
+  it('« Points écartés » : les points rangés nomment leur carte de version', async () => {
+    render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
+    expect((await screen.findAllByText(new RegExp(`Réglé par la carte de version « ${escape(replacement.analysis.subject)} »`))).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(new RegExp(`Réglé par la carte de version « ${escape(formation.analysis.subject)} »`)).length).toBeGreaterThan(0);
   });
 });
