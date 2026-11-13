@@ -17,7 +17,7 @@ type Tab = 'dashboard' | 'prompts' | 'responses' | 'settings';
 
 const TABS: ReadonlyArray<{ id: Tab; label: string }> = [
   { id: 'dashboard', label: 'Tableau de bord' },
-  { id: 'prompts',   label: 'Questions suivies' },
+  { id: 'prompts',   label: 'Prompts' },
   { id: 'responses', label: 'Réponses' },
   { id: 'settings',  label: 'Paramètres' },
 ];
@@ -40,7 +40,7 @@ export function BrandMonitoringPage() {
       const detail = await brandMonitoringApi.getProject(list[0].id);
       setProject(detail);
     } catch (err) {
-      toast.error((err as Error).message ?? "Le projet de suivi de marque n'a pas pu être chargé. Rechargez la page.");
+      toast.error((err as Error).message ?? "Le projet Brand monitoring n'a pas pu être chargé. Rechargez la page.");
     } finally {
       setLoading(false);
     }
@@ -54,7 +54,7 @@ export function BrandMonitoringPage() {
     setCreating(true);
     try {
       await brandMonitoringApi.createProject(name);
-      toast.success(`Projet « ${name} » créé. Configurez les marques et les questions suivies dans l'onglet Paramètres.`);
+      toast.success(`Projet « ${name} » créé. Configurez les marques et les prompts dans l'onglet Paramètres.`);
       setNewName('');
       await loadProject();
       setTab('settings');
@@ -79,11 +79,11 @@ export function BrandMonitoringPage() {
       <div className="brand-monitoring-page brand-monitoring-page--empty">
         <div className="bm-empty">
           <div className="bm-empty__icon" aria-hidden="true"><ChartColumn size={24} /></div>
-          <h2 className="bm-empty__title">Créer un projet de suivi de marque</h2>
+          <h2 className="bm-empty__title">Créer un projet Brand monitoring</h2>
           <p className="bm-empty__desc">
             Suivez la visibilité de votre marque dans les réponses des IA (Mistral pour l'instant),
             face à vos concurrents. Donnez un nom à votre projet (par exemple « Auchan »), puis
-            configurez les marques suivies et les questions suivies dans l'onglet Paramètres.
+            configurez les marques suivies et les prompts dans l'onglet Paramètres.
           </p>
           <div className="bm-empty__form">
             <Input
@@ -110,7 +110,7 @@ export function BrandMonitoringPage() {
           <h1 className="bm-header__title">{project.name}</h1>
           <p className="bm-header__meta">
             {project.brandsCount ?? 0} marque{(project.brandsCount ?? 0) > 1 ? 's' : ''} suivie{(project.brandsCount ?? 0) > 1 ? 's' : ''}
-            {' · '}{project.promptsCount ?? 0} question{(project.promptsCount ?? 0) > 1 ? 's' : ''} suivie{(project.promptsCount ?? 0) > 1 ? 's' : ''}
+            {' · '}{project.promptsCount ?? 0} prompt{(project.promptsCount ?? 0) > 1 ? 's' : ''}
             {' · '}{project.runsCount ?? 0} analyse{(project.runsCount ?? 0) > 1 ? 's' : ''}
             {project.quotaRemaining != null && project.monthlyQuota != null && (
               <> · <span className={(project.quotaRemaining / project.monthlyQuota) < 0.1 ? 'bm-quota--low' : ''}>
@@ -126,7 +126,7 @@ export function BrandMonitoringPage() {
         items={TABS}
         value={tab}
         onChange={setTab}
-        ariaLabel="Sections du suivi de marque"
+        ariaLabel="Sections du Brand monitoring"
       />
 
       <TabPanel id="bm-sections" value={tab} className="bm-main">

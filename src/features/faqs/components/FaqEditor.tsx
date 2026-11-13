@@ -165,7 +165,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
               <span className="faq-editor__stat-value">{faq.views}</span>
             </span>
             <span className="faq-editor__stat">
-              <span className="faq-editor__stat-label">Avis des lecteurs</span>
+              <span className="faq-editor__stat-label">Score helpful</span>
               <FaqHelpfulButtons
                 faqId={faq.id}
                 helpfulYes={faq.helpful_yes}

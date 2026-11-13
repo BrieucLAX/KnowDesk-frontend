@@ -49,7 +49,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
     setRunning(true);
     try {
       await brandMonitoringApi.triggerRun(projectId);
-      toast.success('Analyse lancée en arrière-plan. Comptez environ 10 s par question, puis rechargez le tableau de bord pour voir les résultats.');
+      toast.success('Analyse lancée en arrière-plan. Comptez environ 10 s par prompt, puis rechargez le tableau de bord pour voir les résultats.');
       onReloadProject();
     } catch (err) {
       toast.error((err as Error).message ?? "L'analyse n'a pas pu être lancée. Réessayez.");
@@ -86,10 +86,10 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
     setClustering(true);
     try {
       const result = await brandMonitoringApi.clusterTopics(projectId);
-      toast.success(`${result.assigned} questions regroupées en ${result.topics.length} thèmes (coût : ${result.costEur.toFixed(3)} €).`);
+      toast.success(`${result.assigned} prompts regroupés en ${result.topics.length} thèmes (coût : ${result.costEur.toFixed(3)} €).`);
       await reload();
     } catch (err) {
-      toast.error((err as Error).message ?? "Les questions n'ont pas pu être regroupées. Réessayez.");
+      toast.error((err as Error).message ?? "Les prompts n'ont pas pu être regroupés. Réessayez.");
     } finally {
       setClustering(false);
     }
@@ -113,7 +113,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
           <Play size={16} />Lancer une analyse
         </Button>
         <Button variant="secondary" size="sm" onClick={handleCluster} loading={clustering}>
-          <Sparkles size={16} />Regrouper les questions par thème
+          <Sparkles size={16} />Regrouper les prompts par thème
         </Button>
         <Button variant="secondary" size="sm" onClick={handleGenerateRecos} loading={generatingRecos}>
           <Lightbulb size={16} />Générer les recommandations
@@ -148,7 +148,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
 
       {!hasData && (
         <div className="bm-empty-data">
-          <p>Aucune donnée pour l'instant. Lancez une analyse pour interroger Mistral sur vos questions suivies.</p>
+          <p>Aucune donnée pour l'instant. Lancez une analyse pour interroger Mistral sur vos prompts.</p>
         </div>
       )}
 
@@ -214,8 +214,8 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
                   <p className="bm-alignment-row__zero">
                     {b.isOwner && <TriangleAlert size={16} className="icon-inline bm-alignment-row__warn" />}
                     {b.isOwner
-                      ? " Point critique : votre marque n'est mentionnée dans aucune réponse des IA sur les questions suivies actuelles. Ajoutez des questions plus générales (par exemple « Quel opérateur choisir ? ») pour voir si elle y apparaît, ou revoyez votre stratégie de visibilité."
-                      : "Cette marque n'est mentionnée dans aucune réponse des IA sur les questions suivies actuelles."}
+                      ? " Point critique : votre marque n'est mentionnée dans aucune réponse des IA sur les prompts actuels. Ajoutez des prompts plus généraux (par exemple « Quel opérateur choisir ? ») pour voir si elle y apparaît, ou revoyez votre stratégie de visibilité."
+                      : "Cette marque n'est mentionnée dans aucune réponse des IA sur les prompts actuels."}
                   </p>
                 ) : b.attributesObserved.length === 0 ? (
                   <p className="bm-alignment-row__zero">
@@ -245,7 +245,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
           <h3 className="bm-card__title">Part de voix par thème</h3>
           <p className="bm-card__sub">
             Repérez les thèmes où votre marque est forte et ceux où elle est absente. Si vous voyez
-            « (sans thème) », relancez « Regrouper les questions par thème ».
+            « (sans thème) », relancez « Regrouper les prompts par thème ».
           </p>
           <div className="bm-topics">
             {topics.map(topic => (
@@ -253,7 +253,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
                 <div className="bm-topic__head">
                   <strong>{topic.topic ?? '(sans thème)'}</strong>
                   <span className="bm-topic__meta">
-                    {topic.promptCount} question{topic.promptCount > 1 ? 's' : ''} · {topic.responseCount} réponses · {topic.totalMentions} mentions
+                    {topic.promptCount} prompt{topic.promptCount > 1 ? 's' : ''} · {topic.responseCount} réponses · {topic.totalMentions} mentions
                   </span>
                 </div>
                 {topic.totalMentions > 0 ? (

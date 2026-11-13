@@ -331,7 +331,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
                 </div>
               ),
             },
-            { key: 'helpful',    label: 'Avis', align: 'right', sortable: true, width: '120px',
+            { key: 'helpful',    label: 'Score helpful', align: 'right', sortable: true, width: '120px',
               render: faq => {
                 const totalVotes = faq.helpful_yes + faq.helpful_no;
                 return (

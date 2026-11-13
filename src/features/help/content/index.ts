@@ -508,7 +508,7 @@ Sous la réponse, vous pouvez voter :
 - pouce levé si la réponse a aidé votre client ;
 - pouce baissé si elle est mal formulée, périmée ou si elle a suscité une nouvelle question.
 
-**Pourquoi c'est important** : votre vote remonte aux administrateurs, qui voient l'avis des lecteurs sur chaque FAQ. Une FAQ souvent jugée inutile sera retravaillée. Une FAQ souvent jugée utile sera conservée, et pourra être publiée plus tard.
+**Pourquoi c'est important** : votre vote remonte aux administrateurs, qui voient le Score helpful de chaque FAQ. Une FAQ souvent jugée inutile sera retravaillée. Une FAQ souvent jugée utile sera conservée, et pourra être publiée plus tard.
 
 > 💡 **Astuce** : Si vous cherchez souvent une question qui n'a pas de FAQ, vos recherches sont comptées automatiquement : les administrateurs verront une suggestion sur la page Analyse. Vous pouvez aussi leur en parler directement.
 
@@ -534,7 +534,7 @@ Sous chaque réponse de FAQ affichée dans la barre de recherche, vous pouvez vo
 
 | Pour qui | Effet |
 |---|---|
-| Administrateur, manager | Voit l'**avis des lecteurs** (en %) de chaque FAQ, dans la liste et dans l'éditeur. Une FAQ sous 60 % est à réviser en priorité. |
+| Administrateur, manager | Voit le **Score helpful** (en %) de chaque FAQ, dans la liste et dans l'éditeur. Une FAQ sous 60 % est à réviser en priorité. |
 | Conseiller | Améliore la qualité de la base : moins de mauvaises réponses, plus de bonnes. |
 | Vous | Vous ne votez qu'une fois par FAQ dans une même session (le bouton est désactivé après votre vote). |
 
@@ -573,7 +573,7 @@ Quand vous ouvrez une FAQ à réviser, un encart apparaît en haut de l'éditeur
 - si vous **modifiez** la réponse, la date de révision est mise à jour automatiquement ;
 - si **rien n'est à changer**, cliquez sur **C'est à jour** : la FAQ est marquée comme révisée, sans modifier son contenu.
 
-### 3. Score d'utilité de chaque FAQ
+### 3. Score helpful de chaque FAQ
 
 Chaque FAQ affiche son score (en % et en nombre de votes) dans la liste et dans l'éditeur. Quelques repères :
 
@@ -589,7 +589,7 @@ Dans l'éditeur, ouvrez le panneau **Historique des modifications** pour voir qu
 > 💡 **Astuce** : Prévoyez chaque mois quelques minutes pour passer en revue :
 > 1. Les suggestions « FAQ à créer » de la page Analyse
 > 2. L'onglet « À réviser » de la liste des FAQ
-> 3. Les FAQ dont l'avis des lecteurs est sous 60 %
+> 3. Les FAQ dont le Score helpful est sous 60 %
 >
 > 30 minutes par mois suffisent à garder une base saine, et votre équipe y gagne tout de suite.
         `.trim(),
@@ -1298,7 +1298,7 @@ Au bout d'un mois, regardez :
 | Indicateur | Objectif | Où le trouver |
 |---|---|---|
 | **Vues par FAQ** | plus de 5 par mois pour les FAQ principales | Liste des FAQ (colonne « Vues ») |
-| **Score d'utilité moyen** | plus de 70 % | Liste des FAQ (colonne « Score ») |
+| **Score helpful moyen** | plus de 70 % | Liste des FAQ (colonne « Score helpful ») |
 | **Part des recherches qui ouvrent une FAQ** | plus de 30 % | Top recherches comparé aux vues des FAQ |
 | **Recherches sans résultat** | en baisse d'un mois à l'autre | Page Analyse, carte Recherches sans résultat |
 
@@ -1310,7 +1310,7 @@ Au bout d'un mois, regardez :
 
 ### 5. Aller plus loin
 
-Quand vous avez plus de 50 FAQ avec un avis des lecteurs moyen supérieur à 70 %, deux usages deviennent possibles :
+Quand vous avez plus de 50 FAQ avec un Score helpful moyen supérieur à 70 %, deux usages deviennent possibles :
 
 - **Publication sur le web** (à venir) : vos FAQ apparaissent automatiquement sur votre site. Une seule rédaction pour deux usages (interne et externe), sans écart entre les deux.
 - **Chatbot** (à venir) : un chatbot s'appuie sur vos FAQ pour répondre directement aux clients.

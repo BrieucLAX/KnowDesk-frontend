@@ -15,7 +15,7 @@ interface ArticlesToReworkCardProps {
 }
 
 /**
- * Carte « Qualité des articles (IA) » — auditeur qualité IA en 3 paliers.
+ * Carte « KB Health Score IA » — auditeur qualité IA en 3 paliers.
  *
  * États :
  *   - chargement → skeleton
@@ -64,7 +64,7 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
   if (loading) {
     return (
       <section className="article-rework-card article-rework-card--loading">
-        <h2 className="article-rework-card__title">Qualité des articles (IA)</h2>
+        <h2 className="article-rework-card__title">KB Health Score IA</h2>
         <p className="article-rework-card__desc">Chargement de l'analyse IA…</p>
       </section>
     );
@@ -77,7 +77,7 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
   if (stats && stats.scored === 0) {
     return (
       <section className="article-rework-card article-rework-card--empty">
-        <h2 className="article-rework-card__title">Qualité des articles (IA)</h2>
+        <h2 className="article-rework-card__title">KB Health Score IA</h2>
         <p className="article-rework-card__desc">
           Aucun article évalué pour l'instant. L'IA évalue automatiquement chaque article
           à chaque modification, et tous les articles une fois par semaine.
@@ -93,7 +93,7 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
   if (error || !stats) {
     return (
       <section className="article-rework-card">
-        <h2 className="article-rework-card__title">Qualité des articles (IA)</h2>
+        <h2 className="article-rework-card__title">KB Health Score IA</h2>
         <p className="article-rework-card__desc">{error ?? "L'analyse de la qualité n'a pas pu être chargée. Rechargez la page."}</p>
       </section>
     );
@@ -109,7 +109,7 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
     <section className="article-rework-card">
       <header className="article-rework-card__header">
         <h2 className="article-rework-card__title">
-          Qualité des articles (IA)
+          KB Health Score IA
           <InfoTooltip
             title="Auditeur qualité IA"
             rows={[

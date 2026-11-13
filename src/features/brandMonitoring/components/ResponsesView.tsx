@@ -57,7 +57,7 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
             <thead>
               <tr>
                 <th>Date</th>
-                <th>Question</th>
+                <th>Prompt</th>
                 <th>Mentions détectées</th>
                 <th>Sources</th>
                 <th>Tokens</th>
@@ -68,7 +68,7 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
               {responses.map(r => (
                 <tr key={r.id} onClick={() => setOpenResp(r)} className="bm-responses-table__row">
                   <td>{formatRelative(r.created_at)}</td>
-                  <td className="bm-responses-table__prompt">{r.promptText ?? '(question supprimée)'}</td>
+                  <td className="bm-responses-table__prompt">{r.promptText ?? '(prompt supprimé)'}</td>
                   <td>
                     {r.mentions.filter(m => m.count > 0).length === 0 ? (
                       <span className="bm-responses-table__nomention">aucune</span>
@@ -104,7 +104,7 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
         <Modal title="Réponse de l'IA" size="lg" onClose={() => setOpenResp(null)}>
           <div className="bm-resp-detail">
             <p className="bm-resp-detail__meta">
-              <strong>Question :</strong> {openResp.promptText ?? '(question supprimée)'}
+              <strong>Question :</strong> {openResp.promptText ?? '(prompt supprimé)'}
             </p>
             <p className="bm-resp-detail__meta">
               <strong>Modèle :</strong> {openResp.llm_model}

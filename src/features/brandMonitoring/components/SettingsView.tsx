@@ -58,7 +58,7 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       setProject(prev => prev ? { ...prev, industry } : prev);
       onReloadProject();
       if (industry) {
-        toast.success("Secteur enregistré. Vous pouvez maintenant utiliser le bouton « Suggestions de questions » dans l'onglet Questions suivies.");
+        toast.success("Secteur enregistré. Vous pouvez maintenant utiliser le bouton « Suggestions de prompts » dans l'onglet Prompts.");
       }
     } catch (err) {
       toast.error((err as Error).message ?? "Le secteur n'a pas pu être enregistré. Réessayez.");
@@ -81,7 +81,7 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       await brandMonitoringApi.updateProject(projectId, { enabledProviders: next });
       setProject(prev => prev ? { ...prev, enabled_providers: next } : prev);
       const labels = providers.filter(p => next.includes(p.key)).map(p => p.label).join(', ');
-      toast.success(`Modèles d'IA actifs : ${labels}. Chaque question suivie sera posée à chacun d'eux (quota ×${next.length}).`);
+      toast.success(`Modèles d'IA actifs : ${labels}. Chaque prompt sera envoyé à chacun d'eux (quota ×${next.length}).`);
     } catch (err) {
       toast.error((err as Error).message ?? "La modification n'a pas pu être enregistrée. Réessayez.");
     }
@@ -191,8 +191,8 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       <section className="bm-card">
         <h3 className="bm-card__title">Secteur d'activité du projet</h3>
         <p className="bm-card__sub">
-          Choisissez le secteur pour accéder à la bibliothèque de questions suggérées
-          (25 questions adaptées à votre marché, dans l'onglet Questions suivies).
+          Choisissez le secteur pour accéder à la bibliothèque de prompts suggérés
+          (25 prompts adaptés à votre marché, dans l'onglet Prompts).
         </p>
         <div className="bm-form">
           <label className="bm-select-wrap" htmlFor="bm-industry">
@@ -206,7 +206,7 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
             >
               <option value="">— Non défini —</option>
               {industries.map(ind => (
-                <option key={ind.key} value={ind.key}>{ind.label} ({ind.promptCount} questions)</option>
+                <option key={ind.key} value={ind.key}>{ind.label} ({ind.promptCount} prompts)</option>
               ))}
             </select>
           </label>
@@ -216,8 +216,8 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       <section className="bm-card">
         <h3 className="bm-card__title">Modèles d'IA</h3>
         <p className="bm-card__sub">
-          Choisissez les IA à qui poser chaque question suivie. <strong>Plus vous en activez, plus votre couverture du marché est large</strong>,
-          mais chaque IA activée consomme 1 unité de quota par question (le coût mensuel est multiplié d'autant).
+          Choisissez les IA auxquelles envoyer chaque prompt. <strong>Plus vous en activez, plus votre couverture du marché est large</strong>,
+          mais chaque IA activée consomme 1 unité de quota par prompt (le coût mensuel est multiplié d'autant).
           Les IA grisées demandent une clé API dans Railway (variables d'environnement) avant de pouvoir être activées.
         </p>
         <div className="bm-providers">

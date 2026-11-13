@@ -46,7 +46,7 @@ describe('SideNav — filtrage par modules', () => {
     useAuthStore.setState({ session: sessionWith([...LEGACY_MODULES]), isLoaded: true });
     renderNav();
     for (const label of ['Accueil', 'Articles', 'FAQ', 'Processus', 'Formations', 'Analyse',
-      'Conversations', 'Suivi de marque', 'Équipe', 'Paramètres', 'Notifications', 'Aide', 'Mon compte']) {
+      'Conversations', 'Brand monitoring', 'Équipe', 'Paramètres', 'Notifications', 'Aide', 'Mon compte']) {
       expect(screen.getByRole('button', { name: new RegExp(`^${label}`) })).toBeInTheDocument();
     }
   });
