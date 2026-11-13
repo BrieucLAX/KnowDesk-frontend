@@ -23,7 +23,7 @@
 }
 .invitation-success__title {
   font-size: 22px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-900);
   letter-spacing: -0.02em;
 }

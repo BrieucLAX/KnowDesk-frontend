@@ -5,7 +5,7 @@
 .impersonate-banner {
   position: fixed; top: 0; left: 0; right: 0;
   background: #F59E0B; color: #1A1917;
-  padding: 10px 20px; font-size: 13px; font-weight: 500;
+  padding: 10px 20px; font-size: 13px; font-weight: 600;
   display: flex; align-items: center; gap: 10px;
   z-index: 9999;
 }

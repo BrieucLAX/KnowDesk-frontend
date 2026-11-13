@@ -64,7 +64,7 @@
 }
 .cmd-palette__section-title {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 6px 18px; font-size: 11px; font-weight: 500;
+  padding: 6px 18px; font-size: 11px; font-weight: 600;
   text-transform: uppercase; letter-spacing: .06em;
   color: var(--neutral-400);
   font-family: var(--font-ui);
@@ -235,7 +235,7 @@
   margin-top: 8px;
 }
 .ai-answer__sources-label {
-  font-size: 11px; font-weight: 500;
+  font-size: 11px; font-weight: 600;
   color: var(--neutral-500);
   text-transform: uppercase; letter-spacing: 0.04em;
   margin-right: 4px;
@@ -277,7 +277,7 @@
   border-top: 1px dashed var(--neutral-100);
 }
 .ai-answer__copy {
-  font-size: 11px; color: oklch(0.45 0.16 290); font-weight: 500;
+  font-size: 11px; color: oklch(0.45 0.16 290); font-weight: 600;
   background: oklch(0.96 0.04 290);
   border: 1px solid oklch(0.85 0.06 290);
   border-radius: var(--radius-md);
@@ -337,7 +337,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 .search-bar__dropdown-label {
-  font-size: 10px; font-weight: 500; text-transform: uppercase;
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
   letter-spacing: .06em; color: var(--neutral-400);
   padding: 10px 14px 6px;
 }
@@ -347,7 +347,7 @@
 .search-section__header {
   display: flex; align-items: center; gap: 8px;
   padding: 10px 14px 6px;
-  font-size: 11px; font-weight: 500;
+  font-size: 11px; font-weight: 600;
   color: var(--neutral-500);
   text-transform: uppercase; letter-spacing: 0.04em;
   border-top: 1px solid var(--neutral-100);
@@ -410,13 +410,13 @@
 .search-result:hover,
 .search-result--active { background: var(--brand-50); }
 .search-result__main  { display: flex; flex-direction: column; gap: 3px; }
-.search-result__title { font-size: 13px; font-weight: 500; color: var(--neutral-900); }
+.search-result__title { font-size: 13px; font-weight: 600; color: var(--neutral-900); }
 .search-result__excerpt {
   font-size: 12px; color: var(--neutral-500); line-height: 1.4;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .search-result__excerpt mark {
-  background: none; color: var(--brand-600); font-weight: 500;
+  background: none; color: var(--brand-600); font-weight: 600;
 }
 .search-result__meta {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;

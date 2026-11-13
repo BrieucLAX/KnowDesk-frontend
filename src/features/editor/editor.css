@@ -14,7 +14,7 @@
   transition: all var(--t-fast);
 }
 .link-modal__tab:hover { background: var(--neutral-100); color: var(--neutral-700); }
-.link-modal__tab--active { background: var(--brand-50); color: var(--brand-700); border-color: var(--brand-200); font-weight: 500; }
+.link-modal__tab--active { background: var(--brand-50); color: var(--brand-700); border-color: var(--brand-200); font-weight: 600; }
 
 .link-modal__results { list-style: none; display: flex; flex-direction: column; gap: 4px; margin-top: 8px; max-height: 200px; overflow-y: auto; }
 .link-modal__result {
@@ -107,7 +107,7 @@
 .rte__tool {
   height: 28px; min-width: 28px; padding: 0 6px; border-radius: 5px;
   background: none; border: none; cursor: pointer;
-  font-family: var(--font-ui); font-size: 12px; font-weight: 500;
+  font-family: var(--font-ui); font-size: 12px; font-weight: 600;
   color: var(--neutral-600); transition: all var(--t-fast);
   display: flex; align-items: center; justify-content: center;
 }

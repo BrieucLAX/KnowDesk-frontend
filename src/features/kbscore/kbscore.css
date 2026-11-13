@@ -67,7 +67,7 @@
   display: flex; align-items: baseline; justify-content: space-between;
 }
 .kbscore__dim-label {
-  font-size: 13px; font-weight: 500; color: var(--neutral-800);
+  font-size: 13px; font-weight: 600; color: var(--neutral-800);
 }
 .kbscore__dim-score {
   font-size: 22px; font-weight: 700; color: var(--neutral-900);

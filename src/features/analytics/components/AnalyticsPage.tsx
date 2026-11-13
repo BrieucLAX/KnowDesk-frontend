@@ -765,7 +765,7 @@ function ChatWordCloud() {
   };
   const weightFor = (count: number): number => {
     const ratio = (count - minCount) / span;
-    return ratio > 0.6 ? 700 : ratio > 0.3 ? 600 : 500;
+    return ratio > 0.6 ? 700 : ratio > 0.3 ? 600 : 400;
   };
   const colorFor = (count: number): string => {
     // Du neutre clair au brand foncé selon importance

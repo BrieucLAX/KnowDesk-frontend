@@ -41,7 +41,7 @@
 }
 .stepper__dot {
   width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-  border: 1.5px solid var(--neutral-200); font-size: 12px; font-weight: 500;
+  border: 1.5px solid var(--neutral-200); font-size: 12px; font-weight: 600;
   display: flex; align-items: center; justify-content: center;
   color: var(--neutral-400); transition: all 0.2s ease; background: var(--neutral-0);
 }
@@ -53,10 +53,10 @@
 .stepper__line--done { background: #1A6B3C; }
 
 .onboarding__header { display: flex; flex-direction: column; gap: 6px; }
-.onboarding__step-count { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--brand-500); }
-.onboarding__title { font-size: 22px; font-weight: 500; letter-spacing: -0.02em; color: var(--neutral-900); }
+.onboarding__step-count { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--brand-500); }
+.onboarding__title { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; color: var(--neutral-900); }
 .onboarding__desc  { font-size: 14px; color: var(--neutral-500); line-height: 1.5; }
-.onboarding__welcome { font-size: 14px; color: var(--brand-600); font-weight: 500; margin-bottom: 4px; }
+.onboarding__welcome { font-size: 14px; color: var(--brand-600); font-weight: 600; margin-bottom: 4px; }
 
 .onboarding__body { min-height: 120px; }
 .onboarding__step { display: flex; flex-direction: column; gap: 16px; }
@@ -88,14 +88,14 @@
 /* Category suggestions */
 .onboarding__suggestions { display: flex; flex-direction: column; gap: 8px; }
 .onboarding__suggestions-label {
-  font-size: 11px; font-weight: 500; text-transform: uppercase;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
   letter-spacing: .05em; color: var(--neutral-400);
 }
 .onboarding__suggestion-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .suggestion-chip {
   padding: 5px 12px; border-radius: var(--radius-full);
   border: 1.5px solid var(--neutral-200); background: var(--neutral-0);
-  font-size: 12px; font-weight: 500; color: var(--neutral-600);
+  font-size: 12px; font-weight: 600; color: var(--neutral-600);
   cursor: pointer; transition: all var(--t-fast); font-family: var(--font-ui);
 }
 .suggestion-chip:hover { border-color: var(--brand-300); color: var(--brand-600); background: var(--brand-50); }

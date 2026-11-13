@@ -33,7 +33,7 @@
 
 .apidoc-main           { min-width: 0; }
 .apidoc-section        { margin-bottom: 48px; }
-.apidoc-section__title { font-size: 20px; font-weight: 500; color: var(--neutral-900); margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--neutral-200); }
+.apidoc-section__title { font-size: 20px; font-weight: 600; color: var(--neutral-900); margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--neutral-200); }
 .apidoc-section__text  { font-size: 14px; color: var(--neutral-600); line-height: 1.7; margin-bottom: 16px; }
 .apidoc-section__text code { background: var(--neutral-100); padding: 2px 6px; border-radius: 4px; font-size: 12px; font-family: monospace; }
 
@@ -86,7 +86,7 @@
 .apidoc-params          { margin-bottom: 16px; }
 .apidoc-params__title   { font-size: 12px; font-weight: 600; color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
 .apidoc-params__table   { width: 100%; border-collapse: collapse; font-size: 13px; }
-.apidoc-params__table th { padding: 8px 12px; text-align: left; font-weight: 500; color: var(--neutral-500); border-bottom: 1px solid var(--neutral-100); background: var(--neutral-50); }
+.apidoc-params__table th { padding: 8px 12px; text-align: left; font-weight: 600; color: var(--neutral-500); border-bottom: 1px solid var(--neutral-100); background: var(--neutral-50); }
 .apidoc-params__table td { padding: 8px 12px; border-bottom: 1px solid var(--neutral-50); color: var(--neutral-700); }
 .apidoc-params__table code { background: var(--neutral-100); padding: 2px 6px; border-radius: 4px; font-size: 11px; }
 .apidoc-type { font-size: 11px; background: var(--brand-100); color: var(--brand-700); padding: 2px 6px; border-radius: 4px; font-family: monospace; }

@@ -17,11 +17,11 @@
   margin-bottom: 20px;
 }
 .account-section__header { margin-bottom: 20px; }
-.account-section__title  { font-size: 15px; font-weight: 500; color: var(--neutral-900); }
+.account-section__title  { font-size: 15px; font-weight: 600; color: var(--neutral-900); }
 .account-section__desc   { font-size: 13px; color: var(--neutral-500); margin-top: 4px; }
 .account-form__row       { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .account-form__info      { margin: 12px 0; font-size: 13px; color: var(--neutral-500); }
-.account-form__email     { font-weight: 500; color: var(--neutral-700); }
+.account-form__email     { font-weight: 600; color: var(--neutral-700); }
 .account-form__actions   { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
 .account-form__saved     { font-size: 13px; color: var(--color-success); }
 .account-success {

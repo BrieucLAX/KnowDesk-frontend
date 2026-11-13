@@ -12,7 +12,7 @@
   display: flex; align-items: center; gap: 12px;
 }
 .dashboard__retry {
-  font-size: 13px; font-weight: 500; color: var(--color-danger);
+  font-size: 13px; font-weight: 600; color: var(--color-danger);
   text-decoration: underline; background: none; border: none; cursor: pointer;
 }
 
@@ -28,11 +28,11 @@
   display: flex; flex-direction: column; gap: 6px;
 }
 .stat-card__label {
-  font-size: 12px; font-weight: 500; color: var(--neutral-400);
+  font-size: 12px; font-weight: 600; color: var(--neutral-400);
   text-transform: uppercase; letter-spacing: .05em;
 }
 .stat-card__value {
-  font-size: 28px; font-weight: 500; letter-spacing: -0.03em;
+  font-size: 28px; font-weight: 600; letter-spacing: -0.03em;
   color: var(--neutral-900); line-height: 1;
 }
 .stat-card__skeleton-label { height: 12px; width: 70%; }
@@ -44,7 +44,7 @@
 }
 .dashboard__main { display: flex; flex-direction: column; gap: 24px; }
 .dashboard__section-title {
-  font-size: 13px; font-weight: 500;
+  font-size: 13px; font-weight: 600;
   text-transform: uppercase; letter-spacing: .06em;
   color: var(--neutral-400); margin-bottom: 12px;
 }
@@ -63,7 +63,7 @@
 .article-row:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 1px; }
 .article-row__main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .article-row__title {
-  font-size: 13px; font-weight: 500; color: var(--neutral-900);
+  font-size: 13px; font-weight: 600; color: var(--neutral-900);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .article-row__meta { font-size: 11px; color: var(--neutral-400); }
@@ -83,12 +83,12 @@
 .activity-item__avatar {
   width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
   background: var(--brand-100); color: var(--brand-700);
-  font-size: 11px; font-weight: 500;
+  font-size: 11px; font-weight: 600;
   display: flex; align-items: center; justify-content: center;
 }
 .activity-item__body { flex: 1; min-width: 0; }
 .activity-item__text { font-size: 12px; color: var(--neutral-700); line-height: 1.4; }
-.activity-item__text strong { font-weight: 500; }
+.activity-item__text strong { font-weight: 600; }
 .activity-item__time { font-size: 11px; color: var(--neutral-400); margin-top: 2px; display: block; }
 .activity-item--skeleton { padding: 12px 0; }
 .activity-item__avatar-sk { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; }
@@ -104,9 +104,9 @@
   display: flex; align-items: flex-start; justify-content: space-between;
   margin-bottom: 12px;
 }
-.checklist__title { font-size: 14px; font-weight: 500; color: var(--neutral-900); }
+.checklist__title { font-size: 14px; font-weight: 600; color: var(--neutral-900); }
 .checklist__sub   { font-size: 12px; color: var(--neutral-500); margin-top: 2px; }
-.checklist__pct   { font-size: 20px; font-weight: 500; color: var(--brand-600); letter-spacing: -0.02em; }
+.checklist__pct   { font-size: 20px; font-weight: 600; color: var(--brand-600); letter-spacing: -0.02em; }
 .checklist__progress {
   height: 4px; background: var(--neutral-100); border-radius: var(--radius-full);
   margin-bottom: 16px; overflow: hidden;
@@ -127,7 +127,7 @@
 .checklist__label { font-size: 13px; }
 .checklist__label--done { color: var(--neutral-400); text-decoration: line-through; }
 .checklist__label--todo {
-  color: var(--brand-600); font-weight: 500;
+  color: var(--brand-600); font-weight: 600;
   transition: color var(--t-fast);
 }
 .checklist__label--todo:hover { color: var(--brand-700); text-decoration: underline; }

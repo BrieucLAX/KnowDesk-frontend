@@ -7,7 +7,7 @@
 }
 .category-filter__label {
   color: var(--neutral-600);
-  font-weight: 500;
+  font-weight: 600;
 }
 .category-filter__select {
   padding: 5px 8px;

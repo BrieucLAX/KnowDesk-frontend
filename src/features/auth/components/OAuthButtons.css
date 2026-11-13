@@ -17,7 +17,7 @@
   background: var(--neutral-0, #fff);
   font-family: inherit;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--neutral-900);
   cursor: pointer;
   transition: border-color var(--t-fast), background var(--t-fast);
