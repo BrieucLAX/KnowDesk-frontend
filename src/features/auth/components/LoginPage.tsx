@@ -56,7 +56,7 @@ React.useEffect(() => {
             <span className="login-page__logo-mark">K</span>
           </div>
           <blockquote className="login-page__quote">
-            <p>"La bonne réponse, au bon moment, pour chaque client."</p>
+            <p>La bonne réponse, au bon moment, pour chaque client.</p>
           </blockquote>
           <div className="login-page__brand-dots">
             <span /><span /><span />

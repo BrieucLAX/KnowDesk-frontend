@@ -9,6 +9,7 @@ import { LastModifiedBadge } from './LastModifiedBadge';
 import type {
   AiOrgSettings, AiTone, AiAddressForm, AiGlossaryEntry,
 } from '../types';
+import { ArrowRight, Plus, Sparkles, X } from 'lucide-react';
 
 const TONE_OPTIONS: Array<{ value: AiTone; label: string; hint: string }> = [
   { value: 'professional', label: 'Professionnelle', hint: 'Neutre, factuelle — défaut institutionnel' },
@@ -101,7 +102,7 @@ export function AiSettingsSection() {
   return (
     <section className="settings-section" aria-labelledby="ai-title">
       <div className="settings-section__header">
-        <h2 id="ai-title" className="settings-section__title">✨ IA recherche</h2>
+        <h2 id="ai-title" className="settings-section__title icon-label"><Sparkles size={20} />IA recherche</h2>
         <p className="settings-section__desc">
           Configuration de la <strong>Réponse IA</strong> qui apparaît au-dessus des résultats
           de la recherche interne (vue conseiller). Réponses générées par Mistral à partir
@@ -139,7 +140,8 @@ export function AiSettingsSection() {
         {/* Champs personnalisation — ne servent que si enabled est ON */}
         <fieldset
           disabled={!form.ai_answer_enabled}
-          style={{ border: 'none', padding: 0, margin: 0, opacity: form.ai_answer_enabled ? 1 : 0.5 }}
+          className="ai-settings__fields"
+          style={{ opacity: form.ai_answer_enabled ? 1 : 0.5 }}
         >
           <Input
             id="ai-industry"
@@ -233,7 +235,7 @@ export function AiSettingsSection() {
                     maxLength={50}
                     onChange={e => updateGlossaryRow(i, 'from', e.target.value)}
                   />
-                  <span className="ai-glossary__arrow" aria-hidden="true">→</span>
+                  <span className="ai-glossary__arrow" aria-hidden="true"><ArrowRight size={16} /></span>
                   <input
                     type="text"
                     className="field-input ai-glossary__input"
@@ -249,7 +251,7 @@ export function AiSettingsSection() {
                     aria-label="Supprimer cette correspondance"
                     title="Supprimer"
                   >
-                    ✕
+                    <X size={16} />
                   </button>
                 </div>
               ))}
@@ -260,7 +262,7 @@ export function AiSettingsSection() {
                   size="sm"
                   onClick={addGlossaryRow}
                 >
-                  + Ajouter un terme
+                  <Plus size={16} />Ajouter un terme
                 </Button>
               )}
             </div>

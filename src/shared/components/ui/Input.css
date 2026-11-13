@@ -18,6 +18,12 @@
 .field-required { color: var(--danger); }
 
 .field-wrap { position: relative; }
+/* Élément à droite dans le champ (Input `trailing`), centré verticalement. */
+.field-trailing {
+  position: absolute; top: 50%; right: 6px; transform: translateY(-50%);
+  display: flex; align-items: center;
+}
+.field-wrap--trailing .field-input { padding-right: 88px; }
 
 .field-input {
   width: 100%;
@@ -36,8 +42,9 @@
   padding: 0 var(--space-4);
 }
 /* Zone de texte : valeurs par défaut de spécificité nulle, que les classes
-   des écrans (.obp-textarea, .faq-editor__textarea…) remplacent. */
-:where(textarea.field-input) {
+   des écrans (.obp-textarea, .faq-editor__textarea…) remplacent. Spécificité
+   d'une classe : la remise à zéro `* { padding: 0 }` de base.css ne l'écrase pas. */
+:where(textarea).field-input {
   min-height: 96px;
   padding: 12px var(--space-4);
   line-height: 24px;

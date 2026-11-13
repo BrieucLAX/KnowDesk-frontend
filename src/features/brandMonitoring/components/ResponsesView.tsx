@@ -6,12 +6,13 @@ import { Modal } from '../../../shared/components/ui/Modal';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import { MarkdownContent } from '../../../shared/components/ui/MarkdownContent';
 import type { ResponseWithMentions, Sentiment } from '../types';
+import { Frown, Meh, Smile } from 'lucide-react';
 
-function sentimentEmoji(s: Sentiment | null): string {
-  if (s === 'positive') return '😊';
-  if (s === 'negative') return '😞';
-  if (s === 'neutral')  return '😐';
-  return '';
+function sentimentIcon(s: Sentiment | null): React.ReactNode {
+  if (s === 'positive') return <Smile size={14} role="img" aria-label="Sentiment positif" />;
+  if (s === 'negative') return <Frown size={14} role="img" aria-label="Sentiment négatif" />;
+  if (s === 'neutral')  return <Meh   size={14} role="img" aria-label="Sentiment neutre" />;
+  return null;
 }
 
 interface ResponsesViewProps {
@@ -51,6 +52,7 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
         {responses.length === 0 ? (
           <p className="bm-empty-data">Aucune réponse encore. Lance un run depuis l'onglet Dashboard.</p>
         ) : (
+          <div className="bm-responses-wrap">
           <table className="bm-responses-table">
             <thead>
               <tr>
@@ -76,7 +78,7 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
                         .sort((a, b) => b.count - a.count)
                         .map(m => (
                           <span key={m.brand_id} className={`bm-chip ${m.isOwner ? 'bm-chip--owner' : ''} ${m.sentiment ? `bm-chip--sentiment-${m.sentiment}` : ''}`}>
-                            {sentimentEmoji(m.sentiment)} {m.brandName}: {m.count}
+                            {sentimentIcon(m.sentiment)} {m.brandName}: {m.count}
                           </span>
                         ))
                     )}
@@ -94,6 +96,7 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </section>
 
@@ -115,7 +118,7 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
             <div className="bm-resp-detail__mentions">
               {openResp.mentions.filter(m => m.count > 0).map(m => (
                 <span key={m.brand_id} className={`bm-chip ${m.isOwner ? 'bm-chip--owner' : ''} ${m.sentiment ? `bm-chip--sentiment-${m.sentiment}` : ''}`}>
-                  {sentimentEmoji(m.sentiment)} {m.brandName}: {m.count}
+                  {sentimentIcon(m.sentiment)} {m.brandName}: {m.count}
                 </span>
               ))}
             </div>

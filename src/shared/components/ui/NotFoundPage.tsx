@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from './Button';
 import './NotFoundPage.css';
+import { ArrowLeft } from 'lucide-react';
 
 interface NotFoundPageProps {
   title?:       string;
@@ -13,7 +14,7 @@ export function NotFoundPage({
   title       = 'Page introuvable',
   description = 'La page que vous cherchez n\'existe pas ou a été déplacée.',
   onBack,
-  backLabel   = '← Retour au tableau de bord',
+  backLabel   = 'Retour au tableau de bord',
 }: NotFoundPageProps) {
   return (
     <div className="not-found-page">
@@ -22,7 +23,7 @@ export function NotFoundPage({
         <h1 className="not-found-page__title">{title}</h1>
         <p className="not-found-page__desc">{description}</p>
         {onBack && (
-          <Button variant="primary" size="md" onClick={onBack}>
+          <Button variant="primary" size="md" onClick={onBack} leftIcon={<ArrowLeft size={20} />}>
             {backLabel}
           </Button>
         )}

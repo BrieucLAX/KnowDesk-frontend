@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button }   from './Button';
 import { Skeleton } from './Skeleton';
+import { Plus } from 'lucide-react';
 
 export interface SettingsListSectionProps<T> {
   title:          string;
@@ -50,7 +51,7 @@ export function SettingsListSection<T extends { id: string }>({
           {description && <p className="settings-section__desc">{description}</p>}
         </div>
         {createCta && (
-          <Button variant="primary" size="sm" onClick={createCta.onClick}>
+          <Button variant="primary" size="sm" onClick={createCta.onClick} leftIcon={<Plus size={16} />}>
             {createCta.label}
           </Button>
         )}

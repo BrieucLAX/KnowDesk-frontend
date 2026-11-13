@@ -29,6 +29,11 @@ import { Callout, CALLOUT_TYPES, type CalloutType } from '../extensions/Callout'
 import { SlashCommand }      from '../extensions/SlashCommand';
 import { LinkModal }         from './LinkModal';
 import './RichTextEditor.css';
+import {
+  Highlighter, Image as ImageIcon, Link as LinkIcon, List, ListTodo, Megaphone, Minus, Quote,
+  Table as TableIcon,
+} from 'lucide-react';
+import { StatusIcon } from '../../../shared/components/ui/StatusIcon';
 
 // Curation de langages — ~8 langs au lieu des 192 de common (gain ~400 KB).
 // Si un client a besoin d'autres langues, ajouter ici.
@@ -312,16 +317,16 @@ function Toolbar({ editor, onLinkClick, onImageClick, hasImage }: {
       </ToolGroup>
 
       <ToolGroup>
-        <ToolBtn label="Liste à puces"   active={editor.isActive('bulletList')}  onClick={() => editor.chain().focus().toggleBulletList().run()}>≡</ToolBtn>
+        <ToolBtn label="Liste à puces"   active={editor.isActive('bulletList')}  onClick={() => editor.chain().focus().toggleBulletList().run()}><List size={16} /></ToolBtn>
         <ToolBtn label="Liste numérotée" active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()}>1.</ToolBtn>
-        <ToolBtn label="Tâches"          active={editor.isActive('taskList')}    onClick={() => editor.chain().focus().toggleTaskList().run()}>☐</ToolBtn>
+        <ToolBtn label="Tâches"          active={editor.isActive('taskList')}    onClick={() => editor.chain().focus().toggleTaskList().run()}><ListTodo size={16} /></ToolBtn>
       </ToolGroup>
 
       <ToolGroup>
-        <ToolBtn label="Citation"   active={editor.isActive('blockquote')}  onClick={() => editor.chain().focus().toggleBlockquote().run()}>❝</ToolBtn>
+        <ToolBtn label="Citation"   active={editor.isActive('blockquote')}  onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote size={16} /></ToolBtn>
         <ToolBtn label="Bloc code"  active={editor.isActive('codeBlock')}   onClick={() => editor.chain().focus().toggleCodeBlock().run()}>{'{ }'}</ToolBtn>
         <div className="rte__dropdown" onMouseLeave={() => setShowCalloutMenu(false)}>
-          <ToolBtn label="Encadré coloré" active={editor.isActive('callout')} onClick={() => setShowCalloutMenu(s => !s)}>⚐</ToolBtn>
+          <ToolBtn label="Encadré coloré" active={editor.isActive('callout')} onClick={() => setShowCalloutMenu(s => !s)}><Megaphone size={16} /></ToolBtn>
           {showCalloutMenu && (
             <div className="rte__menu" role="menu">
               {CALLOUT_TYPES.map(t => (
@@ -332,18 +337,19 @@ function Toolbar({ editor, onLinkClick, onImageClick, hasImage }: {
                   onClick={() => { editor.chain().focus().toggleCallout(t).run(); setShowCalloutMenu(false); }}
                   role="menuitem"
                 >
+                  <StatusIcon tone={t} size={16} className="rte__menu-icon" />
                   {calloutLabel(t)}
                 </button>
               ))}
             </div>
           )}
         </div>
-        <ToolBtn label="Ligne horizontale" onClick={() => editor.chain().focus().setHorizontalRule().run()}>—</ToolBtn>
+        <ToolBtn label="Ligne horizontale" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus size={16} /></ToolBtn>
       </ToolGroup>
 
       <ToolGroup>
         <div className="rte__dropdown" onMouseLeave={() => setShowHighlightMenu(false)}>
-          <ToolBtn label="Surligner" active={editor.isActive('highlight')} onClick={() => setShowHighlightMenu(s => !s)}>✏︎</ToolBtn>
+          <ToolBtn label="Surligner" active={editor.isActive('highlight')} onClick={() => setShowHighlightMenu(s => !s)}><Highlighter size={16} /></ToolBtn>
           {showHighlightMenu && (
             <div className="rte__menu rte__menu--colors" role="menu">
               {HIGHLIGHT_COLORS.map(c => (
@@ -368,9 +374,9 @@ function Toolbar({ editor, onLinkClick, onImageClick, hasImage }: {
             </div>
           )}
         </div>
-        <ToolBtn label="Tableau" onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}>▦</ToolBtn>
-        <ToolBtn label="Lien (⌘K)" active={editor.isActive('link')} onClick={onLinkClick}>🔗</ToolBtn>
-        {hasImage && <ToolBtn label="Image" onClick={onImageClick}>🖼</ToolBtn>}
+        <ToolBtn label="Tableau" onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}><TableIcon size={16} /></ToolBtn>
+        <ToolBtn label="Lien (⌘K)" active={editor.isActive('link')} onClick={onLinkClick}><LinkIcon size={16} /></ToolBtn>
+        {hasImage && <ToolBtn label="Image" onClick={onImageClick}><ImageIcon size={16} /></ToolBtn>}
       </ToolGroup>
 
       <ToolGroup>
@@ -387,8 +393,8 @@ function BubbleMenuToolbar({ editor, onLinkClick }: { editor: Editor; onLinkClic
       <ToolBtn label="Italique"  active={editor.isActive('italic')}    onClick={() => editor.chain().focus().toggleItalic().run()}><em>I</em></ToolBtn>
       <ToolBtn label="Souligné"  active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()}><u>U</u></ToolBtn>
       <ToolBtn label="Code"      active={editor.isActive('code')}      onClick={() => editor.chain().focus().toggleCode().run()}>{'<>'}</ToolBtn>
-      <ToolBtn label="Surligner" active={editor.isActive('highlight')} onClick={() => editor.chain().focus().toggleHighlight({ color: HIGHLIGHT_COLORS[0].color }).run()}>✏︎</ToolBtn>
-      <ToolBtn label="Lien"      active={editor.isActive('link')}      onClick={onLinkClick}>🔗</ToolBtn>
+      <ToolBtn label="Surligner" active={editor.isActive('highlight')} onClick={() => editor.chain().focus().toggleHighlight({ color: HIGHLIGHT_COLORS[0].color }).run()}><Highlighter size={16} /></ToolBtn>
+      <ToolBtn label="Lien"      active={editor.isActive('link')}      onClick={onLinkClick}><LinkIcon size={16} /></ToolBtn>
     </div>
   );
 }
@@ -433,10 +439,10 @@ const HIGHLIGHT_COLORS = [
 
 function calloutLabel(t: CalloutType): string {
   const labels: Record<CalloutType, string> = {
-    info:    'ℹ️ Information',
-    success: '✅ Succès',
-    warning: '⚠️ Attention',
-    danger:  '⛔ Danger',
+    info:    'Information',
+    success: 'Succès',
+    warning: 'Attention',
+    danger:  'Danger',
   };
   return labels[t];
 }

@@ -10,8 +10,17 @@ import { ResponsesView } from './components/ResponsesView';
 import { SettingsView }  from './components/SettingsView';
 import type { BrandProject } from './types';
 import './brandMonitoring.css';
+import { ChartColumn } from 'lucide-react';
+import { Tabs, TabPanel } from '../../shared/components/ui/Tabs';
 
 type Tab = 'dashboard' | 'prompts' | 'responses' | 'settings';
+
+const TABS: ReadonlyArray<{ id: Tab; label: string }> = [
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'prompts',   label: 'Prompts' },
+  { id: 'responses', label: 'Réponses' },
+  { id: 'settings',  label: 'Paramètres' },
+];
 
 export function BrandMonitoringPage() {
   const toast = useToast();
@@ -69,7 +78,7 @@ export function BrandMonitoringPage() {
     return (
       <div className="brand-monitoring-page brand-monitoring-page--empty">
         <div className="bm-empty">
-          <div className="bm-empty__icon" aria-hidden="true">📊</div>
+          <div className="bm-empty__icon" aria-hidden="true"><ChartColumn size={24} /></div>
           <h2 className="bm-empty__title">Brand monitoring — créer un projet</h2>
           <p className="bm-empty__desc">
             Suis ta visibilité de marque dans les LLM (Mistral en V1) vs tes concurrents.
@@ -112,19 +121,20 @@ export function BrandMonitoringPage() {
         </div>
       </header>
 
-      <nav className="bm-tabs" aria-label="Sections brand monitoring">
-        <button onClick={() => setTab('dashboard')}  className={`bm-tabs__tab ${tab === 'dashboard'  ? 'is-active' : ''}`}>Dashboard</button>
-        <button onClick={() => setTab('prompts')}    className={`bm-tabs__tab ${tab === 'prompts'    ? 'is-active' : ''}`}>Prompts</button>
-        <button onClick={() => setTab('responses')}  className={`bm-tabs__tab ${tab === 'responses'  ? 'is-active' : ''}`}>Réponses</button>
-        <button onClick={() => setTab('settings')}   className={`bm-tabs__tab ${tab === 'settings'   ? 'is-active' : ''}`}>Paramètres</button>
-      </nav>
+      <Tabs<Tab>
+        id="bm-sections"
+        items={TABS}
+        value={tab}
+        onChange={setTab}
+        ariaLabel="Sections brand monitoring"
+      />
 
-      <main className="bm-main">
+      <TabPanel id="bm-sections" value={tab} className="bm-main">
         {tab === 'dashboard'  && <DashboardView projectId={project.id} onReloadProject={loadProject} />}
         {tab === 'prompts'    && <PromptsView   projectId={project.id} onReloadProject={loadProject} />}
         {tab === 'responses'  && <ResponsesView projectId={project.id} />}
         {tab === 'settings'   && <SettingsView  projectId={project.id} onReloadProject={loadProject} />}
-      </main>
+      </TabPanel>
     </div>
   );
 }

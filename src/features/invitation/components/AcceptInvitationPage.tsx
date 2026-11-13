@@ -4,6 +4,7 @@ import '../invitation.css';
 import { Button }   from '../../../shared/components/ui/Button';
 import { Input }    from '../../../shared/components/ui/Input';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
+import { CircleCheck } from 'lucide-react';
 
 interface AcceptInvitationPageProps {
   token:     string;
@@ -76,7 +77,7 @@ export function AcceptInvitationPage({ token, onSuccess }: AcceptInvitationPageP
     return (
       <Frame quote="Bienvenue dans votre base de connaissance.">
         <div className="invitation-success">
-          <div className="invitation-success__icon" aria-hidden="true">✓</div>
+          <div className="invitation-success__icon" aria-hidden="true"><CircleCheck size={24} /></div>
           <h1 className="invitation-success__title">{existing ? `Vous avez rejoint ${info.orgName}` : 'Compte créé !'}</h1>
           <p className="invitation-success__desc">
             {existing

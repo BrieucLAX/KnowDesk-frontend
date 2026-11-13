@@ -111,3 +111,43 @@ html, body, #root {
   opacity: 0.85;
   cursor: help;
 }
+
+/* ── Icônes Lucide (docs/design-system/icons) ─────────────────── */
+/* Un picto ne rétrécit jamais dans une ligne flexible. */
+svg.lucide { flex-shrink: 0; }
+/* Élément qui reçoit un picto devant (ou après) son texte. */
+.icon-label { display: inline-flex; align-items: center; gap: var(--space-2); }
+/* Picto posé dans une ligne de texte courant. */
+.icon-inline { vertical-align: -0.2em; }
+/* Bouton ou lien qui commence ou finit par un picto : aligné sur le texte.
+   Spécificité nulle : la mise en page propre au composant l'emporte. */
+:where(button, a):has(> svg.lucide) { display: inline-flex; align-items: center; gap: var(--space-2); }
+
+/* Pictos Lucide en masque CSS, pour les éléments sans balisage React (HTML
+   d'article ou d'aide, pseudo-éléments). Couleur : `background-color` de
+   l'élément masqué (currentColor ou une couleur d'état). */
+:root {
+  --icon-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E");
+  --icon-circle-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m16 9-5.5 5.5L8 12'/%3E%3C/svg%3E");
+  --icon-triangle-alert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+  --icon-circle-alert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 8v4'/%3E%3Cpath d='M12 16h.01'/%3E%3C/svg%3E");
+  --icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  --icon-chevron-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E");
+  --icon-lightbulb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5'/%3E%3Cpath d='M9 18h6'/%3E%3Cpath d='M10 22h4'/%3E%3C/svg%3E");
+}
+
+/* Cases à cocher et boutons radio natifs : couleur du design system. */
+input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); }
+
+/* Repli <details> : picto chevron-right Lucide au lieu du triangle natif,
+   pivoté quand le bloc est ouvert. Spécificité nulle. */
+:where(summary) { list-style: none; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+:where(summary)::-webkit-details-marker { display: none; }
+:where(summary)::before {
+  content: ''; flex-shrink: 0; width: 16px; height: 16px;
+  background-color: currentColor;
+  -webkit-mask: var(--icon-chevron-right) center / contain no-repeat;
+  mask: var(--icon-chevron-right) center / contain no-repeat;
+  transition: transform var(--t-fast);
+}
+:where(details[open] > summary)::before { transform: rotate(90deg); }

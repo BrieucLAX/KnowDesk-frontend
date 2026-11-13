@@ -62,15 +62,17 @@ export function LoginForm({
           error={errors.password}
           onChange={e => onChange('password', e.target.value)}
           onBlur={() => onBlur('password')}
+          trailing={(
+            <button
+              type="button"
+              className="login-form__toggle-password"
+              onClick={onTogglePassword}
+              aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+            >
+              {showPassword ? 'Masquer' : 'Afficher'}
+            </button>
+          )}
         />
-        <button
-          type="button"
-          className="login-form__toggle-password"
-          onClick={onTogglePassword}
-          aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
-        >
-          {showPassword ? 'Masquer' : 'Afficher'}
-        </button>
       </div>
 
       <div className="login-form__forgot">

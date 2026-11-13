@@ -10,7 +10,7 @@
   border-left: 1px solid var(--neutral-100);
   display: flex; flex-direction: column;
   z-index: 200;
-  box-shadow: -4px 0 32px color-mix(in srgb, var(--ink) 8%, transparent);
+  box-shadow: var(--shadow-lg);
 }
 .help-panel__header {
   display: flex; align-items: center; justify-content: space-between;
@@ -30,7 +30,8 @@
   font-size: 14px; font-family: var(--font-ui);
   background: var(--neutral-50);
 }
-.help-search:focus { outline: none; border-color: var(--brand-400); background: var(--neutral-0); }
+.help-search:focus { background: var(--neutral-0); }
+.help-search:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 /* Résultats */
 .help-panel__results { flex: 1; overflow-y: auto; padding: 8px 0; }
@@ -58,11 +59,12 @@
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   width: 100%; padding: 12px 8px; text-align: center;
   background: none; border: none; cursor: pointer;
-  transition: background var(--t-fast); border-left: 2px solid transparent;
+  transition: background var(--t-fast);
 }
 .help-nav__item:hover        { background: var(--neutral-50); }
-.help-nav__item--active      { background: var(--brand-50); border-left-color: var(--brand-500); }
-.help-nav__icon              { font-size: 20px; }
+.help-nav__item--active      { background: var(--primary-soft); }
+.help-nav__icon              { display: flex; color: var(--ink-muted); }
+.help-nav__item--active .help-nav__icon { color: var(--primary); }
 .help-nav__label             { font-size: 11px; color: var(--neutral-600); font-weight: 600; }
 .help-nav__item--active .help-nav__label { color: var(--brand-700); }
 
@@ -93,14 +95,24 @@
 .help-article li       { font-size: 13px; color: var(--neutral-700); line-height: 1.6; margin-bottom: 4px; }
 .help-article strong   { font-weight: 600; color: var(--neutral-900); }
 .help-article blockquote {
-  border-left: 3px solid var(--brand-300); padding: 8px 12px;
-  background: var(--brand-50); border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 8px 12px;
+  background: var(--primary-soft); border-radius: var(--radius-md);
   margin: 12px 0; font-size: 13px; color: var(--neutral-700);
 }
+/* Encarts de l'aide (fiche Alert) : fond *-soft, texte --ink, icône colorée. */
 .help-callout {
-  padding: 10px 14px; border-radius: var(--radius-md);
-  font-size: 13px; margin: 12px 0; line-height: 1.5;
+  position: relative;
+  padding: 10px 14px 10px 40px; border-radius: var(--radius-md);
+  font-size: 13px; margin: 12px 0; line-height: 1.5; color: var(--ink);
 }
-.help-callout--tip  { background: var(--success-soft); color: var(--success); }
-.help-callout--warn { background: var(--warning-soft); color: var(--warning); }
+.help-callout::before {
+  content: ''; position: absolute; left: 14px; top: 12px;
+  width: 16px; height: 16px;
+  -webkit-mask: var(--help-callout-icon) center / contain no-repeat;
+  mask: var(--help-callout-icon) center / contain no-repeat;
+}
+.help-callout--tip  { --help-callout-icon: var(--icon-lightbulb); background: var(--success-soft); }
+.help-callout--warn { --help-callout-icon: var(--icon-triangle-alert); background: var(--warning-soft); }
+.help-callout--tip::before  { background-color: var(--success); }
+.help-callout--warn::before { background-color: var(--warning); }
 

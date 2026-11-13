@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './ChipsInput.css';
+import { X } from 'lucide-react';
 
 export interface ChipsInputProps {
   value:        string[];
@@ -91,7 +92,7 @@ export function ChipsInput({
                 className="chip__remove"
                 onClick={() => onChange(value.filter(v => v !== chip))}
                 aria-label={`Retirer ${chip}`}
-              >×</button>
+              ><X size={16} /></button>
             )}
           </span>
         ))}

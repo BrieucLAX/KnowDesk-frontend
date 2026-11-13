@@ -12,6 +12,7 @@ import { ArticlesToReworkCard } from '../../articleQuality/components/ArticlesTo
 import { useDashboard }        from '../hooks/useDashboard';
 import { useAuthStore, selectUser, selectUserRole } from '../../../store/authStore';
 import { formatRelative }      from '../../../shared/lib/formatDate';
+import { Plus } from 'lucide-react';
 
 /**
  * DashboardPage — first screen after login.
@@ -56,7 +57,7 @@ export function DashboardPage({ onArticleClick, onNewArticle }: DashboardPagePro
           : 'Recherchez un processus ou parcourez les catégories.'}
         actions={isAdmin && (
           <Button variant="primary" size="md" onClick={onNewArticle}>
-            + Nouvel article
+            <Plus size={20} />Nouvel article
           </Button>
         )}
       />
@@ -117,7 +118,7 @@ export function DashboardPage({ onArticleClick, onNewArticle }: DashboardPagePro
                 description={isAdmin
                   ? 'Créez votre premier article pour démarrer.'
                   : 'Votre équipe prépare le contenu. Revenez bientôt.'}
-                ctaLabel={isAdmin ? '+ Créer un article' : undefined}
+                ctaLabel={isAdmin ? 'Créer un article' : undefined}
                 onCta={isAdmin ? onNewArticle : undefined}
               />
             )}

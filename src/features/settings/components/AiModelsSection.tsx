@@ -8,6 +8,7 @@ import { ApiError }       from '../../../shared/lib/apiClient';
 import type {
   AiServicesPayload, AiServiceItem, ChatModelId, ChatModelMeta,
 } from '../types';
+import { BookOpen, Globe, GraduationCap, LockKeyhole, MessageCircle, Radar, Search } from 'lucide-react';
 
 /**
  * Section "Modèles IA" — admin org. Liste les 4 services IA de la
@@ -116,7 +117,9 @@ export function AiModelsSection() {
             return (
               <div key={cat.key} className="ai-models__category">
                 <div className="ai-models__category-head">
-                  <h3 className="ai-models__category-title">{cat.label}</h3>
+                  <h3 className="ai-models__category-title icon-label">
+                    {CATEGORY_ICON[cat.key] ?? null}{stripLeadingEmoji(cat.label)}
+                  </h3>
                   <p className="ai-models__category-desc">{cat.description}</p>
                 </div>
                 <div className="ai-models__category-services">
@@ -146,9 +149,20 @@ interface ServiceCardProps {
   onChangeModel:   (id: ChatModelId) => void;
 }
 
+/** Picto de chaque groupe de modèles ; le libellé du back porte encore un emoji, retiré à l'affichage. */
+const CATEGORY_ICON: Record<string, React.ReactNode> = {
+  chatbot:          <MessageCircle size={20} />,
+  search:           <Search size={20} />,
+  kb:               <BookOpen size={20} />,
+  learning:         <GraduationCap size={20} />,
+  brand_monitoring: <Radar size={20} />,
+};
+const stripLeadingEmoji = (label: string) => label.replace(/^[\p{Extended_Pictographic}\uFE0F\s]+/u, '');
+
 function ServiceCard({ service, availableModels, saving, onChangeModel }: ServiceCardProps) {
   const currentMeta = availableModels.find(m => m.id === service.model);
-  const flag = currentMeta?.region === 'FR' ? '🇫🇷' : '🌐';
+  // Drapeau gardé pour la France (identifiant, comme un logo) ; sinon le globe.
+  const flag = currentMeta?.region === 'FR' ? '🇫🇷' : <Globe size={16} />;
 
   return (
     <article className="ai-models__service" aria-labelledby={`ai-svc-${service.key}-title`}>
@@ -165,8 +179,8 @@ function ServiceCard({ service, availableModels, saving, onChangeModel }: Servic
             {service.modelLabel ?? currentMeta?.label ?? service.model}
           </span>
           {!service.modifiable && (
-            <span className="ai-models__lock" title="Non modifiable en V1" aria-label="Verrouillé">
-              🔒
+            <span className="ai-models__lock" title="Non modifiable en V1">
+              <LockKeyhole size={16} role="img" aria-label="Verrouillé" />
             </span>
           )}
         </div>

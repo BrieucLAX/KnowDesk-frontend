@@ -4,7 +4,8 @@ import { brandMonitoringApi } from '../api/brandMonitoringApi';
 import { useToast } from '../../../shared/lib/useToast';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import type { Timeline } from '../types';
-import { CHART_SERIES, CHART_GRID, CHART_AXIS } from '../../../shared/lib/chartColors';
+import { chartSeriesStyle, CHART_GRID, CHART_AXIS } from '../../../shared/lib/chartColors';
+import { Star } from 'lucide-react';
 
 interface TimelineChartProps {
   projectId: string;
@@ -13,7 +14,6 @@ interface TimelineChartProps {
 // La marque du client prend toujours la première couleur (--primary) ; les
 // concurrents se partagent les cinq suivantes. Au-delà de cinq concurrents,
 // les couleurs se répètent (le trait épais et l'étoile distinguent le client).
-const [OWNER_COLOR, ...COMPETITOR_COLORS] = CHART_SERIES;
 
 type Bucket = 'day' | 'week';
 
@@ -37,7 +37,7 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
   // Transformation : agrège chaque bucket en un objet flat { bucket, Auchan: pct, Carrefour: pct, ... }
   // Couleur owner-first dans la légende.
   const { chartData, brands } = useMemo(() => {
-    if (!data || data.series.length === 0) return { chartData: [], brands: [] as Array<{ name: string; isOwner: boolean; color: string }> };
+    if (!data || data.series.length === 0) return { chartData: [], brands: [] as Array<{ name: string; isOwner: boolean; color: string; dash?: string }> };
     const brandSet = new Map<string, { name: string; isOwner: boolean }>();
     for (const point of data.series) {
       for (const b of point.byBrand) {
@@ -49,8 +49,9 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
       if (!a.isOwner && b.isOwner) return 1;
       return a.name.localeCompare(b.name);
     });
-    const ownerCount = orderedBrands.filter(b => b.isOwner).length;
-    const brandsWithColor = orderedBrands.map((b, i) => ({ ...b, color: b.isOwner ? OWNER_COLOR : COMPETITOR_COLORS[(i - ownerCount) % COMPETITOR_COLORS.length] }));
+    // Marque suivie en premier (--primary), puis les concurrentes ; au-delà de
+    // 6 marques, les couleurs reviennent en pointillés, puis en tirets.
+    const brandsWithColor = orderedBrands.map((b, i) => ({ ...b, ...chartSeriesStyle(i) }));
     const chartData = data.series.map(point => {
       const row: Record<string, string | number> = {
         bucket: formatBucketLabel(point.bucket, bucket),
@@ -60,6 +61,7 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
     });
     return { chartData, brands: brandsWithColor };
   }, [data, bucket]);
+  const ownerName = brands.find(b => b.isOwner)?.name;
 
   return (
     <section className="bm-card">
@@ -113,17 +115,25 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
                 formatter={(v: number) => `${v.toFixed(1)}%`}
                 contentStyle={{ fontSize: 12, borderRadius: 8, background: 'var(--surface-raised)', borderColor: 'var(--line)', color: 'var(--ink)' }}
               />
-              <Legend wrapperStyle={{ fontSize: 12 }} />
+              <Legend
+                wrapperStyle={{ fontSize: 12 }}
+                formatter={(value: string) => (
+                  ownerName === value
+                    ? <span className="icon-label bm-timeline__owner"><Star size={12} aria-hidden="true" />{value}</span>
+                    : value
+                )}
+              />
               {brands.map(b => (
                 <Line
                   key={b.name}
                   type="monotone"
                   dataKey={b.name}
                   stroke={b.color}
+                  strokeDasharray={b.dash}
+                  legendType="plainline"
                   strokeWidth={b.isOwner ? 3 : 1.8}
                   dot={{ r: 3 }}
                   activeDot={{ r: 5 }}
-                  name={b.isOwner ? `⭐ ${b.name}` : b.name}
                 />
               ))}
             </LineChart>

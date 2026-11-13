@@ -1,0 +1,20 @@
+/* Alert — encart d'alerte (Alert.tsx), aligné sur la fiche Alert (cx-alert). */
+.alert {
+  display: flex; gap: 12px;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 15px; line-height: 24px;
+  color: var(--ink);
+}
+.alert__icon { margin-top: 2px; }
+.alert__body { flex: 1; min-width: 0; }
+.alert__body > :first-child { margin-top: 0; }
+.alert__body > :last-child  { margin-bottom: 0; }
+.alert--info    { background: var(--info-soft); }
+.alert--success { background: var(--success-soft); }
+.alert--warning { background: var(--warning-soft); }
+.alert--danger  { background: var(--danger-soft); }
+.alert--info    .alert__icon { color: var(--info); }
+.alert--success .alert__icon { color: var(--success); }
+.alert--warning .alert__icon { color: var(--warning); }
+.alert--danger  .alert__icon { color: var(--danger); }

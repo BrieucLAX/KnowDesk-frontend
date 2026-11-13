@@ -17,6 +17,7 @@ import type {
   CategoryCoverage, TopTag, UnusedTag,
   ViewedArticle, LowViewedArticle, SearchQueryStat,
 } from '../types';
+import { CircleHelp, Cloud, MessageCircle, Sparkles, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
 
 interface AnalyticsPageProps {
   onOpenArticle: (articleId: string) => void;
@@ -425,7 +426,7 @@ function AiAnswerStatsBanner({ onCreateFaq }: { onCreateFaq?: (q: string) => voi
   return (
     <section className="ai-stats" aria-labelledby="ai-stats-title">
       <header className="ai-stats__header">
-        <h2 id="ai-stats-title" className="ai-stats__title">✨ Réponse IA — {stats.windowDays} derniers jours</h2>
+        <h2 id="ai-stats-title" className="ai-stats__title icon-label"><Sparkles size={20} />Réponse IA — {stats.windowDays} derniers jours</h2>
       </header>
       <div className="ai-stats__row">
         <div className="ai-stats__metric">
@@ -487,7 +488,7 @@ function AiAnswerStatsBanner({ onCreateFaq }: { onCreateFaq?: (q: string) => voi
               ]}
             />
             <span className="ai-stats__metric-sublabel">
-              {stats.helpfulYes}👍 / {stats.helpfulNo}👎
+              {stats.helpfulYes}<ThumbsUp size={14} className="icon-inline" role="img" aria-label="pouce levé" /> / {stats.helpfulNo}<ThumbsDown size={14} className="icon-inline" role="img" aria-label="pouce baissé" />
               {helpfulPct === null && (stats.helpfulYes + stats.helpfulNo) < 2 && (
                 <> · pas assez de votes</>
               )}
@@ -578,8 +579,8 @@ function ChatStatsBanner() {
   return (
     <section className="ai-stats" aria-labelledby="chat-stats-title">
       <header className="ai-stats__header">
-        <h2 id="chat-stats-title" className="ai-stats__title" style={{ color: 'oklch(0.4 0.16 200)' }}>
-          💬 Chatbot — {stats.windowDays} derniers jours
+        <h2 id="chat-stats-title" className="ai-stats__title icon-label">
+          <MessageCircle size={20} />Chatbot — {stats.windowDays} derniers jours
         </h2>
       </header>
 
@@ -607,7 +608,9 @@ function ChatStatsBanner() {
         </div>
         <div className="ai-stats__metric">
           <span className="ai-stats__metric-value">
-            {stats.csatAverage !== null ? `${stats.csatAverage.toFixed(1)} ⭐` : '—'}
+            {stats.csatAverage !== null
+              ? <span className="icon-label">{stats.csatAverage.toFixed(1)}<Star size={20} className="ai-stats__star" role="img" aria-label="étoile" /></span>
+              : '—'}
           </span>
           <span className="ai-stats__metric-label">
             CSAT moyen
@@ -636,17 +639,17 @@ function ChatStatsBanner() {
           <div className="ai-stats__breakdown-legend">
             <span className="ai-stats__legend-item">
               <span className="ai-stats__legend-dot ai-stats__legend-dot--resolved" aria-hidden="true" />
-              ✓ {stats.resolved} résolue{stats.resolved > 1 ? 's' : ''}
+              {stats.resolved} résolue{stats.resolved > 1 ? 's' : ''}
               <span className="ai-stats__legend-hint">le bot a répondu, visiteur satisfait</span>
             </span>
             <span className="ai-stats__legend-item">
               <span className="ai-stats__legend-dot ai-stats__legend-dot--escalated" aria-hidden="true" />
-              ↗ {stats.escalated} escaladée{stats.escalated > 1 ? 's' : ''}
+              {stats.escalated} escaladée{stats.escalated > 1 ? 's' : ''}
               <span className="ai-stats__legend-hint">passée à un humain</span>
             </span>
             <span className="ai-stats__legend-item">
               <span className="ai-stats__legend-dot ai-stats__legend-dot--unresolved" aria-hidden="true" />
-              ✗ {stats.unresolved} non résolue{stats.unresolved > 1 ? 's' : ''}
+              {stats.unresolved} non résolue{stats.unresolved > 1 ? 's' : ''}
               <span className="ai-stats__legend-hint">le bot n'a pas su répondre</span>
             </span>
           </div>
@@ -693,8 +696,8 @@ function FaqsToCreateBanner({ onCreate }: { onCreate: (question: string) => void
   return (
     <section className="faqs-to-create" aria-labelledby="faqs-to-create-title">
       <header className="faqs-to-create__header">
-        <h2 id="faqs-to-create-title" className="faqs-to-create__title">
-          📝 FAQs à créer
+        <h2 id="faqs-to-create-title" className="faqs-to-create__title icon-label">
+          <CircleHelp size={20} />FAQs à créer
         </h2>
         <p className="faqs-to-create__desc">
           Vos conseillers ou clients ont cherché ces termes sans résultat dans les 7 derniers jours.
@@ -779,8 +782,8 @@ function ChatWordCloud() {
   return (
     <section className="word-cloud" aria-labelledby="word-cloud-title">
       <header className="word-cloud__header">
-        <h2 id="word-cloud-title" className="word-cloud__title">
-          ☁️ Nuage de mots — verbatims chatbot
+        <h2 id="word-cloud-title" className="word-cloud__title icon-label">
+          <Cloud size={20} />Nuage de mots — verbatims chatbot
         </h2>
         <div className="word-cloud__toggle" role="group" aria-label="Période">
           <button

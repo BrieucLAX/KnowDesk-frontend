@@ -24,6 +24,7 @@ import { apiClient }        from '../../../shared/lib/apiClient';
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
 import type { QuestionTreeSummary }  from '../types';
 import type { Category }             from '../../knowledge/types';
+import { Lock, Plus } from 'lucide-react';
 
 interface TreesPageProps {
   onOpenTree:    (treeId: string) => void;
@@ -175,7 +176,7 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
           ? 'Affinez votre recherche ou retirez les filtres.'
           : 'Créez votre premier processus pour guider vos conseillers.'
       }
-      ctaLabel={isAdmin && !hasActiveFilters ? '+ Nouveau processus' : undefined}
+      ctaLabel={isAdmin && !hasActiveFilters ? 'Nouveau processus' : undefined}
       onCta={isAdmin && !hasActiveFilters ? () => setShowCreate(true) : undefined}
     />
   );
@@ -217,7 +218,7 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
           subtitle="Arbres de décision pour guider vos conseillers étape par étape."
           actions={isAdmin && (
             <Button variant="primary" size="md" onClick={() => setShowCreate(true)}>
-              + Nouveau processus
+              <Plus size={20} />Nouveau processus
             </Button>
           )}
         />
@@ -319,7 +320,7 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
                 render: t => (
                   <span className="trees-page__title">
                     {t.visibility === 'internal' && (
-                      <span className="visibility-icon" title="Interne — non exposé au chatbot public" aria-label="Processus interne">🕵️</span>
+                      <span className="visibility-icon" title="Interne — non exposé au chatbot public"><Lock size={16} role="img" aria-label="Processus interne" /></span>
                     )}
                     {t.title}
                   </span>

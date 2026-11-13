@@ -10,6 +10,7 @@
   padding: 2px var(--space-2); border-radius: var(--radius-sm);
   white-space: nowrap;
 }
+.badge__icon { flex-shrink: 0; }
 /* État sans enjeu : brouillon, archivé. `--secondary` est l'ancien nom. */
 .badge--neutral,
 .badge--secondary { border: 1px solid var(--line-strong); color: var(--ink-muted); padding: 1px 7px; }

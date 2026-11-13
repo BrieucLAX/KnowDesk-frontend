@@ -4,8 +4,12 @@
 
 /* ── Superadmin ─────────────────────────────────────────────── */
 .sa-login {
-  min-height: 100vh; display: flex; align-items: center;
-  justify-content: center; background: var(--neutral-50);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--neutral-50);
+  padding: 0 var(--space-4);
 }
 .sa-login__box {
   background: var(--neutral-0); border: 1px solid var(--neutral-100);
@@ -19,13 +23,22 @@
 
 .sa-app    { min-height: 100vh; background: var(--neutral-50); }
 .sa-header {
-  background: var(--neutral-900); color: var(--neutral-0);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 32px; height: 56px; position: sticky; top: 0; z-index: 10;
+  background: var(--surface-raised);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--line);
+  gap: var(--space-4);
 }
 .sa-header__brand  { display: flex; align-items: center; gap: 12px; }
 .sa-header__logo   { background: var(--brand-600) !important; }
-.sa-header__title  { font-size: 15px; font-weight: 600; color: var(--neutral-0); }
+.sa-header__title  { font-size: 15px; font-weight: 600; color: var(--ink); }
 .sa-header__user   { display: flex; align-items: center; gap: 12px; }
 .sa-header__email  { font-size: 13px; color: var(--ink-muted); }
 
@@ -41,7 +54,7 @@
 .sa-metric__value { font-size: 32px; font-weight: 600; color: var(--neutral-900); letter-spacing: -0.02em; }
 .sa-metric__label { font-size: 13px; color: var(--neutral-500); }
 
-.sa-section { background: var(--neutral-0); border: 1px solid var(--neutral-100); border-radius: var(--radius-lg); overflow: hidden; }
+.sa-section { background: var(--neutral-0); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
 .sa-section__header { padding: 20px 24px; border-bottom: 1px solid var(--neutral-100); display: flex; align-items: center; justify-content: space-between; }
 .sa-section__title  { font-size: 15px; font-weight: 600; color: var(--neutral-900); }
 
@@ -57,15 +70,15 @@
 .sa-org-name { font-weight: 600; color: var(--neutral-900); }
 .sa-org-slug { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
 
-.sa-plan { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; }
+.sa-plan { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-full); text-transform: uppercase; }
 .sa-plan--free       { background: var(--neutral-100); color: var(--neutral-600); }
 .sa-plan--pro        { background: var(--brand-100);   color: var(--brand-700); }
 .sa-plan--enterprise { background: var(--primary);     color: var(--on-primary); }
 
-.sa-status { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
+.sa-status { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-full); }
 .sa-status--active   { background: var(--success-soft); color: var(--success); }
 .sa-status--disabled { background: var(--danger-soft); color: var(--danger); }
-.sa-org__actions { display: flex; gap: 4px; }
+.sa-org__actions { display: flex; gap: 4px; flex-wrap: wrap; }
 
 .sa-error   { padding: 16px 24px; color: var(--color-danger); font-size: 13px; }
 .sa-loading { padding: 32px 24px; color: var(--ink-muted); font-size: 13px; text-align: center; }
@@ -73,7 +86,7 @@
 
 /* ── Organisations de test (prérequis 17) ─────────────────────── */
 .sa-badge-test {
-  margin-left: 8px; padding: 1px 6px; border-radius: 99px;
+  margin-left: 8px; padding: 1px 6px; border-radius: var(--radius-full);
   background: var(--brand-50); color: var(--brand-700);
   font-size: 10px; font-weight: 600; vertical-align: middle;
 }
@@ -97,5 +110,23 @@
 .sa-test-data__list  { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
 .sa-test-data__item {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  padding: 6px 8px; border: 1px solid var(--neutral-200); border-radius: 6px;
+  padding: 6px 8px; border: 1px solid var(--neutral-200); border-radius: var(--radius-sm);
+}
+
+/* Bandeaux d'état sous l'en-tête (fiche Alert : fond *-soft, texte --ink,
+   seule l'icône est colorée). */
+.sa-banner {
+  position: absolute; top: 56px; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center; gap: var(--space-2);
+  padding: 8px 16px;
+  font-size: 13px; color: var(--ink);
+}
+.sa-banner--success { background: var(--success-soft); }
+.sa-banner--danger  { background: var(--danger-soft); }
+.sa-banner--info    { background: var(--info-soft); }
+.sa-banner--success .sa-banner__icon { color: var(--success); }
+.sa-banner--danger  .sa-banner__icon { color: var(--danger); }
+.sa-banner--info    .sa-banner__icon { color: var(--info); }
+@media (max-width: 640px) {
+  .sa-metrics { grid-template-columns: repeat(2, 1fr); }
 }

@@ -32,16 +32,22 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 .cmd-palette__input-row {
-  display: flex; align-items: center; gap: 10px;
-  padding: 14px 18px; border-bottom: 1px solid var(--neutral-100);
+  padding: var(--space-4); border-bottom: 1px solid var(--line);
 }
-.cmd-palette__input-icon {
-  font-size: 18px; color: var(--ink-muted); line-height: 1;
+/* Champ aligné sur la fiche SearchBar (même rendu que .search-bar__combobox). */
+.cmd-palette__field {
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: 0 var(--space-4); min-height: 52px;
+  background: var(--surface-raised); border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
 }
+.cmd-palette__field:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+.cmd-palette__input-icon { color: var(--ink-muted); }
 .cmd-palette__input {
-  flex: 1; border: none; outline: none;
+  flex: 1 1 auto; min-width: 0; min-height: 48px;
+  border: none; outline: none;
   font-size: 15px; font-family: var(--font-ui);
-  background: transparent; color: var(--neutral-900);
+  background: transparent; color: var(--ink);
 }
 .cmd-palette__input::placeholder { color: var(--ink-muted); }
 .cmd-palette__loading {
@@ -107,7 +113,7 @@
 .cmd-palette__footer kbd {
   display: inline-block; padding: 1px 5px; margin-right: 3px;
   background: var(--neutral-100); border: 1px solid var(--neutral-200);
-  border-radius: 4px; font-size: 10px;
+  border-radius: var(--radius-sm); font-size: 10px;
   color: var(--neutral-600); font-family: var(--font-ui);
 }
 
@@ -180,12 +186,12 @@
 .ai-answer {
   border-bottom: 1px solid var(--neutral-100);
   padding: 14px 16px 12px;
-  background: linear-gradient(180deg, var(--brand-tint) 0%, var(--neutral-0) 100%);
+  background: var(--primary-soft);
   position: relative;
 }
 .ai-answer::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--primary), var(--brand-300));
+  background: var(--primary);
 }
 .ai-answer__header {
   display: flex; align-items: center; gap: 8px;
@@ -370,7 +376,7 @@
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 18px; height: 18px; padding: 0 6px;
   background: var(--neutral-200); color: var(--neutral-700);
-  border-radius: 99px; font-size: 10px; font-weight: 600;
+  border-radius: var(--radius-full); font-size: 10px; font-weight: 600;
   letter-spacing: 0;
 }
 .search-bar__footer {
@@ -380,7 +386,7 @@
 }
 .search-bar__footer kbd {
   font-family: var(--font-ui); font-size: 10px; padding: 1px 4px;
-  border: 1px solid var(--neutral-200); border-radius: 3px;
+  border: 1px solid var(--neutral-200); border-radius: var(--radius-sm);
   background: var(--neutral-50); margin-right: 3px;
 }
 .search-bar__loading {

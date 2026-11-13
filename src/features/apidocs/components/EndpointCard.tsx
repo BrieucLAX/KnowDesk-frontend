@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Endpoint, Lang } from '../utils/types';
 import { CodeBlock } from './CodeBlock';
+import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 // Méthodes HTTP : lecture = succès, création = info, modification = avertissement,
 // suppression = danger. Texte du badge en --on-primary (apidocs.css).
@@ -38,7 +39,7 @@ export function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
         </span>
         <code className="apidoc-endpoint__path">{endpoint.path}</code>
         <span className="apidoc-endpoint__title">{endpoint.title}</span>
-        <span className="apidoc-endpoint__chevron" aria-hidden="true">{open ? '▲' : '▼'}</span>
+        <span className="apidoc-endpoint__chevron" aria-hidden="true">{open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</span>
       </button>
 
       {open && (
@@ -62,7 +63,7 @@ export function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
                     <tr key={p.name}>
                       <td><code>{p.name}</code></td>
                       <td><span className="apidoc-type">{p.type}</span></td>
-                      <td>{p.required ? '✓' : '—'}</td>
+                      <td>{p.required ? <Check size={16} role="img" aria-label="oui" /> : '—'}</td>
                       <td>{p.description}</td>
                     </tr>
                   ))}

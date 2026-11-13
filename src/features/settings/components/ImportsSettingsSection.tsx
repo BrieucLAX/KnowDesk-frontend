@@ -8,6 +8,7 @@ import { useToast } from '../../../shared/lib/useToast';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import { importsApi, type ImportItem } from '../../imports/api/importsApi';
 import { ImportModal } from '../../imports/components/ImportModal';
+import { Plus, Upload } from 'lucide-react';
 
 const STATUS_LABEL: Record<ImportItem['status'], { label: string; tone: 'neutral' | 'success' | 'warning' | 'danger' }> = {
   pending:    { label: 'En attente',     tone: 'neutral' },
@@ -17,9 +18,9 @@ const STATUS_LABEL: Record<ImportItem['status'], { label: string; tone: 'neutral
 };
 
 const FORMAT_LABEL: Record<ImportItem['format'], string> = {
-  pdf:  '📄 PDF',
-  docx: '📝 DOCX',
-  pptx: '📊 PPTX',
+  pdf:  'PDF',
+  docx: 'DOCX',
+  pptx: 'PPTX',
 };
 
 export function ImportsSettingsSection() {
@@ -57,7 +58,7 @@ export function ImportsSettingsSection() {
     <section className="settings-section" aria-labelledby="imports-title">
       <div className="settings-section__header">
         <div>
-          <h2 id="imports-title" className="settings-section__title">📥 Imports de documents</h2>
+          <h2 id="imports-title" className="settings-section__title icon-label"><Upload size={20} />Imports de documents</h2>
           <p className="settings-section__desc">
             Convertis tes bases de connaissance existantes (PDF, DOCX, PPTX) en articles
             KnowDesk. Les articles importés sont créés en <strong>brouillon</strong> dans
@@ -66,7 +67,7 @@ export function ImportsSettingsSection() {
           </p>
         </div>
         <Button type="button" variant="primary" size="md" onClick={() => setShowModal(true)}>
-          + Nouvel import
+          <Plus size={20} />Nouvel import
         </Button>
       </div>
 

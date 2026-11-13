@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import './Tooltip.css';
+import { Info } from 'lucide-react';
 
 /**
  * InfoTooltip — petite icône ⓘ qui ouvre une bulle d'aide au hover/focus/tap.
@@ -120,10 +121,7 @@ export function InfoTooltip({ title, rows, children, ariaLabel }: InfoTooltipPro
         onBlur={() => setOpen(false)}
         onClick={e => { e.stopPropagation(); toggleTooltip(); }}
       >
-        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-          <circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" strokeWidth="1.2" />
-          <path d="M7 4.5v.01M6.4 6.5h.6V10h.6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none" />
-        </svg>
+        <Info size={16} />
       </button>
       {open && (
         <div

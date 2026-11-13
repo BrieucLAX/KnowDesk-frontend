@@ -9,6 +9,7 @@ import { useAiAnswer, type AiSource } from '../hooks/useAiAnswer';
 import { useAuthStore }        from '../../../store/authStore';
 import { useToast }            from '../../../shared/lib/useToast';
 import type { SearchResult, SearchResultType }   from '../types';
+import { CircleHelp, FileText, ListOrdered, Search, Sparkles, X } from 'lucide-react';
 
 interface SearchBarProps {
   /** Called when user selects a result — caller handles navigation */
@@ -19,14 +20,14 @@ interface SearchBarProps {
 interface SectionDef {
   type:  SearchResultType;
   label: string;
-  icon:  string;
+  icon:  React.ReactNode;
 }
 
 /** Ordre des sections dans le dropdown — les FAQs en premier (cas d'usage conseiller). */
 const SECTIONS: SectionDef[] = [
-  { type: 'faq',     label: 'FAQs',      icon: '❓' },
-  { type: 'article', label: 'Articles',  icon: '📄' },
-  { type: 'tree',    label: 'Processus', icon: '🌳' },
+  { type: 'faq',     label: 'FAQs',      icon: <CircleHelp size={16} /> },
+  { type: 'article', label: 'Articles',  icon: <FileText size={16} /> },
+  { type: 'tree',    label: 'Processus', icon: <ListOrdered size={16} /> },
 ];
 
 /**
@@ -177,7 +178,7 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
         aria-owns={listboxId}
       >
         {/* Search icon */}
-        <SearchIcon />
+        <Search className="search-bar__icon" size={20} />
 
         <input
           ref={inputRef}
@@ -205,7 +206,7 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
             aria-hidden="true"
             title="Réponse IA disponible"
           >
-            ✨
+            <Sparkles size={20} />
           </span>
         )}
 
@@ -222,7 +223,7 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
             onClick={handleClear}
             aria-label="Effacer la recherche"
           >
-            <ClearIcon />
+            <X size={16} />
           </button>
         )}
       </div>
@@ -263,7 +264,7 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
                 <React.Fragment key={section.type}>
                   {/* Header de section : non focusable, role=presentation */}
                   <li className="search-section__header" role="presentation" aria-hidden="true">
-                    <span className="search-section__icon">{section.icon}</span>
+                    <span className="search-section__icon" aria-hidden="true">{section.icon}</span>
                     <span className="search-section__label">{section.label}</span>
                     <span className="search-section__count">{section.results.length}</span>
                   </li>
@@ -325,20 +326,4 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
   );
 }
 
-function SearchIcon() {
-  return (
-    <svg className="search-bar__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.4" />
-      <line x1="11" y1="11" x2="15" y2="15" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
-}
 
-function ClearIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <line x1="2" y1="2" x2="12" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="12" y1="2" x2="2"  y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}

@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { cn } from '../../../shared/lib/cn';
+import { Check } from 'lucide-react';
 
 interface CodeBlockProps {
   code:       string;
@@ -35,7 +36,7 @@ export function CodeBlock({ code, variant = 'request', hideCopy }: CodeBlockProp
           onClick={handleCopy}
           aria-label={copied ? 'Code copié' : 'Copier le code'}
         >
-          {copied ? '✓ Copié' : 'Copier'}
+          {copied ? <><Check size={16} />Copié</> : 'Copier'}
         </button>
       )}
     </div>

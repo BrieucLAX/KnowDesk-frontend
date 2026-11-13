@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { PageHeader } from '../../../shared/components/layout/PageHeader';
 import { Button }     from '../../../shared/components/ui/Button';
-import { FilterTabs } from '../../../shared/components/ui/FilterTabs';
+import { Tabs, TabPanel } from '../../../shared/components/ui/Tabs';
 import { Skeleton }   from '../../../shared/components/ui/Skeleton';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { useToast }   from '../../../shared/lib/useToast';
@@ -19,6 +19,7 @@ import '../onboardingProjects.css';
 import { useAuthStore, selectOrganization, selectUserRole } from '../../../store/authStore';
 import { hasModule } from '../../../shared/lib/modules';
 import { CurrentUserContext } from './base/AuthorName';
+import { ArrowLeft } from 'lucide-react';
 
 export type ProjectTab = 'documents' | 'cadrage' | 'analysis' | 'audit' | 'base';
 
@@ -91,7 +92,7 @@ export function OnboardingProjectPage({
   }, [projectId]);
 
   const back = (
-    <button type="button" className="obp-back" onClick={() => leave(onBack)}>← Tous les projets</button>
+    <button type="button" className="obp-back icon-label" onClick={() => leave(onBack)}><ArrowLeft size={16} />Tous les projets</button>
   );
 
   if (missing) {
@@ -141,14 +142,15 @@ export function OnboardingProjectPage({
         title={project.name}
         actions={<Button variant="ghost" size="sm" onClick={() => setRenaming(true)}>Renommer</Button>}
       />
-      <FilterTabs
-        options={TABS}
+      <Tabs
+        id="obp-sections"
+        items={TABS}
         value={tab}
         onChange={id => { if (id !== tab) leave(() => onTabChange(id)); }}
         ariaLabel="Sections du projet"
       />
       <CurrentUserContext.Provider value={currentUserId}>
-      <div className="obp-tab">
+      <TabPanel id="obp-sections" value={tab} className="obp-tab">
         {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
         {tab === 'cadrage' && <CadrageTab project={project} onSaved={reload} onDirtyChange={setCadrageDirty} />}
         {tab === 'analysis' && <AnalysisTab project={project} onChanged={reload} onOpenAudit={() => onTabChange('audit')} />}
@@ -168,7 +170,7 @@ export function OnboardingProjectPage({
             onOpenKnowledgeBase={onOpenKnowledgeBase}
           />
         )}
-      </div>
+      </TabPanel>
       </CurrentUserContext.Provider>
 
       {pendingLeave && (

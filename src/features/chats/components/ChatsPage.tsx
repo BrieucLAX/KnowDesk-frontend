@@ -11,6 +11,8 @@ import { useToast } from '../../../shared/lib/useToast';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import { chatsApi, type ChatListItem, type ChatStatus } from '../api/chatsApi';
 import { TranscriptModal } from './TranscriptModal';
+import { StarRating } from '../../../shared/components/ui/StarRating';
+import { Badge } from '../../../shared/components/ui/StatusBadge';
 
 const STATUS_OPTIONS: Array<{ value: '' | ChatStatus; label: string }> = [
   { value: '',           label: 'Tous les statuts' },
@@ -117,7 +119,7 @@ export function ChatsPage() {
             <Button
               type="button"
               variant="primary"
-              size="sm"
+              size="md"
               onClick={() => { setPage(1); setQ(searchInput.trim()); }}
             >
               Rechercher
@@ -126,7 +128,7 @@ export function ChatsPage() {
               <Button
                 type="button"
                 variant="ghost"
-                size="sm"
+                size="md"
                 onClick={() => { setSearchInput(''); setQ(''); setPage(1); }}
               >
                 Effacer
@@ -166,12 +168,12 @@ export function ChatsPage() {
                     onClick={() => setSelectedId(c.id)}
                     meta={(
                       <>
-                        <span
-                          className={`chats-page__status chats-page__status--${meta.tone}`}
+                        <Badge
+                          tone={meta.tone}
                           title={c.resolutionReason ? (REASON_LABEL[c.resolutionReason] ?? c.resolutionReason) : undefined}
                         >
                           {meta.label}
-                        </span>
+                        </Badge>
                         {c.resolutionReason && REASON_LABEL[c.resolutionReason] && (
                           <span className="chats-page__row-reason">
                             {REASON_LABEL[c.resolutionReason]}
@@ -182,7 +184,7 @@ export function ChatsPage() {
                         </span>
                         {c.csat !== null && (
                           <span className="chats-page__row-csat" title={`CSAT ${c.csat}/5`}>
-                            {'★'.repeat(c.csat)}{'☆'.repeat(5 - c.csat)}
+                            <StarRating value={c.csat} />
                           </span>
                         )}
                         <span className="chats-page__row-date">

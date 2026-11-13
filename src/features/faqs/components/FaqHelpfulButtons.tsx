@@ -4,6 +4,7 @@ import '../faqs.css';
 import { useToast }     from '../../../shared/lib/useToast';
 import { ApiError }     from '../../../shared/lib/apiClient';
 import { cn }           from '../../../shared/lib/cn';
+import { ThumbsDown, ThumbsUp } from 'lucide-react';
 
 interface FaqHelpfulButtonsProps {
   faqId:        string;
@@ -105,7 +106,7 @@ export function FaqHelpfulButtons({
         aria-pressed={voted === 'yes'}
         aria-label={voted === 'yes' ? 'Annuler mon vote « cette réponse a aidé »' : 'Oui, cette réponse a aidé'}
       >
-        <span aria-hidden="true">👍</span>
+        <ThumbsUp size={16} />
         <span className="faq-helpful__count">{counts.yes}</span>
       </button>
 
@@ -118,7 +119,7 @@ export function FaqHelpfulButtons({
         aria-pressed={voted === 'no'}
         aria-label={voted === 'no' ? 'Annuler mon vote « cette réponse n\'a pas aidé »' : 'Non, cette réponse n\'a pas aidé'}
       >
-        <span aria-hidden="true">👎</span>
+        <ThumbsDown size={16} />
         <span className="faq-helpful__count">{counts.no}</span>
       </button>
 

@@ -4,6 +4,8 @@ import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { useToast } from '../../../shared/lib/useToast';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import { chatsApi, type ChatDetail } from '../api/chatsApi';
+import { Lock, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { StarRating } from '../../../shared/components/ui/StarRating';
 
 interface TranscriptModalProps {
   chatId:  string;
@@ -69,7 +71,7 @@ export function TranscriptModal({ chatId, onClose }: TranscriptModalProps) {
             className="chat-transcript__redaction-notice"
             title="Email, téléphone, IBAN, n° de carte et n° de sécurité sociale sont automatiquement masqués dans cette interface admin."
           >
-            🔒 Coordonnées masquées
+            <Lock size={16} />Coordonnées masquées
           </div>
 
           <dl className="chat-transcript__meta">
@@ -100,13 +102,13 @@ export function TranscriptModal({ chatId, onClose }: TranscriptModalProps) {
             {detail.csat !== null && (
               <div>
                 <dt>CSAT</dt>
-                <dd>{'★'.repeat(detail.csat)}{'☆'.repeat(5 - detail.csat)}</dd>
+                <dd><StarRating value={detail.csat} /></dd>
               </div>
             )}
             {detail.resolvedHelpful !== null && (
               <div>
                 <dt>Retour</dt>
-                <dd>{detail.resolvedHelpful ? '👍 Utile' : '👎 Non utile'}</dd>
+                <dd className="icon-label">{detail.resolvedHelpful ? <><ThumbsUp size={16} />Utile</> : <><ThumbsDown size={16} />Non utile</>}</dd>
               </div>
             )}
           </dl>

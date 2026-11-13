@@ -6,6 +6,7 @@ import { Modal }            from '../../../shared/components/ui/Modal';
 import { ConfirmDialog }    from '../../../shared/components/ui/ConfirmDialog';
 import { SettingsListSection } from '../../../shared/components/ui/SettingsListSection';
 import { formatRelative }   from '../../../shared/lib/formatDate';
+import { Check, TriangleAlert, X } from 'lucide-react';
 
 export function ApiKeysSection() {
   const { keys, loading, newKey, setNewKey, createKey, revokeKey } = useApiKeys();
@@ -37,7 +38,7 @@ export function ApiKeysSection() {
     <SettingsListSection
       title="Clés API"
       description="Utilisez ces clés pour accéder à vos données KnowDesk depuis vos applications."
-      createCta={{ label: '+ Créer une clé', onClick: () => setShowCreate(true) }}
+      createCta={{ label: 'Créer une clé', onClick: () => setShowCreate(true) }}
       loading={loading}
       items={keys}
       emptyMessage="Aucune clé API. Créez-en une pour intégrer KnowDesk à vos outils."
@@ -45,8 +46,8 @@ export function ApiKeysSection() {
       beforeList={newKey ? (
         <div className="api-key-reveal">
           <div className="api-key-reveal__header">
-            <span className="api-key-reveal__title">⚠️ Copiez cette clé maintenant</span>
-            <button type="button" className="api-key-reveal__dismiss" onClick={() => setNewKey(null)}>×</button>
+            <span className="api-key-reveal__title icon-label"><TriangleAlert size={20} />Copiez cette clé maintenant</span>
+            <button type="button" className="api-key-reveal__dismiss" onClick={() => setNewKey(null)}><X size={16} /></button>
           </div>
           <p className="api-key-reveal__desc">
             Cette clé ne sera plus affichée après la fermeture de cette fenêtre.
@@ -54,7 +55,7 @@ export function ApiKeysSection() {
           <div className="api-key-reveal__key">
             <code className="api-key-reveal__code">{newKey}</code>
             <Button variant="ghost" size="sm" onClick={handleCopy}>
-              {copied ? '✓ Copié' : 'Copier'}
+              {copied ? <><Check size={16} />Copié</> : 'Copier'}
             </Button>
           </div>
         </div>

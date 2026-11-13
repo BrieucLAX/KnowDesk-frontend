@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { cn }              from '../../../shared/lib/cn';
 import type { Category }   from '../types';
+import { FolderInput, Pencil, Plus, Trash2 } from 'lucide-react';
 
 export interface CategoryActions {
   /** Renomme inline — appelée quand l'utilisateur valide l'édition. */
@@ -300,20 +301,20 @@ function CategoryActionsMenu({ category, actions, onClose, onStartRename }: Cate
     >
       <button type="button" className="cat-menu__item" role="menuitem"
         onClick={onStartRename}>
-        ✎ Renommer
+        <Pencil size={16} />Renommer
       </button>
       <button type="button" className="cat-menu__item" role="menuitem"
         onClick={() => { onClose(); actions.onAddChild(category); }}>
-        + Ajouter une sous-catégorie
+        <Plus size={16} />Ajouter une sous-catégorie
       </button>
       <button type="button" className="cat-menu__item" role="menuitem"
         onClick={() => { onClose(); actions.onMove(category); }}>
-        ↗ Déplacer…
+        <FolderInput size={16} />Déplacer…
       </button>
       <div className="cat-menu__divider" role="separator" />
       <button type="button" className="cat-menu__item cat-menu__item--danger" role="menuitem"
         onClick={() => { onClose(); actions.onDelete(category); }}>
-        🗑 Supprimer
+        <Trash2 size={16} />Supprimer
       </button>
     </div>
   );

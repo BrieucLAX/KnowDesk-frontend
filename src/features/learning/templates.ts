@@ -1,4 +1,5 @@
 import type { LearningPathRenewal } from './types';
+import { Scale, ShieldAlert, UserPlus, type LucideIcon } from 'lucide-react';
 
 /**
  * Templates de parcours pré-remplis. Pure frontend pour la V1 — chaque
@@ -11,7 +12,7 @@ export interface LearningPathTemplate {
   id:             string;
   label:          string;
   /** Icône courte (emoji) pour la card de sélection. */
-  icon:           string;
+  icon:           LucideIcon;
   /** Phrase d'accroche affichée sous le label dans le sélecteur. */
   hint:           string;
   name:           string;
@@ -25,7 +26,7 @@ export const LEARNING_TEMPLATES: LearningPathTemplate[] = [
   {
     id:    'rgpd',
     label: 'RGPD & données clients',
-    icon:  '🔐',
+    icon:  Scale,
     hint:  'Conformité — renouvellement 12 mois',
     name:  'RGPD & traitement des données client',
     description:
@@ -42,7 +43,7 @@ export const LEARNING_TEMPLATES: LearningPathTemplate[] = [
   {
     id:    'security',
     label: 'Sécurité — phishing & fraude',
-    icon:  '🛡️',
+    icon:  ShieldAlert,
     hint:  'Risque opérationnel — renouvellement 6 mois',
     name:  'Sécurité : reconnaître phishing et tentatives de fraude',
     description:
@@ -59,7 +60,7 @@ export const LEARNING_TEMPLATES: LearningPathTemplate[] = [
   {
     id:    'onboarding',
     label: 'Onboarding nouveau conseiller',
-    icon:  '👋',
+    icon:  UserPlus,
     hint:  'Première semaine — pas de renouvellement',
     name:  'Onboarding nouveau conseiller',
     description:

@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ChecklistItem } from '../types';
+import { Check } from 'lucide-react';
 
 interface ActivationChecklistProps {
   items: ChecklistItem[];
@@ -36,7 +37,7 @@ export function ActivationChecklist({ items }: ActivationChecklistProps) {
         {items.map(item => (
           <li key={item.id} className="checklist__item">
             <span className={`checklist__dot ${item.completed ? 'checklist__dot--done' : ''}`} aria-hidden="true">
-              {item.completed && '✓'}
+              {item.completed && <Check size={14} />}
             </span>
             {item.completed ? (
               <span className="checklist__label checklist__label--done">{item.label}</span>

@@ -1,7 +1,8 @@
 /* ─────────────────────────────────────────────────────────────
    KnowDesk — Layout
    AppLayout (grid sidebar + body), SideNav (vertical, sticky, libellés visibles),
-   TopBar (search + actions). Importé en global depuis main.tsx.
+   barre du haut d'AppLayout (.topbar : recherche + actions). Importé en global
+   depuis main.tsx.
    ───────────────────────────────────────────────────────────── */
 
 /* ── AppLayout ────────────────────────────────────────────────── */
@@ -37,7 +38,7 @@
 .sidenav__logo-mark {
   display: flex; align-items: center; justify-content: center;
   width: 32px; height: 32px; background: var(--brand-600);
-  border-radius: 8px; font-size: 15px; font-weight: 600; color: var(--on-primary);
+  border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; color: var(--on-primary);
 }
 .sidenav__list {
   list-style: none; display: flex; flex-direction: column;
@@ -80,16 +81,18 @@
 .sidenav__avatar:hover { background: var(--brand-200); }
 .sidenav__avatar:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
-/* ── TopBar ───────────────────────────────────────────────────── */
+/* ── Barre du haut (AppLayout) ───────────────────────────────── */
 /* Bandeau « Version de test » : organisations de test (module onboarding). */
+/* Encart d'information (fiche Alert) : fond --info-soft, texte --ink, icône colorée. */
 .test-version-banner {
+  display: flex; align-items: center; justify-content: center; gap: var(--space-2);
   padding: 8px 40px;
-  background: var(--brand-50);
-  border-bottom: 1px solid var(--brand-100);
-  color: var(--brand-700);
+  background: var(--info-soft);
+  color: var(--ink);
   font-size: 13px;
   text-align: center;
 }
+.test-version-banner__icon { color: var(--info); }
 
 .topbar {
   height: var(--topbar-h); background: var(--neutral-0);
@@ -98,30 +101,8 @@
   padding: 0 40px; position: sticky; top: 0; z-index: 10;
 }
 .topbar__search-wrap { flex: 1; max-width: 540px; margin: 0 auto; }
-.topbar__search {
-  display: flex; align-items: center; gap: 8px;
-  padding: 0 12px; height: 34px;
-  background: var(--neutral-50); border: 1px solid var(--neutral-200);
-  border-radius: var(--radius-full); transition: all var(--t-fast);
-  cursor: text;
-}
-.topbar__search:focus-within {
-  background: var(--neutral-0); border-color: var(--brand-400);
-  box-shadow: 0 0 0 3px var(--brand-100);
-}
-.topbar__search-icon { color: var(--ink-muted); flex-shrink: 0; }
-.topbar__search-input {
-  flex: 1; background: none; border: none; outline: none;
-  font-family: var(--font-ui); font-size: 13px; color: var(--neutral-900);
-}
-.topbar__search-input::placeholder { color: var(--ink-muted); }
-.topbar__kbd {
-  font-size: 10px; padding: 2px 5px; border-radius: 4px;
-  border: 1px solid var(--neutral-200); color: var(--ink-muted);
-  background: var(--neutral-0); font-family: var(--font-ui);
-}
 
-/* ── TopBar actions (logout, etc.) ─────────────────────────── */
+/* ── Actions de la barre du haut (déconnexion) ──────────────── */
 .topbar__actions {
   display: flex; align-items: center; gap: 8px;
   margin-left: auto; flex-shrink: 0;

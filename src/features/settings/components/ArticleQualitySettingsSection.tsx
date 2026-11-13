@@ -7,6 +7,7 @@ import { ApiError }  from '../../../shared/lib/apiClient';
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import { articleQualityApi, type QualityStats } from '../../articleQuality/api/articleQualityApi';
+import { CircleAlert, CircleCheck, RotateCw, Sparkles, TriangleAlert } from 'lucide-react';
 
 /**
  * Section Settings → IA → Auditeur qualité.
@@ -79,7 +80,7 @@ export function ArticleQualitySettingsSection() {
     return (
       <section className="settings-section">
         <div className="settings-section__header">
-          <h2 className="settings-section__title">✨ Auditeur qualité articles</h2>
+          <h2 className="settings-section__title icon-label"><Sparkles size={20} />Auditeur qualité articles</h2>
         </div>
         <Skeleton className="sk-p" />
       </section>
@@ -89,8 +90,8 @@ export function ArticleQualitySettingsSection() {
   return (
     <section className="settings-section" aria-labelledby="article-quality-title">
       <div className="settings-section__header">
-        <h2 id="article-quality-title" className="settings-section__title">
-          ✨ Auditeur qualité articles
+        <h2 id="article-quality-title" className="settings-section__title icon-label">
+          <Sparkles size={20} />Auditeur qualité articles
         </h2>
         <p className="settings-section__desc">
           L'IA analyse vos articles publiés sur 6 dimensions
@@ -121,9 +122,9 @@ export function ArticleQualitySettingsSection() {
             <Stat label="Articles publiés"  value={stats.published} />
             <Stat label="Scorés"            value={stats.scored} />
             <Stat label="Non scorés"        value={stats.notScored} muted={stats.notScored === 0} />
-            <Stat label="✓ Parfaits"        value={stats.perfect}  variant="ok" />
-            <Stat label="⚠️ Bons"           value={stats.good}     variant="warn" highlight={stats.good > 0} />
-            <Stat label="❌ À retravailler" value={stats.toRework} variant="bad"  highlight={stats.toRework > 0} />
+            <Stat label="Parfaits"        icon={<CircleCheck size={16} />} value={stats.perfect}  variant="ok" />
+            <Stat label="Bons"           icon={<TriangleAlert size={16} />} value={stats.good}     variant="warn" highlight={stats.good > 0} />
+            <Stat label="À retravailler" icon={<CircleAlert size={16} />} value={stats.toRework} variant="bad"  highlight={stats.toRework > 0} />
           </div>
           {stats.lastChecked && (
             <p className="article-quality-stats__last">
@@ -151,8 +152,9 @@ export function ArticleQualitySettingsSection() {
             : stats?.published === 0
               ? 'Aucun article publié dans cette organisation.'
               : 'Met en file tous les articles publiés. Latence ~10 s/article (worker concurrent).'}
+          leftIcon={<RotateCw size={20} />}
         >
-          ↻ Scorer tous les articles publiés maintenant
+          Scorer tous les articles publiés maintenant
         </Button>
       </div>
 
@@ -164,8 +166,8 @@ export function ArticleQualitySettingsSection() {
   );
 }
 
-function Stat({ label, value, highlight, muted, variant }: {
-  label: string; value: number;
+function Stat({ label, icon, value, highlight, muted, variant }: {
+  label: string; icon?: React.ReactNode; value: number;
   highlight?: boolean; muted?: boolean;
   variant?: 'ok' | 'warn' | 'bad';
 }) {
@@ -173,7 +175,7 @@ function Stat({ label, value, highlight, muted, variant }: {
   return (
     <div className={`article-quality-stat${variantClass}${highlight ? ' article-quality-stat--flag' : ''}${muted ? ' article-quality-stat--muted' : ''}`}>
       <span className="article-quality-stat__value">{value}</span>
-      <span className="article-quality-stat__label">{label}</span>
+      <span className="article-quality-stat__label icon-label">{icon}{label}</span>
     </div>
   );
 }

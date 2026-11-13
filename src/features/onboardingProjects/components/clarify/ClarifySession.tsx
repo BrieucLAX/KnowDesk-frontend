@@ -9,6 +9,7 @@ import { ReadingCardView } from './ReadingCardView';
 import { CardAnswers } from './CardAnswers';
 import { CardHistory } from './CardHistory';
 import { CardCommentBox } from './CardCommentBox';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface ClarifySessionProps {
   audit:       Audit;
@@ -115,10 +116,10 @@ export function ClarifySession({ audit, reading, schemaVersion = '', projectId, 
             <CardCommentBox key={`comment-${card.id}`} projectId={projectId} analysisId={analysisId} cardId={card.id} editable={arbitrable} />
           </div>
           <div className="obp-arb__nav">
-            <Button variant="ghost" size="sm" disabled={i === 0} onClick={() => setIndex(i - 1)}>← Précédente</Button>
+            <Button variant="ghost" size="sm" disabled={i === 0} onClick={() => setIndex(i - 1)} leftIcon={<ArrowLeft size={16} />}>Précédente</Button>
             <Button variant={cardStatus(decision) === 'answered' ? 'primary' : 'secondary'} size="sm"
               disabled={i === ordered.length - 1} onClick={() => setIndex(i + 1)}>
-              Suivante →
+              Suivante<ArrowRight size={16} />
             </Button>
           </div>
         </div>

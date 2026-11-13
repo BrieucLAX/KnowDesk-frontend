@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import '../articles.css';
 import type { ArticleVersion } from '../types';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface ArticleVersionHistoryProps {
   versions:       ArticleVersion[];
@@ -29,7 +30,7 @@ export function ArticleVersionHistory({
         <span>Historique des versions</span>
         <span className="version-history__count">({safeVersions.length})</span>
         <span className="version-history__chevron" aria-hidden="true">
-          {isOpen ? '▲' : '▼'}
+          {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </span>
       </button>
 

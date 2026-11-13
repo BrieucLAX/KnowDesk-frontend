@@ -32,7 +32,7 @@
   font-size: 13px; font-weight: 600; color: var(--neutral-700);
 }
 .knowledge-page__icon-btn {
-  width: 24px; height: 24px; border-radius: 6px;
+  width: 24px; height: 24px; border-radius: var(--radius-sm);
   background: transparent; color: var(--neutral-500);
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; transition: all var(--t-fast); line-height: 1;
@@ -42,7 +42,7 @@
   background: var(--neutral-100); color: var(--neutral-900);
 }
 .knowledge-page__icon-btn:focus-visible {
-  outline: 2px solid var(--brand-500); outline-offset: 1px;
+  outline: 2px solid var(--focus); outline-offset: 2px;
 }
 
 /* Resize handle */
@@ -85,10 +85,7 @@
   transition: border-color var(--t-fast), box-shadow var(--t-fast);
 }
 .knowledge-page__toolbar-search-input::placeholder { color: var(--ink-muted); }
-.knowledge-page__toolbar-search-input:focus {
-  outline: none; border-color: var(--brand-500);
-  box-shadow: 0 0 0 3px var(--primary-soft);
-}
+.knowledge-page__toolbar-search-input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .knowledge-page__toolbar-right {
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
 }
@@ -111,10 +108,7 @@
   background-repeat: no-repeat;
   background-position: right 8px center;
 }
-.knowledge-page__toolbar-sort-select:focus {
-  outline: none; border-color: var(--brand-500);
-  box-shadow: 0 0 0 3px var(--primary-soft);
-}
+.knowledge-page__toolbar-sort-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 /* Empty match (search-in-list returned 0 results) */
 .knowledge-page__no-match {
@@ -147,13 +141,13 @@
   width: fit-content;
 }
 .knowledge-filter {
-  padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: 6px;
+  padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: var(--radius-sm);
   border: none; background: none; color: var(--neutral-500); cursor: pointer;
   transition: all var(--t-fast); font-family: var(--font-ui);
 }
 .knowledge-filter--active {
   background: var(--neutral-0); color: var(--neutral-900);
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 6%, transparent);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Article list in knowledge page */
@@ -171,12 +165,12 @@
 .category-tree { padding: 4px 0; }
 .category-tree__list { list-style: none; }
 .category-tree__skeleton { padding: 4px 16px; }
-.cat-sk--item { height: 28px; border-radius: 6px; margin-bottom: 2px; }
+.cat-sk--item { height: 28px; border-radius: var(--radius-sm); margin-bottom: 2px; }
 
 .cat-item {
   position: relative;
   display: flex; align-items: center; gap: 8px;
-  height: 32px; border-radius: 6px; cursor: pointer;
+  height: 32px; border-radius: var(--radius-sm); cursor: pointer;
   margin: 0 8px; padding-right: 10px;
   padding-left: calc(12px + var(--cat-level, 0) * 16px);
   transition: all var(--t-fast); outline: none;
@@ -185,7 +179,7 @@
 .cat-item:hover   { background: var(--neutral-100); color: var(--neutral-900); }
 .cat-item--selected { background: var(--brand-50); color: var(--brand-700); font-weight: 600; }
 .cat-item--selected:hover { background: var(--brand-100); }
-.cat-item:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 1px; }
+.cat-item:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 .cat-item__chevron {
   font-size: 14px; color: var(--ink-muted); transition: transform var(--t-fast);
@@ -211,7 +205,7 @@
   flex-shrink: 0; width: 22px; height: 22px;
   background: transparent; border: none; cursor: pointer;
   color: var(--ink-muted); font-size: 14px; line-height: 1;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   display: none;
   padding: 0;
   margin-left: 4px;
@@ -245,7 +239,7 @@
   display: flex; align-items: center; gap: 8px;
   padding: 7px 10px; border: none; background: transparent;
   font-size: 13px; color: var(--neutral-800); text-align: left;
-  border-radius: 4px; cursor: pointer;
+  border-radius: var(--radius-sm); cursor: pointer;
   font-family: var(--font-ui);
   transition: background var(--t-fast);
 }
@@ -262,16 +256,14 @@
   flex: 1; min-width: 0;
   background: var(--neutral-0);
   border: 1px solid var(--brand-400);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 2px 6px;
   font-size: 13px;
   font-family: var(--font-ui);
   color: var(--neutral-900);
   outline: none;
 }
-.cat-item__rename-input:focus {
-  box-shadow: 0 0 0 3px var(--primary-soft);
-}
+.cat-item__rename-input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 
 /* ── KnowledgeListView (mode default, sans sidebar) ───────────── */

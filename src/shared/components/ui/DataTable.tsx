@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Skeleton } from './Skeleton';
 import './DataTable.css';
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 
 export type SortDir = 'asc' | 'desc';
 
@@ -190,8 +191,8 @@ export function DataTable<T>({
                     {col.label}
                     <span className="data-table__sort-icon" aria-hidden="true">
                       {sortBy === col.key
-                        ? (sortDir === 'asc' ? '↑' : '↓')
-                        : '↕'}
+                        ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />)
+                        : <ArrowUpDown size={14} />}
                     </span>
                   </button>
                 ) : (

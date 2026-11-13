@@ -33,6 +33,8 @@ import { formatRelative }   from '../../../shared/lib/formatDate';
 import { ImportModal }      from '../../imports/components/ImportModal';
 import type { Category }    from '../types';
 import type { ArticleListItem } from '../../articles/types';
+import { StatusIcon } from '../../../shared/components/ui/StatusIcon';
+import { Lock, Plus } from 'lucide-react';
 
 interface KnowledgePageProps {
   onOpenArticle:      (articleId: string) => void;
@@ -440,7 +442,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
               Importer
             </Button>
             <Button variant="primary" size="md" onClick={onNewArticle}>
-              + Nouvel article
+              <Plus size={20} />Nouvel article
             </Button>
           </>
         )}
@@ -661,7 +663,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
             description={isAdmin
               ? 'Créez le premier article pour cette catégorie.'
               : 'Votre équipe n\'a pas encore publié de contenu ici.'}
-            ctaLabel={isAdmin ? '+ Créer un article' : undefined}
+            ctaLabel={isAdmin ? 'Créer un article' : undefined}
             ctaHref={undefined}
                 onCta={isAdmin ? onNewArticle : undefined}
           />
@@ -1110,7 +1112,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       description={hasActiveFilters
         ? 'Affinez votre recherche ou retirez les filtres.'
         : (isAdmin ? 'Créez votre premier article pour démarrer.' : 'Votre équipe prépare le contenu.')}
-      ctaLabel={isAdmin && !hasActiveFilters ? '+ Nouvel article' : undefined}
+      ctaLabel={isAdmin && !hasActiveFilters ? 'Nouvel article' : undefined}
       onCta={isAdmin && !hasActiveFilters ? onNewArticle : undefined}
     />
   );
@@ -1163,7 +1165,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
         actions={isAdmin && (
           <>
             <Button variant="ghost" size="md" onClick={onOpenImport}>Importer</Button>
-            <Button variant="primary" size="md" onClick={onNewArticle}>+ Nouvel article</Button>
+            <Button variant="primary" size="md" onClick={onNewArticle}><Plus size={20} />Nouvel article</Button>
           </>
         )}
       />
@@ -1221,7 +1223,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
                 <div className="knowledge-list__title-cell">
                   <div className="knowledge-list__title">
                     {a.visibility === 'internal' && (
-                      <span className="visibility-icon" title="Interne — non exposé au chatbot public" aria-label="Article interne">🕵️</span>
+                      <span className="visibility-icon" title="Interne — non exposé au chatbot public"><Lock size={16} role="img" aria-label="Article interne" /></span>
                     )}
                     {a.title}
                   </div>
@@ -1242,7 +1244,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
               render: a => (
                 <div className="knowledge-list__status-cell">
                   <StatusBadge status={a.status} />
-                  {a.isStale && <span className="badge badge--warning" title="Non modifié depuis > 6 mois">À réviser</span>}
+                  {a.isStale && <span className="badge badge--warning" title="Non modifié depuis > 6 mois"><StatusIcon tone="warning" size={14} className="badge__icon" />À réviser</span>}
                 </div>
               ),
             },
@@ -1288,7 +1290,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
                 meta={(
                   <>
                     <StatusBadge status={a.status} />
-                    {a.isStale && <span className="badge badge--warning">À réviser</span>}
+                    {a.isStale && <span className="badge badge--warning"><StatusIcon tone="warning" size={14} className="badge__icon" />À réviser</span>}
                   </>
                 )}
                 onClick={() => onOpenArticle(a.id)}

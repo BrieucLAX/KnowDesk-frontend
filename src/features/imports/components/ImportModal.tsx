@@ -4,6 +4,7 @@ import { Button }  from '../../../shared/components/ui/Button';
 import { useToast } from '../../../shared/lib/useToast';
 import { importsApi, type ImportItem, type ImportSplitMode } from '../api/importsApi';
 import '../imports.css';
+import { CircleCheck, FileText, TriangleAlert, Upload } from 'lucide-react';
 
 interface ImportModalProps {
   onClose: () => void;
@@ -137,13 +138,13 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
               />
               {!file ? (
                 <>
-                  <div className="import-modal__dropzone-icon" aria-hidden="true">📥</div>
+                  <div className="import-modal__dropzone-icon" aria-hidden="true"><Upload size={24} /></div>
                   <p className="import-modal__dropzone-title">Glisse un fichier PDF, DOCX ou PPTX ici</p>
                   <p className="import-modal__dropzone-hint">ou clique pour le sélectionner — max {MAX_SIZE_MB} MB</p>
                 </>
               ) : (
                 <>
-                  <div className="import-modal__file-icon" aria-hidden="true">📄</div>
+                  <div className="import-modal__file-icon" aria-hidden="true"><FileText size={24} /></div>
                   <p className="import-modal__file-name">{file.name}</p>
                   <p className="import-modal__file-meta">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                   <button
@@ -218,7 +219,7 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
 
             {isDone && (
               <>
-                <div className="import-modal__status-icon import-modal__status-icon--ok" aria-hidden="true">✓</div>
+                <div className="import-modal__status-icon import-modal__status-icon--ok" aria-hidden="true"><CircleCheck size={24} /></div>
                 <p className="import-modal__status-text">
                   Import terminé : <strong>{item.articles_created} article{item.articles_created > 1 ? 's' : ''}</strong> créé{item.articles_created > 1 ? 's' : ''} en brouillon
                   {item.category_name && <> dans <strong>{item.category_name}</strong></>}.
@@ -231,7 +232,7 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
 
             {isFailed && (
               <>
-                <div className="import-modal__status-icon import-modal__status-icon--ko" aria-hidden="true">⚠</div>
+                <div className="import-modal__status-icon import-modal__status-icon--ko" aria-hidden="true"><TriangleAlert size={24} /></div>
                 <p className="import-modal__status-text">
                   L'import a échoué.
                 </p>

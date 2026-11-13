@@ -27,36 +27,6 @@
 
 .bm-quota--low { color: var(--color-danger); font-weight: 600; }
 
-/* ── Tabs ──────────────────────────────────────────────── */
-
-.bm-tabs {
-  display: flex;
-  gap: 4px;
-  border-bottom: 1px solid var(--neutral-200);
-  margin-bottom: 24px;
-}
-
-.bm-tabs__tab {
-  background: transparent;
-  border: 0;
-  padding: 12px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--neutral-600);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: color var(--t-fast), border-color var(--t-fast);
-}
-
-.bm-tabs__tab:hover {
-  color: var(--neutral-900);
-}
-
-.bm-tabs__tab.is-active {
-  color: var(--brand-600);
-  border-bottom-color: var(--brand-600);
-}
 
 .bm-main { display: flex; flex-direction: column; gap: 24px; }
 
@@ -191,7 +161,7 @@
 /* ── Forms ────────────────────────────────────────────── */
 
 .bm-form { display: flex; flex-direction: column; gap: 12px; }
-.bm-form__actions { display: flex; gap: 8px; }
+.bm-form__actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
 .bm-checkbox {
   display: flex; align-items: center; gap: 8px;
@@ -231,17 +201,8 @@
 .bm-prompt-row__text { font-size: 14px; flex: 1; }
 .bm-prompt-row__topic { color: var(--neutral-500); font-size: 12px; margin-left: 8px; }
 .bm-prompt-row__actions { display: flex; gap: 8px; }
-.bm-prompt-row__toggle,
-.bm-prompt-row__delete {
-  background: transparent;
-  border: 1px solid var(--neutral-300);
-  border-radius: var(--radius-sm);
-  padding: 4px 10px;
-  font-size: 12px;
-  cursor: pointer;
-  color: var(--neutral-700);
-}
-.bm-prompt-row__delete:hover { background: var(--danger-soft); color: var(--color-danger); border-color: var(--color-danger); }
+
+
 
 /* ── Brands list ──────────────────────────────────────── */
 
@@ -264,13 +225,16 @@
 /* ── Chips ─────────────────────────────────────────── */
 
 .bm-chip {
-  display: inline-block;
+  display: inline-flex;
   background: var(--neutral-100);
   border-radius: var(--radius-full);
   padding: 2px 8px;
   font-size: 11px;
   margin: 2px;
   color: var(--neutral-700);
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
 }
 
 .bm-chip--owner { background: var(--brand-100); color: var(--brand-800); font-weight: 600; }
@@ -279,8 +243,8 @@
 .bm-chip--sentiment-neutral  { background: var(--neutral-100); color: var(--ink-muted); }
 .bm-chip--sentiment-negative { background: var(--danger-soft); color: var(--danger); }
 .bm-chip--sources            { background: var(--info-soft); color: var(--info); font-weight: 600; }
-.bm-chip--owner.bm-chip--sentiment-positive { background: linear-gradient(90deg, var(--brand-100) 0%, var(--success-soft) 100%); }
-.bm-chip--owner.bm-chip--sentiment-negative { background: linear-gradient(90deg, var(--brand-100) 0%, var(--danger-soft) 100%); }
+.bm-chip--owner.bm-chip--sentiment-positive { background: var(--success-soft); box-shadow: inset 0 0 0 1px var(--primary); }
+.bm-chip--owner.bm-chip--sentiment-negative { background: var(--danger-soft); box-shadow: inset 0 0 0 1px var(--primary); }
 
 /* ── Responses table ─────────────────────────────────── */
 
@@ -305,7 +269,7 @@
 
 .bm-responses-table__prompt { max-width: 280px; }
 .bm-responses-table__nomention { color: var(--ink-muted); font-style: italic; }
-.bm-responses-table__num { text-align: right; font-variant-numeric: tabular-nums; }
+.bm-responses-table__num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .bm-resp-detail { display: flex; flex-direction: column; gap: 12px; }
 .bm-resp-detail__meta { font-size: 13px; color: var(--neutral-700); margin: 0; }
@@ -350,7 +314,7 @@
   cursor: pointer;
   max-width: 320px;
 }
-.bm-select:focus { outline: 2px solid var(--brand-300); outline-offset: 1px; }
+.bm-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 /* Désactivé : texte ink-muted sans opacité (4,5:1, lot 3). */
 .bm-select:disabled { color: var(--ink-muted); background: var(--surface); cursor: not-allowed; }
 
@@ -358,7 +322,7 @@
 
 .bm-providers {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 8px;
 }
 
@@ -455,22 +419,17 @@
 
 /* ── Recommandations (R-S8) ──────────────────────────── */
 
-.bm-recos { border-color: var(--brand-300); background: linear-gradient(180deg, var(--brand-50) 0%, var(--neutral-0) 100%); }
+.bm-recos { background: var(--primary-soft); border-color: transparent; }
 
 .bm-recos__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
 
 .bm-reco {
   background: var(--neutral-0);
   border: 1px solid var(--neutral-200);
-  border-left: 3px solid var(--brand-500);
   border-radius: var(--radius-md);
   padding: 12px 16px;
 }
 
-.bm-reco--absent_from_llm   { border-left-color: var(--danger); }
-.bm-reco--missing_topic     { border-left-color: var(--warning); }
-.bm-reco--missing_attribute { border-left-color: var(--brand-500); }
-.bm-reco--missing_source    { border-left-color: var(--success); }
 
 .bm-reco__head {
   display: flex;
@@ -500,17 +459,9 @@
 
 .bm-reco__actions { display: flex; justify-content: flex-end; }
 
-.bm-reco__dismiss {
-  background: transparent;
-  border: 1px solid var(--neutral-300);
-  border-radius: var(--radius-sm);
-  padding: 4px 10px;
-  font-size: 12px;
-  cursor: pointer;
-  color: var(--neutral-700);
-}
 
-.bm-reco__dismiss:hover { background: var(--neutral-50); }
+
+
 
 /* ── Alignment narrative (R-S7) ──────────────────────── */
 
@@ -574,7 +525,7 @@
 }
 
 .bm-resp-sources__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
-.bm-resp-sources__item { border-left: 2px solid var(--brand-300); padding-left: 10px; }
+.bm-resp-sources__item { padding-left: 0; }
 
 .bm-resp-sources__link {
   display: grid;
@@ -672,4 +623,6 @@
   max-height: 60vh;
   overflow: auto;
 }
-
+.bm-prompts, .bm-settings { display: flex; flex-direction: column; gap: var(--space-4); }
+.bm-responses-wrap { overflow-x: auto; }
+.bm-provider.is-disabled.is-active { border-color: var(--line); }

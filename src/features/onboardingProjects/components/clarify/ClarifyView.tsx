@@ -11,6 +11,8 @@ import type { Arbitration } from '../../hooks/useArbitration';
 import { AiFileName, DocNames, FileName } from '../audit/DocName';
 import { ClarifyQuote, CodeFactsBox, ModelAnalysisBox } from './ReadingCardView';
 import { CurrentAnswer } from './CardAnswers';
+import { StatusIcon } from '../../../../shared/components/ui/StatusIcon';
+import { Alert } from '../../../../shared/components/ui/Alert';
 
 interface ClarifyViewProps {
   audit:       Audit;
@@ -53,7 +55,9 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
       {base && reading.base && (
         // Lot Elyra v2 : la détection de la base décide, l'écran l'explique ; rien n'est demandé.
         <section className="obp-audit-section obp-clarify-base" aria-labelledby="obp-clarify-base-title" role="note">
-          <h3 id="obp-clarify-base-title" className="obp-section-title">{base.title}</h3>
+          <h3 id="obp-clarify-base-title" className="obp-section-title icon-label">
+            <StatusIcon tone="info" />{base.title}
+          </h3>
           <p className="obp-muted">{base.reason}</p>
           {reading.base.documentIds.length > 0 && (
             <p className="obp-clarify-base__docs">Documents retenus : <DocNames audit={audit} ids={reading.base.documentIds} /></p>
@@ -71,7 +75,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
           {!notesUnavailable && (
             <p className="obp-muted">Notes temporaires : {reading.temporaryNotes.length}</p>
           )}
-          {failed.map(text => <p key={text} className="obp-clarify-unavailable" role="note">{text}</p>)}
+          {failed.map(text => <Alert key={text} tone="warning" role="note" className="obp-clarify-unavailable">{text}</Alert>)}
         </div>
         {state.status === 'loading' && <Skeleton className="obp-arb-entry__loading" />}
         {ready && reading.cards.length > 0 && (

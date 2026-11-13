@@ -3,6 +3,7 @@ import { Button }   from '../../../shared/components/ui/Button';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { formatFull } from '../../../shared/lib/formatDate';
 import type { ArticleVersion } from '../hooks/useArticleVersions';
+import { X } from 'lucide-react';
 
 interface VersionsPanelProps {
   versions:  ArticleVersion[];
@@ -24,7 +25,7 @@ export function VersionsPanel({
           className="versions-panel__close"
           onClick={onClose}
           aria-label="Fermer l'historique"
-        >×</button>
+        ><X size={16} /></button>
       </div>
 
       <div className="versions-panel__body">

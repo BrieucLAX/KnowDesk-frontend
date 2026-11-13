@@ -11,7 +11,7 @@
 }
 .account-section {
   background: var(--neutral-0);
-  border: 1px solid var(--neutral-100);
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 24px;
   margin-bottom: 20px;
@@ -26,8 +26,16 @@
 .account-form__saved     { font-size: 13px; color: var(--color-success); }
 .account-success {
   padding: 16px;
-  background: var(--color-success-bg);
-  color: var(--color-success);
+  background: var(--success-soft);
+  color: var(--ink);
   border-radius: var(--radius-md);
-  font-size: 14px;
+  font-size: 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.account-success__icon { color: var(--success); flex-shrink: 0; margin-top: 2px; }
+.account-form { display: flex; flex-direction: column; gap: var(--space-4); }
+@media (max-width: 640px) {
+  .account-form__row { grid-template-columns: 1fr; }
 }
