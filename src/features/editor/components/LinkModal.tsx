@@ -4,6 +4,7 @@ import '../editor.css';
 import { Input }      from '../../../shared/components/ui/Input';
 import { Modal }      from '../../../shared/components/ui/Modal';
 import { apiClient }  from '../../../shared/lib/apiClient';
+import { Check, FileText, Link } from 'lucide-react';
 
 interface LinkModalProps {
   onInsert: (url: string, text: string, isInternal: boolean, articleId?: string) => void;
@@ -84,14 +85,14 @@ export function LinkModal({ onInsert, onClose, selectedText }: LinkModalProps) {
           className={`link-modal__tab ${tab === 'external' ? 'link-modal__tab--active' : ''}`}
           onClick={() => setTab('external')}
         >
-          🔗 Lien externe
+          <Link size={16} />Lien externe
         </button>
         <button
           type="button"
           className={`link-modal__tab ${tab === 'internal' ? 'link-modal__tab--active' : ''}`}
           onClick={() => setTab('internal')}
         >
-          📄 Article KnowDesk
+          <FileText size={16} />Article KnowDesk
         </button>
       </div>
 
@@ -144,7 +145,7 @@ export function LinkModal({ onInsert, onClose, selectedText }: LinkModalProps) {
             </ul>
           )}
           {selectedArt && (
-            <p className="link-modal__selected">✓ Sélectionné : <strong>{selectedArt.title}</strong></p>
+            <p className="link-modal__selected icon-label"><Check size={16} />Sélectionné : <strong>{selectedArt.title}</strong></p>
           )}
           <Input
             id="link-text-internal"

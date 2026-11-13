@@ -4,12 +4,15 @@ import { Extension } from '@tiptap/core';
 import Suggestion, { type SuggestionOptions } from '@tiptap/suggestion';
 import type { Editor, Range } from '@tiptap/core';
 import { CALLOUT_TYPES } from './Callout';
+import { List, ListTodo, Minus, Quote, Table as TableIcon } from 'lucide-react';
+import { StatusIcon } from '../../../shared/components/ui/StatusIcon';
 
 export interface SlashCommandItem {
   id:          string;
   label:       string;
   description: string;
-  icon:        string;        // emoji ou char
+  /** Picto Lucide, ou libellé typographique (H2, 1., { }). */
+  icon:        React.ReactNode;
   command:     (args: { editor: Editor; range: Range }) => void;
   /** Mots-clés pour le filtrage (en plus du label) */
   keywords?:   string[];
@@ -28,7 +31,7 @@ const ITEMS: SlashCommandItem[] = [
   },
   {
     id: 'bullet', label: 'Liste à puces', description: 'Liste non ordonnée',
-    icon: '≡', keywords: ['list', 'bullet', 'liste', 'puces'],
+    icon: <List size={16} />, keywords: ['list', 'bullet', 'liste', 'puces'],
     command: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleBulletList().run(),
   },
   {
@@ -38,12 +41,12 @@ const ITEMS: SlashCommandItem[] = [
   },
   {
     id: 'tasks', label: 'Liste de tâches', description: 'Cases à cocher',
-    icon: '☐', keywords: ['task', 'todo', 'tache', 'checkbox'],
+    icon: <ListTodo size={16} />, keywords: ['task', 'todo', 'tache', 'checkbox'],
     command: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleTaskList().run(),
   },
   {
     id: 'quote', label: 'Citation', description: 'Bloc de citation',
-    icon: '❝', keywords: ['quote', 'citation', 'blockquote'],
+    icon: <Quote size={16} />, keywords: ['quote', 'citation', 'blockquote'],
     command: ({ editor, range }) => editor.chain().focus().deleteRange(range).toggleBlockquote().run(),
   },
   {
@@ -53,27 +56,27 @@ const ITEMS: SlashCommandItem[] = [
   },
   {
     id: 'table', label: 'Tableau', description: 'Tableau 3 × 3 avec en-têtes',
-    icon: '▦', keywords: ['table', 'tableau', 'grid'],
+    icon: <TableIcon size={16} />, keywords: ['table', 'tableau', 'grid'],
     command: ({ editor, range }) => editor.chain().focus().deleteRange(range)
       .insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
   },
   {
     id: 'hr', label: 'Séparateur horizontal', description: 'Ligne de séparation',
-    icon: '—', keywords: ['hr', 'rule', 'separator', 'separateur'],
+    icon: <Minus size={16} />, keywords: ['hr', 'rule', 'separator', 'separateur'],
     command: ({ editor, range }) => editor.chain().focus().deleteRange(range).setHorizontalRule().run(),
   },
   ...CALLOUT_TYPES.map(type => {
-    const meta: Record<string, { label: string; icon: string }> = {
-      info:    { label: 'Encadré information', icon: 'ℹ️' },
-      success: { label: 'Encadré succès',      icon: '✅' },
-      warning: { label: 'Encadré attention',   icon: '⚠️' },
-      danger:  { label: 'Encadré danger',      icon: '⛔' },
+    const meta: Record<string, { label: string }> = {
+      info:    { label: 'Encadré information' },
+      success: { label: 'Encadré succès' },
+      warning: { label: 'Encadré attention' },
+      danger:  { label: 'Encadré danger' },
     };
     return {
       id: `callout-${type}`,
       label: meta[type].label,
       description: 'Bloc coloré pour mettre en avant une info',
-      icon: meta[type].icon,
+      icon: <StatusIcon tone={type} size={16} />,
       keywords: ['callout', 'note', type],
       command: ({ editor, range }: { editor: Editor; range: Range }) =>
         editor.chain().focus().deleteRange(range).toggleCallout(type).run(),

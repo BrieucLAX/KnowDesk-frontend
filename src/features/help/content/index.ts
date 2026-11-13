@@ -1,3 +1,4 @@
+import { Briefcase, ChartColumn, CircleHelp, FileText, Headphones, ListOrdered, MessageCircle, Newspaper, Rocket, Search, Settings, Users, type LucideIcon } from 'lucide-react';
 export interface HelpArticle {
   id:      string;
   title:   string;
@@ -7,7 +8,7 @@ export interface HelpArticle {
 export interface HelpSection {
   id:       string;
   title:    string;
-  icon:     string;
+  icon:     LucideIcon;
   articles: HelpArticle[];
 }
 
@@ -15,7 +16,7 @@ export const HELP_CONTENT: HelpSection[] = [
   {
     id:    'whats-new',
     title: 'Nouveautés',
-    icon:  '✨',
+    icon:  Newspaper,
     articles: [
       {
         id:    'release-notes',
@@ -101,7 +102,7 @@ La barre de recherche (raccourci \`Cmd+K\`) tolère désormais les fautes de fra
   {
     id:    'getting-started',
     title: 'Premiers pas',
-    icon:  '🚀',
+    icon:  Rocket,
     articles: [
       {
         id:    'create-workspace',
@@ -196,7 +197,7 @@ Depuis l'icône **Mon compte** (initiales en bas du menu), tu peux modifier ton 
   {
     id:    'articles',
     title: 'Articles',
-    icon:  '📄',
+    icon:  FileText,
     articles: [
       {
         id:    'create-article',
@@ -410,7 +411,7 @@ KnowDesk conserve l'historique de toutes les versions publiées de tes articles.
   {
     id:    'faqs',
     title: 'FAQs',
-    icon:  '❓',
+    icon:  CircleHelp,
     articles: [
       {
         id:    'what-is-faq',
@@ -598,7 +599,7 @@ Dans l'éditeur, ouvre le panneau **Historique des modifications** pour voir qui
   {
     id:    'search',
     title: 'Recherche',
-    icon:  '🔍',
+    icon:  Search,
     articles: [
       {
         id:    'search-basics',
@@ -897,7 +898,7 @@ Sur chaque ligne de la liste :
   {
     id:    'trees',
     title: 'Processus guidés',
-    icon:  '🌳',
+    icon:  ListOrdered,
     articles: [
       {
         id:    'what-is-tree',
@@ -990,7 +991,7 @@ Une fois publié, le processus apparaît dans l'onglet **Processus** de la Base 
   {
     id:    'advisors',
     title: 'Conseillers',
-    icon:  '🎧',
+    icon:  Headphones,
     articles: [
       {
         id:    'find-info',
@@ -1101,7 +1102,7 @@ Va dans **Paramètres → Notifications** pour activer ou désactiver chaque typ
   {
     id:    'use-cases',
     title: 'Cas d\'usage',
-    icon:  '💼',
+    icon:  Briefcase,
     articles: [
       {
         id:    'seasonal-campaign',
@@ -1327,7 +1328,7 @@ Ces deux briques amplifient le ROI éditorial de tes FAQs — mais elles ne fonc
   {
     id:    'team',
     title: 'Équipe',
-    icon:  '👥',
+    icon:  Users,
     articles: [
       {
         id:    'invite',
@@ -1390,7 +1391,7 @@ Le membre ne peut plus se connecter immédiatement. Tu peux le réactiver à tou
   {
     id:    'analytics',
     title: 'Analytics',
-    icon:  '📊',
+    icon:  ChartColumn,
     articles: [
       {
         id:    'analytics-overview',
@@ -1452,7 +1453,7 @@ Aucune donnée individuelle d'utilisation par conseiller n'est exposée. Les sta
   {
     id:    'chats',
     title: 'Chats',
-    icon:  '💬',
+    icon:  MessageCircle,
     articles: [
       {
         id:    'chats-overview',
@@ -1510,7 +1511,7 @@ Clique une ligne pour ouvrir le transcript complet :
   {
     id:    'settings',
     title: 'Paramètres',
-    icon:  '⚙️',
+    icon:  Settings,
     articles: [
       {
         id:    'org-settings',

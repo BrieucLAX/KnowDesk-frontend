@@ -5,6 +5,7 @@ import { Skeleton }       from '../../../shared/components/ui/Skeleton';
 import { NotFoundPage } from '../../../shared/components/ui/NotFoundPage';
 import { Button }             from '../../../shared/components/ui/Button';
 import { sanitizeArticleHtml } from '../../../shared/lib/sanitize';
+import { ArrowLeft, CircleCheck, FileText, RotateCcw } from 'lucide-react';
 
 interface QuestionTreePageProps {
   treeId:        string;
@@ -40,7 +41,7 @@ export function QuestionTreePage({ treeId, onBack, onViewArticle }: QuestionTree
     return (
       <div className="tree-page tree-page--error">
         <p className="tree-error">{loadState.message}</p>
-        <Button variant="ghost" size="sm" onClick={onBack}>← Retour</Button>
+        <Button variant="ghost" size="sm" onClick={onBack} leftIcon={<ArrowLeft size={16} />}>Retour</Button>
       </div>
     );
   }
@@ -49,7 +50,7 @@ export function QuestionTreePage({ treeId, onBack, onViewArticle }: QuestionTree
     return (
       <div className="tree-page tree-page--error">
         <p className="tree-error">Aucun nœud trouvé dans ce processus.</p>
-        <Button variant="ghost" size="sm" onClick={onBack}>← Retour</Button>
+        <Button variant="ghost" size="sm" onClick={onBack} leftIcon={<ArrowLeft size={16} />}>Retour</Button>
       </div>
     );
   }
@@ -60,7 +61,7 @@ export function QuestionTreePage({ treeId, onBack, onViewArticle }: QuestionTree
     <div className="tree-page">
       {/* Header */}
       <div className="tree-page__header">
-        <button type="button" className="tree-page__back" onClick={onBack}>← Retour</button>
+        <button type="button" className="tree-page__back icon-label" onClick={onBack}><ArrowLeft size={16} />Retour</button>
         <div className="tree-page__meta">
           <h1 className="tree-page__title">{tree?.title}</h1>
           {history.length > 0 && (
@@ -68,7 +69,7 @@ export function QuestionTreePage({ treeId, onBack, onViewArticle }: QuestionTree
           )}
         </div>
         <button type="button" className="tree-page__restart" onClick={restart} title="Recommencer">
-          ↺ Recommencer
+          <RotateCcw size={16} />Recommencer
         </button>
       </div>
 
@@ -96,7 +97,7 @@ export function QuestionTreePage({ treeId, onBack, onViewArticle }: QuestionTree
           </div>
         ) : (
           <div className="tree-conclusion">
-            <div className="tree-conclusion__icon">✅</div>
+            <div className="tree-conclusion__icon" aria-hidden="true"><CircleCheck size={24} /></div>
             <div
               className="tree-conclusion__text article-content"
               dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(currentNode.content) }}
@@ -108,7 +109,7 @@ export function QuestionTreePage({ treeId, onBack, onViewArticle }: QuestionTree
                 className="tree-conclusion__article"
                 onClick={() => onViewArticle(currentNode.article_id!)}
               >
-                📄 Voir l'article : {currentNode.article_title}
+                <FileText size={16} />Voir l'article : {currentNode.article_title}
               </button>
             )}
             <button
@@ -125,7 +126,7 @@ export function QuestionTreePage({ treeId, onBack, onViewArticle }: QuestionTree
       {/* Navigation */}
       {canGoBack && (
         <div className="tree-page__nav">
-          <Button variant="ghost" size="sm" onClick={goBack}>← Question précédente</Button>
+          <Button variant="ghost" size="sm" onClick={goBack} leftIcon={<ArrowLeft size={16} />}>Question précédente</Button>
         </div>
       )}
     </div>

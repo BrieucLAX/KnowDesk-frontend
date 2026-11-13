@@ -21,7 +21,7 @@ export function SearchSettingsSection() {
         <>Définissez des synonymes propres à votre organisation. Une recherche sur un terme
         remontera aussi les contenus contenant ses synonymes (et vice-versa).</>
       }
-      createCta={{ label: '+ Ajouter un synonyme', onClick: () => setShowCreate(true) }}
+      createCta={{ label: 'Ajouter un synonyme', onClick: () => setShowCreate(true) }}
       loading={loading}
       error={error}
       items={items}

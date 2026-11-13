@@ -4,6 +4,7 @@ import {
   analysisFailureMessage, analysisSteps, analysisFailureNote, elapsedMs, formatElapsed, isAnalysisActive, stepStates,
 } from '../lib/analysisStatus';
 import type { OnboardingAnalysis } from '../types';
+import { ArrowRight } from 'lucide-react';
 
 interface AnalysisProgressProps {
   analysis:    OnboardingAnalysis;
@@ -79,7 +80,7 @@ export function AnalysisProgress({ analysis, onOpenAudit }: AnalysisProgressProp
       {analysis.status === 'succeeded' && (
         <p className="obp-muted">
           L'audit est prêt.{' '}
-          <button type="button" className="obp-link" onClick={onOpenAudit}>Consulter l'audit →</button>
+          <button type="button" className="obp-link icon-label" onClick={onOpenAudit}>Consulter l'audit<ArrowRight size={16} /></button>
         </p>
       )}
     </section>

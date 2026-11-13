@@ -3,6 +3,7 @@ import { useForgotPassword } from '../hooks/useForgotPassword';
 import '../auth.css';
 import { Button }            from '../../../shared/components/ui/Button';
 import { Input }             from '../../../shared/components/ui/Input';
+import { ArrowLeft, Mail } from 'lucide-react';
 
 interface ForgotPasswordFormProps {
   onBack: () => void;
@@ -14,13 +15,13 @@ export function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
   if (sent) {
     return (
       <div className="forgot-success">
-        <div className="forgot-success__icon">✉️</div>
+        <div className="forgot-success__icon" aria-hidden="true"><Mail size={24} /></div>
         <h2 className="forgot-success__title">Email envoyé</h2>
         <p className="forgot-success__desc">
           Si un compte existe pour <strong>{email}</strong>, tu recevras un lien de réinitialisation dans quelques minutes.
         </p>
         <p className="forgot-success__desc">Vérifie aussi ton dossier spam.</p>
-        <Button variant="ghost" size="md" onClick={onBack}>← Retour à la connexion</Button>
+        <Button variant="ghost" size="md" onClick={onBack} leftIcon={<ArrowLeft size={20} />}>Retour à la connexion</Button>
       </div>
     );
   }
@@ -42,8 +43,8 @@ export function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
         {loading ? 'Envoi…' : 'Envoyer le lien'}
       </Button>
       <p className="login-form__signup">
-        <button type="button" className="login-form__link" onClick={onBack}>
-          ← Retour à la connexion
+        <button type="button" className="login-form__link icon-label" onClick={onBack}>
+          <ArrowLeft size={16} />Retour à la connexion
         </button>
       </p>
     </form>

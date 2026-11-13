@@ -4,6 +4,7 @@ import { Input }  from '../../../shared/components/ui/Input';
 import { CADRAGE_LIMITS, CADRAGE_SECTIONS, type CadrageErrors, type CadrageSectionKey } from '../lib/cadrageForm';
 import { TextArea } from './TextArea';
 import type { CadrageForm, NamedItem, OnboardingDocument } from '../types';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 
 /**
  * Les six sections de la fiche de cadrage (celles du cadrage pilote). Toute
@@ -228,10 +229,10 @@ export function SourceHierarchySection({ form, errors, documents, edit, readOnly
             <span className="obp-cadrage-item__title">Niveau {i + 1}{l.label.trim() ? ` — ${l.label.trim()}` : ''}</span>
             {!readOnly && (
               <span className="obp-cadrage-item__actions">
-                <Button type="button" variant="ghost" size="sm" disabled={i === 0} onClick={() => move(i, -1)}
-                  aria-label={`Monter le niveau ${i + 1}`}>↑</Button>
-                <Button type="button" variant="ghost" size="sm" disabled={i === levels.length - 1} onClick={() => move(i, 1)}
-                  aria-label={`Descendre le niveau ${i + 1}`}>↓</Button>
+                <Button type="button" variant="ghost" size="sm" iconOnly disabled={i === 0} onClick={() => move(i, -1)}
+                  aria-label={`Monter le niveau ${i + 1}`}><ArrowUp size={16} /></Button>
+                <Button type="button" variant="ghost" size="sm" iconOnly disabled={i === levels.length - 1} onClick={() => move(i, 1)}
+                  aria-label={`Descendre le niveau ${i + 1}`}><ArrowDown size={16} /></Button>
                 <Button type="button" variant="ghost" size="sm" onClick={() => edit(d => { d.sourceHierarchy.levels.splice(i, 1); })}
                   aria-label={`Retirer le niveau ${i + 1}`}>Retirer</Button>
               </span>

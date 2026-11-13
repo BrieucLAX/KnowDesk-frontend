@@ -9,6 +9,7 @@ import {
   type QualityDimension, type QualityForArticle,
 } from '../api/articleQualityApi';
 import './ArticleQualityPanel.css';
+import { ChevronRight, CircleCheck, RotateCw, Sparkles, TriangleAlert } from 'lucide-react';
 
 interface ArticleQualityPanelProps {
   articleId: string;
@@ -84,7 +85,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
     return (
       <section className="article-quality">
         <header className="article-quality__header">
-          <h3 className="article-quality__title">✨ Suggestions IA</h3>
+          <h3 className="article-quality__title icon-label"><Sparkles size={16} />Suggestions IA</h3>
         </header>
         <div className="article-quality__empty">
           <p>Aucun scoring disponible pour cet article.</p>
@@ -100,7 +101,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
     return (
       <section className="article-quality article-quality--loading">
         <header className="article-quality__header">
-          <h3 className="article-quality__title">✨ Suggestions IA</h3>
+          <h3 className="article-quality__title icon-label"><Sparkles size={16} />Suggestions IA</h3>
         </header>
         <p className="article-quality__loading">Chargement…</p>
       </section>
@@ -122,9 +123,9 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
           onClick={() => setOpen(o => !o)}
           aria-expanded={open}
         >
-          <span className={`article-quality__chevron ${open ? 'is-open' : ''}`} aria-hidden="true">▸</span>
-          <h3 className="article-quality__title">
-            ✨ Suggestions IA
+          <span className={`article-quality__chevron ${open ? 'is-open' : ''}`} aria-hidden="true"><ChevronRight size={16} /></span>
+          <h3 className="article-quality__title icon-label">
+            <Sparkles size={16} />Suggestions IA
             {allOk
               ? <span className="article-quality__badge article-quality__badge--ok">Tout OK</span>
               : <span className="article-quality__badge article-quality__badge--flag">{visibleFlagged.length} à revoir</span>}
@@ -133,7 +134,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
         <div className="article-quality__head-actions">
           {stale && <span className="article-quality__stale" title="L'article a évolué depuis le dernier scoring">Modif depuis</span>}
           <Button variant="ghost" size="sm" onClick={handleRecheck} loading={recheck}>
-            ↻ Réévaluer
+            <RotateCw size={16} />Réévaluer
           </Button>
         </div>
       </header>
@@ -158,7 +159,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
                 >
                   <div className="article-quality__item-head">
                     <span className="article-quality__item-status" aria-hidden="true">
-                      {status === 'flagged' && !isDismissed ? '⚠️' : '✓'}
+                      {status === 'flagged' && !isDismissed ? <TriangleAlert size={16} /> : <CircleCheck size={16} />}
                     </span>
                     <span className="article-quality__item-name">{DIMENSION_LABEL[d]}</span>
                     {isDismissed && <span className="article-quality__dismissed">marqué OK</span>}

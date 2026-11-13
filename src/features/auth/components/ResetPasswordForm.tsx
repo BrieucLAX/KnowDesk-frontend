@@ -2,6 +2,7 @@ import React from 'react';
 import { useResetPassword } from '../hooks/useResetPassword';
 import { Button }           from '../../../shared/components/ui/Button';
 import { Input }            from '../../../shared/components/ui/Input';
+import { ArrowLeft, CircleCheck } from 'lucide-react';
 
 interface ResetPasswordFormProps {
   token:    string;
@@ -17,7 +18,7 @@ export function ResetPasswordForm({ token, onBack }: ResetPasswordFormProps) {
   if (done) {
     return (
       <div className="forgot-success">
-        <div className="forgot-success__icon">✅</div>
+        <div className="forgot-success__icon forgot-success__icon--success" aria-hidden="true"><CircleCheck size={24} /></div>
         <h2 className="forgot-success__title">Mot de passe modifié</h2>
         <p className="forgot-success__desc">
           Ton mot de passe a été mis à jour. Tu vas être redirigé vers la connexion.
@@ -52,8 +53,8 @@ export function ResetPasswordForm({ token, onBack }: ResetPasswordFormProps) {
         {loading ? 'Mise à jour…' : 'Changer le mot de passe'}
       </Button>
       <p className="login-form__signup">
-        <button type="button" className="login-form__link" onClick={onBack}>
-          ← Retour à la connexion
+        <button type="button" className="login-form__link icon-label" onClick={onBack}>
+          <ArrowLeft size={16} />Retour à la connexion
         </button>
       </p>
     </form>

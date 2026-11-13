@@ -4,6 +4,7 @@ import { useToast }     from '../../../shared/lib/useToast';
 import { apiClient, ApiError } from '../../../shared/lib/apiClient';
 import './EmailVerificationBanner.css';
 import { StatusIcon } from '../../../shared/components/ui/StatusIcon';
+import { X } from 'lucide-react';
 
 /**
  * Bandeau soft affiché en haut de l'app tant que l'utilisateur n'a pas
@@ -55,7 +56,7 @@ export function EmailVerificationBanner() {
         aria-label="Masquer pour cette session"
         title="Masquer pour cette session"
       >
-        ×
+        <X size={16} />
       </button>
     </div>
   );

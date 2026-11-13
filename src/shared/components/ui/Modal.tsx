@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useRef } from 'react';
 import { cn } from '../../lib/cn';
 import './Modal.css';
+import { X } from 'lucide-react';
 
 export type ModalSize = 'sm' | 'md' | 'lg';
 
@@ -134,7 +135,7 @@ export function Modal({
               onClick={onClose}
               aria-label="Fermer"
             >
-              <CloseIcon />
+              <X size={16} />
             </button>
           )}
         </div>
@@ -147,11 +148,3 @@ export function Modal({
   );
 }
 
-function CloseIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <line x1="2"  y1="2"  x2="14" y2="14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="14" y1="2"  x2="2"  y2="14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}

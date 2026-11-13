@@ -2,6 +2,7 @@ import React from 'react';
 import { SideNav, type NavRoute } from './SideNav';
 import { useAuthStore, selectOrganization } from '../../../store/authStore';
 import { isTestOrganization } from '../../lib/modules';
+import { StatusIcon } from '../ui/StatusIcon';
 
 interface AppLayoutProps {
   children:     React.ReactNode;
@@ -30,7 +31,8 @@ export function AppLayout({
         {/* Organisations de test (module onboarding) : bandeau permanent. */}
         {isTestOrganization(organization) && (
           <div className="test-version-banner" role="status">
-            <strong>Version de test</strong> — ce parcours est en cours de développement.
+            <StatusIcon tone="info" size={16} className="test-version-banner__icon" />
+            <span><strong>Version de test</strong> — ce parcours est en cours de développement.</span>
           </div>
         )}
         <header className="topbar" role="banner">

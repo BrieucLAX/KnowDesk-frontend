@@ -15,6 +15,7 @@ import type {
   LearningPathCompletions, LearningCompletionStatus,
 } from '../types';
 import '../learning.css';
+import { ArrowLeft, Check, Circle, CircleCheck, CircleDot, Plus, RotateCw, Sparkles, X } from 'lucide-react';
 
 interface LearningPathEditorProps {
   pathId: string;
@@ -180,7 +181,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
           subtitle="Édition d'un parcours de formation"
           actions={(
             <>
-              <Button variant="ghost" size="md" onClick={onBack}>← Retour</Button>
+              <Button variant="ghost" size="md" onClick={onBack} leftIcon={<ArrowLeft size={20} />}>Retour</Button>
               <Button variant="ghost" size="md" onClick={() => setShowCompletions(true)}>Suivi</Button>
               <Button variant="ghost" size="md" onClick={() => setShowAssign(true)}>Assigner</Button>
             </>
@@ -243,7 +244,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
           <div className="learning-section__header">
             <h2 className="learning-section__title">Modules ({path.modules.length})</h2>
             <Button variant="primary" size="sm" onClick={() => setShowAddModule(true)}>
-              + Ajouter un module
+              <Plus size={16} />Ajouter un module
             </Button>
           </div>
           {path.modules.length === 0 ? (
@@ -398,8 +399,8 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
       }
     >
       <div className="module-editor">
-        <label className="learning-form__field">
-          <span className="learning-form__label">Nom du module</span>
+        <div className="learning-form__field">
+          <label htmlFor="mod-name" className="learning-form__label">Nom du module</label>
           <div className="module-editor__name-row">
             <Input
               id="mod-name"
@@ -411,7 +412,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
               Renommer
             </Button>
           </div>
-        </label>
+        </div>
 
         <h3 className="module-editor__heading">Ressources ({resources.length})</h3>
         {loadingRes ? <Skeleton className="sk-card" /> : (
@@ -426,7 +427,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
                     {r.resource_type === 'article' ? 'Article' : r.resource_type === 'faq' ? 'FAQ' : 'Processus'}
                   </span>
                   <span className="module-editor__title">{resourceTitle(r)}</span>
-                  <Button variant="ghost" size="sm" onClick={() => removeResource(r.id)}>×</Button>
+                  <Button variant="ghost" size="sm" onClick={() => removeResource(r.id)}><X size={16} /></Button>
                 </li>
               ))}
             </ul>
@@ -458,7 +459,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
                   <ul className="module-editor__quiz-choices">
                     {q.choices.map((c, j) => (
                       <li key={j} className={j === q.correct_idx ? 'module-editor__quiz-correct' : ''}>
-                        {j === q.correct_idx ? '✓ ' : ''}{c}
+                        {j === q.correct_idx && <><Check size={16} className="icon-inline" role="img" aria-label="Bonne réponse" />{' '}</>}{c}
                       </li>
                     ))}
                   </ul>
@@ -481,7 +482,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
               loading={generating}
               disabled={resources.length === 0}
             >
-              ✨ Générer le quiz avec l'IA
+              <Sparkles size={20} />Générer le quiz avec l'IA
             </Button>
           </>
         )}
@@ -558,6 +559,8 @@ function ResourcePicker({ articles, faqs, trees, alreadyAdded, onPick }: {
     <div ref={wrapRef} className="resource-picker">
       <Input
         id="resource-picker-input"
+        label="Ajouter une ressource"
+        labelHidden
         type="text"
         placeholder="+ Ajouter une ressource — article, FAQ ou processus…"
         value={query}
@@ -824,10 +827,10 @@ function CompletionsModal({ pathId, onClose }: { pathId: string; onClose: () => 
 }
 
 function StatusBadgeCell({ status, score }: { status: LearningCompletionStatus; score: number | null }) {
-  const icon  = status === 'completed' ? '✓'
-              : status === 'in_progress' ? '◐'
-              : status === 'outdated' ? '↻'
-              : '○';
+  const icon  = status === 'completed' ? <CircleCheck size={16} />
+              : status === 'in_progress' ? <CircleDot size={16} />
+              : status === 'outdated' ? <RotateCw size={16} />
+              : <Circle size={16} />;
   const label = status === 'completed' ? 'Complété'
               : status === 'in_progress' ? 'En cours'
               : status === 'outdated' ? 'À renouveler'

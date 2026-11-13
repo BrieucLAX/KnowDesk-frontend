@@ -8,6 +8,7 @@ import { useAuthStore, selectUserRole, selectOrganization } from '../../../store
 import { canRunSetupWizard } from '../../../shared/lib/modules';
 import { useToast }    from '../../../shared/lib/useToast';
 import { ApiError }    from '../../../shared/lib/apiClient';
+import { Check, CircleCheck, RotateCcw } from 'lucide-react';
 
 export function AccountPage() {
   const { profile, loading, updateProfile, changePassword, requestEmailChange } = useAccount();
@@ -136,7 +137,7 @@ export function AccountPage() {
               Enregistrer
             </Button>
             {profileSaved && (
-              <span className="account-form__saved" role="status">✓ Enregistré</span>
+              <span className="account-form__saved icon-label" role="status"><Check size={16} />Enregistré</span>
             )}
           </div>
         </form>
@@ -152,7 +153,8 @@ export function AccountPage() {
         </div>
         {emailSent ? (
           <div className="account-success" role="status">
-            ✓ Email de confirmation envoyé à <strong>{emailForm.newEmail}</strong>.
+            <CircleCheck size={20} className="account-success__icon" />
+            Email de confirmation envoyé à <strong>{emailForm.newEmail}</strong>.
             Vérifiez votre boîte de réception.
           </div>
         ) : (
@@ -228,7 +230,7 @@ export function AccountPage() {
               onClick={handleResetOnboarding}
               loading={resettingOnboarding}
             >
-              ↻ Refaire l'onboarding
+              <RotateCcw size={20} />Refaire l'onboarding
             </Button>
           </div>
         </section>

@@ -11,6 +11,7 @@ import {
   blockingCardsLeft, blockingLeftLabel, CORRECTABLE_AUDIT_SCHEMAS, correctionFailureMessage, isCorrectionActive,
   type CorrectionQuota, type OnboardingCorrection,
 } from '../../lib/correction';
+import { ArrowRight } from 'lucide-react';
 
 interface CorrectionEntryProps {
   projectId:     string;
@@ -124,7 +125,7 @@ export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, c
       )}
       {left.left > 0 && ready && (
         <p className="obp-muted">
-          <button type="button" className="obp-link" onClick={onOpenBase}>Relire la nouvelle base déjà prête →</button>
+          <button type="button" className="obp-link icon-label" onClick={onOpenBase}>Relire la nouvelle base déjà prête<ArrowRight size={16} /></button>
         </p>
       )}
 

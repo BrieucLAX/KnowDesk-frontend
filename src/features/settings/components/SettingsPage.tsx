@@ -22,6 +22,7 @@ import { DirtyContext, useTrackDirty } from '../lib/dirtyContext';
 import { useUnsavedChanges }     from '../../../shared/lib/useUnsavedChanges';
 import { LastModifiedBadge }     from './LastModifiedBadge';
 import type { SettingsSection, NotifPreferences } from '../types';
+import { ChevronRight } from 'lucide-react';
 
 interface SettingsPageProps {
   initialSection?: SettingsSection;
@@ -372,7 +373,7 @@ function SettingsNav({ tree, activeSection, onNavigate }: SettingsNavProps) {
                 <span
                   className={`settings-nav__chevron ${isOpen ? 'settings-nav__chevron--open' : ''}`}
                   aria-hidden="true"
-                >▸</span>
+                ><ChevronRight size={16} /></span>
                 {entry.label}
               </button>
               {isOpen && (

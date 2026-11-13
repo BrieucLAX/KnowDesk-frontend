@@ -45,7 +45,7 @@
 .rte__tool {
   height: 30px;
   min-width: 30px;
-  padding: 0 8px;
+  padding: 0 6px;
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
@@ -98,10 +98,11 @@
   width: 168px;
 }
 .rte__menu-item {
+  display: flex; align-items: center; gap: 8px;
   background: none;
   border: none;
   padding: 6px 10px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-family: inherit;
   font-size: 13px;
@@ -109,6 +110,10 @@
   color: var(--neutral-800);
   transition: background var(--t-fast);
 }
+.rte__menu-item--callout-info    .rte__menu-icon { color: var(--info); }
+.rte__menu-item--callout-success .rte__menu-icon { color: var(--success); }
+.rte__menu-item--callout-warning .rte__menu-icon { color: var(--warning); }
+.rte__menu-item--callout-danger  .rte__menu-icon { color: var(--danger); }
 .rte__menu-item:hover { background: var(--neutral-100); }
 .rte__menu-item--unset {
   color: var(--neutral-500);
@@ -120,7 +125,7 @@
 .rte__color-swatch {
   width: 24px;
   height: 24px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--neutral-200);
   cursor: pointer;
   padding: 0;
@@ -216,7 +221,7 @@
   padding: 8px 10px;
   background: none;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
@@ -234,7 +239,7 @@
   align-items: center;
   justify-content: center;
   background: var(--neutral-100);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   color: var(--neutral-700);
   flex-shrink: 0;
@@ -255,3 +260,5 @@
   font-size: 11.5px;
   color: var(--neutral-500);
 }
+/* Outil à picto seul : bouton carré. */
+.rte__tool:has(> svg) { padding: 0; width: 30px; }

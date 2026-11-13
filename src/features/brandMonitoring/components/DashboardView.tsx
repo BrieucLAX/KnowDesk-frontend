@@ -5,6 +5,7 @@ import { Button } from '../../../shared/components/ui/Button';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { TimelineChart } from './TimelineChart';
 import type { ShareOfVoice, TopicSov, AlignmentPayload, MonitoringRecommendation } from '../types';
+import { Check, CircleAlert, Lightbulb, Link, Play, Sparkles, Star, Target, TrendingDown, TriangleAlert } from 'lucide-react';
 
 interface DashboardViewProps {
   projectId:       string;
@@ -109,13 +110,13 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
     <div className="bm-dashboard">
       <div className="bm-actions">
         <Button variant="primary" size="sm" onClick={handleRun} loading={running}>
-          ▶ Lancer un nouveau run
+          <Play size={16} />Lancer un nouveau run
         </Button>
         <Button variant="secondary" size="sm" onClick={handleCluster} loading={clustering}>
-          ✨ Regrouper les prompts par topic
+          <Sparkles size={16} />Regrouper les prompts par topic
         </Button>
         <Button variant="secondary" size="sm" onClick={handleGenerateRecos} loading={generatingRecos}>
-          💡 Générer les recommandations
+          <Lightbulb size={16} />Générer les recommandations
         </Button>
       </div>
 
@@ -130,14 +131,14 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
             {recos.map(r => (
               <li key={r.id} className={`bm-reco bm-reco--${r.kind}`}>
                 <div className="bm-reco__head">
-                  <span className="bm-reco__badge">{labelForKind(r.kind)}</span>
+                  <span className="bm-reco__badge icon-label">{iconForKind(r.kind)}{labelForKind(r.kind)}</span>
                   <strong className="bm-reco__title">{r.title}</strong>
                 </div>
                 <p className="bm-reco__body">{r.body}</p>
                 <div className="bm-reco__actions">
-                  <button type="button" className="bm-reco__dismiss" onClick={() => handleDismissReco(r.id)}>
-                    ✓ Traité
-                  </button>
+                  <Button variant="secondary" size="sm" onClick={() => handleDismissReco(r.id)} leftIcon={<Check size={16} />}>
+                    Traité
+                  </Button>
                 </div>
               </li>
             ))}
@@ -199,7 +200,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
             {alignment.byBrand.map(b => (
               <div key={b.brandId} className={`bm-alignment-row ${b.isOwner ? 'is-owner' : ''}`}>
                 <div className="bm-alignment-row__head">
-                  <strong>{b.isOwner && '⭐ '}{b.brandName}</strong>
+                  <strong className="icon-label">{b.isOwner && <Star size={16} aria-hidden="true" />}{b.brandName}</strong>
                   <span className="bm-alignment-row__meta">
                     {b.mentionsCount === 0
                       ? <em>0 mention — marque absente des réponses LLM</em>
@@ -211,8 +212,9 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
                 </div>
                 {b.mentionsCount === 0 ? (
                   <p className="bm-alignment-row__zero">
+                    {b.isOwner && <TriangleAlert size={16} className="icon-inline bm-alignment-row__warn" />}
                     {b.isOwner
-                      ? '⚠️ Insight critique : ta marque n\'est mentionnée dans AUCUNE réponse LLM sur les prompts actuels. Ajoute des prompts plus génériques (ex : « Quel opérateur choisir ? ») pour voir si tu apparais sur du généraliste, ou révise la stratégie de visibilité.'
+                      ? ' Insight critique : ta marque n\'est mentionnée dans AUCUNE réponse LLM sur les prompts actuels. Ajoute des prompts plus génériques (ex : « Quel opérateur choisir ? ») pour voir si tu apparais sur du généraliste, ou révise la stratégie de visibilité.'
                       : 'Cette marque n\'est mentionnée dans aucune réponse LLM sur les prompts actuels.'}
                   </p>
                 ) : b.attributesObserved.length === 0 ? (
@@ -274,10 +276,19 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
 
 function labelForKind(kind: MonitoringRecommendation['kind']): string {
   switch (kind) {
-    case 'absent_from_llm':   return '🚨 Critique';
-    case 'missing_topic':     return '📉 Topic';
-    case 'missing_attribute': return '🎯 Positionnement';
-    case 'missing_source':    return '🔗 Source';
+    case 'absent_from_llm':   return 'Critique';
+    case 'missing_topic':     return 'Topic';
+    case 'missing_attribute': return 'Positionnement';
+    case 'missing_source':    return 'Source';
+  }
+}
+
+function iconForKind(kind: MonitoringRecommendation['kind']): React.ReactNode {
+  switch (kind) {
+    case 'absent_from_llm':   return <CircleAlert size={14} />;
+    case 'missing_topic':     return <TrendingDown size={14} />;
+    case 'missing_attribute': return <Target size={14} />;
+    case 'missing_source':    return <Link size={14} />;
   }
 }
 
@@ -299,7 +310,7 @@ function ShareOfVoiceBars({ byBrand, compact }: SoVBarsProps) {
         return (
           <li key={b.brandId} className={`bm-bar ${b.isOwner ? 'is-owner' : ''}`}>
             <div className="bm-bar__label">
-              {b.isOwner && <span className="bm-bar__star" aria-hidden="true">⭐</span>}
+              {b.isOwner && <span className="bm-bar__star" aria-hidden="true"><Star size={14} /></span>}
               <span className="bm-bar__name">{b.brandName}</span>
             </div>
             <div className="bm-bar__track">

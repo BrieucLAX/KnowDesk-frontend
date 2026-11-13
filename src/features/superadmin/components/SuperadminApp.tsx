@@ -7,9 +7,14 @@ import { formatRelative }  from '../../../shared/lib/formatDate';
 import { CreateTestOrgModal } from './CreateTestOrgModal';
 import { TestDataModal }     from './TestDataModal';
 import { endTestDescription, orgStatus } from '../lib/testOrgStatus';
+import { RotateCw } from 'lucide-react';
+import { StatusIcon } from '../../../shared/components/ui/StatusIcon';
+import { Badge } from '../../../shared/components/ui/StatusBadge';
 
 /** Organisation de test : créée par la route superadmin, module onboarding seul. */
 const isTestOrg = (org: { enabled_modules?: string[] }) => org.enabled_modules?.includes('onboarding') ?? false;
+
+const SA_TONE = { active: 'success', disabled: 'danger', purged: 'neutral' } as const;
 
 export function SuperadminApp() {
   const {
@@ -56,7 +61,7 @@ export function SuperadminApp() {
       const r = await reindexSearch();
       const total = r.articles + r.trees + r.faqs;
       setReindexState('done');
-      setReindexInfo(`✓ Meilisearch réindexé : ${r.articles} article${r.articles !== 1 ? 's' : ''}, ${r.trees} processus, ${r.faqs} FAQ${r.faqs !== 1 ? 's' : ''} (${total} documents au total).`);
+      setReindexInfo(`Meilisearch réindexé : ${r.articles} article${r.articles !== 1 ? 's' : ''}, ${r.trees} processus, ${r.faqs} FAQ${r.faqs !== 1 ? 's' : ''} (${total} documents au total).`);
       setTimeout(() => setReindexState('idle'), 8000);
     } catch (err) {
       setReindexState('error');
@@ -88,7 +93,7 @@ export function SuperadminApp() {
         if (r.total === 0) break;     // plus rien à recalculer
       }
       setRecomputeState('done');
-      setRecomputeInfo(`✓ Statuts recalculés : ${totalProcessed} conversation${totalProcessed !== 1 ? 's' : ''} traitée${totalProcessed !== 1 ? 's' : ''}${totalFailed > 0 ? `, ${totalFailed} échec${totalFailed !== 1 ? 's' : ''}` : ''}.`);
+      setRecomputeInfo(`Statuts recalculés : ${totalProcessed} conversation${totalProcessed !== 1 ? 's' : ''} traitée${totalProcessed !== 1 ? 's' : ''}${totalFailed > 0 ? `, ${totalFailed} échec${totalFailed !== 1 ? 's' : ''}` : ''}.`);
       setTimeout(() => setRecomputeState('idle'), 12000);
     } catch (err) {
       setRecomputeState('error');
@@ -159,7 +164,7 @@ export function SuperadminApp() {
             onClick={runReindex}
             title="Réindexer Meilisearch (toutes les orgs)"
           >
-            🔄 Réindexer
+            <RotateCw size={16} />Réindexer
           </Button>
           <Button
             variant="ghost"
@@ -169,50 +174,25 @@ export function SuperadminApp() {
             onClick={() => setRecomputeConfirm(true)}
             title="Phase D — rejoue resolveStatus + LLM judge sur les conversations sans resolution_reason"
           >
-            🧮 Recalculer les statuts
+            <RotateCw size={16} />Recalculer les statuts
           </Button>
           <Button variant="ghost" size="sm" onClick={logout}>Déconnexion</Button>
         </div>
         {reindexInfo && (
-          <div
-            className="sa-reindex-banner"
-            role="status"
-            style={{
-              position:   'absolute',
-              top:        56,
-              left:       0,
-              right:      0,
-              padding:    '8px 16px',
-              background: reindexState === 'error' ? 'oklch(0.95 0.05 25)' : 'oklch(0.94 0.08 155)',
-              color:      reindexState === 'error' ? 'oklch(0.45 0.18 25)' : 'oklch(0.30 0.14 155)',
-              fontSize:   13,
-              borderBottom: '1px solid var(--neutral-200)',
-              textAlign:  'center',
-            }}
-          >
+          <div className={`sa-banner sa-banner--${reindexState === 'error' ? 'danger' : 'success'}`} role="status">
+            <StatusIcon tone={reindexState === 'error' ? 'danger' : 'success'} className="sa-banner__icon" />
             {reindexInfo}
           </div>
         )}
         {recomputeInfo && (
           <div
+            className={`sa-banner sa-banner--${recomputeState === 'error' ? 'danger' : recomputeState === 'running' ? 'info' : 'success'}`}
             role="status"
-            style={{
-              position:   'absolute',
-              top:        56,
-              left:       0,
-              right:      0,
-              padding:    '8px 16px',
-              background: recomputeState === 'error'   ? 'oklch(0.95 0.05 25)'
-                        : recomputeState === 'running' ? 'oklch(0.96 0.04 250)'
-                        :                                'oklch(0.94 0.08 155)',
-              color:      recomputeState === 'error'   ? 'oklch(0.45 0.18 25)'
-                        : recomputeState === 'running' ? 'oklch(0.40 0.10 250)'
-                        :                                'oklch(0.30 0.14 155)',
-              fontSize:   13,
-              borderBottom: '1px solid var(--neutral-200)',
-              textAlign:  'center',
-            }}
           >
+            <StatusIcon
+              tone={recomputeState === 'error' ? 'danger' : recomputeState === 'running' ? 'info' : 'success'}
+              className="sa-banner__icon"
+            />
             {recomputeInfo}
           </div>
         )}
@@ -281,7 +261,7 @@ export function SuperadminApp() {
                       <td>
                         {(() => {
                           const status = orgStatus(org);
-                          return <span className={`sa-status sa-status--${status.tone}`} title={status.title}>{status.label}</span>;
+                          return <Badge tone={SA_TONE[status.tone]} title={status.title}>{status.label}</Badge>;
                         })()}
                       </td>
                       <td>

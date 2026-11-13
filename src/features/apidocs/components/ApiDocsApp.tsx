@@ -4,6 +4,7 @@ import '../apidocs.css';
 import { Sidebar }       from './Sidebar';
 import { EndpointCard }  from './EndpointCard';
 import { GettingStarted } from './GettingStarted';
+import { ArrowLeft } from 'lucide-react';
 
 interface EndpointGroup {
   id:       string;
@@ -30,7 +31,7 @@ export function ApiDocsApp() {
               <p className="apidoc-header__subtitle">Documentation de l'API publique v1</p>
             </div>
           </div>
-          <a href="/" className="apidoc-header__login">← Retour à l'application</a>
+          <a href="/" className="apidoc-header__login icon-label"><ArrowLeft size={16} />Retour à l'application</a>
         </div>
       </header>
 

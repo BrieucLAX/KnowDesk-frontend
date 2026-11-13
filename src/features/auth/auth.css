@@ -80,7 +80,7 @@
 .login-page__logo-mark--sm {
   width: 32px; height: 32px;
   font-size: 15px;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
 }
 
 .login-page__quote {
@@ -221,31 +221,26 @@
 
 .login-form__password-wrap { position: relative; }
 
+/* Bouton posé dans le champ (Input `trailing`) : centré sur le champ, quel que
+   soit le libellé au-dessus ou le message d'erreur en dessous. */
 .login-form__toggle-password {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 12px;
+  min-height: 36px;
+  padding: 0 var(--space-2);
+  font-family: var(--font-ui);
+  font-size: 13px;
   font-weight: 600;
-  color: var(--brand-600);
+  color: var(--primary);
   background: none;
   border: none;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  padding: 2px;
   transition: color var(--t-fast);
-  /* Account for the label above the input — shift into input area */
-  margin-top: 13px;
 }
-.login-form__toggle-password:hover { color: var(--brand-700); }
+.login-form__toggle-password:hover { color: var(--ink); }
 .login-form__toggle-password:focus-visible {
-  outline: 2px solid var(--brand-500);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
-  border-radius: 4px;
 }
-
-/* Offset input padding so text doesn't go under the toggle */
-.login-form__password-wrap .field-input { padding-right: 80px; }
 
 .login-form__forgot {
   display: flex;

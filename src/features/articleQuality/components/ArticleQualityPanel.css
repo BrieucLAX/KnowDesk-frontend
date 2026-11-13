@@ -9,7 +9,7 @@
 }
 .article-quality--ok {
   background: var(--success-soft);
-  border-color: color-mix(in srgb, var(--success) 35%, var(--success-soft));
+  border-color: transparent;
 }
 .article-quality--loading {
   color: var(--neutral-500);
@@ -20,6 +20,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
 }
 .article-quality__toggle {
   display: flex;
@@ -120,7 +121,7 @@
   padding: 8px 10px;
 }
 .article-quality__item--flagged {
-  border-color: color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
+  border-color: transparent;
   background: var(--warning-soft);
 }
 /* Point validé : plus d'opacité sur le texte (4,5:1, lot 3). */
@@ -163,8 +164,7 @@
 }
 .article-quality__item-excerpt {
   margin: 6px 0 0 24px;
-  padding: 4px 10px;
-  border-left: 2px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
+  padding: 4px 0;
   font-size: 12px;
   color: var(--neutral-600);
   font-style: italic;
@@ -187,3 +187,4 @@
   border-color: var(--neutral-400);
   color: var(--neutral-900);
 }
+.article-quality__item--flagged .article-quality__item-status { color: var(--warning); }

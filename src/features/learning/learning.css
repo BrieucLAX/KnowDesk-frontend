@@ -38,7 +38,7 @@
   line-height: 1.5;
 }
 .learning-form__textarea:focus-visible {
-  outline: 2px solid var(--brand-500);
+  outline: 2px solid var(--focus);
   outline-offset: -1px;
   border-color: var(--brand-500);
 }
@@ -94,11 +94,15 @@
   display: flex; flex-direction: column; gap: 8px;
 }
 .learning-module {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 12px 16px;
   background: var(--neutral-50);
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-md);
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 .learning-module__head {
   display: flex; align-items: center; gap: 8px;
@@ -202,11 +206,8 @@
   cursor: pointer;
   transition: background var(--t-fast);
 }
-.resource-picker__option:hover,
-.resource-picker__option:focus-visible {
-  background: var(--neutral-50);
-  outline: none;
-}
+.resource-picker__option:hover { background: var(--neutral-50); }
+.resource-picker__option:focus-visible { background: var(--neutral-50); outline: 2px solid var(--focus); outline-offset: -2px; }
 .resource-picker__option-label {
   flex: 1; min-width: 0;
   font-size: 14px;
@@ -297,11 +298,6 @@
   border-radius: var(--radius-lg);
   padding: 20px 24px;
 }
-.my-learning-card--renew { border-left: 4px solid var(--warning); }
-.my-learning-card--todo  { border-left: 4px solid var(--brand-500); }
-/* Terminé : plus d'opacité sur le texte (4,5:1, lot 3). */
-.my-learning-card--done  { border-left: 4px solid var(--success); }
-
 .my-learning-card__head {
   display: flex; align-items: flex-start; justify-content: space-between;
   gap: 12px; margin-bottom: 8px;
@@ -317,13 +313,13 @@
 .my-learning-card__progress-bar {
   flex: 1; height: 6px;
   background: var(--neutral-100);
-  border-radius: 3px;
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 .my-learning-card__progress-fill {
   height: 100%;
   background: var(--brand-500);
-  border-radius: 3px;
+  border-radius: var(--radius-full);
   transition: width var(--t-normal);
 }
 .my-learning-card__progress-label {
@@ -365,11 +361,15 @@
   background: var(--neutral-50);
 }
 .learning-player__topbar {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 12px 24px;
   background: var(--neutral-0);
   border-bottom: 1px solid var(--neutral-200);
   flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 .learning-player__back {
   background: none; border: none;
@@ -400,9 +400,10 @@
 }
 
 .learning-player__resource {
-  background: var(--neutral-0);
+  background: var(--surface-raised);
   border-radius: var(--radius-lg);
   padding: 32px 40px;
+  border: 1px solid var(--line);
 }
 .learning-player__type {
   display: inline-block;
@@ -482,7 +483,9 @@
 }
 
 .learning-player__footer {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 16px 24px;
   background: var(--neutral-0);
   border-top: 1px solid var(--neutral-200);
@@ -490,6 +493,8 @@
   max-width: 760px;
   margin: 0 auto;
   width: 100%;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
 /* ── Completions modal (suivi conseillers) ───────────────────── */
@@ -648,4 +653,7 @@
   margin: 4px 2px 0;
   font-size: 12px;
   color: var(--neutral-600);
+}
+@media (max-width: 640px) {
+  .learning-player__resource { padding: var(--space-6) var(--space-4); }
 }

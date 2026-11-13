@@ -46,9 +46,13 @@
   display: flex; flex-direction: column; min-height: calc(100vh - var(--topbar-h));
 }
 .article-editor__topbar {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 0 16px; border-bottom: 1px solid var(--neutral-100);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0 16px;
+  border-bottom: 1px solid var(--neutral-100);
   margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 .article-editor__back {
   font-size: 13px; color: var(--neutral-500); background: none; border: none;
@@ -60,17 +64,20 @@
   flex: 1; display: flex; justify-content: center;
 }
 .article-editor__topbar-actions {
-  display: flex; align-items: center; gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .article-editor__offline {
-  padding: 10px 14px; background: var(--warning-soft); border: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
-  border-radius: var(--radius-md); font-size: 13px; color: var(--warning);
-  margin-bottom: 16px; border-left: 3px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
+  padding: 10px 14px; background: var(--warning-soft);
+  border-radius: var(--radius-md); font-size: 13px; color: var(--ink);
+  margin-bottom: 16px;
 }
 .article-editor__body {
   max-width: 740px; display: flex; flex-direction: column; gap: 16px;
 }
-.article-editor__meta { max-width: 320px; }
+.article-editor__meta { max-width: 320px; display: flex; flex-direction: column; gap: var(--space-4); }
 .article-editor__title-input {
   width: 100%; border: none; outline: none; padding: 0;
   font-family: var(--font-brand); font-size: 32px; font-weight: 400;
@@ -105,7 +112,7 @@
   border-bottom: 1px solid var(--neutral-200);
 }
 .rte__tool {
-  height: 28px; min-width: 28px; padding: 0 6px; border-radius: 5px;
+  height: 28px; min-width: 28px; padding: 0 6px; border-radius: var(--radius-sm);
   background: none; border: none; cursor: pointer;
   font-family: var(--font-ui); font-size: 12px; font-weight: 600;
   color: var(--neutral-600); transition: all var(--t-fast);

@@ -6,6 +6,7 @@ import { Button }         from '../../../shared/components/ui/Button';
 import { STEPS }          from '../types';
 import type { OnboardingData } from '../types';
 import { useAuthStore }   from '../../../store/authStore';
+import { ArrowLeft, ArrowRight, Check, Clock, X } from 'lucide-react';
 
 interface OnboardingPageProps {
   onComplete: () => void;
@@ -55,7 +56,7 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
                   aria-label={`Étape ${i + 1} : ${step.title}${isDone ? ' — terminée' : isCurrent ? ' — en cours' : ''}`}
                   role="img"
                 >
-                  {isDone ? '✓' : i + 1}
+                  {isDone ? <Check size={16} aria-hidden="true" /> : i + 1}
                 </div>
                 {i < STEPS.length - 1 && (
                   <div className={`stepper__line ${isDone ? 'stepper__line--done' : ''}`} aria-hidden="true" />
@@ -95,8 +96,8 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
         <div className="onboarding__actions">
           <div className="onboarding__actions-left">
             {stepIndex > 0 && (
-              <Button variant="ghost" size="md" onClick={goBack} disabled={isSubmitting}>
-                ← Retour
+              <Button variant="ghost" size="md" onClick={goBack} disabled={isSubmitting} leftIcon={<ArrowLeft size={20} />}>
+                Retour
               </Button>
             )}
           </div>
@@ -112,7 +113,7 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
               </Button>
             ) : (
               <Button variant="primary" size="md" onClick={goNext}>
-                Continuer →
+                Continuer<ArrowRight size={20} />
               </Button>
             )}
           </div>
@@ -122,7 +123,7 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
 
       {/* Estimated time */}
       <p className="onboarding__estimate" aria-live="polite">
-        ⏱ Environ {Math.max(1, (totalSteps - stepIndex - 1))} minute{totalSteps - stepIndex - 1 > 1 ? 's' : ''} restante{totalSteps - stepIndex - 1 > 1 ? 's' : ''}
+        <Clock size={16} className="icon-inline" /> Environ {Math.max(1, (totalSteps - stepIndex - 1))} minute{totalSteps - stepIndex - 1 > 1 ? 's' : ''} restante{totalSteps - stepIndex - 1 > 1 ? 's' : ''}
       </p>
     </div>
   );
@@ -184,7 +185,7 @@ function StepTeam({ emails, error, onChange, userName }: {
                 onClick={() => onChange(emails.filter(e => e !== email))}
                 aria-label={`Retirer ${email}`}
               >
-                ×
+                <X size={16} />
               </button>
             </span>
           ))}

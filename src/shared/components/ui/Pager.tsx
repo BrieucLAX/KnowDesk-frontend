@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from './Button';
 import './Pager.css';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface PagerProps {
   page:       number;
@@ -26,7 +27,7 @@ export function Pager({ page, totalPages, onChange, hideWhenSingle = true, class
         disabled={page <= 1}
         onClick={() => onChange(Math.max(1, page - 1))}
       >
-        ← Précédent
+        <ArrowLeft size={16} />Précédent
       </Button>
       <span className="pager__info" aria-live="polite">
         Page {page} / {totalPages}
@@ -38,7 +39,7 @@ export function Pager({ page, totalPages, onChange, hideWhenSingle = true, class
         disabled={page >= totalPages}
         onClick={() => onChange(Math.min(totalPages, page + 1))}
       >
-        Suivant →
+        Suivant<ArrowRight size={16} />
       </Button>
     </div>
   );

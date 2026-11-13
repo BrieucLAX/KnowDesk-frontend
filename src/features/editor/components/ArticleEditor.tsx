@@ -16,6 +16,7 @@ import { ArticleQualityPanel } from '../../articleQuality/components/ArticleQual
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { archiveApi }    from '../../articles/api/archiveApi';
+import { ArrowLeft } from 'lucide-react';
 
 interface ArticleEditorProps {
   articleId?: string;
@@ -272,8 +273,8 @@ if (!isEdit) {
         />
       )}
       <div className="article-editor__topbar">
-        <button type="button" className="article-editor__back" onClick={onCancel}>
-          ← Annuler
+        <button type="button" className="article-editor__back icon-label" onClick={onCancel}>
+          <ArrowLeft size={16} />Annuler
         </button>
         <div className="article-editor__topbar-center">
           <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
@@ -346,8 +347,8 @@ if (!isEdit) {
               value={form.visibility}
               onChange={e => updateField('visibility', e.target.value as 'internal' | 'public')}
             >
-              <option value="internal">🔒 Interne — réservé aux conseillers</option>
-              <option value="public">🌐 Public — exposé au chatbot client</option>
+              <option value="internal">Interne — réservé aux conseillers</option>
+              <option value="public">Public — exposé au chatbot client</option>
             </select>
             <p className="field-hint">
               Les articles « Public » sont consultables par le chatbot embarqué sur le site web client (s'il est activé).

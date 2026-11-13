@@ -85,7 +85,7 @@
 .chat-transcript__msg--visitor { align-self: flex-end; align-items: flex-end; }
 .chat-transcript__msg--bot     { align-self: flex-start; align-items: flex-start; }
 .chat-transcript__bubble {
-  padding: 9px 13px; border-radius: 12px; font-size: 13.5px; line-height: 1.45;
+  padding: 9px 13px; border-radius: var(--radius-md); font-size: 13.5px; line-height: 1.45;
   white-space: pre-wrap; word-wrap: break-word;
 }
 .chat-transcript__msg--visitor .chat-transcript__bubble {

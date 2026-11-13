@@ -8,7 +8,6 @@
   position: fixed;
   top: 0; left: 0; right: 0;
   background: var(--warning-soft);
-  border-bottom: 1px solid color-mix(in srgb, var(--warning) 35%, var(--warning-soft));
   color: var(--ink);
   padding: 12px 20px;
   font-size: 15px;

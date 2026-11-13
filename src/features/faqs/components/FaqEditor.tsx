@@ -13,6 +13,8 @@ import { apiClient, ApiError } from '../../../shared/lib/apiClient';
 import { useToast }     from '../../../shared/lib/useToast';
 import { cn }           from '../../../shared/lib/cn';
 import type { FaqVisibility } from '../types';
+import { ArrowLeft } from 'lucide-react';
+import { Alert } from '../../../shared/components/ui/Alert';
 
 interface Category {
   id:       string;
@@ -126,7 +128,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
   return (
     <div className="faq-editor">
       <div className="faq-editor__topbar">
-        <button type="button" className="faq-editor__back" onClick={onCancel}>← Annuler</button>
+        <button type="button" className="faq-editor__back icon-label" onClick={onCancel}><ArrowLeft size={16} />Annuler</button>
         <h1 className="faq-editor__heading">{faqId ? 'Modifier la FAQ' : 'Nouvelle FAQ'}</h1>
         <div className="faq-editor__topbar-actions">
           <Button variant="ghost" size="sm" onClick={() => handleSave('draft')} loading={saving}>
@@ -140,9 +142,9 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
 
       <div className="faq-editor__body">
         {faq?.is_stale && (
-          <div className="faq-editor__stale-banner" role="status">
+          <Alert tone="warning" className="faq-editor__stale-banner">
             <div>
-              <strong>📌 Cette FAQ n'a pas été révisée depuis plus de 6 mois.</strong>
+              <strong>Cette FAQ n'a pas été révisée depuis plus de 6 mois.</strong>
               <p>Vérifiez que la réponse est toujours d'actualité, puis relisez ou mettez à jour.</p>
             </div>
             <Button
@@ -153,7 +155,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
             >
               C'est à jour
             </Button>
-          </div>
+          </Alert>
         )}
 
         {faq && (faq.views > 0 || (faq.helpful_yes + faq.helpful_no) > 0) && (

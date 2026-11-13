@@ -3,6 +3,7 @@ import { Button }  from '../../../shared/components/ui/Button';
 import { apiClient, ApiError } from '../../../shared/lib/apiClient';
 import { useAuthStore } from '../../../store/authStore';
 import '../auth.css';
+import { CircleCheck } from 'lucide-react';
 
 type Status = 'verifying' | 'success' | 'error';
 
@@ -72,7 +73,7 @@ export function VerifyEmailPage() {
           {status === 'success' && (
             <>
               <div className="login-page__header">
-                <h1 className="login-page__title">✓ Email vérifié</h1>
+                <h1 className="login-page__title icon-label"><CircleCheck size={24} className="login-page__title-icon" />Email vérifié</h1>
                 <p className="login-page__subtitle">
                   Votre adresse email a été confirmée avec succès. Vous pouvez maintenant utiliser KnowDesk pleinement.
                 </p>

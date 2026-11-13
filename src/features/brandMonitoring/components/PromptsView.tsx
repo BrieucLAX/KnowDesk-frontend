@@ -7,6 +7,7 @@ import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { Modal } from '../../../shared/components/ui/Modal';
 import type { MonitoringPrompt, SuggestPromptsPayload } from '../types';
+import { Sparkles, Upload } from 'lucide-react';
 
 interface PromptsViewProps {
   projectId:       string;
@@ -188,10 +189,10 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
               Ajouter
             </Button>
             <Button variant="secondary" size="md" onClick={openSuggestions}>
-              ✨ Suggestions de prompts
+              <Sparkles size={20} />Suggestions de prompts
             </Button>
             <Button variant="ghost" size="md" onClick={() => setBulkOpen(o => !o)}>
-              {bulkOpen ? 'Annuler import bulk' : '+ Import bulk (CSV)'}
+              {bulkOpen ? 'Annuler import bulk' : <><Upload size={16} />Import bulk (CSV)</>}
             </Button>
           </div>
         </div>
@@ -229,22 +230,22 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
                   )}
                 </div>
                 <div className="bm-prompt-row__actions">
-                  <button
-                    type="button"
-                    className="bm-prompt-row__toggle"
+                  <Button
+                    variant="secondary"
+                    size="sm"
                     onClick={() => handleToggle(p)}
                     aria-label={p.active ? 'Désactiver' : 'Activer'}
                   >
                     {p.active ? 'Actif' : 'Inactif'}
-                  </button>
-                  <button
-                    type="button"
-                    className="bm-prompt-row__delete"
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
                     onClick={() => setPendingDelete(p)}
                     aria-label="Supprimer"
                   >
                     Supprimer
-                  </button>
+                  </Button>
                 </div>
               </li>
             ))}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import type { ChatbotTabContext } from './types';
+import { EyeOff, RotateCw } from 'lucide-react';
+import { Alert } from '../../../../shared/components/ui/Alert';
 
 /**
  * Tab "Test & intégrer" — test live du widget sur cette page +
@@ -20,9 +22,9 @@ export function ChatbotIntegrationTab({ ctx }: { ctx: ChatbotTabContext }) {
         snippet sur votre site.
       </p>
 
-      <div className="chatbot-settings__test-prerequisite">
-        <strong>⚠ Pré-requis :</strong> ajoute le domaine <code>{typeof window !== 'undefined' ? window.location.host : 'app.knowdesk.fr'}</code> dans la liste des domaines autorisés (onglet Apparence), sinon le widget ne s'affichera pas (CORS bloqué côté serveur).
-      </div>
+      <Alert tone="info" role="note" className="chatbot-settings__test-prerequisite">
+        <strong>Pré-requis :</strong> ajoute le domaine <code>{typeof window !== 'undefined' ? window.location.host : 'app.knowdesk.fr'}</code> dans la liste des domaines autorisés (onglet Apparence), sinon le widget ne s'affichera pas (CORS bloqué côté serveur).
+      </Alert>
       <div className="chatbot-settings__test-actions">
         <Button
           type="button"
@@ -32,7 +34,7 @@ export function ChatbotIntegrationTab({ ctx }: { ctx: ChatbotTabContext }) {
           disabled={!form.chat_enabled}
           title={form.chat_enabled ? '' : 'Activez le chatbot d\'abord (onglet Activation & messages)'}
         >
-          {widgetMounted ? '✕ Masquer le widget' : '💬 Recharger le widget'}
+          {widgetMounted ? <><EyeOff size={20} />Masquer le widget</> : <><RotateCw size={20} />Recharger le widget</>}
         </Button>
       </div>
 

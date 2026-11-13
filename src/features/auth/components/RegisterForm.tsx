@@ -96,15 +96,17 @@ export function RegisterForm({
           onChange={onChange}
           error={errors.password}
           autoComplete="new-password"
+          trailing={(
+            <button
+              type="button"
+              className="login-form__toggle-password"
+              onClick={onTogglePassword}
+              aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+            >
+              {showPassword ? 'Masquer' : 'Afficher'}
+            </button>
+          )}
         />
-        <button
-          type="button"
-          className="login-form__toggle-password"
-          onClick={onTogglePassword}
-          aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
-        >
-          {showPassword ? 'Masquer' : 'Afficher'}
-        </button>
       </div>
       <PasswordStrengthMeter password={form.password} />
 
@@ -119,15 +121,17 @@ export function RegisterForm({
           onChange={onChange}
           error={errors.confirmPassword}
           autoComplete="new-password"
+          trailing={(
+            <button
+              type="button"
+              className="login-form__toggle-password"
+              onClick={onTogglePassword}
+              aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+            >
+              {showPassword ? 'Masquer' : 'Afficher'}
+            </button>
+          )}
         />
-        <button
-          type="button"
-          className="login-form__toggle-password"
-          onClick={onTogglePassword}
-          aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
-        >
-          {showPassword ? 'Masquer' : 'Afficher'}
-        </button>
       </div>
 
       <label className="login-form__gdpr">

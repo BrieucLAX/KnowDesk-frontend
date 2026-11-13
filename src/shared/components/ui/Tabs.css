@@ -1,0 +1,38 @@
+/* ─────────────────────────────────────────────────────────────
+   Tabs — navigation entre les sections d'une page (Tabs.tsx).
+   Mêmes tokens que le reste : texte --ink-muted, actif --ink souligné
+   de 2 px en --primary, filet --line, focus --focus.
+   ───────────────────────────────────────────────────────────── */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tabs__tab {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  margin-bottom: -1px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--t-fast), border-color var(--t-fast);
+}
+.tabs__tab:hover { color: var(--ink); }
+.tabs__tab--active { color: var(--ink); border-bottom-color: var(--primary); }
+/* Anneau intérieur : la liste défile en largeur et rognerait un anneau extérieur. */
+.tabs__tab:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; border-radius: var(--radius-sm); }
+
+[role="tabpanel"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--radius-sm); }

@@ -11,6 +11,8 @@ import { useMembers }    from '../hooks/useMembers';
 import { useAuthStore }  from '../../../store/authStore';
 import type { Member }   from '../types';
 import type { UserRole } from '../../../shared/types';
+import { ArrowRight, Plus } from 'lucide-react';
+import { Alert } from '../../../shared/components/ui/Alert';
 
 type FilterTab = 'all' | 'active' | 'pending' | 'disabled';
 
@@ -90,7 +92,7 @@ export function MembersPage() {
             disabled={atLimit}
             title={atLimit ? `Limite de ${PLAN_LIMIT} membres atteinte — passez au plan Pro` : undefined}
           >
-            + Inviter un membre
+            <Plus size={20} />Inviter un membre
           </Button>
         )}
       />
@@ -101,17 +103,17 @@ export function MembersPage() {
           <span>
             Vous avez atteint la limite de <strong>{PLAN_LIMIT} membres</strong> du plan gratuit.
           </span>
-          <a href="/settings/billing" className="members-page__upgrade-link">
-            Passer au plan Pro →
+          <a href="/settings/billing" className="members-page__upgrade-link icon-label">
+            Passer au plan Pro<ArrowRight size={16} />
           </a>
         </div>
       )}
 
       {/* Error */}
       {error && (
-        <div className="members-page__error" role="alert">
+        <Alert tone="danger" className="members-page__error">
           Impossible de charger l'équipe. {error}
-        </div>
+        </Alert>
       )}
 
       {/* Toolbar: search + filter tabs */}
@@ -186,7 +188,7 @@ export function MembersPage() {
           description={searchQuery
             ? `Aucun membre ne correspond à "${searchQuery}".`
             : 'Invitez des collègues pour qu\'ils rejoignent votre espace.'}
-          ctaLabel={!searchQuery ? '+ Inviter un membre' : undefined}
+          ctaLabel={!searchQuery ? 'Inviter un membre' : undefined}
           ctaHref={undefined}
         />
       )}

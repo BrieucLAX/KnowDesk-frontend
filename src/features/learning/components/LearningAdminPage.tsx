@@ -15,6 +15,8 @@ import { formatRelative } from '../../../shared/lib/formatDate';
 import type { LearningPath, LearningPathRenewal } from '../types';
 import { LEARNING_TEMPLATES, findTemplate, type LearningPathTemplate } from '../templates';
 import '../learning.css';
+import { StatusIcon } from '../../../shared/components/ui/StatusIcon';
+import { Plus } from 'lucide-react';
 
 interface LearningAdminPageProps {
   onEditPath: (id: string) => void;
@@ -151,7 +153,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
     <EmptyState
       title="Aucun parcours pour l'instant"
       description="Créez votre premier parcours en sélectionnant des articles, FAQs ou processus de votre base."
-      ctaLabel="+ Nouveau parcours"
+      ctaLabel="Nouveau parcours"
       onCta={() => setShowCreate(true)}
     />
   );
@@ -193,7 +195,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
                 className={`template-card ${templateId === null ? 'template-card--active' : ''}`}
                 onClick={() => handlePickTemplate(null)}
               >
-                <span className="template-card__icon" aria-hidden="true">⚪</span>
+                <span className="template-card__icon" aria-hidden="true"><Plus size={24} /></span>
                 <span className="template-card__label">Vierge</span>
                 <span className="template-card__hint">Tout configurer manuellement</span>
               </button>
@@ -204,7 +206,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
                   className={`template-card ${templateId === tpl.id ? 'template-card--active' : ''}`}
                   onClick={() => handlePickTemplate(tpl)}
                 >
-                  <span className="template-card__icon" aria-hidden="true">{tpl.icon}</span>
+                  <span className="template-card__icon" aria-hidden="true"><tpl.icon size={24} /></span>
                   <span className="template-card__label">{tpl.label}</span>
                   <span className="template-card__hint">{tpl.hint}</span>
                 </button>
@@ -267,7 +269,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
           subtitle="Parcours de formation pour vos conseillers, basés sur votre base de connaissance."
           actions={(
             <Button variant="primary" size="md" onClick={() => setShowCreate(true)}>
-              + Nouveau parcours
+              <Plus size={20} />Nouveau parcours
             </Button>
           )}
         />
@@ -289,7 +291,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
               },
               { key: 'mandatory', label: 'Type',
                 render: p => p.mandatory
-                  ? <span className="badge badge--warning">Obligatoire</span>
+                  ? <span className="badge badge--warning"><StatusIcon tone="warning" size={14} className="badge__icon" />Obligatoire</span>
                   : <span className="badge badge--secondary">Optionnel</span>,
               },
               { key: 'renewal', label: 'Renouvellement',

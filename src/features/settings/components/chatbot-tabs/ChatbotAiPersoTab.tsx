@@ -4,6 +4,7 @@ import { Input } from '../../../../shared/components/ui/Input';
 import { HelpPopover } from '../../../../shared/components/ui/HelpPopover';
 import type { AiTone, AiAddressForm, AiGlossaryEntry } from '../../types';
 import type { ChatbotTabContext } from './types';
+import { ArrowRight, Plus, X } from 'lucide-react';
 
 const TONE_OPTIONS: Array<{ value: AiTone; label: string; hint: string }> = [
   { value: 'professional', label: 'Professionnelle', hint: 'Neutre, factuelle' },
@@ -110,7 +111,7 @@ export function ChatbotAiPersoTab({ ctx }: { ctx: ChatbotTabContext }) {
                 maxLength={50}
                 onChange={e => updateGlossaryRow(i, 'from', e.target.value)}
               />
-              <span className="ai-glossary__arrow" aria-hidden="true">→</span>
+              <span className="ai-glossary__arrow" aria-hidden="true"><ArrowRight size={16} /></span>
               <input
                 type="text"
                 className="field-input ai-glossary__input"
@@ -126,13 +127,13 @@ export function ChatbotAiPersoTab({ ctx }: { ctx: ChatbotTabContext }) {
                 aria-label="Supprimer"
                 title="Supprimer"
               >
-                ✕
+                <X size={16} />
               </button>
             </div>
           ))}
           {(form.ai_glossary?.length ?? 0) < MAX_GLOSSARY && (
             <Button type="button" variant="ghost" size="sm" onClick={addGlossaryRow}>
-              + Ajouter un terme
+              <Plus size={16} />Ajouter un terme
             </Button>
           )}
         </div>

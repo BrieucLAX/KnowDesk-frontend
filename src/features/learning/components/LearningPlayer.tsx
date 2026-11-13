@@ -7,6 +7,7 @@ import { sanitizeArticleHtml } from '../../../shared/lib/sanitize';
 import { useToast } from '../../../shared/lib/useToast';
 import type { LearningModuleResource, LearningQuiz, LearningResourceType } from '../types';
 import '../learning.css';
+import { ArrowLeft, ArrowRight, PartyPopper } from 'lucide-react';
 
 interface LearningPlayerProps {
   moduleId: string;
@@ -152,7 +153,7 @@ export function LearningPlayer({ moduleId, onBack }: LearningPlayerProps) {
   return (
     <div className="learning-player">
       <header className="learning-player__topbar">
-        <button type="button" className="learning-player__back" onClick={onBack}>← Quitter</button>
+        <button type="button" className="learning-player__back icon-label" onClick={onBack}><ArrowLeft size={16} />Quitter</button>
         <div className="learning-player__progress">
           {step.kind === 'res' && resources.length > 0 && (
             <span>Ressource {step.idx + 1} / {resources.length}{quiz ? ' · Quiz à venir' : ''}</span>
@@ -221,7 +222,7 @@ export function LearningPlayer({ moduleId, onBack }: LearningPlayerProps) {
           <div className={`learning-player__done ${step.passed ? 'learning-player__done--ok' : 'learning-player__done--ko'}`}>
             {step.passed ? (
               <>
-                <h1>🎉 Module complété !</h1>
+                <h1 className="icon-label"><PartyPopper size={24} className="learning-player__done-icon" />Module complété !</h1>
                 {step.score !== null && (
                   <p>Score : <strong>{step.score}%</strong></p>
                 )}
@@ -246,15 +247,17 @@ export function LearningPlayer({ moduleId, onBack }: LearningPlayerProps) {
         <footer className="learning-player__footer">
           {step.kind === 'res' && (
             <>
-              <Button variant="ghost" disabled={step.idx === 0} onClick={handlePrev}>← Précédent</Button>
+              <Button variant="ghost" disabled={step.idx === 0} onClick={handlePrev} leftIcon={<ArrowLeft size={20} />}>Précédent</Button>
               <Button variant="primary" onClick={handleNext}>
-                {step.idx + 1 < resources.length ? 'Suivant →' : (quiz ? 'Passer au quiz →' : 'Terminer')}
+                {step.idx + 1 < resources.length
+                  ? <>Suivant<ArrowRight size={20} /></>
+                  : (quiz ? <>Passer au quiz<ArrowRight size={20} /></> : 'Terminer')}
               </Button>
             </>
           )}
           {step.kind === 'quiz' && (
             <>
-              <Button variant="ghost" disabled={resources.length === 0} onClick={handlePrev}>← Précédent</Button>
+              <Button variant="ghost" disabled={resources.length === 0} onClick={handlePrev} leftIcon={<ArrowLeft size={20} />}>Précédent</Button>
               <Button
                 variant="primary"
                 onClick={handleComplete}

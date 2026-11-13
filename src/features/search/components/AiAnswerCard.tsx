@@ -3,11 +3,12 @@ import { sanitizeArticleHtml } from '../../../shared/lib/sanitize';
 import { useToast }            from '../../../shared/lib/useToast';
 import { trackEvent }          from '../../../shared/lib/trackEvent';
 import type { AiState, AiSource }   from '../hooks/useAiAnswer';
+import { CircleHelp, FileText, ListOrdered, Sparkles, ThumbsDown, ThumbsUp } from 'lucide-react';
 
-const TYPE_ICONS: Record<AiSource['type'], string> = {
-  article: '📄',
-  faq:     '❓',
-  tree:    '🌳',
+const TYPE_ICONS: Record<AiSource['type'], React.ReactNode> = {
+  article: <FileText size={16} />,
+  faq:     <CircleHelp size={16} />,
+  tree:    <ListOrdered size={16} />,
 };
 
 interface AiAnswerCardProps {
@@ -75,7 +76,7 @@ export function AiAnswerCard({ state, query, onSelectSource }: AiAnswerCardProps
     <div className={`ai-answer ai-answer--${state.status}`} role="region" aria-label="Réponse IA">
       <div className="ai-answer__header">
         <span className={`ai-answer__sparkle ${isStreaming ? 'ai-answer__sparkle--anim' : ''}`} aria-hidden="true">
-          ✨
+          <Sparkles size={20} />
         </span>
         <span className="ai-answer__title">
           {isUnsure
@@ -140,7 +141,7 @@ export function AiAnswerCard({ state, query, onSelectSource }: AiAnswerCardProps
                 aria-label="Réponse utile"
                 title="Réponse utile"
               >
-                👍
+                <ThumbsUp size={16} />
               </button>
               <button
                 type="button"
@@ -150,7 +151,7 @@ export function AiAnswerCard({ state, query, onSelectSource }: AiAnswerCardProps
                 aria-label="Réponse pas utile"
                 title="Réponse pas utile"
               >
-                👎
+                <ThumbsDown size={16} />
               </button>
             </div>
           )}

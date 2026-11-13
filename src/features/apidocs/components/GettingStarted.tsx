@@ -1,6 +1,7 @@
 import React from 'react';
 import { CodeBlock } from './CodeBlock';
 import { BASE_URL } from '../utils/makeExamples';
+import { Alert } from '../../../shared/components/ui/Alert';
 
 const AUTH_EXAMPLE = `curl ${BASE_URL}/articles \\
   -H "X-API-Key: kd_live_votre_cle_api"`;
@@ -34,10 +35,10 @@ export function GettingStarted() {
           Vous pouvez générer une clé depuis <strong>Paramètres → API</strong> dans votre espace KnowDesk.
         </p>
         <CodeBlock code={AUTH_EXAMPLE} />
-        <div className="apidoc-callout apidoc-callout--warn">
+        <Alert tone="warning" role="note" className="apidoc-callout">
           Ne partagez jamais votre clé API. Si elle est compromise, révoquez-la immédiatement
           depuis Paramètres → API.
-        </div>
+        </Alert>
       </section>
 
       {/* Erreurs */}

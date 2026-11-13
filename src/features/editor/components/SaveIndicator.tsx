@@ -1,5 +1,6 @@
 import React from 'react';
 import type { SaveStatus } from '../types';
+import { Check } from 'lucide-react';
 
 interface SaveIndicatorProps {
   status:      SaveStatus;
@@ -31,7 +32,7 @@ export function SaveIndicator({ status, lastSavedAt }: SaveIndicatorProps) {
       aria-label={label}
     >
       {status === 'saving' && <span className="save-indicator__spinner" aria-hidden="true" />}
-      {status === 'saved'  && <span className="save-indicator__check"   aria-hidden="true">✓</span>}
+      {status === 'saved'  && <Check size={16} className="save-indicator__check" aria-hidden="true" />}
       {label}
     </span>
   );

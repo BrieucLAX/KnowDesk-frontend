@@ -22,6 +22,7 @@ import { ChatbotPrivacyTab     } from './chatbot-tabs/ChatbotPrivacyTab';
 import { ChatbotRetentionTab   } from './chatbot-tabs/ChatbotRetentionTab';
 import { ChatbotIntegrationTab } from './chatbot-tabs/ChatbotIntegrationTab';
 import type { ChatbotTabId, ChatbotTabContext } from './chatbot-tabs/types';
+import { Sparkles } from 'lucide-react';
 
 const DEFAULT_WELCOME  = 'Bonjour 👋 Comment puis-je vous aider ?';
 const DEFAULT_FALLBACK = 'Désolé, je n\'ai pas la réponse précise à cette question. Vous pouvez nous joindre par email à contact@example.com ou par téléphone au 09 99 99 99 99.';
@@ -474,7 +475,7 @@ export function ChatbotSettingsSection() {
   return (
     <section className="settings-section" aria-labelledby="chatbot-title">
       <div className="settings-section__header">
-        <h2 id="chatbot-title" className="settings-section__title">✨ IA chatbot</h2>
+        <h2 id="chatbot-title" className="settings-section__title icon-label"><Sparkles size={20} />IA chatbot</h2>
         <p className="settings-section__desc">
           Activez et personnalisez le chatbot embarquable que vos clients peuvent utiliser depuis votre site web.
           Il répond <strong>uniquement</strong> à partir des FAQs, articles et processus marqués comme « Public ».

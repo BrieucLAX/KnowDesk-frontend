@@ -6,6 +6,7 @@ import { Input }  from '../../../shared/components/ui/Input';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import type { MonitoredBrand, IndustryMeta, IndustryKey, BrandProject, LlmMode, ProviderMeta, BrandMonitoringProvider, MonitoredBrandKind } from '../types';
+import { Star } from 'lucide-react';
 
 interface SettingsViewProps {
   projectId:       string;
@@ -376,20 +377,16 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
                 {list.map(b => (
                   <li key={b.id} className={`bm-brand-row ${b.is_owner ? 'is-owner' : ''}`}>
                     <div className="bm-brand-row__head">
-                      {b.is_owner && <span className="bm-brand-row__star" aria-hidden="true">⭐</span>}
+                      {b.is_owner && <span className="bm-brand-row__star" aria-hidden="true"><Star size={16} /></span>}
                       <strong>{b.name}</strong>
                     </div>
                     <div className="bm-brand-row__aliases">
                       {b.aliases.map(a => <span key={a} className="bm-chip">{a}</span>)}
                     </div>
                     <div className="bm-brand-row__actions">
-                      <button
-                        type="button"
-                        className="bm-prompt-row__delete"
-                        onClick={() => setPendingDelete(b)}
-                      >
+                      <Button variant="secondary" size="sm" onClick={() => setPendingDelete(b)}>
                         Supprimer
-                      </button>
+                      </Button>
                     </div>
                   </li>
                 ))}

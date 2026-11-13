@@ -20,6 +20,8 @@ import { useAuthStore, selectUserRole } from '../../../store/authStore';
 import { tagsApi, type OrgTag } from '../../articles/api/tagsApi';
 import type { FaqListItem, FaqStatus, FaqSortBy, FaqSortDir } from '../types';
 import type { Category }  from '../../knowledge/types';
+import { StatusIcon } from '../../../shared/components/ui/StatusIcon';
+import { Lock, Plus, ThumbsDown, ThumbsUp } from 'lucide-react';
 
 interface FaqsPageProps {
   onNewFaq:  () => void;
@@ -181,7 +183,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
     if (faq.status === 'draft') {
       return <span className="badge badge--secondary">Brouillon</span>;
     }
-    return <span className="badge badge--success">Publié</span>;
+    return <span className="badge badge--success"><StatusIcon tone="success" size={14} className="badge__icon" />Publié</span>;
   };
 
   const hasActiveFilters = !!search || activeTags.length > 0 || !!categoryId || tab !== 'all';
@@ -193,7 +195,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
           ? 'Affinez votre recherche ou retirez les filtres.'
           : 'Créez votre première FAQ à partir des questions fréquentes de votre équipe.'
       }
-      ctaLabel={canEdit && !hasActiveFilters ? '+ Nouvelle FAQ' : undefined}
+      ctaLabel={canEdit && !hasActiveFilters ? 'Nouvelle FAQ' : undefined}
       onCta={canEdit && !hasActiveFilters ? onNewFaq : undefined}
     />
   );
@@ -249,7 +251,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
           subtitle="Questions fréquentes et leurs réponses prêtes à copier."
           actions={canEdit && (
             <Button variant="primary" size="md" onClick={onNewFaq}>
-              + Nouvelle FAQ
+              <Plus size={20} />Nouvelle FAQ
             </Button>
           )}
         />
@@ -302,7 +304,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
                 <div className="faqs-cell-question">
                   <div className="faqs-cell-question__text">
                     {faq.visibility === 'internal' && (
-                      <span className="visibility-icon" title="Interne — non exposé au chatbot public" aria-label="FAQ interne">🕵️</span>
+                      <span className="visibility-icon" title="Interne — non exposé au chatbot public"><Lock size={16} role="img" aria-label="FAQ interne" /></span>
                     )}
                     {faq.question}
                   </div>
@@ -324,7 +326,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
                 <div className="faqs-cell-status">
                   {renderStatusBadge(faq)}
                   {faq.is_stale && (
-                    <span className="badge badge--warning" title="Dernière révision il y a plus de 6 mois">À réviser</span>
+                    <span className="badge badge--warning" title="Dernière révision il y a plus de 6 mois"><StatusIcon tone="warning" size={14} className="badge__icon" />À réviser</span>
                   )}
                 </div>
               ),
@@ -334,9 +336,9 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
                 const totalVotes = faq.helpful_yes + faq.helpful_no;
                 return (
                   <span className={`faqs-cell-helpful ${totalVotes < 2 ? 'faqs-cell-muted' : ''}`}>
-                    <span className="faqs-cell-helpful__yes">{faq.helpful_yes} 👍</span>
+                    <span className="faqs-cell-helpful__yes icon-label">{faq.helpful_yes} <ThumbsUp size={14} role="img" aria-label="pouce levé" /></span>
                     <span className="faqs-cell-helpful__sep">·</span>
-                    <span className="faqs-cell-helpful__no">{faq.helpful_no} 👎</span>
+                    <span className="faqs-cell-helpful__no icon-label">{faq.helpful_no} <ThumbsDown size={14} role="img" aria-label="pouce baissé" /></span>
                   </span>
                 );
               },

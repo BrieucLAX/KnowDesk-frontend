@@ -12,6 +12,8 @@ import { trackEvent }           from '../../../shared/lib/trackEvent';
 import { sanitizeArticleHtml }  from '../../../shared/lib/sanitize';
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
 import { formatRelative }       from '../../../shared/lib/formatDate';
+import { ArrowLeft, Copy } from 'lucide-react';
+import { Alert } from '../../../shared/components/ui/Alert';
 
 interface ArticlePageProps {
   articleId: string;
@@ -68,7 +70,7 @@ if (state.status === 'error') {
       title="Article introuvable"
       description={state.message}
       onBack={onBack}
-      backLabel="← Retour"
+      backLabel="Retour"
     />
   );
 }
@@ -83,8 +85,8 @@ if (state.status === 'error') {
       <div className="article-page__topbar">
         <nav className="article-page__breadcrumb" aria-label="Fil d'Ariane">
           {onBack && (
-            <button className="article-page__back-btn" onClick={onBack}>
-              ← Base de connaissance
+            <button className="article-page__back-btn icon-label" onClick={onBack}>
+              <ArrowLeft size={16} />Base de connaissance
             </button>
           )}
           <span className="article-page__breadcrumb-sep" aria-hidden="true">/</span>
@@ -98,7 +100,7 @@ if (state.status === 'error') {
             aria-label="Copier le lien"
             title="Copier le lien"
           >
-            <CopyIcon />
+            <Copy size={16} />
           </button>
           {isAdmin && (
             <button
@@ -137,9 +139,9 @@ if (state.status === 'error') {
           </div>
         )}
         {isOlderThan(article.updatedAt, 90) && (
-          <div className="article-page__stale-warning" role="note">
+          <Alert tone="warning" role="note" className="article-page__stale-warning">
             Cet article n'a pas été vérifié depuis plus de 90 jours.
-          </div>
+          </Alert>
         )}
       </header>
 
@@ -192,11 +194,3 @@ function isOlderThan(isoString: string, days: number): boolean {
   return ms > days * 86_400_000;
 }
 
-function CopyIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="5" y="5" width="9" height="9" rx="2" stroke="currentColor" strokeWidth="1.3"/>
-      <path d="M11 5V3a2 2 0 00-2-2H3a2 2 0 00-2 2v6a2 2 0 002 2h2" stroke="currentColor" strokeWidth="1.3"/>
-    </svg>
-  );
-}

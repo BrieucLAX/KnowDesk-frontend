@@ -2,6 +2,8 @@ import React from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import { PromptVariablesPanel } from '../PromptVariablesPanel';
 import type { ChatbotTabContext } from './types';
+import { Pencil, RotateCcw } from 'lucide-react';
+import { Alert } from '../../../../shared/components/ui/Alert';
 
 /**
  * Tab "Prompt système" — éditeur du template Mustache + panneau
@@ -45,11 +47,11 @@ export function ChatbotPromptTab({ ctx }: { ctx: ChatbotTabContext }) {
         </label>
 
         {editPrompt && !promptDraft.includes('{{response_modes}}') && (
-          <div role="alert" className="chatbot-settings__prompt-warning">
-            ⚠ La variable <code className="km-mono">{`{{response_modes}}`}</code> n'est pas dans
+          <Alert tone="warning" role="alert" className="chatbot-settings__prompt-warning">
+            La variable <code className="km-mono">{`{{response_modes}}`}</code> n'est pas dans
             ton prompt. Sans elle, les garde-fous anti-jailbreak et le mode "fallback" sont
             désactivés. Pense à la réinsérer si tu l'as supprimée par erreur.
-          </div>
+          </Alert>
         )}
 
         <div className="prompt-editor-grid">
@@ -84,7 +86,7 @@ export function ChatbotPromptTab({ ctx }: { ctx: ChatbotTabContext }) {
                 setEditPrompt(true);
               }}
             >
-              ✎ Modifier
+              <Pencil size={16} />Modifier
             </Button>
           ) : (
             <div className="chatbot-settings__prompt-actions">
@@ -107,7 +109,7 @@ export function ChatbotPromptTab({ ctx }: { ctx: ChatbotTabContext }) {
                 onClick={restorePromptDefault}
                 disabled={promptDraft.trim() === defaultPrompt.trim() && !hasCustomPrompt}
               >
-                ↺ Restaurer le défaut
+                <RotateCcw size={16} />Restaurer le défaut
               </Button>
             </div>
           )}

@@ -9,6 +9,7 @@ import { useToast } from '../../../shared/lib/useToast';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import { auditApi, type AuditAction, type AuditLogItem } from '../api/auditApi';
 import '../audit.css';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 const PER_PAGE = 30;
 
@@ -194,6 +195,7 @@ export function AuditPage({ embed = false }: AuditPageProps = {}) {
             : 'Les actions sensibles apparaîtront ici dès qu\'elles auront été effectuées.'}
         />
       ) : (
+        <div className="audit-table-wrap">
         <table className="audit-table">
           <thead>
             <tr>
@@ -222,6 +224,7 @@ export function AuditPage({ embed = false }: AuditPageProps = {}) {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       <Pager page={page} totalPages={totalPages} onChange={setPage} />
@@ -362,11 +365,11 @@ function MetadataView({ meta }: { meta: Record<string, unknown> }) {
           <dt>
             <button
               type="button"
-              className="audit-detail__tech-toggle"
+              className="audit-detail__tech-toggle icon-label"
               onClick={() => setShowTech(s => !s)}
               aria-expanded={showTech}
             >
-              {showTech ? '▾' : '▸'} Détails techniques ({technical.length})
+              {showTech ? <ChevronDown size={16} /> : <ChevronRight size={16} />}Détails techniques ({technical.length})
             </button>
           </dt>
           {showTech && (
@@ -388,11 +391,11 @@ function MetadataView({ meta }: { meta: Record<string, unknown> }) {
         <dt>
           <button
             type="button"
-            className="audit-detail__tech-toggle"
+            className="audit-detail__tech-toggle icon-label"
             onClick={() => setShowRaw(s => !s)}
             aria-expanded={showRaw}
           >
-            {showRaw ? '▾' : '▸'} JSON brut
+            {showRaw ? <ChevronDown size={16} /> : <ChevronRight size={16} />}JSON brut
           </button>
         </dt>
         {showRaw && (

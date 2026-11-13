@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './ListViewToggle.css';
+import { LayoutGrid, Table as TableIcon } from 'lucide-react';
 
 export type ListView = 'table' | 'cards';
 
@@ -33,7 +34,7 @@ export function ListViewToggle({ value, onChange, storageKey }: ListViewTogglePr
         aria-label="Vue tableau"
         title="Vue tableau"
       >
-        <span aria-hidden="true">☰</span>
+        <TableIcon size={16} />
       </button>
       <button
         type="button"
@@ -43,7 +44,7 @@ export function ListViewToggle({ value, onChange, storageKey }: ListViewTogglePr
         aria-label="Vue cartes"
         title="Vue cartes"
       >
-        <span aria-hidden="true">▦</span>
+        <LayoutGrid size={16} />
       </button>
     </div>
   );

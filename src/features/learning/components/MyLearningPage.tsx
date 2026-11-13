@@ -9,6 +9,8 @@ import { ApiError }   from '../../../shared/lib/apiClient';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import type { MyLearningPath, LearningCompletionStatus } from '../types';
 import '../learning.css';
+import { StatusIcon } from '../../../shared/components/ui/StatusIcon';
+import { Circle, CircleCheck, CircleDot, RotateCw } from 'lucide-react';
 
 interface MyLearningPageProps {
   onOpenModule: (moduleId: string, pathId: string) => void;
@@ -139,9 +141,9 @@ function PathCard({ path, variant, onOpenModule }: {
       <div className="my-learning-card__head">
         <h3 className="my-learning-card__title">{path.path.name}</h3>
         <div className="my-learning-card__badges">
-          {path.path.mandatory && <span className="badge badge--warning">Obligatoire</span>}
+          {path.path.mandatory && <span className="badge badge--warning"><StatusIcon tone="warning" size={14} className="badge__icon" />Obligatoire</span>}
           {path.path.renewal_months && (
-            <span className="badge badge--secondary">↻ {path.path.renewal_months} mois</span>
+            <span className="badge badge--secondary"><RotateCw size={14} className="badge__icon" />{path.path.renewal_months} mois</span>
           )}
         </div>
       </div>
@@ -165,9 +167,9 @@ function PathCard({ path, variant, onOpenModule }: {
         {path.modules.map(m => (
           <li key={m.id} className={`my-learning-mod my-learning-mod--${m.status}`}>
             <span className="my-learning-mod__icon" aria-hidden="true">
-              {m.status === 'completed' ? '✓' :
-               m.status === 'outdated'  ? '↻' :
-               m.status === 'in_progress' ? '◐' : '○'}
+              {m.status === 'completed' ? <CircleCheck size={16} /> :
+               m.status === 'outdated'  ? <RotateCw size={16} /> :
+               m.status === 'in_progress' ? <CircleDot size={16} /> : <Circle size={16} />}
             </span>
             <span className="my-learning-mod__name">{m.name}</span>
             {m.status === 'completed' && m.score !== null && (

@@ -5,6 +5,7 @@ import { apiClient } from '../../../shared/lib/apiClient';
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
 import type { Category }     from '../../knowledge/types';
 import type { SearchResult } from '../types';
+import { BookOpen, ChartColumn, CircleHelp, FileText, Folder, House, ListOrdered, Plus, Search, Settings, User, Users } from 'lucide-react';
 
 /**
  * CommandPalette — quick navigator (Cmd+J / Ctrl+J).
@@ -33,7 +34,7 @@ type ActionId =
 interface ActionItem {
   id:        ActionId;
   label:     string;
-  icon:      string;
+  icon:      React.ReactNode;
   /** Mots-clés invisibles utilisés pour le matching (incluent le label). */
   keywords:  string;
   /** Cible navigation. Pour les créations spéciales, on encode via query param. */
@@ -43,24 +44,24 @@ interface ActionItem {
 
 const ACTIONS: ActionItem[] = [
   // Navigation
-  { id: 'go-dashboard', label: 'Aller au tableau de bord',          icon: '🏠', keywords: 'tableau bord dashboard accueil home',  path: '/',          adminOnly: false },
-  { id: 'go-knowledge', label: 'Aller à la base de connaissance',   icon: '📚', keywords: 'base connaissance knowledge articles',  path: '/knowledge', adminOnly: false },
-  { id: 'go-faqs',      label: 'Aller aux FAQs',                    icon: '❓', keywords: 'faq questions',                         path: '/faqs',      adminOnly: false },
-  { id: 'go-trees',     label: 'Aller aux processus guidés',        icon: '🌳', keywords: 'processus arbres trees',                 path: '/trees',     adminOnly: false },
-  { id: 'go-analytics', label: 'Aller aux analytics',               icon: '📊', keywords: 'analytics statistiques stats',           path: '/analytics', adminOnly: true },
-  { id: 'go-members',   label: 'Aller à l\'équipe',                 icon: '👥', keywords: 'équipe team members membres',           path: '/members',   adminOnly: true },
-  { id: 'go-settings',  label: 'Aller aux paramètres',              icon: '⚙', keywords: 'paramètres settings réglages config',    path: '/settings',  adminOnly: false },
-  { id: 'go-account',   label: 'Mon compte',                        icon: '👤', keywords: 'compte profil account profile',         path: '/account',   adminOnly: false },
+  { id: 'go-dashboard', label: 'Aller au tableau de bord',          icon: <House size={16} />, keywords: 'tableau bord dashboard accueil home',  path: '/',          adminOnly: false },
+  { id: 'go-knowledge', label: 'Aller à la base de connaissance',   icon: <BookOpen size={16} />, keywords: 'base connaissance knowledge articles',  path: '/knowledge', adminOnly: false },
+  { id: 'go-faqs',      label: 'Aller aux FAQs',                    icon: <CircleHelp size={16} />, keywords: 'faq questions',                         path: '/faqs',      adminOnly: false },
+  { id: 'go-trees',     label: 'Aller aux processus guidés',        icon: <ListOrdered size={16} />, keywords: 'processus arbres trees',                 path: '/trees',     adminOnly: false },
+  { id: 'go-analytics', label: 'Aller aux analytics',               icon: <ChartColumn size={16} />, keywords: 'analytics statistiques stats',           path: '/analytics', adminOnly: true },
+  { id: 'go-members',   label: 'Aller à l\'équipe',                 icon: <Users size={16} />, keywords: 'équipe team members membres',           path: '/members',   adminOnly: true },
+  { id: 'go-settings',  label: 'Aller aux paramètres',              icon: <Settings size={16} />, keywords: 'paramètres settings réglages config',    path: '/settings',  adminOnly: false },
+  { id: 'go-account',   label: 'Mon compte',                        icon: <User size={16} />, keywords: 'compte profil account profile',         path: '/account',   adminOnly: false },
   // Création (admin / manager)
-  { id: 'new-article',  label: 'Créer un nouvel article',           icon: '＋', keywords: 'nouvel article créer create new',       path: '/articles/new',                       adminOnly: true },
-  { id: 'new-faq',      label: 'Créer une nouvelle FAQ',            icon: '＋', keywords: 'nouvelle faq créer create new',         path: '/faqs/new',                           adminOnly: true },
-  { id: 'new-category', label: 'Créer une nouvelle catégorie',      icon: '＋', keywords: 'nouvelle catégorie créer create new',   path: '/knowledge?action=new-category',     adminOnly: true },
+  { id: 'new-article',  label: 'Créer un nouvel article',           icon: <Plus size={16} />, keywords: 'nouvel article créer create new',       path: '/articles/new',                       adminOnly: true },
+  { id: 'new-faq',      label: 'Créer une nouvelle FAQ',            icon: <Plus size={16} />, keywords: 'nouvelle faq créer create new',         path: '/faqs/new',                           adminOnly: true },
+  { id: 'new-category', label: 'Créer une nouvelle catégorie',      icon: <Plus size={16} />, keywords: 'nouvelle catégorie créer create new',   path: '/knowledge?action=new-category',     adminOnly: true },
 ];
 
 interface FlatItem {
   key:      string;
   label:    string;
-  icon:     string;
+  icon:     React.ReactNode;
   hint?:    string;
   onSelect: () => void;
 }
@@ -179,7 +180,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
         items: matchedCats.map(c => ({
           key:    `cat-${c.id}`,
           label:  c.name,
-          icon:   '📁',
+          icon:   <Folder size={16} />,
           hint:   c.path.length > 1 ? c.path.slice(0, -1).join(' › ') : undefined,
           onSelect: () => goPath(`/knowledge?cat=${encodeURIComponent(c.id)}`),
         })),
@@ -198,7 +199,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
           items: articles.map(r => ({
             key:    `article-${r.id}`,
             label:  r.title,
-            icon:   '📄',
+            icon:   <FileText size={16} />,
             hint:   r.category || undefined,
             onSelect: () => goPath(`/articles/${r.id}`),
           })),
@@ -211,7 +212,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
           items: faqs.map(r => ({
             key:    `faq-${r.id}`,
             label:  r.title,
-            icon:   '❓',
+            icon:   <CircleHelp size={16} />,
             hint:   r.category || undefined,
             onSelect: () => goPath(`/faqs`),
           })),
@@ -223,7 +224,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
           items: trees.map(r => ({
             key:    `tree-${r.id}`,
             label:  r.title,
-            icon:   '🌳',
+            icon:   <ListOrdered size={16} />,
             hint:   r.category || undefined,
             onSelect: () => goPath(`/trees/${r.id}`),
           })),
@@ -283,22 +284,25 @@ export function CommandPalette({ className }: CommandPaletteProps) {
         aria-label="Palette de commandes"
       >
         <div className="cmd-palette__input-row">
-          <span className="cmd-palette__input-icon" aria-hidden="true">›</span>
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            onKeyDown={onInputKeyDown}
-            placeholder="Naviguer ou créer…"
-            className="cmd-palette__input"
-            aria-label="Recherche dans la palette"
-            autoComplete="off"
-            spellCheck={false}
-          />
-          {searchLoading && (
-            <span className="cmd-palette__loading" aria-hidden="true">…</span>
-          )}
+          <label htmlFor="cmd-palette-input" className="sr-only">Recherche dans la palette</label>
+          <div className="cmd-palette__field">
+            <Search size={20} className="cmd-palette__input-icon" />
+            <input
+              id="cmd-palette-input"
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              onKeyDown={onInputKeyDown}
+              placeholder="Naviguer ou créer…"
+              className="cmd-palette__input"
+              autoComplete="off"
+              spellCheck={false}
+            />
+            {searchLoading && (
+              <span className="cmd-palette__loading" aria-hidden="true">…</span>
+            )}
+          </div>
         </div>
 
         <div className="cmd-palette__results" role="listbox" aria-label="Résultats">

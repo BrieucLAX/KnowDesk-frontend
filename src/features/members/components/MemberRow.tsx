@@ -4,6 +4,7 @@ import { formatRelative }  from '../../../shared/lib/formatDate';
 import { computeInitials } from '../../../shared/lib/initials';
 import type { Member }     from '../types';
 import type { UserRole }   from '../../../shared/types';
+import { Badge, type BadgeTone } from '../../../shared/components/ui/StatusBadge';
 
 interface MemberRowProps {
   member:     Member;
@@ -15,11 +16,11 @@ interface MemberRowProps {
   onResend:      (id: string) => void;
 }
 
-const STATUS_CONFIG = {
-  active:   { label: 'Actif',             className: 'member-status member-status--active'   },
-  invited:  { label: 'Invitation envoyée', className: 'member-status member-status--invited'  },
-  expired:  { label: 'Invitation expirée', className: 'member-status member-status--expired'  },
-  disabled: { label: 'Désactivé',          className: 'member-status member-status--disabled' },
+const STATUS_CONFIG: Record<string, { label: string; tone: BadgeTone }> = {
+  active:   { label: 'Actif',             tone: 'success' },
+  invited:  { label: 'Invitation envoyée', tone: 'info'    },
+  expired:  { label: 'Invitation expirée', tone: 'danger'  },
+  disabled: { label: 'Désactivé',          tone: 'neutral' },
 };
 
 const ROLE_LABELS: Record<UserRole, string> = {
@@ -83,9 +84,9 @@ export function MemberRow({
 
       {/* Status */}
       <td className="member-row__cell">
-        <span className={statusCfg.className}>
+        <Badge tone={statusCfg.tone}>
           {statusCfg.label}
-        </span>
+        </Badge>
       </td>
 
       {/* Joined / Invited date */}

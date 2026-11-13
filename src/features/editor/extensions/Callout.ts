@@ -4,13 +4,6 @@ export type CalloutType = 'info' | 'success' | 'warning' | 'danger';
 
 export const CALLOUT_TYPES: CalloutType[] = ['info', 'success', 'warning', 'danger'];
 
-const ICONS: Record<CalloutType, string> = {
-  info:    'ℹ️',
-  success: '✅',
-  warning: '⚠️',
-  danger:  '⛔',
-};
-
 /**
  * Custom block node "callout" — encadré coloré contenant du texte enrichi.
  *
@@ -76,10 +69,6 @@ export const Callout = Node.create<{
     };
   },
 });
-
-export function calloutIcon(type: CalloutType): string {
-  return ICONS[type];
-}
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {

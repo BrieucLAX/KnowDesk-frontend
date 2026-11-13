@@ -32,7 +32,7 @@
   width: 48px;
   height: 36px;
   border: 1px solid var(--neutral-200);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: transparent;
   cursor: pointer;
   padding: 2px;
@@ -46,16 +46,7 @@
 }
 
 /* Prompt système — warning en rouge si {{response_modes}} retiré */
-.chatbot-settings__prompt-warning {
-  margin-bottom: 10px;
-  padding: 8px 12px;
-  background: var(--color-danger-bg);
-  border: 1px solid var(--color-danger-border);
-  color: var(--color-danger);
-  border-radius: 8px;
-  font-size: 12.5px;
-  line-height: 1.5;
-}
+.chatbot-settings__prompt-warning { margin-bottom: 10px; }
 
 /* Prompt système — pill "Personnalisé actif" inline dans la desc */
 .chatbot-settings__prompt-active {
@@ -116,7 +107,7 @@
 .chatbot-settings__embed-snippet {
   background: var(--neutral-50);
   border: 1px solid var(--neutral-200);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   padding: 14px;
   font-family: var(--font-mono);
   font-size: 12.5px;
@@ -128,15 +119,7 @@
 .chatbot-settings__embed-copy { margin-top: 8px; }
 
 /* Test live — bandeau pré-requis (ajoute le domaine à la liste blanche) */
-.chatbot-settings__test-prerequisite {
-  background: var(--info-soft);
-  border: 1px solid color-mix(in srgb, var(--info) 35%, var(--info-soft));
-  border-radius: var(--radius-md);
-  padding: 14px;
-  font-size: 13px;
-  color: var(--neutral-700);
-  margin-bottom: 12px;
-}
+.chatbot-settings__test-prerequisite { margin-bottom: 12px; }
 
 /* ── Tabs horizontaux (S2-T2) ───────────────────────────────────── */
 .chatbot-settings__tabs {
@@ -172,9 +155,9 @@
   font-weight: 600;
 }
 .chatbot-settings__tab:focus-visible {
-  outline: 2px solid var(--brand-500);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .chatbot-settings__tab-body {
@@ -191,7 +174,7 @@
 .chatbot-settings__sticky-actions {
   position: sticky;
   bottom: 0;
-  background: var(--neutral-0);
+  background: var(--surface);
   padding: 12px 0;
   margin-top: 16px;
   border-top: 1px solid var(--neutral-100);

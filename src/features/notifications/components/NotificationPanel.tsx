@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import '../notifications.css';
 import type { Notification } from '../types';
+import { Bell, FileText, Pencil, RotateCw, UserPlus, X } from 'lucide-react';
 
 interface NotificationPanelProps {
   notifications: Notification[];
@@ -11,11 +12,11 @@ interface NotificationPanelProps {
   onClose:       () => void;
 }
 
-const TYPE_CONFIG: Record<string, { label: string; icon: string }> = {
-  article_published: { label: 'Article publié',     icon: '📄' },
-  article_updated:   { label: 'Article modifié',    icon: '✏️' },
-  member_joined:     { label: 'Nouveau membre',     icon: '👋' },
-  learning_renewal:  { label: 'Module à renouveler', icon: '↻' },
+const TYPE_CONFIG: Record<string, { label: string; icon: React.ReactNode }> = {
+  article_published: { label: 'Article publié',     icon: <FileText size={16} /> },
+  article_updated:   { label: 'Article modifié',    icon: <Pencil size={16} /> },
+  member_joined:     { label: 'Nouveau membre',     icon: <UserPlus size={16} /> },
+  learning_renewal:  { label: 'Module à renouveler', icon: <RotateCw size={16} /> },
 };
 
 export function NotificationPanel({
@@ -76,7 +77,7 @@ export function NotificationPanel({
             onClick={onClose}
             aria-label="Fermer les notifications"
           >
-            ×
+            <X size={16} />
           </button>
         </div>
       </div>
@@ -97,7 +98,7 @@ export function NotificationPanel({
         {!loading && notifications.length > 0 && (
           <ul className="notif-list" role="list">
             {notifications.map(notif => {
-              const config = TYPE_CONFIG[notif.type] ?? { label: notif.type, icon: '🔔' };
+              const config = TYPE_CONFIG[notif.type] ?? { label: notif.type, icon: <Bell size={16} /> };
               const isUnread = !notif.read_at;
               const title = String(notif.payload?.title ?? '');
 

@@ -5,6 +5,7 @@ import { ApiError }      from '../../../shared/lib/apiClient';
 import { useToast }      from '../../../shared/lib/useToast';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import type { FaqHistory, FaqHistoryActor } from '../types';
+import { Pencil, Plus, Trash2 } from 'lucide-react';
 
 interface FaqHistoryPanelProps {
   faqId: string;
@@ -18,10 +19,10 @@ function actorLabel(actor: FaqHistoryActor | null, fallback: string): string {
   return fallback;
 }
 
-function actionLabel(action: 'faq.updated' | 'faq.deleted'): { icon: string; text: string } {
+function actionLabel(action: 'faq.updated' | 'faq.deleted'): { icon: React.ReactNode; text: string } {
   switch (action) {
-    case 'faq.updated': return { icon: '📝', text: 'a modifié la FAQ' };
-    case 'faq.deleted': return { icon: '🗑',  text: 'a supprimé la FAQ' };
+    case 'faq.updated': return { icon: <Pencil size={16} />, text: 'a modifié la FAQ' };
+    case 'faq.deleted': return { icon: <Trash2 size={16} />, text: 'a supprimé la FAQ' };
   }
 }
 
@@ -90,7 +91,7 @@ export function FaqHistoryPanel({ faqId }: FaqHistoryPanelProps) {
             })}
             {/* Entrée synthétique de création — toujours en bas (la plus ancienne) */}
             <li className="faq-history__entry faq-history__entry--creation">
-              <span className="faq-history__icon" aria-hidden="true">✨</span>
+              <span className="faq-history__icon" aria-hidden="true"><Plus size={16} /></span>
               <span className="faq-history__text">
                 FAQ créée — <time dateTime={history.creation.createdAt}>{formatRelative(history.creation.createdAt)}</time>
               </span>

@@ -79,7 +79,7 @@
 .kbscore__dim--good      .kbscore__dim-score { color: var(--success); }
 .kbscore__dim--excellent .kbscore__dim-score { color: var(--success); }
 .kbscore__dim-bar {
-  height: 6px; background: var(--neutral-200); border-radius: 3px; overflow: hidden;
+  height: 6px; background: var(--neutral-200); border-radius: var(--radius-full); overflow: hidden;
 }
 .kbscore__dim-bar-fill {
   height: 100%; transition: width 0.4s ease;

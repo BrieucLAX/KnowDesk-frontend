@@ -8,6 +8,7 @@ import { useToast }       from '../../../shared/lib/useToast';
 import { sanitizeArticleHtml } from '../../../shared/lib/sanitize';
 import { RichTextEditor }  from '../../editor/components/RichTextEditor';
 import type { TreeNode, NodeAnswer } from '../types';
+import { ArrowLeft, ArrowRight, CircleCheck, CircleHelp, Pencil, Plus, Trash2, X } from 'lucide-react';
 
 interface TreeEditorProps {
   treeId:   string;
@@ -112,7 +113,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
   if (!tree) return (
     <div className="tree-editor tree-editor--error">
       <p>Processus introuvable.</p>
-      <Button variant="ghost" size="sm" onClick={onBack}>← Retour</Button>
+      <Button variant="ghost" size="sm" onClick={onBack} leftIcon={<ArrowLeft size={16} />}>Retour</Button>
     </div>
   );
 
@@ -129,7 +130,9 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
       <div key={node.id} className={`tree-node tree-node--${node.type}`} style={{ '--tree-depth': depth } as React.CSSProperties}>
         <div className="tree-node__header">
           <span className={`tree-node__badge tree-node__badge--${node.type}`}>
-            {node.type === 'question' ? '❓ Question' : '✅ Conclusion'}
+            {node.type === 'question'
+              ? <><CircleHelp size={16} />Question</>
+              : <><CircleCheck size={16} />Conclusion</>}
           </span>
           <div className="tree-node__actions">
             <button
@@ -137,13 +140,15 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
               className="tree-node__action"
               onClick={() => { setEditingNode(node.id); setNodeEditDraft(node.content); }}
               title="Modifier"
-            >✏️</button>
+              aria-label="Modifier"
+            ><Pencil size={16} /></button>
             <button
               type="button"
               className="tree-node__action tree-node__action--danger"
               onClick={() => handleDeleteNode(node.id)}
               title="Supprimer"
-            >🗑</button>
+              aria-label="Supprimer"
+            ><Trash2 size={16} /></button>
           </div>
         </div>
 
@@ -182,13 +187,13 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
             {node.answers.map(answer => (
               <div key={answer.id} className="tree-answer">
                 <div className="tree-answer__header">
-                  <span className="tree-answer__label">→ {answer.label}</span>
+                  <span className="tree-answer__label icon-label"><ArrowRight size={16} />{answer.label}</span>
                   <button
                     type="button"
                     className="tree-answer__delete"
                     onClick={() => handleDeleteAnswer(node.id, answer.id)}
                     title="Supprimer cette réponse"
-                  >×</button>
+                  ><X size={16} /></button>
                 </div>
                 {/* Nœuds enfants de cette réponse */}
                 {tree.nodes
@@ -235,7 +240,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
                     style={{ '--tree-depth': depth + 1 } as React.CSSProperties}
                     onClick={() => setAddingNode({ parentId: node.id, parentAnswerId: answer.id })}
                   >
-                    + Ajouter un nœud
+                    <Plus size={20} />Ajouter un nœud
                   </button>
                 )}
               </div>
@@ -264,7 +269,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
                 className="tree-add-answer-btn"
                 onClick={() => setAddingAnswer(node.id)}
               >
-                + Ajouter une réponse
+                <Plus size={20} />Ajouter une réponse
               </button>
             )}
           </div>
@@ -288,7 +293,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
     <div className="tree-editor">
       {/* Topbar */}
       <div className="tree-editor__topbar">
-        <button type="button" className="tree-editor__back" onClick={onBack}>← Retour</button>
+        <button type="button" className="tree-editor__back icon-label" onClick={onBack}><ArrowLeft size={16} />Retour</button>
         <div className="tree-editor__topbar-center">
           {editingTitle ? (
             <div className="tree-editor__title-edit">
@@ -310,7 +315,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
               onClick={() => { setTitleDraft(tree.title); setEditingTitle(true); }}
               title="Cliquer pour modifier"
             >
-              {tree.title} ✏️
+              {tree.title} <Pencil size={16} className="icon-inline" />
             </button>
           )}
         </div>
@@ -322,8 +327,8 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
             title="Visibilité du processus"
             style={{ maxWidth: 220 }}
           >
-            <option value="internal">🔒 Interne</option>
-            <option value="public">🌐 Public (chatbot)</option>
+            <option value="internal">Interne</option>
+            <option value="public">Public (chatbot)</option>
           </select>
           <Button variant="ghost"   size="sm" onClick={() => onPreview(treeId)}>Aperçu conseiller</Button>
           <Button
@@ -390,7 +395,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
             className="tree-add-root"
             onClick={() => setAddingNode({ parentId: null, parentAnswerId: null })}
           >
-            + Ajouter un point d'entrée
+            <Plus size={20} />Ajouter un point d'entrée
           </button>
         )}
       </div>

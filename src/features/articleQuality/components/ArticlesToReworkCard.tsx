@@ -7,6 +7,7 @@ import {
   DIMENSION_LABEL,
 } from '../api/articleQualityApi';
 import './ArticlesToReworkCard.css';
+import { StatusIcon, type StatusTone } from '../../../shared/components/ui/StatusIcon';
 
 interface ArticlesToReworkCardProps {
   /** Callback ouverture d'un article (depuis la liste dépliée). */
@@ -98,10 +99,10 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
     );
   }
 
-  const tiers: Array<{ id: QualityTier; label: string; emoji: string; count: number; modifier: string }> = [
-    { id: 'perfect',  label: 'Parfaits',       emoji: '✓',  count: stats.perfect,  modifier: 'perfect'  },
-    { id: 'good',     label: 'Bons',           emoji: '⚠️', count: stats.good,     modifier: 'good'     },
-    { id: 'toRework', label: 'À retravailler', emoji: '❌', count: stats.toRework, modifier: 'rework'   },
+  const tiers: Array<{ id: QualityTier; label: string; tone: StatusTone; count: number; modifier: string }> = [
+    { id: 'perfect',  label: 'Parfaits',       tone: 'success', count: stats.perfect,  modifier: 'perfect'  },
+    { id: 'good',     label: 'Bons',           tone: 'warning', count: stats.good,     modifier: 'good'     },
+    { id: 'toRework', label: 'À retravailler', tone: 'danger',  count: stats.toRework, modifier: 'rework'   },
   ];
 
   return (
@@ -137,7 +138,7 @@ export function ArticlesToReworkCard({ onOpen }: ArticlesToReworkCardProps) {
               disabled={!isClickable}
               aria-expanded={isExpanded}
             >
-              <span className="article-rework-card__tier-emoji" aria-hidden="true">{t.emoji}</span>
+              <StatusIcon tone={t.tone} size={20} className="article-rework-card__tier-emoji" />
               <span className="article-rework-card__tier-count">{t.count}</span>
               <span className="article-rework-card__tier-label">{t.label}</span>
             </button>

@@ -5,6 +5,7 @@ import { groupQuestions, questionKind, type Audit, type QuestionKind } from '../
 import { firstOpenStep, isStepDone, progress, STEP_STATUS_LABEL, stepStatus } from '../../lib/decisions';
 import type { Arbitration } from '../../hooks/useArbitration';
 import { QuestionStep } from './QuestionStep';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface ArbitrationSessionProps {
   audit:       Audit;
@@ -112,10 +113,10 @@ export function ArbitrationSession({ audit, projectId, analysisId, arbitration, 
             arbitration={arbitration}
           />
           <div className="obp-arb__nav">
-            <Button variant="ghost" size="sm" disabled={index === 0} onClick={() => go(index - 1)}>← Précédente</Button>
+            <Button variant="ghost" size="sm" disabled={index === 0} onClick={() => go(index - 1)} leftIcon={<ArrowLeft size={16} />}>Précédente</Button>
             <Button variant={isStepDone(status) ? 'primary' : 'secondary'} size="sm"
               disabled={index === list.steps.length - 1} onClick={() => go(index + 1)}>
-              Suivante →
+              Suivante<ArrowRight size={16} />
             </Button>
           </div>
         </div>

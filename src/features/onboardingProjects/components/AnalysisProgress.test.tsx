@@ -89,7 +89,7 @@ describe('AnalysisProgress', () => {
     />);
     expect(screen.getByText(/L'audit est prêt/)).toBeInTheDocument();
     expect(screen.queryByText(/prochaine version/)).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Consulter l\'audit →' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Consulter l\'audit' }));
     expect(onOpenAudit).toHaveBeenCalledOnce();
   });
 

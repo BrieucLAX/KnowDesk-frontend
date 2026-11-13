@@ -1,6 +1,7 @@
 import React from 'react';
 import { Input } from '../../../../shared/components/ui/Input';
 import type { ChatbotTabContext } from './types';
+import { TriangleAlert } from 'lucide-react';
 
 // Couleur par défaut du widget chatbot, affiché sur le site du client :
 // donnée de produit, hors design system de l'app. Gardée volontairement.
@@ -26,6 +27,8 @@ export function ChatbotAppearanceTab({ ctx }: { ctx: ChatbotTabContext }) {
           />
           <Input
             id="chat-color-hex"
+            label="Couleur primaire (code hexadécimal)"
+            labelHidden
             value={form.chat_primary_color ?? ''}
             placeholder={DEFAULT_CHAT_COLOR}
             onChange={e => setForm(f => ({ ...f, chat_primary_color: e.target.value }))}
@@ -46,7 +49,7 @@ export function ChatbotAppearanceTab({ ctx }: { ctx: ChatbotTabContext }) {
       />
 
       <div className="field">
-        <label htmlFor="chat-domains" className="field-label">Domaines autorisés ⚠</label>
+        <label htmlFor="chat-domains" className="field-label icon-label">Domaines autorisés <TriangleAlert size={16} className="chatbot-settings__label-warning" role="img" aria-label="attention" /></label>
         <textarea
           id="chat-domains"
           className="field-input"

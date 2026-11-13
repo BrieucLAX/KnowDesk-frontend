@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { HELP_CONTENT, HELP_INDEX } from '../content';
 import '../help.css';
 import type { HelpSection, HelpArticle } from '../content';
+import { ArrowLeft, ChevronRight, X } from 'lucide-react';
 
 interface HelpPanelProps {
   onClose:      () => void;
@@ -74,7 +75,7 @@ export function HelpPanel({ onClose, currentScreen }: HelpPanelProps) {
           className="help-panel__close"
           onClick={onClose}
           aria-label="Fermer l'aide"
-        >×</button>
+        ><X size={16} /></button>
       </div>
 
       {/* Recherche */}
@@ -124,7 +125,7 @@ export function HelpPanel({ onClose, currentScreen }: HelpPanelProps) {
                 className={`help-nav__item ${section.id === activeSectionId ? 'help-nav__item--active' : ''}`}
                 onClick={() => { setActiveSectionId(section.id); setActiveArticleId(null); }}
               >
-                <span className="help-nav__icon">{section.icon}</span>
+                <span className="help-nav__icon" aria-hidden="true"><section.icon size={20} /></span>
                 <span className="help-nav__label">{section.title}</span>
               </button>
             ))}
@@ -136,10 +137,10 @@ export function HelpPanel({ onClose, currentScreen }: HelpPanelProps) {
               <>
                 <button
                   type="button"
-                  className="help-content__back"
+                  className="help-content__back icon-label"
                   onClick={() => setActiveArticleId(null)}
                 >
-                  ← Retour
+                  <ArrowLeft size={16} />Retour
                 </button>
                 <div
                   className="help-article"
@@ -148,8 +149,8 @@ export function HelpPanel({ onClose, currentScreen }: HelpPanelProps) {
               </>
             ) : (
               <>
-                <h3 className="help-content__section-title">
-                  {activeSection.icon} {activeSection.title}
+                <h3 className="help-content__section-title icon-label">
+                  <activeSection.icon size={20} aria-hidden="true" />{activeSection.title}
                 </h3>
                 <ul className="help-article-list">
                   {activeSection.articles.map(article => (
@@ -160,7 +161,7 @@ export function HelpPanel({ onClose, currentScreen }: HelpPanelProps) {
                         onClick={() => setActiveArticleId(article.id)}
                       >
                         {article.title}
-                        <span className="help-article-item__arrow">→</span>
+                        <ChevronRight size={16} className="help-article-item__arrow" />
                       </button>
                     </li>
                   ))}
