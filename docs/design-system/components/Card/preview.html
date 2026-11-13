@@ -1,0 +1,35 @@
+<!-- @dsCard group="Structure" height=300 subtitle="Standard, teintée, chaleureuse" -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Card</title>
+<style>
+html, body { margin: 0; }
+body { background: var(--surface); }
+.stage { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.cap { font-family: var(--font-sans); font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+
+</style>
+</head>
+<body>
+<div class="cx-root stage">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+<a class="cx-card" href="#">
+<span class="cx-badge cx-badge--primary" style="align-self: flex-start;">Procédure</span>
+<h3 class="cx-card__title">Comment retourner un article ?</h3>
+<p class="cx-card__meta">Retours et remboursements · mis à jour le 28 oct.</p>
+</a>
+<div class="cx-card cx-card--tinted">
+<h3 class="cx-card__title">Réponse courte</h3>
+<p style="margin: 0;">L'adresse peut être modifiée tant que la commande n'est pas expédiée.</p>
+</div>
+<div class="cx-card cx-card--warm">
+<h3 class="cx-card__title">Interne · réservé aux agents</h3>
+<p style="margin: 0;">Commande expédiée : demander un réacheminement au transporteur.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

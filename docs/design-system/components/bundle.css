@@ -1,0 +1,80 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap");
+
+/* Design system CX — composants. Toutes les valeurs viennent de tokens.css. Préfixe : cx- */
+
+.cx-root { font-family: var(--font-sans); color: var(--ink); font-size: 15px; line-height: 24px; }
+.cx-root *, .cx-root *::before, .cx-root *::after { box-sizing: border-box; }
+.cx-icon { width: 20px; height: 20px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cx-icon--sm { width: 16px; height: 16px; }
+
+/* Bouton */
+.cx-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: var(--radius-md); font-family: var(--font-sans); font-size: 15px; line-height: 1; font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap; }
+.cx-btn:focus-visible, .cx-input:focus-visible, .cx-search:focus-within, .cx-segmented__item:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.cx-btn--primary { background: var(--primary); color: var(--on-primary); }
+.cx-btn--primary:hover { background: var(--ink); }
+.cx-btn--secondary { background: var(--surface-raised); color: var(--ink); border-color: var(--line-strong); }
+.cx-btn--secondary:hover { background: var(--surface); }
+.cx-btn--ghost { background: transparent; color: var(--primary); }
+.cx-btn--ghost:hover { background: var(--primary-soft); }
+.cx-btn--danger { background: var(--danger); color: var(--on-primary); }
+.cx-btn--sm { min-height: 36px; padding: 0 14px; font-size: 13px; }
+.cx-btn--icon { width: 44px; padding: 0; }
+.cx-btn:disabled, .cx-btn[aria-disabled="true"] { background: var(--line); color: var(--ink-muted); border-color: transparent; cursor: not-allowed; }
+
+/* Champ de formulaire */
+.cx-field { display: flex; flex-direction: column; gap: var(--space-2); }
+.cx-label { font-size: 13px; line-height: 18px; font-weight: 600; color: var(--ink); }
+.cx-input { width: 100%; min-height: 48px; padding: 0 var(--space-4); border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface-raised); color: var(--ink); font-family: var(--font-sans); font-size: 15px; }
+textarea.cx-input { padding: 12px var(--space-4); line-height: 24px; min-height: 96px; resize: vertical; }
+.cx-input::placeholder { color: var(--ink-muted); }
+.cx-help { font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+.cx-field--error .cx-input { border: 2px solid var(--danger); }
+.cx-error { display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 20px; font-weight: 600; color: var(--danger); }
+
+/* Barre de recherche */
+.cx-search { display: flex; align-items: center; gap: var(--space-2); min-height: 52px; padding: 0 6px 0 var(--space-4); border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface-raised); color: var(--ink-muted); }
+.cx-search input { flex: 1 1 auto; min-width: 0; min-height: 48px; border: 0; outline: none; background: transparent; color: var(--ink); font-family: var(--font-sans); font-size: 15px; }
+.cx-search input::placeholder { color: var(--ink-muted); }
+.cx-search .cx-btn { min-height: 40px; }
+.cx-search--lg { min-height: 60px; }
+
+/* Badge */
+.cx-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px var(--space-2); border-radius: var(--radius-sm); font-size: 13px; line-height: 18px; font-weight: 600; white-space: nowrap; }
+.cx-badge .cx-icon { width: 14px; height: 14px; stroke-width: 2.5; }
+.cx-badge--neutral { border: 1px solid var(--line-strong); color: var(--ink-muted); }
+.cx-badge--primary { background: var(--primary-soft); color: var(--primary); }
+.cx-badge--accent { background: var(--accent-soft); color: var(--accent); }
+.cx-badge--success { background: var(--success-soft); color: var(--success); }
+.cx-badge--warning { background: var(--warning-soft); color: var(--warning); }
+.cx-badge--danger { background: var(--danger-soft); color: var(--danger); }
+.cx-badge--info { background: var(--info-soft); color: var(--info); }
+
+/* Encart d'alerte */
+.cx-alert { display: flex; gap: 12px; padding: var(--space-4); border-radius: var(--radius-md); font-size: 15px; line-height: 24px; color: var(--ink); }
+.cx-alert .cx-icon { margin-top: 2px; }
+.cx-alert__title { margin: 0; font-weight: 600; }
+.cx-alert__text { margin: 0; }
+.cx-alert--info { background: var(--info-soft); } .cx-alert--info .cx-icon { color: var(--info); }
+.cx-alert--success { background: var(--success-soft); } .cx-alert--success .cx-icon { color: var(--success); }
+.cx-alert--warning { background: var(--warning-soft); } .cx-alert--warning .cx-icon { color: var(--warning); }
+.cx-alert--danger { background: var(--danger-soft); } .cx-alert--danger .cx-icon { color: var(--danger); }
+
+/* Carte */
+.cx-card { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-6); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface-raised); color: var(--ink); }
+.cx-card__title { margin: 0; font-size: 18px; line-height: 26px; font-weight: 600; }
+.cx-card__meta { margin: 0; font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+.cx-card--tinted { background: var(--primary-soft); border-color: transparent; }
+.cx-card--warm { background: var(--accent-soft); border-color: transparent; }
+a.cx-card { text-decoration: none; }
+a.cx-card:hover { border-color: var(--line-strong); }
+
+/* Sélecteur segmenté */
+.cx-segmented { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); }
+.cx-segmented__item { min-height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; color: var(--ink-muted); font-family: var(--font-sans); font-size: 13px; font-weight: 600; cursor: pointer; }
+.cx-segmented__item[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+
+/* Modale */
+.cx-backdrop { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: var(--space-6); background: rgba(39, 33, 28, 0.45); }
+.cx-modal { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-6); border-radius: var(--radius-lg); background: var(--surface-raised); box-shadow: var(--shadow-lg); color: var(--ink); }
+.cx-modal__title { margin: 0; font-size: 18px; line-height: 26px; font-weight: 600; }
+.cx-modal__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-2); }

@@ -1,0 +1,31 @@
+<!-- @dsCard group="Formulaires" height=220 subtitle="Standard et grande, avec bouton" -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>SearchBar</title>
+<style>
+html, body { margin: 0; }
+body { background: var(--surface); }
+.stage { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.cap { font-family: var(--font-sans); font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+
+</style>
+</head>
+<body>
+<div class="cx-root stage">
+<form role="search" class="cx-search" style="max-width: 520px;">
+<svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+<label for="s1" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Rechercher</label>
+<input id="s1" type="search" placeholder="Rechercher une réponse">
+</form>
+<form role="search" class="cx-search cx-search--lg" style="max-width: 720px;">
+<svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+<label for="s2" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Rechercher dans l'aide</label>
+<input id="s2" type="search" placeholder="Posez votre question, par exemple : changer mon adresse">
+<button class="cx-btn cx-btn--primary" type="submit">Rechercher</button>
+</form>
+</div>
+</body>
+</html>

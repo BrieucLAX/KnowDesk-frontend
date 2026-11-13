@@ -1,0 +1,32 @@
+<!-- @dsCard group="Structure" height=340 subtitle="Confirmation d'une action" -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Modal</title>
+<style>
+html, body { margin: 0; }
+body { background: var(--surface); }
+.stage { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.cap { font-family: var(--font-sans); font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+
+</style>
+</head>
+<body>
+<div class="cx-root stage">
+<div style="position: relative; height: 292px; margin: -24px; border-radius: 0;">
+<div class="cx-backdrop">
+<div class="cx-modal" role="dialog" aria-modal="true" aria-labelledby="m1">
+<h2 class="cx-modal__title" id="m1">Supprimer cet article ?</h2>
+<p style="margin: 0;">« Changer de point relais » ne sera plus visible des agents ni des clients. Vous pourrez le restaurer pendant 30 jours.</p>
+<div class="cx-modal__actions">
+<button class="cx-btn cx-btn--secondary" type="button">Annuler</button>
+<button class="cx-btn cx-btn--danger" type="button">Supprimer l'article</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
