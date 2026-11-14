@@ -44,7 +44,7 @@ export function LastModifiedBadge({ actions }: LastModifiedBadgeProps) {
 
   const userName = item.user?.firstName
     ? `${item.user.firstName} ${item.user.lastName ?? ''}`.trim()
-    : item.user?.email ?? 'Utilisateur inconnu';
+    : item.user?.email ?? 'Membre inconnu';
 
   return (
     <p className="settings-section__last-modified" aria-live="polite">

@@ -22,8 +22,8 @@ describe('validateCadrageForm', () => {
       notions: [{ first: 'Résiliation', second: 'a\nb', explanation: '' }],
     }));
     expect(errors).toEqual({
-      'offers.0.name':   'Champ requis.',
-      'notions.0.second': 'Une seule ligne attendue.',
+      'offers.0.name':   'Renseignez ce champ.',
+      'notions.0.second': 'Écrivez ce texte sur une seule ligne.',
     });
   });
 
@@ -52,7 +52,7 @@ describe('validateCadrageForm', () => {
       'limitedDocuments.0.validUntil': 'La fin de validité précède son début.',
       'limitedDocuments.1.document': 'Document déjà listé parmi les documents à durée limitée.',
       'limitedDocuments.2.document': 'Choisissez un document.',
-      'limitedDocuments.2.validFrom':  'Date invalide.',
+      'limitedDocuments.2.validFrom':  'Saisissez une date valide.',
     });
     expect(errorsBySection(errors)).toEqual({ limitedDocuments: 4 });
   });

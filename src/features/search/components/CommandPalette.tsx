@@ -44,14 +44,14 @@ interface ActionItem {
 
 const ACTIONS: ActionItem[] = [
   // Navigation
-  { id: 'go-dashboard', label: 'Aller au tableau de bord',          icon: <House size={16} />, keywords: 'tableau bord dashboard accueil home',  path: '/',          adminOnly: false },
-  { id: 'go-knowledge', label: 'Aller à la base de connaissance',   icon: <BookOpen size={16} />, keywords: 'base connaissance knowledge articles',  path: '/knowledge', adminOnly: false },
-  { id: 'go-faqs',      label: 'Aller aux FAQs',                    icon: <CircleHelp size={16} />, keywords: 'faq questions',                         path: '/faqs',      adminOnly: false },
-  { id: 'go-trees',     label: 'Aller aux processus guidés',        icon: <ListOrdered size={16} />, keywords: 'processus arbres trees',                 path: '/trees',     adminOnly: false },
-  { id: 'go-analytics', label: 'Aller aux analytics',               icon: <ChartColumn size={16} />, keywords: 'analytics statistiques stats',           path: '/analytics', adminOnly: true },
+  { id: 'go-dashboard', label: 'Aller à l\'accueil',                 icon: <House size={16} />, keywords: 'tableau bord dashboard accueil home',  path: '/',          adminOnly: false },
+  { id: 'go-knowledge', label: 'Aller aux articles',                icon: <BookOpen size={16} />, keywords: 'base connaissance knowledge articles',  path: '/knowledge', adminOnly: false },
+  { id: 'go-faqs',      label: 'Aller aux FAQ',                     icon: <CircleHelp size={16} />, keywords: 'faq questions',                         path: '/faqs',      adminOnly: false },
+  { id: 'go-trees',     label: 'Aller aux processus',               icon: <ListOrdered size={16} />, keywords: 'processus arbres trees',                 path: '/trees',     adminOnly: false },
+  { id: 'go-analytics', label: 'Aller à l\'analyse',                 icon: <ChartColumn size={16} />, keywords: 'analytics statistiques stats',           path: '/analytics', adminOnly: true },
   { id: 'go-members',   label: 'Aller à l\'équipe',                 icon: <Users size={16} />, keywords: 'équipe team members membres',           path: '/members',   adminOnly: true },
   { id: 'go-settings',  label: 'Aller aux paramètres',              icon: <Settings size={16} />, keywords: 'paramètres settings réglages config',    path: '/settings',  adminOnly: false },
-  { id: 'go-account',   label: 'Mon compte',                        icon: <User size={16} />, keywords: 'compte profil account profile',         path: '/account',   adminOnly: false },
+  { id: 'go-account',   label: 'Aller à mon compte',                icon: <User size={16} />, keywords: 'compte profil account profile',         path: '/account',   adminOnly: false },
   // Création (admin / manager)
   { id: 'new-article',  label: 'Créer un nouvel article',           icon: <Plus size={16} />, keywords: 'nouvel article créer create new',       path: '/articles/new',                       adminOnly: true },
   { id: 'new-faq',      label: 'Créer une nouvelle FAQ',            icon: <Plus size={16} />, keywords: 'nouvelle faq créer create new',         path: '/faqs/new',                           adminOnly: true },
@@ -208,7 +208,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
       if (faqs.length > 0) {
         // Pas de fiche FAQ deep-linkable aujourd'hui → on navigue vers /faqs
         out.push({
-          title: 'FAQs',
+          title: 'FAQ',
           items: faqs.map(r => ({
             key:    `faq-${r.id}`,
             label:  r.title,
@@ -284,7 +284,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
         aria-label="Palette de commandes"
       >
         <div className="cmd-palette__input-row">
-          <label htmlFor="cmd-palette-input" className="sr-only">Recherche dans la palette</label>
+          <label htmlFor="cmd-palette-input" className="sr-only">Rechercher une page, un contenu ou une action</label>
           <div className="cmd-palette__field">
             <Search size={20} className="cmd-palette__input-icon" />
             <input
@@ -294,7 +294,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={onInputKeyDown}
-              placeholder="Naviguer ou créer…"
+              placeholder="Rechercher une page, un contenu ou une action…"
               className="cmd-palette__input"
               autoComplete="off"
               spellCheck={false}

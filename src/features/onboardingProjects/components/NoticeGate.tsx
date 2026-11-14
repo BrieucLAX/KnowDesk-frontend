@@ -49,7 +49,7 @@ export function NoticeGate({ notice, onChange }: NoticeGateProps) {
         setRead(false);
         onChange(await onboardingApi.getNotice());
       } else {
-        toast.error(err instanceof Error ? err.message : 'Acceptation impossible.');
+        toast.error(err instanceof Error ? err.message : 'Votre acceptation n\'a pas pu être enregistrée. Réessayez.');
       }
     } finally {
       setAccepting(false);

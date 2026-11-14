@@ -57,7 +57,7 @@ export function SettingsPage({ initialSection = 'general' }: SettingsPageProps) 
       <div className="settings-page-wrap">
         <PageHeader
           title="Paramètres"
-          subtitle="Réglages de votre organisation et de votre compte."
+          subtitle="Paramètres de votre organisation et de votre compte."
         />
         <div className="settings-page">
           <MobileSettingsNav
@@ -93,8 +93,8 @@ export function SettingsPage({ initialSection = 'general' }: SettingsPageProps) 
 
       {pendingSection && (
         <ConfirmDialog
-          title="Modifications non enregistrées"
-          description="Vos modifications sur cette section seront perdues si vous quittez maintenant."
+          title="Quitter sans enregistrer ?"
+          description="Les modifications de cette section seront perdues. Elles ne pourront pas être récupérées."
           confirmLabel="Quitter sans enregistrer"
           variant="danger"
           onConfirm={() => {
@@ -182,14 +182,14 @@ function navTree(isAdmin: boolean): NavEntry[] {
       { type: 'leaf', id: 'ai', label: 'Recherche interne',
         keywords: ['ia', 'mistral', 'recherche', 'tonalité', 'glossaire', 'secteur'] },
       { type: 'leaf', id: 'chatbot', label: 'Chatbot public',
-        keywords: ['chat', 'widget', 'embed', 'rgpd', 'rétention', 'handoff', 'prompt', 'privacy', 'confidentialité'] },
+        keywords: ['chat', 'widget', 'embed', 'rgpd', 'rétention', 'handoff', 'prompt', 'consigne', 'conservation', 'humain', 'privacy', 'confidentialité'] },
       { type: 'leaf', id: 'ai-quality', label: 'Auditeur qualité',
         keywords: ['qualité', 'audit', 'articles', 'révision', 'scoring', 'retravailler', 'clarté'] },
-      { type: 'leaf', id: 'ai-models', label: 'Modèles & fournisseurs',
+      { type: 'leaf', id: 'ai-models', label: 'Modèles et fournisseurs',
         keywords: ['modèle', 'mistral', 'small', 'medium', 'large', 'ministral', 'coût'] },
     ]},
     { type: 'leaf', id: 'notifications', label: 'Notifications',
-      keywords: ['email', 'digest', 'in-app', 'canal'] },
+      keywords: ['email', 'e-mail', 'digest', 'in-app', 'canal'] },
     { type: 'category', id: 'data', label: 'Données', adminOnly: true, children: [
       { type: 'leaf', id: 'search', label: 'Synonymes',
         keywords: ['meilisearch', 'recherche'] },
@@ -423,7 +423,7 @@ function SectionGeneral() {
         const fallback = { name: session?.organization.name ?? '', timezone: 'Europe/Paris' };
         setForm(fallback);
         setInitialForm(fallback);
-        toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les paramètres.');
+        toast.error(err instanceof ApiError ? err.message : 'Les paramètres n\'ont pas pu être chargés. Rechargez la page.');
       });
   }, [session, toast]);
 
@@ -435,7 +435,7 @@ function SectionGeneral() {
       setInitialForm(form);
       toast.success('Paramètres enregistrés');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Sauvegarde impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Les paramètres n\'ont pas été enregistrés. Réessayez.');
     } finally {
       setSaving(false);
     }
@@ -455,7 +455,7 @@ function SectionGeneral() {
           value={form.name}
           required
           onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-          helperText="Affiché dans le header et les emails envoyés à votre équipe."
+          helperText="Affiché dans l'en-tête de l'application et dans les e-mails envoyés à votre équipe."
         />
         <div className="field">
           <label htmlFor="timezone" className="field-label">Fuseau horaire</label>
@@ -514,7 +514,7 @@ function SectionNotifications() {
       setInitialPrefs(prefs);
       toast.success('Paramètres enregistrés');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Sauvegarde des préférences impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Les préférences n\'ont pas été enregistrées. Réessayez.');
     } finally {
       setSaving(false);
     }
@@ -538,14 +538,14 @@ function SectionNotifications() {
           <Switch
             id="notif-member"
             label="Nouveau membre"
-            description="Soyez averti quand un collaborateur rejoint votre espace."
+            description="Soyez averti quand un membre rejoint votre organisation."
             checked={prefs.memberJoined}
             onChange={v => setPrefs(p => ({ ...p, memberJoined: v }))}
           />
           <Switch
             id="notif-digest"
             label="Résumé hebdomadaire"
-            description="Un email récapitulatif chaque lundi matin."
+            description="Un e-mail récapitulatif chaque lundi matin."
             checked={prefs.weeklyDigest}
             onChange={v => setPrefs(p => ({ ...p, weeklyDigest: v }))}
           />
@@ -558,9 +558,9 @@ function SectionNotifications() {
             value={prefs.channel}
             onChange={e => setPrefs(p => ({ ...p, channel: e.target.value as NotifPreferences['channel'] }))}
           >
-            <option value="email">Email uniquement</option>
-            <option value="in_app">Dans l'app uniquement</option>
-            <option value="both">Email et dans l'app</option>
+            <option value="email">E-mail uniquement</option>
+            <option value="in_app">Dans l'application uniquement</option>
+            <option value="both">E-mail et dans l'application</option>
           </select>
         </div>
         <div className="settings-form__actions">
@@ -615,7 +615,7 @@ function SectionBilling() {
           <ul className="billing-upgrade-card__features">
             <li>Membres illimités</li>
             <li>Articles illimités</li>
-            <li>Notifications email avancées</li>
+            <li>Notifications par e-mail avancées</li>
             <li>Support prioritaire</li>
           </ul>
           <Button variant="primary" size="md">Passer au plan Pro</Button>
@@ -665,12 +665,12 @@ function SectionDanger() {
           <Input
             id={inputId}
             type="text"
-            label={`Tapez « ${orgName} » pour confirmer`}
+            label={`Saisissez « ${orgName} » pour confirmer`}
             value={confirm}
             onChange={e => setConfirm(e.target.value)}
             placeholder={orgName}
             autoComplete="off"
-            error={confirm && !canDelete ? 'Le nom ne correspond pas.' : undefined}
+            error={confirm && !canDelete ? 'Le nom ne correspond pas. Saisissez-le exactement comme il est affiché.' : undefined}
           />
           <Button type="submit" variant="danger" size="md" disabled={!canDelete} loading={isDeleting}>
             Supprimer définitivement l'organisation

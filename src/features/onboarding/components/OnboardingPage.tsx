@@ -109,7 +109,7 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
             )}
             {isLastStep ? (
               <Button variant="primary" size="md" loading={isSubmitting} onClick={submit}>
-                Terminer
+                Terminer la configuration
               </Button>
             ) : (
               <Button variant="primary" size="md" onClick={goNext}>
@@ -151,11 +151,11 @@ function StepTeam({ emails, error, onChange, userName }: {
   return (
     <div className="onboarding__step">
       {userName && (
-        <p className="onboarding__welcome">Bienvenue, {userName} !</p>
+        <p className="onboarding__welcome">Bienvenue, {userName}.</p>
       )}
       <div className="field">
         <label htmlFor="invite-emails" className="field-label">
-          Adresses email de vos collègues
+          Adresses e-mail de vos collègues
         </label>
         <input
           id="invite-emails"
@@ -169,7 +169,7 @@ function StepTeam({ emails, error, onChange, userName }: {
           aria-describedby="invite-hint"
         />
         <p id="invite-hint" className="field-helper">
-          Séparez les emails par une virgule ou appuyez sur Entrée.
+          Séparez les adresses par une virgule ou appuyez sur Entrée.
         </p>
         {error && <p className="field-error" role="alert">{error}</p>}
       </div>

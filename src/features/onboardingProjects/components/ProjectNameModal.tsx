@@ -20,13 +20,13 @@ export function ProjectNameModal({ title, submitLabel, initialName = '', onSubmi
 
   const submit = async () => {
     const trimmed = name.trim();
-    if (!trimmed) { setError('Le nom du projet est requis.'); return; }
+    if (!trimmed) { setError('Saisissez le nom du projet.'); return; }
     setSubmitting(true);
     setError('');
     try {
       await onSubmit(trimmed);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Enregistrement impossible.');
+      setError(err instanceof Error ? err.message : 'Le nom n\'a pas pu être enregistré. Réessayez.');
       setSubmitting(false);
     }
   };

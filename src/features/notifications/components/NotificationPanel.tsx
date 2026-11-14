@@ -68,7 +68,7 @@ export function NotificationPanel({
               className="notif-panel__mark-all"
               onClick={onMarkAllRead}
             >
-              Tout marquer lu
+              Tout marquer comme lu
             </button>
           )}
           <button

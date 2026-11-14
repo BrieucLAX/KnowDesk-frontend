@@ -17,14 +17,14 @@ export function TagsSettingsSection() {
       title="Tags"
       titleId="tags-title"
       description={
-        <>Gérez les étiquettes utilisées par votre équipe sur les articles.
+        <>Gérez les tags utilisés par votre équipe sur les articles.
         Les nouveaux tags se créent automatiquement depuis l'éditeur ;
-        ici vous pouvez les renommer ou les retirer.</>
+        ici, vous pouvez les renommer ou les supprimer.</>
       }
       loading={loading}
       error={error}
       items={items}
-      emptyMessage="Aucun tag pour l'instant. Les tags se créent automatiquement quand un contributeur en saisit dans l'éditeur d'article."
+      emptyMessage="Aucun tag pour l'instant. Les tags se créent automatiquement quand un membre en saisit dans l'éditeur d'article."
       listClassName="tags-list"
       renderItem={tag => (
         <li key={tag.id} className="tag-row">
@@ -54,7 +54,7 @@ export function TagsSettingsSection() {
               ? `Ce tag sera retiré de ${confirmDelete.articles_count} article${confirmDelete.articles_count === 1 ? '' : 's'}. Cette action est irréversible.`
               : 'Cette action est irréversible.'
           }
-          confirmLabel="Supprimer"
+          confirmLabel="Supprimer le tag"
           variant="danger"
           onConfirm={() => { remove(confirmDelete.id); setConfirmDelete(null); }}
           onCancel={() => setConfirmDelete(null)}
@@ -106,7 +106,7 @@ function RenameTagModal({
         <>
           <Button type="button" variant="ghost" size="md" onClick={onClose}>Annuler</Button>
           <Button type="submit" variant="primary" size="md" loading={saving} disabled={!canSubmit}>
-            Enregistrer
+            Renommer le tag
           </Button>
         </>
       }
@@ -115,7 +115,7 @@ function RenameTagModal({
         id="rename-input"
         type="text"
         label="Nouveau nom"
-        helperText="Tous les articles taggés afficheront le nouveau nom. Si un tag avec ce nom existe déjà (insensible à la casse), les deux seront fusionnés."
+        helperText="Tous les articles qui portent ce tag afficheront le nouveau nom. Si un tag porte déjà ce nom (majuscules et minuscules confondues), les deux seront fusionnés."
         value={value}
         onChange={e => setValue(e.target.value)}
         autoFocus

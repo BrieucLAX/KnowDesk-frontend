@@ -35,9 +35,9 @@ export function PrivacyPage() {
         <h2>2. Données collectées via l'application web</h2>
         <p>Lors de votre utilisation d'<strong>app.knowdesk.fr</strong>, nous collectons :</p>
         <ul>
-          <li><strong>Données de compte</strong> : email, prénom, nom, organisation, rôle.</li>
-          <li><strong>Contenu que vous créez</strong> : articles, FAQs, processus guidés, catégories, tags.</li>
-          <li><strong>Données d'usage</strong> : recherches effectuées, articles consultés, votes 👍/👎 sur les FAQs, ouvertures de l'application. Ces données alimentent les indicateurs internes (KB Health Score, Analytics).</li>
+          <li><strong>Données de compte</strong> : e-mail, prénom, nom, organisation, rôle.</li>
+          <li><strong>Contenu que vous créez</strong> : articles, FAQ, processus guidés, catégories, tags.</li>
+          <li><strong>Données d'usage</strong> : recherches effectuées, articles consultés, votes positifs ou négatifs sur les FAQ, ouvertures de l'application. Ces données alimentent les indicateurs internes (Santé de la base, écran Analyse).</li>
           <li><strong>Données techniques</strong> : adresse IP, navigateur et système d'exploitation. L'adresse IP sert à la limitation du nombre de requêtes et à la sécurité ; elle est enregistrée, avec le navigateur, dans le journal d'audit des actions sensibles, conservé 365 jours.</li>
         </ul>
       </section>
@@ -45,14 +45,14 @@ export function PrivacyPage() {
       <section className="privacy-page__section">
         <h2>3. Données collectées via l'extension Chrome « KnowDesk Search »</h2>
         <p>
-          L'extension Chrome est une <strong>surface de recherche</strong>
+          L'extension Chrome est une <strong>surface de recherche</strong>{' '}
           qui réutilise votre session d'authentification posée par
           app.knowdesk.fr. Elle accède aux données suivantes :
         </p>
         <ul>
           <li>
-            <strong>Cookie d'authentification</strong> (`access_token`) du
-            domaine <code>.knowdesk.fr</code>, lu localement via l'API Chrome
+            <strong>Cookie d'authentification</strong> (<code>access_token</code>) du
+            domaine <code>.knowdesk.fr</code>, lu localement via l'API Chrome{' '}
             <code>chrome.cookies.get</code>. Ce cookie reste sur votre machine,
             il n'est ni stocké côté KnowDesk autrement que sous forme de token
             JWT temporaire, ni partagé avec des tiers.
@@ -66,14 +66,14 @@ export function PrivacyPage() {
             <strong>Événements d'usage</strong> de l'extension (ouverture de la
             popup, recherche, génération de réponse IA, clic sur résultat),
             enregistrés dans la table <code>events</code> de votre
-            organisation. Ces événements alimentent les Analytics et nous
+            organisation. Ces événements alimentent l'écran Analyse et nous
             aident à améliorer le produit.
           </li>
         </ul>
         <p>
           L'extension <strong>ne collecte aucune donnée</strong> sur les sites
           que vous visitez, ne lit pas le contenu des pages, n'analyse ni vos
-          historiques ni vos onglets. Elle n'a accès qu'aux cookies du domaine
+          historiques ni vos onglets. Elle n'a accès qu'aux cookies du domaine{' '}
           <code>.knowdesk.fr</code>.
         </p>
       </section>
@@ -85,7 +85,7 @@ export function PrivacyPage() {
           conversations sont enregistrées dans votre espace KnowDesk pour audit
           et amélioration continue. Voir le bandeau de transparence affiché à
           l'ouverture du widget côté visiteur. Vous pouvez configurer la durée
-          de rétention (30, 60, 90 ou 180 jours) dans Settings → Chatbot.
+          de conservation (30, 60, 90 ou 180 jours) dans les paramètres du chatbot.
         </p>
       </section>
 
@@ -93,9 +93,9 @@ export function PrivacyPage() {
         <h2>5. Finalités du traitement</h2>
         <ul>
           <li>Fourniture du service de base de connaissance (création, consultation, recherche, IA).</li>
-          <li>Mesure de la santé éditoriale de la base (KB Health Score, Analytics) — réservée aux admins de l'organisation.</li>
-          <li>Sécurité (rate-limiting, audit log des actions sensibles).</li>
-          <li>Communication transactionnelle (vérification email, réinitialisation mot de passe, notifications).</li>
+          <li>Mesure de la santé éditoriale de la base (Santé de la base, écran Analyse), réservée aux administrateurs de l'organisation.</li>
+          <li>Sécurité (limitation du nombre de requêtes, journal d'audit des actions sensibles).</li>
+          <li>Communication transactionnelle (vérification de l'adresse e-mail, réinitialisation du mot de passe, notifications).</li>
         </ul>
       </section>
 
@@ -108,8 +108,8 @@ export function PrivacyPage() {
           <li><strong>Mistral AI</strong> (génération de réponses IA et de résumés thématiques) — traitement dans l'Union européenne.</li>
           <li><strong>Meilisearch</strong> (indexation de la recherche), auto-hébergé sur Railway avec l'application.</li>
           <li><strong>Vercel</strong> (hébergement de l'interface web).</li>
-          <li><strong>Resend</strong> (envoi d'emails transactionnels).</li>
-          <li><strong>Sentry</strong> (monitoring d'erreurs) — données personnelles masquées avant envoi (emails, IBAN, cartes, téléphones).</li>
+          <li><strong>Resend</strong> (envoi d'e-mails transactionnels).</li>
+          <li><strong>Sentry</strong> (suivi des erreurs) — données personnelles masquées avant envoi (e-mails, IBAN, cartes, téléphones).</li>
         </ul>
       </section>
 
@@ -119,9 +119,9 @@ export function PrivacyPage() {
         <ul>
           <li>Accéder à vos données (page « Mon compte »).</li>
           <li>Modifier vos données (page « Mon compte »).</li>
-          <li>Demander la suppression de votre compte et des données associées, par email à contact@knowdesk.fr.</li>
+          <li>Demander la suppression de votre compte et des données associées, par e-mail à contact@knowdesk.fr.</li>
           <li>Exporter vos données dans un format réutilisable (sur demande à contact@knowdesk.fr).</li>
-          <li>Désinstaller l'extension Chrome à tout moment (les événements d'usage déjà loggués restent dans votre espace mais ne sont plus alimentés).</li>
+          <li>Désinstaller l'extension Chrome à tout moment (les événements d'usage déjà enregistrés restent dans votre espace mais ne sont plus alimentés).</li>
         </ul>
         <p>
           Pour toute réclamation, vous pouvez également saisir la CNIL.
@@ -133,8 +133,8 @@ export function PrivacyPage() {
         <ul>
           <li><strong>Compte utilisateur</strong> : conservé tant que le compte est actif.</li>
           <li><strong>Événements d'usage (table events)</strong> : 90 jours, purge automatique.</li>
-          <li><strong>Audit log</strong> (dont l'adresse IP et le navigateur) : 365 jours, purge automatique.</li>
-          <li><strong>Conversations chatbot</strong> : 30 à 180 jours selon configuration admin de votre organisation.</li>
+          <li><strong>Journal d'audit</strong> (dont l'adresse IP et le navigateur) : 365 jours, purge automatique.</li>
+          <li><strong>Conversations du chatbot</strong> : 30 à 180 jours, selon le paramètre choisi par un administrateur de votre organisation.</li>
           <li><strong>Tokens d'authentification</strong> : access token 15 min, refresh token 30 jours.</li>
         </ul>
       </section>
@@ -145,7 +145,7 @@ export function PrivacyPage() {
           KnowDesk peut être amené à modifier cette politique. La date de
           dernière mise à jour est affichée en haut de la page. Les
           changements significatifs seront notifiés aux administrateurs des
-          organisations par email.
+          organisations par e-mail.
         </p>
       </section>
     </div>

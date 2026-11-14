@@ -83,7 +83,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
       .then(setVersions)
       .catch(err => {
         setVersions([]);
-        toast.error(err instanceof Error ? err.message : 'Impossible de charger l\'historique.');
+        toast.error(err instanceof Error ? err.message : 'Impossible de charger l\'historique. Rechargez la page.');
       });
   }, [project.id, toast]);
 
@@ -104,7 +104,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
         if (!alive) return;
         setDocuments([]);
         applySaved(null);
-        toast.error(err instanceof Error ? err.message : 'Impossible de charger la fiche de cadrage.');
+        toast.error(err instanceof Error ? err.message : 'Impossible de charger la fiche de cadrage. Rechargez la page.');
       })
       .finally(() => { if (alive) setLoaded(true); });
     loadVersions();
@@ -147,7 +147,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
       setPending({
         title,
         description: 'Le texte actuel de la fiche sera remplacé. Il reste disponible dans l\'historique s\'il a été enregistré.',
-        confirmLabel: 'Remplacer',
+        confirmLabel: 'Remplacer le texte',
         action: apply,
       });
     } else {
@@ -187,7 +187,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
       const cadrage = await onboardingApi.getCadrage(project.id, latestStructured);
       replaceFreeText(cadrage.markdown, null, 'Partir du rendu de la fiche structurée ?');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Impossible de charger la fiche structurée.');
+      toast.error(err instanceof Error ? err.message : 'Impossible de charger la fiche structurée. Réessayez.');
     } finally {
       setStartingFromStructured(false);
     }
@@ -240,7 +240,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
       if (err instanceof ApiError && err.code === 'VALIDATION_ERROR') {
         setFreeError(parseBackendError(err.message)?.message ?? err.message);
       } else {
-        toast.error(err instanceof Error ? err.message : 'Enregistrement impossible.');
+        toast.error(err instanceof Error ? err.message : 'La fiche de cadrage n\'a pas pu être enregistrée. Réessayez.');
       }
     } finally {
       setSaving(false);
@@ -266,7 +266,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
         if (parsed) setErrors({ [parsed.path]: parsed.message });
         else setFormError(err.message);
       } else {
-        toast.error(err instanceof Error ? err.message : 'Enregistrement impossible.');
+        toast.error(err instanceof Error ? err.message : 'La fiche de cadrage n\'a pas pu être enregistrée. Réessayez.');
       }
     } finally {
       setSaving(false);

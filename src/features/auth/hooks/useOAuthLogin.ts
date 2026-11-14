@@ -38,7 +38,7 @@ export function useOAuthLogin(onSuccess: (session: AuthSession) => void): UseOAu
     } catch (err) {
       setError(err instanceof ApiError
         ? err.message
-        : (err instanceof Error ? err.message : 'Échec du login social.'));
+        : (err instanceof Error ? err.message : 'La connexion n\'a pas abouti. Réessayez, ou connectez-vous avec votre adresse e-mail.'));
     } finally {
       setLoading(false);
     }

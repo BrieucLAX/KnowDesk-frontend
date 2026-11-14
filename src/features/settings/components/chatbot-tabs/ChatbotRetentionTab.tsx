@@ -15,10 +15,10 @@ export function ChatbotRetentionTab({ ctx }: { ctx: ChatbotTabContext }) {
         Durée de conservation des conversations
         <HelpPopover content={
           <>
-            Plus la durée est courte, plus le risque RGPD diminue ;
-            mais vous perdez l'historique pour analyser les conversations
-            passées (Analytics, debug). <code>90 jours</code> est un bon
-            compromis pour la plupart des cas.
+            Plus la durée est courte, plus le risque au regard du RGPD
+            diminue, mais vous perdez l'historique des conversations passées
+            (écran Analyse, diagnostic). Une durée de 90 jours est un bon
+            compromis dans la plupart des cas.
           </>
         } />
       </label>
@@ -38,7 +38,7 @@ export function ChatbotRetentionTab({ ctx }: { ctx: ChatbotTabContext }) {
       </select>
       <p className="field-helper">
         Au-delà de cette durée, les conversations sont définitivement supprimées
-        de notre base (purge quotidienne RGPD).
+        de nos serveurs. La suppression a lieu chaque jour, conformément au RGPD.
       </p>
     </div>
   );

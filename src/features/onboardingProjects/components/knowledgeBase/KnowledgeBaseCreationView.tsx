@@ -380,7 +380,7 @@ export function KnowledgeBaseCreationView({
           title="Créer la base de connaissance ?"
           description={`${plural(c.counts.articles, 'article', 'articles')} et ${plural(c.counts.faqs, 'FAQ', 'FAQ')} seront publiés en interne : `
             + 'votre équipe les verra dans la base de connaissance, le chatbot public ne les verra pas.'}
-          confirmLabel="Créer"
+          confirmLabel="Créer la base"
           variant="primary"
           onConfirm={create}
           onCancel={() => setConfirming(false)}

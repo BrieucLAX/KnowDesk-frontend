@@ -11,7 +11,7 @@ export function useAccount() {
   useEffect(() => {
     apiClient.get<AccountProfile>('/account')
       .then(setProfile)
-      .catch(err => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger votre profil.'))
+      .catch(err => toast.error(err instanceof ApiError ? err.message : 'Votre profil n\'a pas pu être chargé. Rechargez la page.'))
       .finally(() => setLoading(false));
   }, [toast]);
 
@@ -33,7 +33,7 @@ export function useAccount() {
 
   const requestEmailChange = useCallback(async (newEmail: string) => {
     await apiClient.post('/account/request-email-change', { newEmail });
-    toast.success('Email de confirmation envoyé.');
+    toast.success('E-mail de confirmation envoyé.');
   }, [toast]);
 
   return { profile, loading, updateProfile, changePassword, requestEmailChange };

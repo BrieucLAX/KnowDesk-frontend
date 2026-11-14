@@ -34,7 +34,7 @@ export function CardHistory({ projectId, analysisId, card, docs, currentId }: Ca
       .catch(err => {
         if (cancelled) return;
         setItems([]);
-        toast.error(err instanceof Error ? err.message : 'Impossible de charger l\'historique.');
+        toast.error(err instanceof Error ? err.message : 'Impossible de charger l\'historique. Rechargez la page.');
       });
     return () => { cancelled = true; };
   }, [open, currentId, projectId, analysisId, card.id, toast]);

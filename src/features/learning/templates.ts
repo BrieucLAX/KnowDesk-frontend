@@ -47,7 +47,7 @@ export const LEARNING_TEMPLATES: LearningPathTemplate[] = [
     hint:  'Risque opérationnel — renouvellement 6 mois',
     name:  'Sécurité : reconnaître phishing et tentatives de fraude',
     description:
-      'Identifier les emails suspects, suivre la procédure de signalement et appliquer l\'authentification client renforcée.',
+      'Identifier les e-mails suspects, suivre la procédure de signalement et appliquer l\'authentification client renforcée.',
     mandatory:      true,
     renewal_months: 6,
     modules: [
@@ -59,10 +59,10 @@ export const LEARNING_TEMPLATES: LearningPathTemplate[] = [
   },
   {
     id:    'onboarding',
-    label: 'Onboarding nouveau conseiller',
+    label: 'Intégration d\'un nouveau conseiller',
     icon:  UserPlus,
     hint:  'Première semaine — pas de renouvellement',
-    name:  'Onboarding nouveau conseiller',
+    name:  'Intégration d\'un nouveau conseiller',
     description:
       'Premier parcours pour un nouvel arrivant : outils, posture conseiller et premiers appels accompagnés.',
     mandatory:      true,

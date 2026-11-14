@@ -29,7 +29,7 @@ export function MyLearningPage({ onOpenModule }: MyLearningPageProps) {
     let alive = true;
     learningApi.myLearning()
       .then(d => { if (alive) setPaths(d); })
-      .catch((err: unknown) => { if (alive) toast.error(err instanceof ApiError ? err.message : 'Erreur de chargement.'); })
+      .catch((err: unknown) => { if (alive) toast.error(err instanceof ApiError ? err.message : 'Impossible de charger vos formations. Rechargez la page.'); })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, [toast]);
@@ -63,7 +63,7 @@ export function MyLearningPage({ onOpenModule }: MyLearningPageProps) {
         <PageHeader title="Mes formations" subtitle="" />
         <EmptyState
           title="Aucune formation assignée"
-          description="Quand votre admin vous assignera des parcours, ils apparaîtront ici."
+          description="Quand votre administrateur vous assignera des parcours, ils apparaîtront ici."
         />
       </div>
     );

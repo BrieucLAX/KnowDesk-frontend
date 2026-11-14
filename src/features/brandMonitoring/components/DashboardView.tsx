@@ -37,7 +37,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
       setAlignment(a);
       setRecos(rc);
     } catch (err) {
-      toast.error((err as Error).message ?? 'Chargement impossible.');
+      toast.error((err as Error).message ?? "Le tableau de bord n'a pas pu être chargé. Rechargez la page.");
     } finally {
       setLoading(false);
     }
@@ -49,10 +49,10 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
     setRunning(true);
     try {
       await brandMonitoringApi.triggerRun(projectId);
-      toast.success('Run lancé en arrière-plan. Compte ~10s par prompt, recharge le dashboard pour voir les résultats.');
+      toast.success('Analyse lancée en arrière-plan. Comptez environ 10 s par prompt, puis rechargez le tableau de bord pour voir les résultats.');
       onReloadProject();
     } catch (err) {
-      toast.error((err as Error).message ?? 'Lancement impossible.');
+      toast.error((err as Error).message ?? "L'analyse n'a pas pu être lancée. Réessayez.");
     } finally {
       setRunning(false);
     }
@@ -63,11 +63,11 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
     try {
       const r = await brandMonitoringApi.generateRecommendations(projectId);
       toast.success(r.generated === 0
-        ? 'Aucun signal détecté pour générer des recommandations. Lance plus de runs pour accumuler du signal.'
+        ? "Pas encore assez de signaux pour proposer des recommandations. Lancez d'autres analyses pour en accumuler."
         : `${r.generated} recommandation${r.generated > 1 ? 's' : ''} générée${r.generated > 1 ? 's' : ''}.`);
       await reload();
     } catch (err) {
-      toast.error((err as Error).message ?? 'Génération impossible.');
+      toast.error((err as Error).message ?? "Les recommandations n'ont pas pu être générées. Réessayez.");
     } finally {
       setGeneratingRecos(false);
     }
@@ -78,7 +78,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
       await brandMonitoringApi.dismissRecommendation(recoId);
       setRecos(prev => prev.filter(r => r.id !== recoId));
     } catch (err) {
-      toast.error((err as Error).message ?? 'Suppression impossible.');
+      toast.error((err as Error).message ?? "La recommandation n'a pas pu être archivée. Réessayez.");
     }
   };
 
@@ -86,10 +86,10 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
     setClustering(true);
     try {
       const result = await brandMonitoringApi.clusterTopics(projectId);
-      toast.success(`${result.assigned} prompts regroupés en ${result.topics.length} topics (coût ${result.costEur.toFixed(3)}€).`);
+      toast.success(`${result.assigned} prompts regroupés en ${result.topics.length} thèmes (coût : ${result.costEur.toFixed(3)} €).`);
       await reload();
     } catch (err) {
-      toast.error((err as Error).message ?? 'Clustering impossible.');
+      toast.error((err as Error).message ?? "Les prompts n'ont pas pu être regroupés. Réessayez.");
     } finally {
       setClustering(false);
     }
@@ -110,10 +110,10 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
     <div className="bm-dashboard">
       <div className="bm-actions">
         <Button variant="primary" size="sm" onClick={handleRun} loading={running}>
-          <Play size={16} />Lancer un nouveau run
+          <Play size={16} />Lancer une analyse
         </Button>
         <Button variant="secondary" size="sm" onClick={handleCluster} loading={clustering}>
-          <Sparkles size={16} />Regrouper les prompts par topic
+          <Sparkles size={16} />Regrouper les prompts par thème
         </Button>
         <Button variant="secondary" size="sm" onClick={handleGenerateRecos} loading={generatingRecos}>
           <Lightbulb size={16} />Générer les recommandations
@@ -124,8 +124,8 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
         <section className="bm-card bm-recos">
           <h3 className="bm-card__title">Actions à mener ({recos.length})</h3>
           <p className="bm-card__sub">
-            Signaux détectés dans tes données. Click sur « Traité » pour archiver une recommandation —
-            elle ne sera plus régénérée tant que tu ne la réinitialises pas.
+            Signaux détectés dans vos données. Cliquez sur « Marquer comme traitée » pour archiver une
+            recommandation : elle ne sera plus proposée tant que vous ne la réinitialisez pas.
           </p>
           <ul className="bm-recos__list">
             {recos.map(r => (
@@ -137,7 +137,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
                 <p className="bm-reco__body">{r.body}</p>
                 <div className="bm-reco__actions">
                   <Button variant="secondary" size="sm" onClick={() => handleDismissReco(r.id)} leftIcon={<Check size={16} />}>
-                    Traité
+                    Marquer comme traitée
                   </Button>
                 </div>
               </li>
@@ -148,7 +148,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
 
       {!hasData && (
         <div className="bm-empty-data">
-          <p>Aucune donnée encore. Lance un run pour interroger Mistral sur tes prompts.</p>
+          <p>Aucune donnée pour l'instant. Lancez une analyse pour interroger Mistral sur vos prompts.</p>
         </div>
       )}
 
@@ -174,10 +174,10 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
             </section>
             {productsOnly.length > 0 && (
               <section className="bm-card">
-                <h3 className="bm-card__title">Part de voix — produits (AI Shopping)</h3>
+                <h3 className="bm-card__title">Part de voix — produits (recommandations d'achat)</h3>
                 <p className="bm-card__sub">
                   {totalProduct} mentions de produits cumulées sur {sov.responseCount} réponses.
-                  Mesure ce que l'IA recommande aux utilisateurs sur les questions shopping.
+                  Mesure ce que l'IA recommande sur les questions d'achat.
                 </p>
                 <ShareOfVoiceBars byBrand={recalcPct(productsOnly, totalProduct)} totalMentions={totalProduct} />
               </section>
@@ -190,11 +190,11 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
 
       {hasData && alignment && alignment.byBrand.length > 0 && (
         <section className="bm-card">
-          <h3 className="bm-card__title">Alignement narrative</h3>
+          <h3 className="bm-card__title">Alignement narratif</h3>
           <p className="bm-card__sub">
             {alignment.desiredAttributes.length > 0
               ? <>Attributs souhaités du positionnement : {alignment.desiredAttributes.map(a => <span key={a} className="bm-chip bm-chip--owner" style={{marginRight:4}}>{a}</span>)}</>
-              : <>Aucun attribut prioritaire défini. Configure-les dans Paramètres pour obtenir le score d'alignement.</>}
+              : <>Aucun attribut prioritaire défini. Renseignez-les dans l'onglet Paramètres pour obtenir le score d'alignement.</>}
           </p>
           <div className="bm-alignment">
             {alignment.byBrand.map(b => (
@@ -203,7 +203,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
                   <strong className="icon-label">{b.isOwner && <Star size={16} aria-hidden="true" />}{b.brandName}</strong>
                   <span className="bm-alignment-row__meta">
                     {b.mentionsCount === 0
-                      ? <em>0 mention — marque absente des réponses LLM</em>
+                      ? <em>0 mention : marque absente des réponses des IA</em>
                       : <>
                           {b.mentionsCount} mention{b.mentionsCount > 1 ? 's' : ''} évaluée{b.mentionsCount > 1 ? 's' : ''}
                           {alignment.desiredAttributes.length > 0 && <> · score d'alignement <strong>{b.alignmentScore.toFixed(0)}%</strong></>}
@@ -214,12 +214,12 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
                   <p className="bm-alignment-row__zero">
                     {b.isOwner && <TriangleAlert size={16} className="icon-inline bm-alignment-row__warn" />}
                     {b.isOwner
-                      ? ' Insight critique : ta marque n\'est mentionnée dans AUCUNE réponse LLM sur les prompts actuels. Ajoute des prompts plus génériques (ex : « Quel opérateur choisir ? ») pour voir si tu apparais sur du généraliste, ou révise la stratégie de visibilité.'
-                      : 'Cette marque n\'est mentionnée dans aucune réponse LLM sur les prompts actuels.'}
+                      ? " Point critique : votre marque n'est mentionnée dans aucune réponse des IA sur les prompts actuels. Ajoutez des prompts plus généraux (par exemple « Quel opérateur choisir ? ») pour voir si elle y apparaît, ou revoyez votre stratégie de visibilité."
+                      : "Cette marque n'est mentionnée dans aucune réponse des IA sur les prompts actuels."}
                   </p>
                 ) : b.attributesObserved.length === 0 ? (
                   <p className="bm-alignment-row__zero">
-                    Mentions détectées mais aucun attribut clair extrait par le LLM judge.
+                    Des mentions ont été détectées, mais l'IA d'évaluation n'en a extrait aucun attribut clair.
                   </p>
                 ) : (
                   <div className="bm-alignment-row__attrs">
@@ -242,16 +242,16 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
 
       {hasData && topics.length > 0 && (
         <section className="bm-card">
-          <h3 className="bm-card__title">Part de voix par topic</h3>
+          <h3 className="bm-card__title">Part de voix par thème</h3>
           <p className="bm-card__sub">
-            Identifie les axes où ta marque est forte vs absente. Si tu vois « (sans topic) »,
-            relance « Regrouper les prompts par topic ».
+            Repérez les thèmes où votre marque est forte et ceux où elle est absente. Si vous voyez
+            « (sans thème) », relancez « Regrouper les prompts par thème ».
           </p>
           <div className="bm-topics">
             {topics.map(topic => (
               <div key={topic.topic ?? '__null__'} className="bm-topic">
                 <div className="bm-topic__head">
-                  <strong>{topic.topic ?? '(sans topic)'}</strong>
+                  <strong>{topic.topic ?? '(sans thème)'}</strong>
                   <span className="bm-topic__meta">
                     {topic.promptCount} prompt{topic.promptCount > 1 ? 's' : ''} · {topic.responseCount} réponses · {topic.totalMentions} mentions
                   </span>
@@ -263,7 +263,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
                     compact
                   />
                 ) : (
-                  <p className="bm-topic__empty">Aucune mention détectée sur ce topic.</p>
+                  <p className="bm-topic__empty">Aucune mention détectée sur ce thème.</p>
                 )}
               </div>
             ))}
@@ -277,7 +277,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
 function labelForKind(kind: MonitoringRecommendation['kind']): string {
   switch (kind) {
     case 'absent_from_llm':   return 'Critique';
-    case 'missing_topic':     return 'Topic';
+    case 'missing_topic':     return 'Thème';
     case 'missing_attribute': return 'Positionnement';
     case 'missing_source':    return 'Source';
   }

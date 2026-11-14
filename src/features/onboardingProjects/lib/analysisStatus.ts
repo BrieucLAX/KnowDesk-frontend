@@ -123,7 +123,7 @@ const NOT_RETRYABLE = new Set(['provider_auth', 'pipeline_invalid_error_code']);
  */
 export function analysisFailureNote(code: string | null): string {
   if (code === 'corpus_too_large') {
-    return 'Elle ne compte pas dans votre quota. Retirez des documents dans « Vos documents » avant de lancer une nouvelle analyse.';
+    return 'Elle ne compte pas dans votre quota. Retirez des documents dans l\'onglet « Documents » avant de lancer une nouvelle analyse.';
   }
   return code !== null && NOT_RETRYABLE.has(code)
     ? 'Elle ne compte pas dans votre quota. Nous sommes prévenus.'

@@ -25,7 +25,7 @@ interface SectionDef {
 
 /** Ordre des sections dans le dropdown — les FAQs en premier (cas d'usage conseiller). */
 const SECTIONS: SectionDef[] = [
-  { type: 'faq',     label: 'FAQs',      icon: <CircleHelp size={16} /> },
+  { type: 'faq',     label: 'FAQ',       icon: <CircleHelp size={16} /> },
   { type: 'article', label: 'Articles',  icon: <FileText size={16} /> },
   { type: 'tree',    label: 'Processus', icon: <ListOrdered size={16} /> },
 ];
@@ -81,9 +81,9 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
     const plain = text.replace(/<\/?mark>/g, '');
     try {
       await navigator.clipboard.writeText(plain);
-      toast.success('Réponse copiée');
+      toast.success('Réponse copiée.');
     } catch {
-      toast.error('Impossible d\'accéder au presse-papier');
+      toast.error('Copie impossible : le navigateur bloque le presse-papiers. Sélectionnez le texte et copiez-le à la main.');
     }
   }, [toast]);
 
@@ -318,7 +318,7 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
       {/* No results */}
       {state.status === 'success' && state.query && state.results.length === 0 && !dismissed && (
         <div className="search-bar__empty" role="status">
-          <p>Aucun résultat pour <strong>"{state.query}"</strong></p>
+          <p>Aucun résultat pour « <strong>{state.query}</strong> »</p>
           <p className="search-bar__empty-hint">Essayez d'autres mots-clés ou consultez les catégories.</p>
         </div>
       )}

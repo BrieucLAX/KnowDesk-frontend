@@ -71,7 +71,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
     setLoading(true);
     learningApi.listPaths()
       .then(setPaths)
-      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les parcours.'))
+      .catch((err: unknown) => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les parcours. Rechargez la page.'))
       .finally(() => setLoading(false));
   }, [toast]);
 
@@ -111,7 +111,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
         : 'Parcours créé.');
       onEditPath(path.id);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Création impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Création du parcours impossible. Réessayez dans un instant.');
     } finally {
       setCreating(false);
     }
@@ -126,7 +126,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
       setConfirmDelete(null);
       toast.success('Parcours supprimé.');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Suppression du parcours impossible. Réessayez dans un instant.');
     } finally {
       setDeleting(false);
     }
@@ -140,7 +140,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
 
   const renderRowActions = (p: LearningPath) => (
     <ActionMenu items={[
-      { label: 'Éditer',    onClick: () => onEditPath(p.id) },
+      { label: 'Modifier',  onClick: () => onEditPath(p.id) },
       { type: 'separator' },
       { label: 'Supprimer', onClick: () => setConfirmDelete(p), variant: 'danger' },
     ]} />
@@ -152,7 +152,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
   const emptyState = (
     <EmptyState
       title="Aucun parcours pour l'instant"
-      description="Créez votre premier parcours en sélectionnant des articles, FAQs ou processus de votre base."
+      description="Créez votre premier parcours en sélectionnant des articles, FAQ ou processus de votre base."
       ctaLabel="Nouveau parcours"
       onCta={() => setShowCreate(true)}
     />
@@ -163,8 +163,8 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
       {confirmDelete && (
         <ConfirmDialog
           title="Supprimer ce parcours ?"
-          description={`« ${confirmDelete.name} » sera définitivement supprimé. Les assignations et complétions associées resteront en historique côté audit log.`}
-          confirmLabel="Supprimer"
+          description={`« ${confirmDelete.name} » sera supprimé. Les assignations et la progression des conseillers restent consignées dans le journal d'activité. Cette action est définitive.`}
+          confirmLabel="Supprimer le parcours"
           variant="danger"
           loading={deleting}
           onConfirm={handleDelete}
@@ -174,7 +174,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
 
       {showCreate && (
         <Modal
-          title="Nouveau parcours de formation"
+          title="Nouveau parcours"
           onClose={() => { setShowCreate(false); resetCreateForm(); }}
           asForm
           onSubmit={handleCreate}
@@ -182,13 +182,13 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
             <>
               <Button type="button" variant="ghost" size="md" onClick={() => { setShowCreate(false); resetCreateForm(); }}>Annuler</Button>
               <Button type="submit" variant="primary" size="md" loading={creating} disabled={!newName.trim()}>
-                Créer et éditer
+                Créer et ouvrir le parcours
               </Button>
             </>
           }
         >
           <fieldset className="template-picker">
-            <legend className="learning-form__label">Démarrer avec un template (optionnel)</legend>
+            <legend className="learning-form__label">Partir d'un modèle (facultatif)</legend>
             <div className="template-picker__grid">
               <button
                 type="button"
@@ -197,7 +197,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
               >
                 <span className="template-card__icon" aria-hidden="true"><Plus size={24} /></span>
                 <span className="template-card__label">Vierge</span>
-                <span className="template-card__hint">Tout configurer manuellement</span>
+                <span className="template-card__hint">Tout configurer vous-même</span>
               </button>
               {LEARNING_TEMPLATES.map(tpl => (
                 <button
@@ -223,14 +223,14 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
             id="path-name"
             type="text"
             label="Nom du parcours"
-            placeholder="ex. Onboarding conseiller niveau 1"
+            placeholder="ex. Intégration conseiller niveau 1"
             value={newName}
             onChange={e => setNewName(e.target.value)}
             autoFocus
             required
           />
           <label className="learning-form__field">
-            <span className="learning-form__label">Description (optionnel)</span>
+            <span className="learning-form__label">Description (facultatif)</span>
             <textarea
               className="learning-form__textarea"
               placeholder="À quoi sert ce parcours ?"
@@ -245,7 +245,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
               checked={newMandatory}
               onChange={e => setNewMandatory(e.target.checked)}
             />
-            <span>Formation obligatoire pour les conseillers assignés</span>
+            <span>Parcours obligatoire pour les conseillers assignés</span>
           </label>
           <label className="learning-form__field">
             <span className="learning-form__label">Renouvellement périodique</span>

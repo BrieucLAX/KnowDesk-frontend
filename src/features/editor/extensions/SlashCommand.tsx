@@ -75,7 +75,7 @@ const ITEMS: SlashCommandItem[] = [
     return {
       id: `callout-${type}`,
       label: meta[type].label,
-      description: 'Bloc coloré pour mettre en avant une info',
+      description: 'Bloc coloré pour mettre en avant une information',
       icon: <StatusIcon tone={type} size={16} />,
       keywords: ['callout', 'note', type],
       command: ({ editor, range }: { editor: Editor; range: Range }) =>

@@ -28,7 +28,7 @@ export function OnboardingHomePage({ onOpenProject }: OnboardingHomePageProps) {
       .catch(err => {
         if (!alive) return;
         setProjects([]);
-        toast.error(err instanceof Error ? err.message : 'Impossible de charger les projets.');
+        toast.error(err instanceof Error ? err.message : 'Impossible de charger les projets. Rechargez la page.');
       });
     return () => { alive = false; };
   }, [toast]);
@@ -47,7 +47,7 @@ export function OnboardingHomePage({ onOpenProject }: OnboardingHomePageProps) {
     <div className="obp-page">
       <PageHeader
         title="Onboarding"
-        subtitle="Importez vos documents et décrivez votre métier : Knowdesk en fera l'audit."
+        subtitle="Importez vos documents et décrivez votre métier : KnowDesk en fera l'audit."
         actions={projects && projects.length > 0 ? newButton : undefined}
       />
 

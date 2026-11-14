@@ -34,7 +34,7 @@ export function VersionsPanel({
             {[1,2,3].map(i => <Skeleton key={i} className="sk-version" />)}
           </>
         ) : versions.length === 0 ? (
-          <p className="versions-panel__empty">Aucune version sauvegardée.</p>
+          <p className="versions-panel__empty">Aucune version enregistrée.</p>
         ) : (
           <ul className="versions-list" role="list">
             {versions.map(v => (

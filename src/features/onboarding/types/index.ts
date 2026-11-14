@@ -20,5 +20,5 @@ export interface OnboardingErrors {
  */
 export const STEPS: OnboardingStep[] = [
   { id: 'team',    title: 'Inviter l\'équipe',    description: 'Optionnel — vous pouvez le faire plus tard.' },
-  { id: 'content', title: 'Première catégorie',  description: 'Organisez vos processus dès le départ.' },
+  { id: 'content', title: 'Première catégorie',  description: 'Organisez votre base dès le départ.' },
 ];

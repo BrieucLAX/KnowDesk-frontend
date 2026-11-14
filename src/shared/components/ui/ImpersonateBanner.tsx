@@ -37,7 +37,7 @@ const handleReturn = async () => {
     <div className="impersonate-banner" role="status">
       <StatusIcon tone="warning" className="impersonate-banner__icon" />
       <span className="impersonate-banner__text">
-        Mode impersonnification — Espace : <strong>{impersonating.orgName}</strong>
+        Accès superadmin à l'organisation <strong>{impersonating.orgName}</strong>
       </span>
       <Button
         type="button"
@@ -46,7 +46,7 @@ const handleReturn = async () => {
         className="impersonate-banner__quit"
         onClick={handleReturn}
       >
-        Quitter
+        Revenir au superadmin
       </Button>
     </div>
   );

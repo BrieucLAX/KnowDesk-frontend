@@ -80,8 +80,8 @@ export function ApiKeysSection() {
       {confirmRevoke && (
         <ConfirmDialog
           title={`Révoquer « ${confirmRevoke.name} » ?`}
-          description="Cette clé sera immédiatement invalidée. Les intégrations qui l'utilisent cesseront de fonctionner."
-          confirmLabel="Révoquer"
+          description="Cette clé sera immédiatement invalidée et les intégrations qui l'utilisent cesseront de fonctionner. Cette action est irréversible."
+          confirmLabel="Révoquer la clé"
           variant="danger"
           onConfirm={() => { revokeKey(confirmRevoke.id); setConfirmRevoke(null); }}
           onCancel={() => setConfirmRevoke(null)}
@@ -99,7 +99,7 @@ export function ApiKeysSection() {
                 Annuler
               </Button>
               <Button type="submit" variant="primary" size="md" loading={creating} disabled={!name.trim()}>
-                Créer
+                Créer la clé
               </Button>
             </>
           }
@@ -108,8 +108,8 @@ export function ApiKeysSection() {
             id="key-name"
             type="text"
             label="Nom de la clé"
-            placeholder="ex. Intégration Hubicus"
-            helperText="Donnez un nom descriptif pour identifier cette clé."
+            placeholder="Par exemple : Intégration Hubicus"
+            helperText="Un nom qui permet de reconnaître l'usage de cette clé."
             value={name}
             onChange={e => setName(e.target.value)}
             autoFocus

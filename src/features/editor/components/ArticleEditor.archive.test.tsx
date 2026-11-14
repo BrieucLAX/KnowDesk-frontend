@@ -63,7 +63,7 @@ describe('ArticleEditor : Archiver et Désarchiver (plan-articles-v1, lot 0)', (
     render(<ArticleEditor articleId={draftId} onSaved={() => {}} onCancel={() => {}} />);
 
     fireEvent.click(await screen.findByRole('button', { name: 'Archiver' }));
-    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Archiver' }));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: "Archiver l'article" }));
 
     expect(await screen.findByRole('button', { name: 'Désarchiver' })).toBeTruthy();
     expect(apiClient.put).toHaveBeenCalledWith(`/articles/${draftId}/archive`);

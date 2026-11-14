@@ -169,7 +169,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
   const renderRowActions = (faq: FaqListItem) => canEdit ? (
     <ActionMenu
       items={[
-        { label: 'Éditer',    onClick: () => onEditFaq(faq.id) },
+        { label: 'Modifier',  onClick: () => onEditFaq(faq.id) },
         { type: 'separator' },
         { label: 'Supprimer', onClick: () => setConfirmDelete(faq), variant: 'danger' },
       ]}
@@ -215,9 +215,9 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
     <>
       {confirmDelete && (
         <ConfirmDialog
-          title="Supprimer la FAQ ?"
-          description={`« ${confirmDelete.question} » sera retirée définitivement.`}
-          confirmLabel="Supprimer"
+          title="Supprimer cette FAQ ?"
+          description={`« ${confirmDelete.question} » sera supprimée. Cette action est définitive.`}
+          confirmLabel="Supprimer la FAQ"
           variant="danger"
           onConfirm={async () => {
             const ok = await remove(confirmDelete.id);
@@ -228,16 +228,16 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
       )}
       <BulkActionBar
         count={selectedIds.size}
-        label={n => `${n} FAQ${n > 1 ? 's' : ''} sélectionnée${n > 1 ? 's' : ''}`}
+        label={n => `${n} FAQ sélectionnée${n > 1 ? 's' : ''}`}
         onDelete={() => setBulkConfirmOpen(true)}
         onClear={() => setSelectedIds(new Set())}
         loading={bulkDeleting}
       />
       {bulkConfirmOpen && (
         <ConfirmDialog
-          title={`Supprimer ${selectedIds.size} FAQ${selectedIds.size > 1 ? 's' : ''} ?`}
-          description="Cette action est irréversible."
-          confirmLabel="Supprimer"
+          title={`Supprimer ${selectedIds.size} FAQ ?`}
+          description="Les FAQ sélectionnées seront supprimées, sauf celles utilisées dans des parcours. Cette action est définitive."
+          confirmLabel={selectedIds.size > 1 ? 'Supprimer les FAQ' : 'Supprimer la FAQ'}
           variant="danger"
           loading={bulkDeleting}
           onConfirm={handleBulkDelete}
@@ -247,7 +247,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
 
       <div className="faqs-page">
         <PageHeader
-          title="FAQs"
+          title="FAQ"
           subtitle="Questions fréquentes et leurs réponses prêtes à copier."
           actions={canEdit && (
             <Button variant="primary" size="md" onClick={onNewFaq}>
@@ -276,7 +276,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
               value={search}
               onChange={setSearch}
               placeholder="Filtrer la page…"
-              ariaLabel="Filtrer les FAQs"
+              ariaLabel="Filtrer les FAQ"
             />
           )}
           extra={(
@@ -304,7 +304,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
                 <div className="faqs-cell-question">
                   <div className="faqs-cell-question__text">
                     {faq.visibility === 'internal' && (
-                      <span className="visibility-icon" title="Interne — non exposé au chatbot public"><Lock size={16} role="img" aria-label="FAQ interne" /></span>
+                      <span className="visibility-icon" title="Interne — non utilisée par le chatbot de votre site"><Lock size={16} role="img" aria-label="FAQ interne" /></span>
                     )}
                     {faq.question}
                   </div>
@@ -331,19 +331,19 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
                 </div>
               ),
             },
-            { key: 'helpful',    label: 'Score', align: 'right', sortable: true, width: '120px',
+            { key: 'helpful',    label: 'Score helpful', align: 'right', sortable: true, width: '120px',
               render: faq => {
                 const totalVotes = faq.helpful_yes + faq.helpful_no;
                 return (
                   <span className={`faqs-cell-helpful ${totalVotes < 2 ? 'faqs-cell-muted' : ''}`}>
-                    <span className="faqs-cell-helpful__yes icon-label">{faq.helpful_yes} <ThumbsUp size={14} role="img" aria-label="pouce levé" /></span>
+                    <span className="faqs-cell-helpful__yes icon-label">{faq.helpful_yes} <ThumbsUp size={14} role="img" aria-label="votes « a aidé »" /></span>
                     <span className="faqs-cell-helpful__sep">·</span>
-                    <span className="faqs-cell-helpful__no icon-label">{faq.helpful_no} <ThumbsDown size={14} role="img" aria-label="pouce baissé" /></span>
+                    <span className="faqs-cell-helpful__no icon-label">{faq.helpful_no} <ThumbsDown size={14} role="img" aria-label="votes « n'a pas aidé »" /></span>
                   </span>
                 );
               },
             },
-            { key: 'views',      label: 'Vues 30j', align: 'right', sortable: true, width: '90px',
+            { key: 'views',      label: 'Vues 30 j', align: 'right', sortable: true, width: '90px',
               render: faq => (faq.views_30d ?? 0) > 0
                 ? (faq.views_30d ?? 0)
                 : <span className="faqs-cell-muted">0</span> },

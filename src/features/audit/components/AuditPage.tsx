@@ -23,14 +23,14 @@ const ACTION_LABEL: Record<AuditAction, string> = {
   'member.role_changed':      'Membre — rôle modifié',
   'member.disabled':          'Membre — désactivé',
   'member.reactivated':       'Membre — réactivé',
-  'org.settings_updated':     'Org — paramètres modifiés',
-  'org.general_updated':      'Org — informations modifiées',
-  'org.chat_settings_updated':'Org — chatbot modifié',
-  'org.chat_model.changed':   'Org — modèle chatbot changé',
-  'org.ai_settings_updated':  'Org — IA modifiée',
+  'org.settings_updated':     'Organisation — paramètres modifiés',
+  'org.general_updated':      'Organisation — informations modifiées',
+  'org.chat_settings_updated':'Organisation — chatbot modifié',
+  'org.chat_model.changed':   'Organisation — modèle du chatbot modifié',
+  'org.ai_settings_updated':  'Organisation — réglages de l\'IA modifiés',
   'account.password_changed': 'Compte — mot de passe modifié',
-  'account.email_change_requested': 'Compte — changement email demandé',
-  'account.email_change_confirmed': 'Compte — changement email confirmé',
+  'account.email_change_requested': 'Compte — changement d\'e-mail demandé',
+  'account.email_change_confirmed': 'Compte — changement d\'e-mail confirmé',
   'apikey.created':           'Clé API — créée',
   'apikey.revoked':           'Clé API — révoquée',
   'tag.deleted':              'Tag — supprimé',
@@ -44,16 +44,16 @@ const ACTION_LABEL: Record<AuditAction, string> = {
   'category.created':         'Catégorie — créée',
   'category.deleted':         'Catégorie — supprimée',
   'category.moved':           'Catégorie — modifiée',
-  'learning.path.created':    'Parcours de formation — créé',
-  'learning.path.updated':    'Parcours de formation — modifié',
-  'learning.path.deleted':    'Parcours de formation — supprimé',
-  'learning.module.created':  'Module de formation — créé',
-  'learning.module.updated':  'Module de formation — modifié',
-  'learning.module.deleted':  'Module de formation — supprimé',
-  'learning.assigned':        'Formation — assignée à un conseiller',
-  'learning.unassigned':      'Formation — désaffectée d\'un conseiller',
-  'superadmin.impersonate.start': 'Superadmin — impersonation',
-  'superadmin.impersonate.stop':  'Superadmin — fin impersonation',
+  'learning.path.created':    'Parcours — créé',
+  'learning.path.updated':    'Parcours — modifié',
+  'learning.path.deleted':    'Parcours — supprimé',
+  'learning.module.created':  'Module — créé',
+  'learning.module.updated':  'Module — modifié',
+  'learning.module.deleted':  'Module — supprimé',
+  'learning.assigned':        'Parcours — assigné à un conseiller',
+  'learning.unassigned':      'Parcours — retiré à un conseiller',
+  'superadmin.impersonate.start': 'Superadmin — accès à l\'organisation',
+  'superadmin.impersonate.stop':  'Superadmin — fin de l\'accès à l\'organisation',
 };
 
 const ACTION_OPTIONS: AuditAction[] = Object.keys(ACTION_LABEL) as AuditAction[];
@@ -113,7 +113,7 @@ export function AuditPage({ embed = false }: AuditPageProps = {}) {
         setItems(res.items);
         setTotal(res.total);
       })
-      .catch(err => toast.error(err?.message ?? 'Impossible de charger les logs.'))
+      .catch(err => toast.error(err?.message ?? 'Impossible de charger le journal d\'activité. Rechargez la page.'))
       .finally(() => setLoading(false));
   }, [action, since, until, page, toast]);
 
@@ -131,7 +131,7 @@ export function AuditPage({ embed = false }: AuditPageProps = {}) {
       {!embed && (
         <PageHeader
           title="Journal d'activité"
-          subtitle={`Trace des actions sensibles effectuées sur cet espace : modifications de paramètres, gestion des membres, suppressions, impersonation. Conservé 1 an.`}
+          subtitle={`Trace des actions sensibles effectuées dans votre organisation : modifications de paramètres, gestion des membres, suppressions, accès du superadmin. Le journal est conservé 1 an.`}
         />
       )}
 
@@ -173,7 +173,7 @@ export function AuditPage({ embed = false }: AuditPageProps = {}) {
                 className="audit-page__filter-reset"
                 onClick={resetFilters}
               >
-                Réinitialiser
+                Réinitialiser les filtres
               </button>
             )}
           </>
@@ -191,7 +191,7 @@ export function AuditPage({ embed = false }: AuditPageProps = {}) {
         <EmptyState
           title="Aucune entrée pour ces filtres"
           description={(action || since || until)
-            ? 'Élargis la période ou réinitialise les filtres.'
+            ? 'Élargissez la période ou réinitialisez les filtres.'
             : 'Les actions sensibles apparaîtront ici dès qu\'elles auront été effectuées.'}
         />
       ) : (
@@ -217,7 +217,7 @@ export function AuditPage({ embed = false }: AuditPageProps = {}) {
                     className="audit-table__detail-btn"
                     onClick={() => setDetail(item)}
                   >
-                    Voir
+                    Voir le détail
                   </button>
                 </td>
               </tr>
@@ -283,7 +283,7 @@ const META_LABELS: Record<string, string> = {
   from:                 'Ancienne valeur',
   field:                'Champ modifié',
   fields:               'Champs modifiés',
-  email:                'Email',
+  email:                'E-mail',
   role:                 'Rôle',
   name:                 'Nom',
   title:                'Titre',
@@ -294,7 +294,7 @@ const META_LABELS: Record<string, string> = {
   // resourceTitle est intercepté en amont et remonté dans la section
   // « Ressource » (cf MetadataView). Pas affiché en double dans metadata.
   resourceTitle:        '',
-  impersonatedByEmail:  'Impersonifié par',
+  impersonatedByEmail:  'Superadmin',
 };
 
 // Clés techniques rangées derrière un disclosure. `impersonatedBy` (UUID)
@@ -308,17 +308,17 @@ const FIELD_LABELS: Record<string, string> = {
   // Chatbot
   enabled:                'Activation',
   welcomeMessage:         'Message d\'accueil',
-  fallbackMessage:        'Message de fallback',
+  fallbackMessage:        'Message de repli',
   primaryColor:           'Couleur principale',
   logoUrl:                'Logo',
   allowedDomains:         'Domaines autorisés',
-  handoffMode:            'Mode handoff',
-  handoffWebhookUrl:      'Webhook handoff',
-  handoffEmail:           'Email handoff',
-  systemPrompt:           'Prompt système',
-  privacyNotice:          'Disclaimer RGPD',
-  privacyPolicyUrl:       'URL politique de confidentialité',
-  retentionDays:          'Rétention conversations',
+  handoffMode:            'Mode de transmission',
+  handoffWebhookUrl:      'Webhook de transfert',
+  handoffEmail:           'E-mail de transfert',
+  systemPrompt:           'Consigne système',
+  privacyNotice:          'Mention RGPD',
+  privacyPolicyUrl:       'URL de la politique de confidentialité',
+  retentionDays:          'Durée de conservation des conversations',
   // Org général
   name:                   'Nom de l\'organisation',
   logoUrl_org:            'Logo',
@@ -330,7 +330,7 @@ const FIELD_LABELS: Record<string, string> = {
   ai_glossary:            'Glossaire IA',
   ai_answer_enabled:      'Réponse IA activée',
   // Modèle chatbot
-  chat_model:             'Modèle chatbot',
+  chat_model:             'Modèle du chatbot',
 };
 
 function renderFieldName(field: string): string {

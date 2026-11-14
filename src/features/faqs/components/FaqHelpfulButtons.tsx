@@ -69,7 +69,7 @@ export function FaqHelpfulButtons({
       } catch { /* ignore */ }
       onVoted?.(result);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Vote impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Votre vote n\'a pas été enregistré. Réessayez dans un instant.');
     } finally {
       setVoting(false);
     }
@@ -80,7 +80,7 @@ export function FaqHelpfulButtons({
 
   if (readOnly) {
     return (
-      <span className="faq-helpful faq-helpful--readonly" title={`${counts.yes} 👍 · ${counts.no} 👎`}>
+      <span className="faq-helpful faq-helpful--readonly" title={`${counts.yes} « a aidé » · ${counts.no} « n'a pas aidé »`}>
         {total === 0 ? (
           <span className="faq-helpful__empty">—</span>
         ) : (
@@ -102,7 +102,7 @@ export function FaqHelpfulButtons({
         className={cn('faq-helpful__btn', voted === 'yes' && 'faq-helpful__btn--active')}
         onClick={(e) => { e.stopPropagation(); handleVote('yes'); }}
         disabled={voting || (voted === 'no')}
-        title={voted === 'yes' ? 'Recliquez pour annuler votre vote' : voted === 'no' ? 'Annulez d\'abord votre 👎 pour changer de vote' : ''}
+        title={voted === 'yes' ? 'Cliquez à nouveau pour annuler votre vote' : voted === 'no' ? 'Annulez d\'abord votre vote « n\'a pas aidé » pour changer d\'avis' : ''}
         aria-pressed={voted === 'yes'}
         aria-label={voted === 'yes' ? 'Annuler mon vote « cette réponse a aidé »' : 'Oui, cette réponse a aidé'}
       >
@@ -115,7 +115,7 @@ export function FaqHelpfulButtons({
         className={cn('faq-helpful__btn', voted === 'no' && 'faq-helpful__btn--active')}
         onClick={(e) => { e.stopPropagation(); handleVote('no'); }}
         disabled={voting || (voted === 'yes')}
-        title={voted === 'no' ? 'Recliquez pour annuler votre vote' : voted === 'yes' ? 'Annulez d\'abord votre 👍 pour changer de vote' : ''}
+        title={voted === 'no' ? 'Cliquez à nouveau pour annuler votre vote' : voted === 'yes' ? 'Annulez d\'abord votre vote « a aidé » pour changer d\'avis' : ''}
         aria-pressed={voted === 'no'}
         aria-label={voted === 'no' ? 'Annuler mon vote « cette réponse n\'a pas aidé »' : 'Non, cette réponse n\'a pas aidé'}
       >

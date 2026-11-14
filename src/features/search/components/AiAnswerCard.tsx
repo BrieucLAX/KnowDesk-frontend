@@ -47,9 +47,9 @@ export function AiAnswerCard({ state, query, onSelectSource }: AiAnswerCardProps
       .trim();
     try {
       await navigator.clipboard.writeText(plain);
-      toast.success('Réponse copiée');
+      toast.success('Réponse copiée.');
     } catch {
-      toast.error('Impossible d\'accéder au presse-papier');
+      toast.error('Copie impossible : le navigateur bloque le presse-papiers. Sélectionnez le texte et copiez-le à la main.');
     }
   }, [state.answer, toast]);
 
@@ -64,7 +64,7 @@ export function AiAnswerCard({ state, query, onSelectSource }: AiAnswerCardProps
         sourceIds:  state.sources.map(s => s.id),
       },
     });
-    toast.success(helpful ? 'Merci pour votre retour' : 'Merci, on va améliorer ça');
+    toast.success(helpful ? 'Merci pour votre retour.' : 'Merci, votre retour nous aide à améliorer les réponses.');
   }, [feedback, query, state.status, state.sources, toast]);
 
   const isStreaming = state.status === 'streaming';
@@ -80,7 +80,7 @@ export function AiAnswerCard({ state, query, onSelectSource }: AiAnswerCardProps
         </span>
         <span className="ai-answer__title">
           {isUnsure
-            ? 'Je n\'ai pas la réponse précise dans la base.'
+            ? 'La base ne contient pas de réponse précise à cette question.'
             : isError
               ? 'Génération indisponible'
               : 'Réponse IA'}
@@ -156,7 +156,7 @@ export function AiAnswerCard({ state, query, onSelectSource }: AiAnswerCardProps
             </div>
           )}
         </div>
-        <span className="ai-answer__disclaimer">Réponse générée par IA — vérifiez les sources</span>
+        <span className="ai-answer__disclaimer">Réponse générée par l'IA. Vérifiez les sources.</span>
       </div>
     </div>
   );

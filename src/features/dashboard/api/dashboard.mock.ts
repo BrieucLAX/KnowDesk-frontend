@@ -50,7 +50,7 @@ export const MOCK_DASHBOARD_DATA: DashboardData = {
 
   activity: [
     { id: 'a1', type: 'article_published', message: 'a publié "Politique de remboursement express"',     timestamp: new Date(Date.now() - 1000 * 60 * 90).toISOString(), authorName: 'Marc D.' },
-    { id: 'a2', type: 'member_joined',     message: 'a rejoint l\'espace',                               timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(), authorName: 'Camille R.' },
+    { id: 'a2', type: 'member_joined',     message: "a rejoint l'organisation",                          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(), authorName: 'Camille R.' },
     { id: 'a3', type: 'faq_created',       message: 'a créé 3 nouvelles FAQ dans Abonnements',           timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(), authorName: 'Lucie B.' },
     { id: 'a4', type: 'article_updated',   message: 'a mis à jour "Procédure résiliation abonnement"',   timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), authorName: 'Marc D.' },
   ],

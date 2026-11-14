@@ -9,14 +9,14 @@ export function useForgotPassword() {
 
   const submit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) { setError('L\'email est requis.'); return; }
+    if (!email.trim()) { setError('Saisissez votre adresse e-mail.'); return; }
     setLoading(true);
     setError('');
     try {
       await apiClient.post('/auth/forgot-password', { email: email.trim().toLowerCase() });
       setSent(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur. Réessayez.');
+      setError(err instanceof Error ? err.message : 'Le lien n\'a pas pu être envoyé. Réessayez dans quelques instants.');
     } finally {
       setLoading(false);
     }

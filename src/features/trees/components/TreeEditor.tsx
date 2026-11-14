@@ -43,9 +43,9 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
     setPublishing(true);
     try {
       await publishTree();
-      toast.success('Processus publié !');
+      toast.success('Processus publié.');
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Erreur lors de la publication.');
+      toast.error(err instanceof Error ? err.message : 'Publication impossible. Réessayez dans un instant.');
     } finally {
       setPublishing(false);
     }
@@ -69,14 +69,14 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
     });
     setNodeDraft('');
     setAddingNode(null);
-    toast.success('Nœud ajouté.');
+    toast.success('Étape ajoutée.');
   }, [nodeDraft, nodeType, addingNode, addNode, toast]);
 
   const handleUpdateNode = useCallback(async (nodeId: string) => {
     if (!nodeEditDraft.trim()) return;
     await updateNode(nodeId, { content: nodeEditDraft.trim() });
     setEditingNode(null);
-    toast.success('Nœud modifié.');
+    toast.success('Étape modifiée.');
   }, [nodeEditDraft, updateNode, toast]);
 
   const handleDeleteNode = useCallback(async (nodeId: string) => {
@@ -87,7 +87,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
     if (!confirmDeleteNode) return;
     await deleteNode(confirmDeleteNode);
     setConfirmDeleteNode(null);
-    toast.success('Nœud supprimé.');
+    toast.success('Étape supprimée.');
   }, [confirmDeleteNode, deleteNode, toast]);
 
   const handleAddAnswer = useCallback(async (nodeId: string) => {
@@ -139,15 +139,15 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
               type="button"
               className="tree-node__action"
               onClick={() => { setEditingNode(node.id); setNodeEditDraft(node.content); }}
-              title="Modifier"
-              aria-label="Modifier"
+              title="Modifier l'étape"
+              aria-label="Modifier l'étape"
             ><Pencil size={16} /></button>
             <button
               type="button"
               className="tree-node__action tree-node__action--danger"
               onClick={() => handleDeleteNode(node.id)}
-              title="Supprimer"
-              aria-label="Supprimer"
+              title="Supprimer l'étape"
+              aria-label="Supprimer l'étape"
             ><Trash2 size={16} /></button>
           </div>
         </div>
@@ -171,7 +171,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
               />
             )}
             <div className="tree-node__edit-actions">
-              <Button variant="primary" size="sm" onClick={() => handleUpdateNode(node.id)}>Sauvegarder</Button>
+              <Button variant="primary" size="sm" onClick={() => handleUpdateNode(node.id)}>Enregistrer</Button>
               <Button variant="ghost"   size="sm" onClick={() => setEditingNode(null)}>Annuler</Button>
             </div>
           </div>
@@ -229,7 +229,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
                       />
                     )}
                     <div className="tree-node__edit-actions">
-                      <Button variant="primary" size="sm" onClick={handleAddNode}>Ajouter</Button>
+                      <Button variant="primary" size="sm" onClick={handleAddNode}>Ajouter l'étape</Button>
                       <Button variant="ghost"   size="sm" onClick={() => setAddingNode(null)}>Annuler</Button>
                     </div>
                   </div>
@@ -240,7 +240,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
                     style={{ '--tree-depth': depth + 1 } as React.CSSProperties}
                     onClick={() => setAddingNode({ parentId: node.id, parentAnswerId: answer.id })}
                   >
-                    <Plus size={20} />Ajouter un nœud
+                    <Plus size={20} />Ajouter une étape
                   </button>
                 )}
               </div>
@@ -259,7 +259,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
                   autoFocus
                 />
                 <div className="tree-node__edit-actions">
-                  <Button variant="primary" size="sm" onClick={() => handleAddAnswer(node.id)}>Ajouter</Button>
+                  <Button variant="primary" size="sm" onClick={() => handleAddAnswer(node.id)}>Ajouter la réponse</Button>
                   <Button variant="ghost"   size="sm" onClick={() => setAddingAnswer(null)}>Annuler</Button>
                 </div>
               </div>
@@ -282,9 +282,9 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
     <>
     {confirmDeleteNode && (
       <ConfirmDialog
-        title="Supprimer ce nœud ?"
-        description="Ce nœud et tous ses descendants (réponses et sous-questions) seront définitivement supprimés."
-        confirmLabel="Supprimer"
+        title="Supprimer cette étape ?"
+        description="L'étape et tout ce qui en découle (réponses et questions suivantes) seront supprimés. Cette action est définitive."
+        confirmLabel="Supprimer l'étape"
         variant="danger"
         onConfirm={confirmDeleteNodeAction}
         onCancel={() => setConfirmDeleteNode(null)}
@@ -305,7 +305,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
                 onKeyDown={e => { if (e.key === 'Enter') handleSaveTitle(); if (e.key === 'Escape') setEditingTitle(false); }}
                 autoFocus
               />
-              <Button variant="primary" size="sm" onClick={handleSaveTitle}>OK</Button>
+              <Button variant="primary" size="sm" onClick={handleSaveTitle}>Enregistrer le titre</Button>
               <Button variant="ghost"   size="sm" onClick={() => setEditingTitle(false)}>Annuler</Button>
             </div>
           ) : (
@@ -313,7 +313,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
               type="button"
               className="tree-editor__title"
               onClick={() => { setTitleDraft(tree.title); setEditingTitle(true); }}
-              title="Cliquer pour modifier"
+              title="Cliquez pour modifier le titre"
             >
               {tree.title} <Pencil size={16} className="icon-inline" />
             </button>
@@ -330,14 +330,14 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
             <option value="internal">Interne</option>
             <option value="public">Public (chatbot)</option>
           </select>
-          <Button variant="ghost"   size="sm" onClick={() => onPreview(treeId)}>Aperçu conseiller</Button>
+          <Button variant="ghost"   size="sm" onClick={() => onPreview(treeId)}>Voir l'aperçu conseiller</Button>
           <Button
             variant="primary" size="sm"
             loading={publishing}
             onClick={handlePublish}
             disabled={tree.status === 'published'}
           >
-            {tree.status === 'published' ? 'Publié' : 'Publier'}
+            {tree.status === 'published' ? 'Publié' : 'Publier le processus'}
           </Button>
         </div>
       </div>
@@ -346,7 +346,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
       <div className="tree-editor__canvas">
         {rootNodes.length === 0 && (
           <div className="tree-editor__empty">
-            <p>Aucun nœud pour l'instant.</p>
+            <p>Aucune étape pour l'instant.</p>
             <p>Ajoutez un premier point d'entrée ci-dessous.</p>
           </div>
         )}
@@ -385,7 +385,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
               />
             )}
             <div className="tree-node__edit-actions">
-              <Button variant="primary" size="sm" onClick={handleAddNode}>Ajouter</Button>
+              <Button variant="primary" size="sm" onClick={handleAddNode}>Ajouter l'étape</Button>
               <Button variant="ghost"   size="sm" onClick={() => setAddingNode(null)}>Annuler</Button>
             </div>
           </div>

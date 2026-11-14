@@ -25,7 +25,7 @@ export function VerifyEmailPage() {
     const token = new URLSearchParams(window.location.search).get('token');
     if (!token) {
       setStatus('error');
-      setErrorMsg('Lien invalide — aucun token trouvé dans l\'URL.');
+      setErrorMsg('Ce lien est incomplet. Ouvrez de nouveau le lien reçu par e-mail.');
       return;
     }
     apiClient.post<{ verified: boolean }>('/auth/verify-email', { token })
@@ -44,7 +44,7 @@ export function VerifyEmailPage() {
         setStatus('error');
         setErrorMsg(err instanceof ApiError
           ? err.message
-          : 'Lien invalide ou expiré.');
+          : 'Ce lien est invalide ou a expiré. Demandez un nouveau lien depuis le bandeau de vérification.');
       });
   }, [session, setSession]);
 
@@ -73,9 +73,9 @@ export function VerifyEmailPage() {
           {status === 'success' && (
             <>
               <div className="login-page__header">
-                <h1 className="login-page__title icon-label"><CircleCheck size={24} className="login-page__title-icon" />Email vérifié</h1>
+                <h1 className="login-page__title icon-label"><CircleCheck size={24} className="login-page__title-icon" />Adresse e-mail vérifiée</h1>
                 <p className="login-page__subtitle">
-                  Votre adresse email a été confirmée avec succès. Vous pouvez maintenant utiliser KnowDesk pleinement.
+                  Votre adresse e-mail est confirmée. Vous pouvez maintenant utiliser KnowDesk pleinement.
                 </p>
               </div>
               <Button variant="primary" size="md" fullWidth onClick={handleBack}>

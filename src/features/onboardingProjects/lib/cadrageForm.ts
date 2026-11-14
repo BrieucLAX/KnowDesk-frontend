@@ -75,9 +75,9 @@ export type CadrageErrors = Record<string, string>;
 
 function checkLine(errors: CadrageErrors, path: string, value: string, max: number) {
   const v = value.trim();
-  if (!v) errors[path] = 'Champ requis.';
+  if (!v) errors[path] = 'Renseignez ce champ.';
   else if (v.length > max) errors[path] = `${max} caractères au plus.`;
-  else if (/[\r\n]/.test(v)) errors[path] = 'Une seule ligne attendue.';
+  else if (/[\r\n]/.test(v)) errors[path] = 'Écrivez ce texte sur une seule ligne.';
 }
 
 function checkParagraph(errors: CadrageErrors, path: string, value: string) {
@@ -141,8 +141,8 @@ export function validateCadrageForm(form: CadrageForm): CadrageErrors {
     if (!d.document) errors[`${p}.document`] = 'Choisissez un document.';
     else if (bounded.has(d.document)) errors[`${p}.document`] = 'Document déjà listé parmi les documents à durée limitée.';
     if (d.document) bounded.add(d.document);
-    if (d.validFrom  && !isValidDate(d.validFrom))  errors[`${p}.validFrom`]  = 'Date invalide.';
-    if (d.validUntil && !isValidDate(d.validUntil)) errors[`${p}.validUntil`] = 'Date invalide.';
+    if (d.validFrom  && !isValidDate(d.validFrom))  errors[`${p}.validFrom`]  = 'Saisissez une date valide.';
+    if (d.validUntil && !isValidDate(d.validUntil)) errors[`${p}.validUntil`] = 'Saisissez une date valide.';
     if (d.validFrom && d.validUntil && d.validFrom > d.validUntil) errors[`${p}.validUntil`] = 'La fin de validité précède son début.';
     checkParagraph(errors, `${p}.scope`, d.scope);
   });

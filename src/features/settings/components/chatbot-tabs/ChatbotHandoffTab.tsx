@@ -12,38 +12,38 @@ export function ChatbotHandoffTab({ ctx }: { ctx: ChatbotTabContext }) {
   return (
     <>
       <p className="settings-section__desc">
-        Quand un visiteur clique « Parler à un humain » ou indique que le bot ne l'a pas aidé,
-        KnowDesk peut transmettre le transcript de la conversation à votre équipe.
+        Quand un visiteur clique sur « Parler à un humain » ou indique que le chatbot ne l'a pas aidé,
+        KnowDesk peut transmettre la conversation à votre équipe.
       </p>
 
       <div className="field">
-        <label htmlFor="handoff-mode" className="field-label">Mode</label>
+        <label htmlFor="handoff-mode" className="field-label">Mode de transmission</label>
         <select
           id="handoff-mode"
           className="field-input"
           value={form.chat_handoff_mode}
           onChange={e => setForm(f => ({ ...f, chat_handoff_mode: e.target.value as ChatHandoffMode }))}
         >
-          <option value="none">Aucun — le visiteur voit juste le message de fallback</option>
-          <option value="email">Email — envoie le transcript à une adresse</option>
-          <option value="webhook">Webhook — POST le transcript JSON à votre URL (CRM, Zendesk, Slack…)</option>
+          <option value="none">Aucun : le visiteur voit seulement le message de repli</option>
+          <option value="email">E-mail : la conversation est envoyée à une adresse</option>
+          <option value="webhook">Webhook : la conversation est envoyée en JSON à votre URL (CRM, Zendesk, Slack…)</option>
         </select>
         <p className="field-helper">
-          « Aucun » garde l'expérience MVP actuelle. « Email » est le plus simple à intégrer. « Webhook »
-          permet de créer automatiquement un ticket dans votre helpdesk.
+          « Aucun » ne transmet rien à votre équipe. « E-mail » est le plus simple à mettre en place. « Webhook »
+          permet de créer automatiquement un ticket dans votre outil de support.
         </p>
       </div>
 
       {form.chat_handoff_mode === 'email' && (
         <Input
           id="handoff-email"
-          label="Email du destinataire"
+          label="Adresse e-mail du destinataire"
           type="email"
           value={form.chat_handoff_email ?? ''}
           maxLength={120}
           placeholder="support@votre-entreprise.fr"
           onChange={e => setForm(f => ({ ...f, chat_handoff_email: e.target.value }))}
-          helperText="Recevra le transcript HTML de chaque demande de handoff. Utilisez une adresse partagée (support@) plutôt qu'individuelle."
+          helperText="Reçoit la conversation au format HTML à chaque demande de passage à un humain. Utilisez une adresse partagée (support@…) plutôt qu'une adresse personnelle."
         />
       )}
 
@@ -56,7 +56,7 @@ export function ChatbotHandoffTab({ ctx }: { ctx: ChatbotTabContext }) {
           maxLength={500}
           placeholder="https://api.votre-crm.fr/webhooks/knowdesk-chat"
           onChange={e => setForm(f => ({ ...f, chat_handoff_webhook_url: e.target.value }))}
-          helperText="Recevra un POST JSON { conversationId, transcript, visitorEmail, … }. Timeout 8s. Cf documentation handoff dans le help center pour le format exact."
+          helperText="Reçoit une requête POST en JSON { conversationId, transcript, visitorEmail, … }. Délai de réponse maximal : 8 secondes. Le format exact est décrit dans le centre d'aide, article « Passage à un humain »."
         />
       )}
     </>

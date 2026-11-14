@@ -39,7 +39,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
       const data = await brandMonitoringApi.listPrompts(projectId);
       setPrompts(data);
     } catch (err) {
-      toast.error((err as Error).message ?? 'Chargement impossible.');
+      toast.error((err as Error).message ?? "Les prompts n'ont pas pu être chargés. Rechargez la page.");
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
 
   const handleCreate = async () => {
     const text = newText.trim();
-    if (text.length < 5) { toast.error('Le prompt doit faire au moins 5 caractères.'); return; }
+    if (text.length < 5) { toast.error("Saisissez un prompt d'au moins 5 caractères."); return; }
     setSaving(true);
     try {
       await brandMonitoringApi.createPrompt(projectId, {
@@ -61,7 +61,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
       await reload();
       onReloadProject();
     } catch (err) {
-      toast.error((err as Error).message ?? 'Création impossible.');
+      toast.error((err as Error).message ?? "Le prompt n'a pas pu être ajouté. Réessayez.");
     } finally {
       setSaving(false);
     }
@@ -69,8 +69,8 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
 
   const handleBulk = async () => {
     const lines = bulkText.split('\n').map(l => l.trim()).filter(l => l.length >= 5);
-    if (lines.length === 0) { toast.error('Aucune ligne valide (≥ 5 caractères) dans le texte.'); return; }
-    if (lines.length > 200) { toast.error('Maximum 200 prompts à la fois.'); return; }
+    if (lines.length === 0) { toast.error('Aucune ligne valide : chaque prompt doit faire au moins 5 caractères.'); return; }
+    if (lines.length > 200) { toast.error('Importez 200 prompts au maximum à la fois.'); return; }
     setBulkSaving(true);
     try {
       const r = await brandMonitoringApi.bulkPrompts(projectId, lines.map(l => ({ text: l })));
@@ -80,7 +80,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
       await reload();
       onReloadProject();
     } catch (err) {
-      toast.error((err as Error).message ?? 'Import impossible.');
+      toast.error((err as Error).message ?? "L'import n'a pas pu aboutir. Réessayez.");
     } finally {
       setBulkSaving(false);
     }
@@ -91,7 +91,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
       await brandMonitoringApi.updatePrompt(prompt.id, { active: !prompt.active });
       await reload();
     } catch (err) {
-      toast.error((err as Error).message ?? 'Mise à jour impossible.');
+      toast.error((err as Error).message ?? "Le prompt n'a pas pu être modifié. Réessayez.");
     }
   };
 
@@ -103,7 +103,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
       await reload();
       onReloadProject();
     } catch (err) {
-      toast.error((err as Error).message ?? 'Suppression impossible.');
+      toast.error((err as Error).message ?? "Le prompt n'a pas pu être supprimé. Réessayez.");
     }
   };
 
@@ -116,9 +116,9 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
       // Coche tout par défaut — l'admin décoche ce qu'il ne veut pas.
       setSelectedSugs(new Set(data.prompts.map((_, i) => i)));
     } catch (err) {
-      const msg = (err as Error).message ?? 'Suggestions indisponibles.';
+      const msg = (err as Error).message ?? 'Les suggestions ne sont pas disponibles. Réessayez plus tard.';
       if (msg.includes('Secteur')) {
-        toast.error('Configure d\'abord un secteur dans l\'onglet Paramètres.');
+        toast.error("Choisissez d'abord un secteur dans l'onglet Paramètres.");
         setSuggestOpen(false);
       } else {
         toast.error(msg);
@@ -141,7 +141,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
     const toImport = suggestData.prompts
       .filter((_, i) => selectedSugs.has(i))
       .map(p => ({ text: p.text, topicHint: p.topicHint }));
-    if (toImport.length === 0) { toast.error('Aucun prompt sélectionné.'); return; }
+    if (toImport.length === 0) { toast.error('Sélectionnez au moins un prompt.'); return; }
     setImportingSugs(true);
     try {
       const r = await brandMonitoringApi.bulkPrompts(projectId, toImport);
@@ -152,7 +152,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
       await reload();
       onReloadProject();
     } catch (err) {
-      toast.error((err as Error).message ?? 'Import impossible.');
+      toast.error((err as Error).message ?? "L'import n'a pas pu aboutir. Réessayez.");
     } finally {
       setImportingSugs(false);
     }
@@ -165,8 +165,8 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
       <section className="bm-card">
         <h3 className="bm-card__title">Ajouter un prompt</h3>
         <p className="bm-card__sub">
-          Une question d'utilisateur grand public qu'on enverra à Mistral. Préfère une formulation
-          naturelle (« Quel hypermarché choisir pour les courses ? ») plutôt qu'une requête de recherche
+          Une question qu'un particulier pourrait poser, envoyée à Mistral. Préférez une formulation
+          naturelle (« Quel hypermarché choisir pour les courses ? ») à une requête de recherche
           (« meilleur hypermarché »).
         </p>
         <div className="bm-form">
@@ -179,26 +179,26 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
           />
           <Input
             id="bm-new-prompt-topic"
-            label="Topic (optionnel, sera regénéré par l'IA)"
+            label="Thème (facultatif, l'IA le recalculera)"
             value={newTopic}
             onChange={e => setNewTopic(e.target.value)}
             placeholder="courses-quotidien"
           />
           <div className="bm-form__actions">
             <Button variant="primary" size="md" onClick={handleCreate} loading={saving} disabled={newText.trim().length < 5}>
-              Ajouter
+              Ajouter le prompt
             </Button>
             <Button variant="secondary" size="md" onClick={openSuggestions}>
               <Sparkles size={20} />Suggestions de prompts
             </Button>
             <Button variant="ghost" size="md" onClick={() => setBulkOpen(o => !o)}>
-              {bulkOpen ? 'Annuler import bulk' : <><Upload size={16} />Import bulk (CSV)</>}
+              {bulkOpen ? "Annuler l'import en masse" : <><Upload size={16} />Importer en masse (CSV)</>}
             </Button>
           </div>
         </div>
         {bulkOpen && (
           <div className="bm-bulk">
-            <p className="bm-bulk__hint">Une ligne = un prompt. Max 200.</p>
+            <p className="bm-bulk__hint">Un prompt par ligne, 200 au maximum.</p>
             <textarea
               className="bm-bulk__textarea"
               value={bulkText}
@@ -207,7 +207,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
               rows={8}
             />
             <Button variant="primary" size="sm" onClick={handleBulk} loading={bulkSaving}>
-              Importer
+              Importer les prompts
             </Button>
           </div>
         )}
@@ -215,7 +215,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
 
       <section className="bm-card">
         <h3 className="bm-card__title">
-          Prompts existants <span className="bm-card__count">({prompts.length})</span>
+          Prompts <span className="bm-card__count">({prompts.length})</span>
         </h3>
         {prompts.length === 0 ? (
           <p className="bm-empty-data">Aucun prompt pour l'instant.</p>
@@ -226,7 +226,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
                 <div className="bm-prompt-row__text">
                   {p.text}
                   {p.topic_cluster && (
-                    <span className="bm-prompt-row__topic">· topic : {p.topic_cluster}</span>
+                    <span className="bm-prompt-row__topic">· thème : {p.topic_cluster}</span>
                   )}
                 </div>
                 <div className="bm-prompt-row__actions">
@@ -234,7 +234,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
                     variant="secondary"
                     size="sm"
                     onClick={() => handleToggle(p)}
-                    aria-label={p.active ? 'Désactiver' : 'Activer'}
+                    aria-label={p.active ? 'Désactiver le prompt' : 'Activer le prompt'}
                   >
                     {p.active ? 'Actif' : 'Inactif'}
                   </Button>
@@ -242,7 +242,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
                     variant="secondary"
                     size="sm"
                     onClick={() => setPendingDelete(p)}
-                    aria-label="Supprimer"
+                    aria-label="Supprimer le prompt"
                   >
                     Supprimer
                   </Button>
@@ -256,8 +256,8 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
       {pendingDelete && (
         <ConfirmDialog
           title="Supprimer ce prompt ?"
-          description={`« ${pendingDelete.text} » ne sera plus envoyé aux LLM lors des prochains runs. Les anciennes réponses restent dans l'historique.`}
-          confirmLabel="Supprimer"
+          description={`« ${pendingDelete.text} » ne sera plus envoyé aux IA lors des prochaines analyses. Les réponses passées restent dans l'historique. Cette action est définitive.`}
+          confirmLabel="Supprimer le prompt"
           variant="danger"
           onConfirm={handleDelete}
           onCancel={() => setPendingDelete(null)}
@@ -274,9 +274,9 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
           {!suggestLoading && suggestData && (
             <div className="bm-suggest">
               <p className="bm-suggest__intro">
-                Sélectionne les prompts que tu veux ajouter à ton projet ({selectedSugs.size}/{suggestData.prompts.length} cochés).
-                Tout est coché par défaut — décoche ceux qui ne te parlent pas. Tu pourras toujours
-                en ajouter / supprimer plus tard.
+                Sélectionnez les prompts à ajouter à votre projet ({selectedSugs.size}/{suggestData.prompts.length} cochés).
+                Tout est coché par défaut : décochez celles qui ne vous conviennent pas. Vous pourrez
+                en ajouter ou en supprimer plus tard.
               </p>
               <div className="bm-suggest__actions">
                 <button type="button" className="bm-suggest__toggle-all" onClick={() => setSelectedSugs(new Set(suggestData.prompts.map((_, i) => i)))}>
@@ -312,7 +312,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
                   loading={importingSugs}
                   disabled={selectedSugs.size === 0}
                 >
-                  Importer {selectedSugs.size > 0 ? `(${selectedSugs.size})` : ''}
+                  Importer les prompts {selectedSugs.size > 0 ? `(${selectedSugs.size})` : ''}
                 </Button>
               </div>
             </div>

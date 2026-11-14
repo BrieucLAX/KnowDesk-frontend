@@ -37,7 +37,7 @@ export function ArticlePage({ articleId, onBack, onEdit }: ArticlePageProps) {
       toast.success(`Version ${version} restaurée.`);
       reload();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Erreur lors de la restauration.');
+      toast.error(err instanceof Error ? err.message : 'Restauration impossible. Réessayez dans un instant.');
     }
   }, [articleId, reload, toast]);
 
@@ -140,7 +140,7 @@ if (state.status === 'error') {
         )}
         {isOlderThan(article.updatedAt, 90) && (
           <Alert tone="warning" role="note" className="article-page__stale-warning">
-            Cet article n'a pas été vérifié depuis plus de 90 jours.
+            Cet article n'a pas été mis à jour depuis plus de 90 jours. Vérifiez les informations avant de les communiquer.
           </Alert>
         )}
       </header>

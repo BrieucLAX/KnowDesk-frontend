@@ -82,7 +82,7 @@ export function useMembers() {
         status:    'invited',
         invitedAt: new Date().toISOString(),
       };
-      dispatch({ type: "ADD", member: optimistic }); toast.success("Invitation envoyée !");
+      dispatch({ type: "ADD", member: optimistic }); toast.success("Invitation envoyée.");
     } catch (err) {
       dispatch({ type: 'MUTATING', id: null });
       throw err;

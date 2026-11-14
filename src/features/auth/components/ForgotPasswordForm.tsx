@@ -16,11 +16,11 @@ export function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
     return (
       <div className="forgot-success">
         <div className="forgot-success__icon" aria-hidden="true"><Mail size={24} /></div>
-        <h2 className="forgot-success__title">Email envoyé</h2>
+        <h2 className="forgot-success__title">E-mail envoyé</h2>
         <p className="forgot-success__desc">
-          Si un compte existe pour <strong>{email}</strong>, tu recevras un lien de réinitialisation dans quelques minutes.
+          Si un compte existe pour <strong>{email}</strong>, vous recevrez un lien de réinitialisation dans quelques minutes.
         </p>
-        <p className="forgot-success__desc">Vérifie aussi ton dossier spam.</p>
+        <p className="forgot-success__desc">Vérifiez aussi vos courriers indésirables.</p>
         <Button variant="ghost" size="md" onClick={onBack} leftIcon={<ArrowLeft size={20} />}>Retour à la connexion</Button>
       </div>
     );
@@ -32,7 +32,7 @@ export function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
       <Input
         id="forgot-email"
         type="email"
-        label="Adresse email"
+        label="Adresse e-mail"
         placeholder="vous@exemple.fr"
         value={email}
         onChange={e => setEmail(e.target.value)}

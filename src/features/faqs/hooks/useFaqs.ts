@@ -18,7 +18,7 @@ export function useFaqs(initialFilters: FaqListFilters = {}) {
       const data = await faqsApi.listAll(f);
       setItems(data);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les FAQs.');
+      toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les FAQ. Rechargez la page.');
     } finally {
       setLoading(false);
     }
@@ -29,7 +29,7 @@ export function useFaqs(initialFilters: FaqListFilters = {}) {
     faqsApi.listAll(filters)
       .then(data => { if (alive) setItems(data); })
       .catch(err => {
-        if (alive) toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les FAQs.');
+        if (alive) toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les FAQ. Rechargez la page.');
       })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
@@ -42,7 +42,7 @@ export function useFaqs(initialFilters: FaqListFilters = {}) {
       toast.success('FAQ supprimée.');
       return true;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible. Réessayez dans un instant.');
       return false;
     }
   }, [toast]);
@@ -56,11 +56,11 @@ export function useFaqs(initialFilters: FaqListFilters = {}) {
       const deletedSet = new Set(res.deleted);
       setItems(prev => prev.filter(f => !deletedSet.has(f.id)));
       if (res.deleted.length > 0 && res.blocked.length === 0) {
-        toast.success(`${res.deleted.length} FAQ${res.deleted.length > 1 ? 's' : ''} supprimée${res.deleted.length > 1 ? 's' : ''}.`);
+        toast.success(`${res.deleted.length} FAQ supprimée${res.deleted.length > 1 ? 's' : ''}.`);
       } else if (res.deleted.length > 0 && res.blocked.length > 0) {
-        toast.success(`${res.deleted.length} supprimée${res.deleted.length > 1 ? 's' : ''}. ${res.blocked.length} bloquée${res.blocked.length > 1 ? 's' : ''} (utilisée${res.blocked.length > 1 ? 's' : ''} dans des parcours de formation).`);
+        toast.success(`${res.deleted.length} FAQ supprimée${res.deleted.length > 1 ? 's' : ''}. ${res.blocked.length} FAQ utilisée${res.blocked.length > 1 ? 's' : ''} dans des parcours ${res.blocked.length > 1 ? 'sont conservées : retirez-les' : 'est conservée : retirez-la'} d'abord de ces parcours.`);
       } else {
-        toast.error(`Aucune FAQ supprimée : ${res.blocked.length} bloquée${res.blocked.length > 1 ? 's' : ''} par des parcours de formation.`);
+        toast.error(`Aucune FAQ supprimée : ${res.blocked.length > 1 ? 'elles sont utilisées' : 'elle est utilisée'} dans des parcours. Retirez-${res.blocked.length > 1 ? 'les' : 'la'} d'abord de ces parcours.`);
       }
       // Refetch : la liste affichée doit refléter ce que le back a vraiment
       // supprimé (les FAQs bloquées par Learning restent).
@@ -69,7 +69,7 @@ export function useFaqs(initialFilters: FaqListFilters = {}) {
       }
       return { deleted: res.deleted.length, blocked: res.blocked.length };
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Suppression en masse impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Suppression en masse impossible. Réessayez dans un instant.');
       return { deleted: 0, blocked: 0 };
     }
   }, [toast, reload]);

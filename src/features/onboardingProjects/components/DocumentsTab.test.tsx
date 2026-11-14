@@ -38,7 +38,7 @@ describe('DocumentsTab', () => {
     const onChanged = vi.fn();
     render(<DocumentsTab project={project} onChanged={onChanged} />);
     fireEvent.click(await screen.findByRole('button', { name: 'Retirer cgv.pdf' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Retirer' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Retirer le document' }));
     await waitFor(() => expect(screen.queryByText('cgv.pdf')).not.toBeInTheDocument());
     expect(onboardingApi.deleteDocument).toHaveBeenCalledWith('p1', 'd1');
     expect(onChanged).toHaveBeenCalled();
@@ -60,7 +60,7 @@ describe('DocumentsTab', () => {
     vi.mocked(onboardingApi.deleteDocument).mockRejectedValue(new ApiError('DOCUMENT_CITED', 'Ce document est cité par la fiche de cadrage.', 409));
     render(<DocumentsTab project={project} onChanged={() => {}} />);
     fireEvent.click(await screen.findByRole('button', { name: 'Retirer cgv.pdf' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Retirer' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Retirer le document' }));
     await waitFor(() => expect(onboardingApi.deleteDocument).toHaveBeenCalled());
     expect(screen.getByText('cgv.pdf')).toBeInTheDocument();
   });

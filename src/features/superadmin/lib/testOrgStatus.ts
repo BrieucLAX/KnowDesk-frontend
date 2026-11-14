@@ -19,12 +19,12 @@ export function scheduledPurgeDate(testEndedAt: string): Date {
  * accepté le texte du 2026-10-20, tout sinon.
  */
 export function endTestDescription(now: Date): string {
-  return 'L\'espace est désactivé immédiatement : ses utilisateurs ne peuvent plus se connecter. '
+  return 'L\'organisation est désactivée immédiatement : ses membres ne peuvent plus se connecter. '
     + `Le ${formatDay(scheduledPurgeDate(now.toISOString()))}, 30 jours après, la purge automatique dépend du texte d'information accepté. `
     + 'Si un administrateur a accepté le nouveau texte, seuls les documents importés sont supprimés. '
     + 'Sinon, toutes ses données de test (documents, fiches, analyses, audits, décisions) sont supprimées, comme avant. '
     + 'Pour tout supprimer tout de suite, base de connaissance comprise, utilisez « Données de test ». '
-    + 'C\'est définitif : l\'espace ne pourra pas être réactivé.';
+    + 'C\'est définitif : l\'organisation ne pourra pas être réactivée.';
 }
 
 export interface OrgStatus {

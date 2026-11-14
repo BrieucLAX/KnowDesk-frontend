@@ -46,7 +46,7 @@ export async function mockLogin(email: string, password: string): Promise<AuthSe
   await simulateDelay();
 
   if (password === 'wrong') {
-    throw new Error('Email ou mot de passe incorrect.');
+    throw new Error('Adresse e-mail ou mot de passe incorrect. Vérifiez votre saisie, puis réessayez.');
   }
   if (email.includes('admin')) {
     return MOCK_ADMIN_SESSION;

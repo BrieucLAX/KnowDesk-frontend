@@ -52,7 +52,7 @@ export function FaqHistoryPanel({ faqId }: FaqHistoryPanelProps) {
     faqsApi.getHistory(faqId)
       .then(data => { if (alive) setHistory(data); })
       .catch(err => {
-        if (alive) toast.error(err instanceof ApiError ? err.message : 'Impossible de charger l\'historique.');
+        if (alive) toast.error(err instanceof ApiError ? err.message : 'Impossible de charger l\'historique. Réessayez dans un instant.');
       })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };

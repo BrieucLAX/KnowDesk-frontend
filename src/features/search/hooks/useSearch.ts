@@ -79,7 +79,7 @@ export function useSearch({ onSelect }: UseSearchOptions) {
     } catch (err) {
       dispatch({
         type:    'ERROR',
-        message: err instanceof Error ? err.message : 'Erreur de recherche.',
+        message: err instanceof Error ? err.message : 'La recherche a échoué. Réessayez dans un instant.',
       });
     }
   }, []);

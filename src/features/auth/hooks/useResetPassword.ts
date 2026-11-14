@@ -19,7 +19,7 @@ export function useResetPassword(token: string, onSuccess: () => void) {
       setDone(true);
       setTimeout(onSuccess, 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Lien invalide ou expiré.');
+      setError(err instanceof Error ? err.message : 'Ce lien est invalide ou a expiré. Demandez un nouveau lien depuis « Mot de passe oublié ? ».');
     } finally {
       setLoading(false);
     }

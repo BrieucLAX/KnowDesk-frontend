@@ -55,12 +55,12 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
       if (res.deleted.length > 0 && res.blocked.length === 0) {
         toast.success(`${res.deleted.length} processus supprimé${res.deleted.length > 1 ? 's' : ''}.`);
       } else if (res.deleted.length > 0 && res.blocked.length > 0) {
-        toast.success(`${res.deleted.length} supprimé${res.deleted.length > 1 ? 's' : ''}. ${res.blocked.length} bloqué${res.blocked.length > 1 ? 's' : ''} (utilisé${res.blocked.length > 1 ? 's' : ''} dans des parcours de formation).`);
+        toast.success(`${res.deleted.length} processus supprimé${res.deleted.length > 1 ? 's' : ''}. ${res.blocked.length} processus utilisé${res.blocked.length > 1 ? 's' : ''} dans des parcours ${res.blocked.length > 1 ? 'sont conservés : retirez-les' : 'est conservé : retirez-le'} d'abord de ces parcours.`);
       } else {
-        toast.error(`Aucun processus supprimé : ${res.blocked.length} bloqué${res.blocked.length > 1 ? 's' : ''} par des parcours de formation.`);
+        toast.error(`Aucun processus supprimé : ${res.blocked.length > 1 ? 'ils sont utilisés' : 'il est utilisé'} dans des parcours. Retirez-${res.blocked.length > 1 ? 'les' : 'le'} d'abord de ces parcours.`);
       }
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Suppression en masse impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Suppression en masse impossible. Réessayez dans un instant.');
     } finally {
       setBulkDeleting(false);
     }
@@ -144,7 +144,7 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
     } catch (err) {
       // Le backend renvoie 409 quand le processus est référencé dans
       // un parcours de formation. On affiche le message tel quel.
-      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'Suppression impossible. Réessayez dans un instant.');
       setConfirmDeleteId(null);
     }
   }, [confirmDeleteId, deleteTree, toast]);
@@ -186,8 +186,8 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
       {confirmDeleteId && (
         <ConfirmDialog
           title="Supprimer ce processus ?"
-          description="Cette action est définitive. Le processus et tous ses nœuds seront supprimés."
-          confirmLabel="Supprimer"
+          description="Le processus et toutes ses étapes seront supprimés. Cette action est définitive."
+          confirmLabel="Supprimer le processus"
           variant="danger"
           onConfirm={handleDeleteConfirm}
           onCancel={() => setConfirmDeleteId(null)}
@@ -203,8 +203,8 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
       {bulkConfirmOpen && (
         <ConfirmDialog
           title={`Supprimer ${selectedIds.size} processus ?`}
-          description="Cette action est irréversible."
-          confirmLabel="Supprimer"
+          description="Les processus sélectionnés seront supprimés, sauf ceux utilisés dans des parcours. Cette action est définitive."
+          confirmLabel={selectedIds.size > 1 ? 'Supprimer les processus' : 'Supprimer le processus'}
           variant="danger"
           loading={bulkDeleting}
           onConfirm={handleBulkDelete}
@@ -215,7 +215,7 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
       <div className="trees-page">
         <PageHeader
           title="Processus guidés"
-          subtitle="Arbres de décision pour guider vos conseillers étape par étape."
+          subtitle="Des questions pas à pas pour guider vos conseillers jusqu'à la bonne réponse."
           actions={isAdmin && (
             <Button variant="primary" size="md" onClick={() => setShowCreate(true)}>
               <Plus size={20} />Nouveau processus
@@ -224,7 +224,7 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
         />
         {trees.length >= 200 && (
           <div className="list-limit-banner" role="status">
-            Affichage des 200 processus les plus récents. Affinez les filtres pour voir plus.
+            Seuls les 200 processus les plus récents sont affichés. Affinez les filtres pour trouver les autres.
           </div>
         )}
 
@@ -240,7 +240,7 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
                   Annuler
                 </Button>
                 <Button type="submit" variant="primary" size="md" loading={creating} disabled={!newTitle.trim()}>
-                  Créer
+                  Créer le processus
                 </Button>
               </>
             }
@@ -320,7 +320,7 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
                 render: t => (
                   <span className="trees-page__title">
                     {t.visibility === 'internal' && (
-                      <span className="visibility-icon" title="Interne — non exposé au chatbot public"><Lock size={16} role="img" aria-label="Processus interne" /></span>
+                      <span className="visibility-icon" title="Interne — non utilisé par le chatbot de votre site"><Lock size={16} role="img" aria-label="Processus interne" /></span>
                     )}
                     {t.title}
                   </span>

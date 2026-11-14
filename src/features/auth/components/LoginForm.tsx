@@ -39,7 +39,7 @@ export function LoginForm({
       <Input
         id="email"
         type="email"
-        label="Adresse email"
+        label="Adresse e-mail"
         placeholder="vous@entreprise.fr"
         autoComplete="email"
         autoFocus
@@ -95,7 +95,7 @@ export function LoginForm({
       <p className="login-form__signup">
         Pas encore de compte ?{' '}
 <button type="button" className="login-form__link" onClick={e => { e.stopPropagation(); onSwitchToRegister(); }}>
-  Créer un espace
+  Créer une organisation
 </button>
       </p>
       )}

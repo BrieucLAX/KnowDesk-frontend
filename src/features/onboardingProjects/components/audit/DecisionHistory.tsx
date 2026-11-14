@@ -33,7 +33,7 @@ export function DecisionHistory({ projectId, analysisId, question, currentId }: 
       .catch(err => {
         if (cancelled) return;
         setItems([]);
-        toast.error(err instanceof Error ? err.message : 'Impossible de charger l\'historique.');
+        toast.error(err instanceof Error ? err.message : 'Impossible de charger l\'historique. Rechargez la page.');
       });
     return () => { cancelled = true; };
   }, [open, currentId, projectId, analysisId, question.id, toast]);

@@ -38,7 +38,7 @@ export function useArbitration(projectId: string, analysisId: string | null) {
     } catch (err) {
       if (shown.current !== analysisId) return;
       setState({ status: 'error' });
-      toast.error(err instanceof Error ? err.message : 'Impossible de charger les décisions.');
+      toast.error(err instanceof Error ? err.message : 'Impossible de charger les décisions. Rechargez la page.');
     }
   }, [projectId, analysisId, toast]);
 
@@ -77,7 +77,7 @@ export function useArbitration(projectId: string, analysisId: string | null) {
       setCurrent(question.id, saved);
       return true;
     } catch (err) {
-      await fail(err, 'Impossible d\'enregistrer la décision.');
+      await fail(err, 'Impossible d\'enregistrer la décision. Réessayez.');
       return false;
     } finally {
       setPending(null);
@@ -97,7 +97,7 @@ export function useArbitration(projectId: string, analysisId: string | null) {
       setCurrent(cardId, saved);
       return true;
     } catch (err) {
-      await fail(err, 'Impossible d\'enregistrer la réponse.');
+      await fail(err, 'Impossible d\'enregistrer la réponse. Réessayez.');
       return false;
     } finally {
       setPending(null);
@@ -118,7 +118,7 @@ export function useArbitration(projectId: string, analysisId: string | null) {
       setCurrent(question.id, res.current);
       return true;
     } catch (err) {
-      await fail(err, 'Impossible d\'annuler la décision.');
+      await fail(err, 'Impossible d\'annuler la décision. Réessayez.');
       return false;
     } finally {
       setPending(null);

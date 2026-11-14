@@ -134,7 +134,7 @@ describe('Arbitrage (F-F3b)', () => {
       questionId: 'q1', expectedCurrentId: null, action: choose('a2', 'a1'),
     }));
     expect(await within(questionBlock('q1')).findByText('Option B retenue')).toBeInTheDocument();
-    expect(within(questionBlock('q1')).getByRole('button', { name: 'Annuler' })).toBeInTheDocument();
+    expect(within(questionBlock('q1')).getByRole('button', { name: 'Annuler la décision' })).toBeInTheDocument();
   });
 
   it('progression par groupe : l\'étape n\'est faite qu\'une fois ses deux questions tranchées ; « plus tard » reste à faire', async () => {
@@ -152,7 +152,7 @@ describe('Arbitrage (F-F3b)', () => {
     expect(within(overview).getAllByRole('listitem')[0]).toHaveTextContent('Plus tard');
     expect(screen.getByText(/sur 2/, { selector: 'strong' })).toHaveTextContent('0 sur 2');
 
-    fireEvent.click(within(questionBlock('q2')).getByRole('button', { name: 'Changer' }));
+    fireEvent.click(within(questionBlock('q2')).getByRole('button', { name: 'Changer la décision' }));
     fireEvent.click(within(questionBlock('q2')).getByRole('button', { name: 'Retenir B' }));
     await within(questionBlock('q2')).findByText('Option B retenue');
     expect(within(overview).getAllByRole('listitem')[0]).toHaveTextContent('Décidée');
@@ -172,11 +172,11 @@ describe('Arbitrage (F-F3b)', () => {
     fireEvent.click(screen.getByRole('button', { name: /Décision 2/ }));
 
     expect(within(questionBlock('q3')).getByText('Passée (non applicable)')).toBeInTheDocument();
-    fireEvent.click(within(questionBlock('q3')).getByRole('button', { name: 'Annuler' }));
+    fireEvent.click(within(questionBlock('q3')).getByRole('button', { name: 'Annuler la décision' }));
     expect(await within(questionBlock('q3')).findByText('Plus tard', { selector: '.obp-decision__badge' })).toBeInTheDocument();
     expect(onboardingApi.cancelDecision).toHaveBeenLastCalledWith('p1', 'an1', second.id);
 
-    fireEvent.click(within(questionBlock('q3')).getByRole('button', { name: 'Annuler' }));
+    fireEvent.click(within(questionBlock('q3')).getByRole('button', { name: 'Annuler la décision' }));
     expect(await within(questionBlock('q3')).findByRole('button', { name: 'Retenir A' })).toBeInTheDocument();
     expect(onboardingApi.cancelDecision).toHaveBeenLastCalledWith('p1', 'an1', first.id);
   });
@@ -188,7 +188,7 @@ describe('Arbitrage (F-F3b)', () => {
 
     fireEvent.click(within(questionBlock('q1')).getByRole('button', { name: 'Retenir A' }));
     expect(await within(questionBlock('q1')).findByText('Passée (non applicable)')).toBeInTheDocument();
-    expect(toast).toHaveBeenCalledWith('Cette question a été modifiée entre-temps.', 'error', expect.anything());
+    expect(toast).toHaveBeenCalledWith('Cette question a été modifiée entre-temps : l\'audit a été rechargé.', 'error', expect.anything());
     expect(onboardingApi.listDecisions).toHaveBeenCalledTimes(2);
   });
 
@@ -246,7 +246,7 @@ describe('Arbitrage (F-F3b)', () => {
     fireEvent.click(within(questionBlock('q1')).getByRole('button', { name: 'Passer' }));
     const dialog = await screen.findByRole('dialog');
     expect(dialog).toHaveTextContent('Rien n\'est supprimé');
-    fireEvent.click(within(dialog).getByRole('button', { name: 'Passer' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Passer la question' }));
     await waitFor(() => expect(onboardingApi.decide).toHaveBeenCalledWith('p1', 'an1', expect.objectContaining({ action: { type: 'skip' } })));
     expect(confirmSpy).not.toHaveBeenCalled();
   });

@@ -21,7 +21,7 @@ export function ResetPasswordForm({ token, onBack }: ResetPasswordFormProps) {
         <div className="forgot-success__icon forgot-success__icon--success" aria-hidden="true"><CircleCheck size={24} /></div>
         <h2 className="forgot-success__title">Mot de passe modifié</h2>
         <p className="forgot-success__desc">
-          Ton mot de passe a été mis à jour. Tu vas être redirigé vers la connexion.
+          Votre mot de passe a été mis à jour. Vous allez être redirigé vers la connexion.
         </p>
       </div>
     );
@@ -44,7 +44,7 @@ export function ResetPasswordForm({ token, onBack }: ResetPasswordFormProps) {
         id="confirm-password"
         type="password"
         label="Confirmer le mot de passe"
-        placeholder="Répète le mot de passe"
+        placeholder="Répétez le mot de passe"
         value={confirmPassword}
         onChange={e => setConfirmPassword(e.target.value)}
         autoComplete="new-password"

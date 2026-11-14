@@ -44,7 +44,7 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       setIndustries(inds);
       setProviders(prs);
     } catch (err) {
-      toast.error((err as Error).message ?? 'Chargement impossible.');
+      toast.error((err as Error).message ?? "Les paramètres n'ont pas pu être chargés. Rechargez la page.");
     } finally {
       setLoading(false);
     }
@@ -58,10 +58,10 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       setProject(prev => prev ? { ...prev, industry } : prev);
       onReloadProject();
       if (industry) {
-        toast.success('Secteur enregistré. Tu peux maintenant utiliser le bouton « ✨ Suggestions de prompts » dans l\'onglet Prompts.');
+        toast.success("Secteur enregistré. Vous pouvez maintenant utiliser le bouton « Suggestions de prompts » dans l'onglet Prompts.");
       }
     } catch (err) {
-      toast.error((err as Error).message ?? 'Enregistrement impossible.');
+      toast.error((err as Error).message ?? "Le secteur n'a pas pu être enregistré. Réessayez.");
     } finally {
       setSavingIndustry(false);
     }
@@ -74,16 +74,16 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       ? Array.from(new Set([...current, provider]))
       : current.filter(p => p !== provider);
     if (next.length === 0) {
-      toast.error('Au moins un provider doit rester actif.');
+      toast.error("Au moins un modèle d'IA doit rester actif.");
       return;
     }
     try {
       await brandMonitoringApi.updateProject(projectId, { enabledProviders: next });
       setProject(prev => prev ? { ...prev, enabled_providers: next } : prev);
       const labels = providers.filter(p => next.includes(p.key)).map(p => p.label).join(', ');
-      toast.success(`Providers actifs : ${labels}. Chaque prompt sera exécuté sur tous les providers actifs (×${next.length} quota).`);
+      toast.success(`Modèles d'IA actifs : ${labels}. Chaque prompt sera envoyé à chacun d'eux (quota ×${next.length}).`);
     } catch (err) {
-      toast.error((err as Error).message ?? 'Mise à jour impossible.');
+      toast.error((err as Error).message ?? "La modification n'a pas pu être enregistrée. Réessayez.");
     }
   };
 
@@ -108,23 +108,23 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       await brandMonitoringApi.updateProject(projectId, { alignmentEnabled: enabled });
       setProject(prev => prev ? { ...prev, alignment_enabled: enabled } : prev);
       toast.success(enabled
-        ? 'Alignement narrative activé. Mistral extraira les attributs associés à chaque marque mentionnée (1 quota supplémentaire par réponse).'
-        : 'Alignement narrative désactivé.');
+        ? 'Alignement narratif activé. Mistral extraira les attributs associés à chaque marque mentionnée (1 quota supplémentaire par réponse).'
+        : 'Alignement narratif désactivé.');
     } catch (err) {
-      toast.error((err as Error).message ?? 'Mise à jour impossible.');
+      toast.error((err as Error).message ?? "La modification n'a pas pu être enregistrée. Réessayez.");
     }
   };
 
   const handleSaveAttributes = async () => {
     const attrs = attrsDraft.split(',').map(s => s.trim().toLowerCase()).filter(s => s.length >= 2);
-    if (attrs.length > 8) { toast.error('Maximum 8 attributs prioritaires.'); return; }
+    if (attrs.length > 8) { toast.error('Saisissez 8 attributs prioritaires au maximum.'); return; }
     setSavingAlign(true);
     try {
       await brandMonitoringApi.updateProject(projectId, { desiredAttributes: attrs });
       setProject(prev => prev ? { ...prev, desired_attributes: attrs } : prev);
       toast.success(`${attrs.length} attribut${attrs.length > 1 ? 's' : ''} prioritaire${attrs.length > 1 ? 's' : ''} enregistré${attrs.length > 1 ? 's' : ''}.`);
     } catch (err) {
-      toast.error((err as Error).message ?? 'Enregistrement impossible.');
+      toast.error((err as Error).message ?? "Les attributs n'ont pas pu être enregistrés. Réessayez.");
     } finally {
       setSavingAlign(false);
     }
@@ -135,10 +135,10 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       await brandMonitoringApi.updateProject(projectId, { sentimentEnabled: enabled });
       setProject(prev => prev ? { ...prev, sentiment_enabled: enabled } : prev);
       toast.success(enabled
-        ? 'Analyse de sentiment activée. Elle sera appliquée aux PROCHAINS runs (consomme 1 quota supplémentaire par réponse).'
+        ? "Analyse de sentiment activée. Elle s'appliquera à partir de la prochaine analyse (1 quota supplémentaire par réponse)."
         : 'Analyse de sentiment désactivée.');
     } catch (err) {
-      toast.error((err as Error).message ?? 'Mise à jour impossible.');
+      toast.error((err as Error).message ?? "La modification n'a pas pu être enregistrée. Réessayez.");
     }
   };
 
@@ -150,13 +150,13 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
   const handleCreate = async () => {
     const name = newName.trim();
     const aliases = parseAliases(newAliases);
-    if (name.length < 1) { toast.error('Donne un nom de marque.'); return; }
-    if (aliases.length === 0) { toast.error('Ajoute au moins un alias (peut être le nom lui-même).'); return; }
+    if (name.length < 1) { toast.error('Saisissez le nom de la marque ou du produit.'); return; }
+    if (aliases.length === 0) { toast.error('Ajoutez au moins un alias (le nom lui-même convient).'); return; }
     // La contrainte UNIQUE owner ne s'applique qu'aux marques 'brand' (pour
     // les produits, on peut avoir N produits MDD owner). Le backend a la
     // même règle via l'index unique partiel.
     if (newOwner && newKind === 'brand' && brands.some(b => b.is_owner && b.kind === 'brand')) {
-      toast.error('Il existe déjà une marque "owner" pour ce projet. Décoche pour ajouter une marque concurrente.');
+      toast.error('Votre marque est déjà définie pour ce projet. Décochez la case pour ajouter une marque concurrente.');
       return;
     }
     setSaving(true);
@@ -166,7 +166,7 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       await reload();
       onReloadProject();
     } catch (err) {
-      toast.error((err as Error).message ?? 'Création impossible.');
+      toast.error((err as Error).message ?? "La marque n'a pas pu être ajoutée. Réessayez.");
     } finally {
       setSaving(false);
     }
@@ -180,7 +180,7 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       await reload();
       onReloadProject();
     } catch (err) {
-      toast.error((err as Error).message ?? 'Suppression impossible.');
+      toast.error((err as Error).message ?? "La marque n'a pas pu être supprimée. Réessayez.");
     }
   };
 
@@ -191,8 +191,8 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       <section className="bm-card">
         <h3 className="bm-card__title">Secteur d'activité du projet</h3>
         <p className="bm-card__sub">
-          Définit le secteur pour débloquer la bibliothèque de prompts curated
-          (25 questions adaptées à ton marché, disponibles dans l'onglet Prompts).
+          Choisissez le secteur pour accéder à la bibliothèque de prompts suggérés
+          (25 prompts adaptés à votre marché, dans l'onglet Prompts).
         </p>
         <div className="bm-form">
           <label className="bm-select-wrap" htmlFor="bm-industry">
@@ -214,11 +214,11 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       </section>
 
       <section className="bm-card">
-        <h3 className="bm-card__title">Providers LLM</h3>
+        <h3 className="bm-card__title">Modèles d'IA</h3>
         <p className="bm-card__sub">
-          Sélectionne les LLM sur lesquels exécuter chaque prompt. <strong>Plus tu en actives, plus ta coverage marché est large</strong>,
-          mais chaque provider activé consomme 1 unité de quota par prompt (multiplie le coût mensuel).
-          Les providers grisés nécessitent une clé API dans Railway (variables d'environnement) avant d'être activables.
+          Choisissez les IA auxquelles envoyer chaque prompt. <strong>Plus vous en activez, plus votre couverture du marché est large</strong>,
+          mais chaque IA activée consomme 1 unité de quota par prompt (le coût mensuel est multiplié d'autant).
+          Les IA grisées demandent une clé API dans Railway (variables d'environnement) avant de pouvoir être activées.
         </p>
         <div className="bm-providers">
           {providers.map(p => {
@@ -252,11 +252,11 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       <section className="bm-card">
         <h3 className="bm-card__title">Analyse de sentiment (optionnelle)</h3>
         <p className="bm-card__sub">
-          Quand activée, chaque réponse Mistral est ré-analysée pour évaluer le sentiment
-          (positif / neutre / négatif) de chaque marque mentionnée. Permet de savoir si une
-          marque est citée pour la recommander ou la critiquer. Coût : <strong>1 unité de quota
-          supplémentaire par réponse</strong> — pense à augmenter
-          BRAND_MONITORING_MONTHLY_CALL_QUOTA si tu actives sur tous les projets.
+          Une fois activée, chaque réponse de Mistral est analysée à nouveau pour évaluer le sentiment
+          (positif, neutre ou négatif) envers chaque marque mentionnée. Vous savez ainsi si une
+          marque est citée pour être recommandée ou critiquée. Coût : <strong>1 unité de quota
+          supplémentaire par réponse</strong>. Pensez à augmenter
+          BRAND_MONITORING_MONTHLY_CALL_QUOTA si vous l'activez sur tous les projets.
         </p>
         <label className="bm-checkbox">
           <input
@@ -264,21 +264,21 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
             checked={project?.sentiment_enabled ?? false}
             onChange={e => handleSentimentToggle(e.target.checked)}
           />
-          Activer l'analyse de sentiment sur les prochains runs
+          Activer l'analyse de sentiment pour les prochaines analyses
         </label>
       </section>
 
       <section className="bm-card">
-        <h3 className="bm-card__title">Alignement narrative (optionnel)</h3>
+        <h3 className="bm-card__title">Alignement narratif (optionnel)</h3>
         <p className="bm-card__sub">
-          Définis le <strong>positionnement souhaité</strong> de ta marque (3-8 attributs prioritaires)
-          et active l'analyse. Pour chaque réponse, Mistral extrait les attributs réellement
-          associés à chaque marque — tu vois si le LLM te décrit aligné avec ton positionnement
-          ou autrement. Coût : <strong>1 unité de quota supplémentaire par réponse</strong>.
+          Définissez le <strong>positionnement souhaité</strong> de votre marque (3 à 8 attributs prioritaires),
+          puis activez l'analyse. Pour chaque réponse, Mistral extrait les attributs réellement
+          associés à chaque marque : vous voyez si les IA vous décrivent conformément à votre
+          positionnement ou autrement. Coût : <strong>1 unité de quota supplémentaire par réponse</strong>.
         </p>
         <div className="bm-form" style={{ marginBottom: 8 }}>
           <label htmlFor="bm-desired-attrs" className="bm-select-label">
-            Attributs prioritaires (séparés par des virgules, max 8)
+            Attributs prioritaires (séparés par des virgules, 8 au maximum)
           </label>
           <textarea
             id="bm-desired-attrs"
@@ -300,18 +300,18 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
             checked={project?.alignment_enabled ?? false}
             onChange={e => handleAlignmentToggle(e.target.checked)}
           />
-          Activer l'extraction d'attributs sur les prochains runs
+          Activer l'extraction d'attributs pour les prochaines analyses
         </label>
       </section>
 
       <section className="bm-card">
         <h3 className="bm-card__title">Ajouter une marque ou un produit</h3>
         <p className="bm-card__sub">
-          <strong>Marque</strong> = enseigne / acteur du marché (Auchan, Carrefour, Leclerc).
-          <strong> Produit</strong> = référence consommateur ou marque de distributeur (Auchan Bio,
-          Carrefour Sélection, Mmm!) — utile quand l'IA répond à des questions du type
+          <strong>Marque</strong> : enseigne ou acteur du marché (Auchan, Carrefour, Leclerc).
+          <strong> Produit</strong> : référence grand public ou marque de distributeur (Auchan Bio,
+          Carrefour Sélection, Mmm!), utile quand l'IA répond à des questions comme
           « Quel yaourt bio acheter ? ».
-          Les <strong>alias</strong> sont les variantes texte qu'on cherche dans les réponses LLM.
+          Les <strong>alias</strong> sont les variantes du nom recherchées dans les réponses des IA.
         </p>
         <div className="bm-form">
           <fieldset className="bm-radio-group" style={{ marginBottom: 8 }}>
@@ -337,7 +337,7 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
           />
           <Input
             id="bm-new-brand-aliases"
-            label="Aliases (séparés par des virgules, max 20)"
+            label="Alias (séparés par des virgules, 20 au maximum)"
             value={newAliases}
             onChange={e => setNewAliases(e.target.value)}
             placeholder={newKind === 'product' ? 'Auchan Bio, Mmm!, Cuir & Compagnie' : 'Auchan, Auchan Drive, auchan.fr'}
@@ -345,12 +345,12 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
           <label className="bm-checkbox">
             <input type="checkbox" checked={newOwner} onChange={e => setNewOwner(e.target.checked)} />
             {newKind === 'product'
-              ? 'Ce produit appartient à ma marque (MDD) — peut être coché sur plusieurs produits.'
-              : 'C\'est ma marque (owner) — il ne peut y en avoir qu\'une par projet.'}
+              ? 'Ce produit appartient à votre marque (marque de distributeur). Vous pouvez cocher plusieurs produits.'
+              : "C'est votre marque. Il ne peut y en avoir qu'une par projet."}
           </label>
           <div className="bm-form__actions">
             <Button variant="primary" size="md" onClick={handleCreate} loading={saving}>
-              Ajouter
+              {newKind === 'product' ? 'Ajouter le produit' : 'Ajouter la marque'}
             </Button>
           </div>
         </div>
@@ -358,10 +358,10 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
 
       {(['brand', 'product'] as MonitoredBrandKind[]).map(kind => {
         const list = brands.filter(b => (b.kind ?? 'brand') === kind);
-        const title = kind === 'brand' ? 'Marques surveillées' : 'Produits surveillés';
+        const title = kind === 'brand' ? 'Marques suivies' : 'Produits suivis';
         const empty = kind === 'brand'
-          ? 'Aucune marque encore. Ajoute au moins ta marque owner.'
-          : 'Aucun produit surveillé. Ajoute des références consommateur si tu veux mesurer l\'AI Shopping.';
+          ? "Aucune marque pour l'instant. Ajoutez au moins votre marque."
+          : "Aucun produit suivi. Ajoutez des références grand public pour mesurer ce que les IA recommandent à l'achat.";
         // Section "Produits" masquée tant que rien n'a été créé (UX propre
         // pour les projets qui ne monitorent que des enseignes).
         if (kind === 'product' && list.length === 0) return null;
@@ -399,8 +399,8 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       {pendingDelete && (
         <ConfirmDialog
           title="Supprimer cette marque ?"
-          description={`« ${pendingDelete.name} » sera retirée du suivi. Les anciennes mentions sont conservées dans l'historique mais ne seront plus comptées dans les nouveaux runs.`}
-          confirmLabel="Supprimer"
+          description={`« ${pendingDelete.name} » sera retirée du suivi. Ses mentions passées restent dans l'historique, mais ne seront plus comptées dans les prochaines analyses. Cette action est définitive.`}
+          confirmLabel="Supprimer la marque"
           variant="danger"
           onConfirm={handleDelete}
           onCancel={() => setPendingDelete(null)}

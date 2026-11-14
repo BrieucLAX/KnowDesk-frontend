@@ -135,7 +135,7 @@ describe('Créer la base de connaissance (plan-articles-v1, lot 2)', () => {
     expect(onboardingApi.createKnowledgeBase).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole('button', { name: 'Créer la base de connaissance' }));
-    fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Créer' }));
+    fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Créer la base' }));
     expect(await screen.findByRole('heading', { name: 'Création en attente de démarrage' })).toBeInTheDocument();
     expect(onboardingApi.createKnowledgeBase).toHaveBeenCalledWith('p1', VALIDATION_ID, CREATION_ID);
     expect(screen.getByText(/Vous pouvez quitter cette page/)).toBeInTheDocument();
@@ -178,7 +178,7 @@ describe('Créer la base de connaissance (plan-articles-v1, lot 2)', () => {
     vi.mocked(onboardingApi.getKnowledgeBaseCreation).mockResolvedValue({ ...creation(PREVIEW as Recorded), knowledgeBaseEmpty: false });
     renderView();
     fireEvent.click(await screen.findByRole('button', { name: 'Créer la base de connaissance' }));
-    fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Créer' }));
+    fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Créer la base' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('La base de connaissance n\'est plus vide : archivez ou supprimez ses articles et ses FAQ, puis réessayez.');
     await waitFor(() => expect(screen.getByRole('button', { name: 'Créer la base de connaissance' })).toBeDisabled());
     expect(onboardingApi.getKnowledgeBaseCreation).toHaveBeenCalledWith('p1', CREATION_ID);
@@ -190,7 +190,7 @@ describe('Créer la base de connaissance (plan-articles-v1, lot 2)', () => {
     vi.mocked(onboardingApi.getKnowledgeBaseCreation).mockResolvedValue(creation(RUNNING));
     renderView();
     fireEvent.click(await screen.findByRole('button', { name: 'Créer la base de connaissance' }));
-    fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Créer' }));
+    fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Créer la base' }));
     expect(await screen.findByRole('heading', { name: 'Création en cours' })).toBeInTheDocument();
 
     expect(creationErrorMessage(refusal(CREATE_RUNNING))).toBe('Une création est déjà en cours pour votre organisation.');

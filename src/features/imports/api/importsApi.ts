@@ -38,7 +38,7 @@ export const importsApi = {
     });
     const body = await res.json();
     if (!res.ok || body.error) {
-      throw new Error(body.error?.message ?? body.error ?? `Upload échoué (${res.status}).`);
+      throw new Error(body.error?.message ?? body.error ?? `L'envoi du fichier a échoué (code ${res.status}). Réessayez dans un instant.`);
     }
     return body.data as ImportItem;
   },

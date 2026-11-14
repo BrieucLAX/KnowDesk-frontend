@@ -23,7 +23,7 @@ export function useApiKeys() {
       const data = await apiClient.get<ApiKey[]>('/api-keys');
       setKeys(data);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les clés API.');
+      toast.error(err instanceof ApiError ? err.message : 'Les clés API n\'ont pas pu être chargées. Rechargez la page.');
     } finally {
       setLoading(false);
     }
@@ -39,7 +39,7 @@ export function useApiKeys() {
       toast.success('Clé API créée.');
       return true;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Création impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'La clé n\'a pas été créée. Réessayez.');
       return false;
     }
   }, [toast]);
@@ -51,7 +51,7 @@ export function useApiKeys() {
       toast.success('Clé révoquée.');
       return true;
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'Révocation impossible.');
+      toast.error(err instanceof ApiError ? err.message : 'La clé n\'a pas été révoquée. Réessayez.');
       return false;
     }
   }, [toast]);

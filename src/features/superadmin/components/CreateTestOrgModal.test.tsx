@@ -14,7 +14,7 @@ function created(email: TestOrgCreated['email']): TestOrgCreated {
 
 function fillAndSubmit() {
   fireEvent.change(screen.getByLabelText("Nom de l'organisation"), { target: { value: ' Prospect SA ' } });
-  fireEvent.change(screen.getByLabelText("Email de l'admin"), { target: { value: 'admin@prospect.fr' } });
+  fireEvent.change(screen.getByLabelText("Adresse e-mail de l'administrateur"), { target: { value: 'admin@prospect.fr' } });
   fireEvent.click(screen.getByRole('button', { name: 'Créer et inviter' }));
 }
 
@@ -25,7 +25,7 @@ describe('CreateTestOrgModal', () => {
     fillAndSubmit();
     expect(onCreate).toHaveBeenCalledWith('Prospect SA', 'admin@prospect.fr');
     expect(await screen.findByLabelText("Lien d'invitation")).toHaveValue('https://app.knowdesk.fr/accept-invitation?token=abc');
-    expect(screen.getByRole('status')).toHaveTextContent('envoyée par email');
+    expect(screen.getByRole('status')).toHaveTextContent('envoyée par e-mail');
   });
 
   it('dit de transmettre le lien si l\'email n\'est pas parti', async () => {

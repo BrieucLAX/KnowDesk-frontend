@@ -78,7 +78,7 @@ describe('KnowledgePage : Archiver, onglet Archivés, Désarchiver (plan-article
 
     rowAction('Résiliation infra-annuelle', 'Archiver');
     expect(apiClient.put).not.toHaveBeenCalled();
-    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Archiver' }));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: "Archiver l'article" }));
 
     await waitFor(() => expect(tabCount('Archivés')).toBe('2'));
     expect(apiClient.put).toHaveBeenCalledWith(`/articles/${(ARCHIVE.data as { id: string }).id}/archive`);

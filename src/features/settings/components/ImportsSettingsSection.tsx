@@ -37,7 +37,7 @@ export function ImportsSettingsSection() {
       const list = await importsApi.list();
       setItems(list);
     } catch (err) {
-      toast.error((err as Error).message ?? 'Impossible de charger l\'historique des imports.');
+      toast.error((err as Error).message ?? 'L\'historique des imports n\'a pas pu être chargé. Rechargez la page.');
     } finally {
       setLoading(false);
     }
@@ -60,9 +60,9 @@ export function ImportsSettingsSection() {
         <div>
           <h2 id="imports-title" className="settings-section__title icon-label"><Upload size={20} />Imports de documents</h2>
           <p className="settings-section__desc">
-            Convertis tes bases de connaissance existantes (PDF, DOCX, PPTX) en articles
+            Convertissez vos documents existants (PDF, DOCX, PPTX) en articles
             KnowDesk. Les articles importés sont créés en <strong>brouillon</strong> dans
-            une catégorie temporaire <em>📥 Imports — date du jour</em> — relis-les avant
+            une catégorie temporaire « Imports ». Relisez-les avant
             de les publier.
           </p>
         </div>
@@ -80,7 +80,7 @@ export function ImportsSettingsSection() {
       ) : items.length === 0 ? (
         <EmptyState
           title="Aucun import pour l'instant"
-          description="Clique sur « + Nouvel import » pour transformer un document existant en articles brouillon."
+          description="Cliquez sur « Nouvel import » pour transformer un document existant en articles brouillons."
         />
       ) : (
         <ul className="imports-list" role="list">
@@ -102,7 +102,7 @@ export function ImportsSettingsSection() {
                       {item.split_mode === 'split_by_section'
                         ? 'Découpé par section'
                         : item.format === 'pptx'
-                          ? '1 slide = 1 article'
+                          ? '1 diapositive = 1 article'
                           : '1 fichier = 1 article'}
                     </span>
                     <span>·</span>

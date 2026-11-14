@@ -49,7 +49,7 @@ export function AnalyticsPage({ onOpenArticle, onCreateFaq }: AnalyticsPageProps
           title="Analyse"
           subtitle="Vue d'ensemble de la santé éditoriale de votre base de connaissance."
         />
-        <p className="field-error" role="alert">{error ?? 'Impossible de charger les analytics.'}</p>
+        <p className="field-error" role="alert">{error ?? "L'analyse n'a pas pu être chargée. Rechargez la page."}</p>
       </div>
     );
   }
@@ -205,8 +205,8 @@ function NoTagsCard({ items, onOpen }: { items: ArticleSummary[]; onOpen: (id: s
 function TopContributorsCard({ items }: { items: TopContributor[] }) {
   return (
     <AnalyticsCard
-      title="Top contributeurs"
-      description="Auteurs les plus actifs (count = total ; (X) = 30 derniers jours)."
+      title="Contributeurs les plus actifs"
+      description="Nombre total d'articles par auteur ; entre parenthèses, ceux des 30 derniers jours."
       count={items.length}
       emptyHint="Aucun article publié pour l'instant."
     >
@@ -258,7 +258,7 @@ function TopTagsCard({ items }: { items: TopTag[] }) {
   return (
     <AnalyticsCard
       title="Tags les plus utilisés"
-      description="Top 10 des tags par nombre d'articles."
+      description="Les 10 tags portés par le plus d'articles."
       count={items.length}
       emptyHint="Aucun tag utilisé pour l'instant."
     >
@@ -281,7 +281,7 @@ function UnusedTagsCard({ items }: { items: UnusedTag[] }) {
       title="Tags inutilisés"
       description="Présents en base mais qu'aucun article ne porte."
       count={items.length}
-      emptyHint="Tous les tags sont utilisés. Bien joué."
+      emptyHint="Tous les tags sont utilisés."
     >
       <ul className="analytics-chips">
         {items.map(t => (
@@ -300,9 +300,9 @@ function TopViewedCard({ items, windowDays, onOpen }: { items: ViewedArticle[]; 
   return (
     <AnalyticsCard
       title="Articles les plus consultés"
-      description={`Top 10 sur ${windowDays} jours.`}
+      description={`Les 10 premiers sur ${windowDays} jours.`}
       count={items.length}
-      emptyHint="Pas encore assez de vues — revenez après quelques jours d'activité."
+      emptyHint="Pas encore assez de vues. Revenez après quelques jours d'activité."
     >
       <ul className="analytics-list">
         {items.map(a => (
@@ -324,7 +324,7 @@ function LowViewedCard({ items, windowDays, onOpen }: { items: LowViewedArticle[
   return (
     <AnalyticsCard
       title="Articles peu consultés"
-      description={`Publiés depuis plus de ${windowDays} jours et lus au plus une fois sur la fenêtre.`}
+      description={`Publiés depuis plus de ${windowDays} jours et lus au plus une fois sur cette période.`}
       count={items.length}
       emptyHint="Tous vos articles publiés trouvent leur lecteur."
     >
@@ -334,7 +334,7 @@ function LowViewedCard({ items, windowDays, onOpen }: { items: LowViewedArticle[
             <button type="button" className="analytics-list__btn" onClick={() => onOpen(a.id)}>
               <span className="analytics-list__title">{a.title}</span>
               <span className="analytics-list__meta">
-                {a.categoryName ?? 'Sans catégorie'} · {a.views} vue · MAJ {formatRelative(a.lastUpdated)}
+                {a.categoryName ?? 'Sans catégorie'} · {a.views} vue · mis à jour {formatRelative(a.lastUpdated)}
               </span>
             </button>
           </li>
@@ -347,8 +347,8 @@ function LowViewedCard({ items, windowDays, onOpen }: { items: LowViewedArticle[
 function TopSearchesCard({ items, windowDays }: { items: SearchQueryStat[]; windowDays: number }) {
   return (
     <AnalyticsCard
-      title="Top recherches"
-      description={`Requêtes les plus fréquentes sur ${windowDays} jours.`}
+      title="Recherches les plus fréquentes"
+      description={`Sur les ${windowDays} derniers jours.`}
       count={items.length}
       emptyHint="Pas encore de recherches enregistrées."
     >
@@ -368,9 +368,9 @@ function ZeroResultsCard({ items, windowDays }: { items: SearchQueryStat[]; wind
   return (
     <AnalyticsCard
       title="Recherches sans résultat"
-      description={`Requêtes qui n'ont rien retourné sur ${windowDays} jours — opportunités éditoriales.`}
+      description={`Recherches qui n'ont rien donné sur ${windowDays} jours : autant de sujets à rédiger.`}
       count={items.length}
-      emptyHint="Aucune recherche infructueuse — votre base couvre bien le besoin."
+      emptyHint="Aucune recherche sans résultat : votre base couvre bien les besoins."
     >
       <ul className="analytics-list">
         {items.map(s => (
@@ -436,9 +436,9 @@ function AiAnswerStatsBanner({ onCreateFaq }: { onCreateFaq?: (q: string) => voi
             <InfoTooltip
               title="Réponses générées par IA"
               rows={[
-                { label: 'Quoi',   text: 'nombre total de réponses IA produites par la barre Cmd+K (conseillers internes) sur 30 jours, qu\'elles aient abouti ou non.' },
-                { label: 'Calcul', text: 'appels à l\'IA agrégés sur 30 jours, après déduplication des frappes intermédiaires (une recherche tapée en plusieurs étapes compte 1, pas N).' },
-                { label: 'Action', text: 'ce n\'est pas un objectif chiffré en soi — c\'est un volume d\'usage. Il sert de dénominateur aux KPI suivants (Réponses précises / Sans réponse / Utiles). Si très bas par rapport au nombre de conseillers actifs, la fonction IA est sous-utilisée — fais une démo Cmd+K en réunion.' },
+                { label: 'Quoi',   text: "nombre total de réponses de l'IA produites dans la barre de recherche Cmd+K (conseillers) sur 30 jours, qu'elles aient abouti ou non." },
+                { label: 'Calcul', text: "appels à l'IA cumulés sur 30 jours, sans compter les frappes intermédiaires : une recherche tapée en plusieurs étapes compte une seule fois." },
+                { label: 'Action', text: "ce n'est pas un objectif en soi, mais un volume d'usage. Il sert de base aux indicateurs suivants (Réponses précises, Sans réponse, Satisfaction). S'il est très bas par rapport au nombre de conseillers actifs, la fonction est sous-utilisée : faites une démonstration de Cmd+K en réunion." },
               ]}
             />
           </span>
@@ -450,9 +450,9 @@ function AiAnswerStatsBanner({ onCreateFaq }: { onCreateFaq?: (q: string) => voi
             <InfoTooltip
               title="Réponses précises"
               rows={[
-                { label: 'Quoi',   text: 'pourcentage de fois où l\'IA a réussi à produire une vraie réponse adossée à ta base (avec sources affichées), sur 30 jours.' },
-                { label: 'Calcul', text: 'nombre de réponses précises sur nombre total de réponses générées par IA. Dédup préfixes appliquée : une recherche tapée en plusieurs étapes compte 1.' },
-                { label: 'Action', text: 'viser ≥ 70%. Si plus bas, l\'IA tombe souvent dans le vide — consulte la carte « Recherches sans résultat » plus bas et crée les FAQs manquantes.' },
+                { label: 'Quoi',   text: "pourcentage de fois où l'IA a produit une vraie réponse appuyée sur votre base (avec les sources affichées), sur 30 jours." },
+                { label: 'Calcul', text: "nombre de réponses précises divisé par le nombre total de réponses générées par l'IA. Une recherche tapée en plusieurs étapes compte une seule fois." },
+                { label: 'Action', text: "visez 70 % ou plus. En dessous, l'IA reste souvent sans réponse : consultez la carte « Recherches sans résultat » plus bas et créez les FAQ manquantes." },
               ]}
             />
             <span className="ai-stats__metric-sublabel">{stats.doneCount} sur {stats.totalShown}</span>
@@ -465,9 +465,9 @@ function AiAnswerStatsBanner({ onCreateFaq }: { onCreateFaq?: (q: string) => voi
             <InfoTooltip
               title="Sans réponse"
               rows={[
-                { label: 'Quoi',   text: 'pourcentage de cas où l\'IA n\'a pas pu répondre, car le contenu de ta base ne couvre pas le sujet posé.' },
-                { label: 'Calcul', text: 'nombre de cas où l\'IA n\'a pas pu répondre sur nombre total de réponses générées par IA. Dédup préfixes appliquée : une recherche tapée en plusieurs étapes compte 1.' },
-                { label: 'Action', text: 'viser ≤ 30%. Si plus haut, va dans la carte « Recherches sans résultat » plus bas et crée les FAQs manquantes — c\'est le KPI le plus actionnable du bandeau.' },
+                { label: 'Quoi',   text: "pourcentage de cas où l'IA n'a pas pu répondre, parce que votre base ne couvre pas le sujet demandé." },
+                { label: 'Calcul', text: "nombre de cas où l'IA n'a pas pu répondre, divisé par le nombre total de réponses générées par l'IA. Une recherche tapée en plusieurs étapes compte une seule fois." },
+                { label: 'Action', text: "visez 30 % ou moins. Au-dessus, ouvrez la carte « Recherches sans résultat » plus bas et créez les FAQ manquantes : c'est l'indicateur de ce bandeau sur lequel vous pouvez agir le plus directement." },
               ]}
             />
             <span className="ai-stats__metric-sublabel">{stats.unsureCount} sur {stats.totalShown}</span>
@@ -482,9 +482,9 @@ function AiAnswerStatsBanner({ onCreateFaq }: { onCreateFaq?: (q: string) => voi
             <InfoTooltip
               title="Satisfaction"
               rows={[
-                { label: 'Quoi',   text: 'pourcentage de réponses IA jugées utiles par les collaborateurs via les boutons 👍 / 👎 de la carte de réponse, sur 30 jours.' },
-                { label: 'Calcul', text: 'nombre de votes 👍 sur nombre total de votes (👍 + 👎). Affiché « — » sous 2 votes au total. Les réponses sans vote ne comptent ni au numérateur ni au dénominateur.' },
-                { label: 'Action', text: 'viser ≥ 70%. Si plus bas, ajuste les réglages dans Paramètres → ✨ IA recherche (secteur, tonalité, glossaire) pour mieux cadrer l\'IA, et regarde « Top questions » plus bas pour identifier les sujets où l\'IA répond mal.' },
+                { label: 'Quoi',   text: "pourcentage de réponses de l'IA jugées utiles par les membres, avec les boutons pouce levé et pouce baissé de la carte de réponse, sur 30 jours." },
+                { label: 'Calcul', text: "nombre de votes positifs divisé par le nombre total de votes (positifs et négatifs). « — » s'affiche sous 2 votes au total. Les réponses sans vote ne sont pas comptées." },
+                { label: 'Action', text: "visez 70 % ou plus. En dessous, ajustez les réglages de la rubrique « Recherche interne » des paramètres (secteur, tonalité, glossaire) pour mieux cadrer l'IA, et regardez « Questions les plus posées » plus bas pour repérer les sujets où elle répond mal." },
               ]}
             />
             <span className="ai-stats__metric-sublabel">
@@ -501,7 +501,7 @@ function AiAnswerStatsBanner({ onCreateFaq }: { onCreateFaq?: (q: string) => voi
         <div className="ai-stats__queries">
           {stats.topQueries.length > 0 && (
             <div className="ai-stats__queries-col">
-              <h3 className="ai-stats__queries-title">Top questions</h3>
+              <h3 className="ai-stats__queries-title">Questions les plus posées</h3>
               <ul className="ai-stats__list" role="list">
                 {stats.topQueries.slice(0, 5).map(q => (
                   <li key={q.query} className="ai-stats__item">
@@ -522,7 +522,7 @@ function AiAnswerStatsBanner({ onCreateFaq }: { onCreateFaq?: (q: string) => voi
                     <span className="ai-stats__item-count">{q.count}</span>
                     {onCreateFaq && (
                       <Button variant="ghost" size="sm" onClick={() => onCreateFaq(q.query)}>
-                        Créer FAQ
+                        Créer une FAQ
                       </Button>
                     )}
                   </li>
@@ -613,7 +613,7 @@ function ChatStatsBanner() {
               : '—'}
           </span>
           <span className="ai-stats__metric-label">
-            CSAT moyen
+            Satisfaction moyenne
             <span className="ai-stats__metric-sublabel">
               {stats.csatRated} note{stats.csatRated > 1 ? 's' : ''} explicite{stats.csatRated > 1 ? 's' : ''}
             </span>
@@ -640,7 +640,7 @@ function ChatStatsBanner() {
             <span className="ai-stats__legend-item">
               <span className="ai-stats__legend-dot ai-stats__legend-dot--resolved" aria-hidden="true" />
               {stats.resolved} résolue{stats.resolved > 1 ? 's' : ''}
-              <span className="ai-stats__legend-hint">le bot a répondu, visiteur satisfait</span>
+              <span className="ai-stats__legend-hint">le chatbot a répondu, visiteur satisfait</span>
             </span>
             <span className="ai-stats__legend-item">
               <span className="ai-stats__legend-dot ai-stats__legend-dot--escalated" aria-hidden="true" />
@@ -650,7 +650,7 @@ function ChatStatsBanner() {
             <span className="ai-stats__legend-item">
               <span className="ai-stats__legend-dot ai-stats__legend-dot--unresolved" aria-hidden="true" />
               {stats.unresolved} non résolue{stats.unresolved > 1 ? 's' : ''}
-              <span className="ai-stats__legend-hint">le bot n'a pas su répondre</span>
+              <span className="ai-stats__legend-hint">le chatbot n'a pas su répondre</span>
             </span>
           </div>
         </div>
@@ -659,7 +659,7 @@ function ChatStatsBanner() {
       {stats.topQuestions.length > 0 && (
         <div className="ai-stats__queries">
           <div className="ai-stats__queries-col">
-            <h3 className="ai-stats__queries-title">Top thématiques des conversations</h3>
+            <h3 className="ai-stats__queries-title">Thèmes les plus fréquents des conversations</h3>
             <ul className="ai-stats__list" role="list">
               {stats.topQuestions.slice(0, 8).map(q => (
                 <li key={q.question} className="ai-stats__item">
@@ -697,7 +697,7 @@ function FaqsToCreateBanner({ onCreate }: { onCreate: (question: string) => void
     <section className="faqs-to-create" aria-labelledby="faqs-to-create-title">
       <header className="faqs-to-create__header">
         <h2 id="faqs-to-create-title" className="faqs-to-create__title icon-label">
-          <CircleHelp size={20} />FAQs à créer
+          <CircleHelp size={20} />FAQ à créer
         </h2>
         <p className="faqs-to-create__desc">
           Vos conseillers ou clients ont cherché ces termes sans résultat dans les 7 derniers jours.
@@ -783,7 +783,7 @@ function ChatWordCloud() {
     <section className="word-cloud" aria-labelledby="word-cloud-title">
       <header className="word-cloud__header">
         <h2 id="word-cloud-title" className="word-cloud__title icon-label">
-          <Cloud size={20} />Nuage de mots — verbatims chatbot
+          <Cloud size={20} />Nuage de mots — messages des visiteurs du chatbot
         </h2>
         <div className="word-cloud__toggle" role="group" aria-label="Période">
           <button

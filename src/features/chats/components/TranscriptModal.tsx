@@ -21,14 +21,14 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const REASON_LABEL: Record<string, string> = {
-  handoff:           'Demande humain',
+  handoff:           'Demande à parler à un humain',
   positive_signal:   'Emoji positif',
   negative_signal:   'Emoji négatif',
-  csat_high:         'CSAT élevé',
-  csat_low:          'CSAT bas',
+  csat_high:         'Satisfaction élevée',
+  csat_low:          'Satisfaction basse',
   llm_positive:      'Analyse IA positive',
   llm_negative:      'Analyse IA négative',
-  fallback_message:  'Bot a ré-orienté',
+  fallback_message:  'Chatbot sans réponse, visiteur réorienté',
   short_answered:    'Réponse rapide',
   no_signal:         'Aucun signal exploitable',
   no_interaction:    'Aucune interaction',
@@ -46,7 +46,7 @@ export function TranscriptModal({ chatId, onClose }: TranscriptModalProps) {
       .then(res => { if (alive) setDetail(res); })
       .catch(err => {
         if (!alive) return;
-        toast.error(err?.message ?? 'Impossible de charger la transcription.');
+        toast.error(err?.message ?? 'Impossible de charger la conversation. Réessayez dans un instant.');
         onClose();
       })
       .finally(() => { if (alive) setLoading(false); });
@@ -69,7 +69,7 @@ export function TranscriptModal({ chatId, onClose }: TranscriptModalProps) {
         <div className="chat-transcript">
           <div
             className="chat-transcript__redaction-notice"
-            title="Email, téléphone, IBAN, n° de carte et n° de sécurité sociale sont automatiquement masqués dans cette interface admin."
+            title="E-mail, téléphone, IBAN, n° de carte et n° de sécurité sociale sont masqués automatiquement dans cet écran."
           >
             <Lock size={16} />Coordonnées masquées
           </div>
@@ -101,7 +101,7 @@ export function TranscriptModal({ chatId, onClose }: TranscriptModalProps) {
             )}
             {detail.csat !== null && (
               <div>
-                <dt>CSAT</dt>
+                <dt>Satisfaction</dt>
                 <dd><StarRating value={detail.csat} /></dd>
               </div>
             )}

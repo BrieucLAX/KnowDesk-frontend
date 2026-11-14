@@ -77,7 +77,7 @@ export function RegisterForm({
         id="email"
         name="email"
         type="email"
-        label="Adresse email"
+        label="Adresse e-mail"
         placeholder="vous@exemple.fr"
         value={form.email}
         onChange={onChange}
@@ -158,7 +158,7 @@ export function RegisterForm({
         loading={isLoading}
         fullWidth
       >
-        {isLoading ? 'Création…' : 'Créer mon espace'}
+        {isLoading ? 'Création…' : 'Créer mon organisation'}
       </Button>
 
       <p className="login-form__signup">

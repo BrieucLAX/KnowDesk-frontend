@@ -24,7 +24,7 @@ const STATUS_CONFIG: Record<string, { label: string; tone: BadgeTone }> = {
 };
 
 const ROLE_LABELS: Record<UserRole, string> = {
-  admin:   'Admin',
+  admin:   'Administrateur',
   manager: 'Manager',
   advisor: 'Conseiller',
 };
@@ -77,7 +77,7 @@ export function MemberRow({
           >
             <option value="advisor">Conseiller</option>
             <option value="manager">Manager</option>
-            <option value="admin">Admin</option>
+            <option value="admin">Administrateur</option>
           </select>
         )}
       </td>

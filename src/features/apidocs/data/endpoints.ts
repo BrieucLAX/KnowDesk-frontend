@@ -8,7 +8,7 @@ export const ENDPOINTS: Endpoint[] = [
     path:        '/categories',
     title:       'Lister les catégories',
     description:
-      'Retourne toutes les catégories de votre base de connaissance, avec leur hiérarchie. Une catégorie racine a `parent_id: null` ; les sous-catégories pointent vers leur parent via `parent_id`.',
+      'Retourne toutes les catégories de votre base de connaissance, avec leur hiérarchie. Une catégorie racine a un parent_id à null ; les sous-catégories pointent vers leur parent via parent_id.',
     response: JSON.stringify({
       data: [
         { id: 'uuid-mobile',     name: 'Mobile',              parent_id: null,             position: 0 },
@@ -31,7 +31,7 @@ export const ENDPOINTS: Endpoint[] = [
     params: [
       { name: 'categoryId', type: 'uuid',   required: false, description: 'Filtrer par catégorie' },
       { name: 'q',          type: 'string', required: false, description: 'Recherche full-text dans le titre et le contenu' },
-      { name: 'tags',       type: 'string', required: false, description: 'Liste de tags séparés par virgule (filtre AND)' },
+      { name: 'tags',       type: 'string', required: false, description: 'Liste de tags séparés par des virgules (filtre AND)' },
       { name: 'page',       type: 'number', required: false, description: 'Numéro de page (défaut : 1)' },
       { name: 'perPage',    type: 'number', required: false, description: 'Résultats par page (défaut : 20, max : 100)' },
     ],

@@ -78,7 +78,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
   useEffect(() => {
     apiClient.get<Category[]>('/categories')
       .then(setCategories)
-      .catch(err => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les catégories.'));
+      .catch(err => toast.error(err instanceof ApiError ? err.message : 'Impossible de charger les catégories. Rechargez la page.'));
   }, [toast]);
 
   const flatCats = useMemo(() => flattenCategories(categories), [categories]);
@@ -99,7 +99,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
 
   const handleSave = async (status: 'draft' | 'published') => {
     if (!isValid) {
-      toast.error('Question et réponse sont requises.');
+      toast.error('Saisissez une question et une réponse avant d\'enregistrer.');
       return;
     }
     if (faqId) {
@@ -132,10 +132,10 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
         <h1 className="faq-editor__heading">{faqId ? 'Modifier la FAQ' : 'Nouvelle FAQ'}</h1>
         <div className="faq-editor__topbar-actions">
           <Button variant="ghost" size="sm" onClick={() => handleSave('draft')} loading={saving}>
-            Sauvegarder en brouillon
+            Enregistrer le brouillon
           </Button>
           <Button variant="primary" size="sm" onClick={() => handleSave('published')} loading={saving} disabled={!canPublish}>
-            {faq?.status === 'published' ? 'Mettre à jour' : 'Publier'}
+            {faq?.status === 'published' ? 'Publier les modifications' : 'Publier la FAQ'}
           </Button>
         </div>
       </div>
@@ -145,7 +145,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
           <Alert tone="warning" className="faq-editor__stale-banner">
             <div>
               <strong>Cette FAQ n'a pas été révisée depuis plus de 6 mois.</strong>
-              <p>Vérifiez que la réponse est toujours d'actualité, puis relisez ou mettez à jour.</p>
+              <p>Vérifiez que la réponse est toujours d'actualité, puis corrigez-la ou confirmez qu'elle est à jour.</p>
             </div>
             <Button
               variant="secondary"
@@ -153,7 +153,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
               onClick={() => markReviewed(faq.id)}
               loading={saving}
             >
-              C'est à jour
+              Confirmer qu'elle est à jour
             </Button>
           </Alert>
         )}
@@ -233,7 +233,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
         <div className="field">
           <label htmlFor="faq-tags" className="field-label">Tags</label>
           <TagsInput id="faq-tags" describedBy="faq-tags-helper" value={tags} onChange={setLocalTags} max={10} />
-          <p id="faq-tags-helper" className="field-helper">Tapez Entrée ou virgule après chaque tag (max 10).</p>
+          <p id="faq-tags-helper" className="field-helper">Appuyez sur Entrée ou tapez une virgule après chaque tag (10 au maximum).</p>
         </div>
 
         {faqId && <FaqHistoryPanel faqId={faqId} />}
@@ -250,7 +250,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
                 onChange={() => setVisibility('internal')}
               />
               <span className="faq-editor__radio-title">Interne</span>
-              <span className="faq-editor__radio-desc">Visible par votre équipe seulement</span>
+              <span className="faq-editor__radio-desc">Visible par votre équipe uniquement</span>
             </label>
             <label className={cn('faq-editor__radio', visibility === 'public' && 'faq-editor__radio--active')}>
               <input
@@ -264,7 +264,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
                 Public
                 <span className="badge badge--info faq-editor__radio-badge">Bientôt</span>
               </span>
-              <span className="faq-editor__radio-desc">Exportable sur le site web (à venir)</span>
+              <span className="faq-editor__radio-desc">Utilisable sur votre site (bientôt disponible)</span>
             </label>
           </div>
         </div>

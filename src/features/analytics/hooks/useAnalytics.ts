@@ -12,7 +12,7 @@ export function useAnalytics() {
     let alive = true;
     analyticsApi.getOverview()
       .then(d => { if (alive) setData(d); })
-      .catch(err => { if (alive) setError(err instanceof ApiError ? err.message : 'Erreur de chargement.'); })
+      .catch(err => { if (alive) setError(err instanceof ApiError ? err.message : "L'analyse n'a pas pu être chargée. Rechargez la page."); })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, []);

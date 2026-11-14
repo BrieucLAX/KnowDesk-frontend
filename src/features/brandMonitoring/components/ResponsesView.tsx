@@ -31,7 +31,7 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
       const data = await brandMonitoringApi.listResponses(projectId, 1, 50);
       setResponses(data);
     } catch (err) {
-      toast.error((err as Error).message ?? 'Chargement impossible.');
+      toast.error((err as Error).message ?? "Les réponses n'ont pas pu être chargées. Rechargez la page.");
     } finally {
       setLoading(false);
     }
@@ -44,13 +44,13 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
   return (
     <div className="bm-responses">
       <section className="bm-card">
-        <h3 className="bm-card__title">Dernières réponses LLM</h3>
+        <h3 className="bm-card__title">Dernières réponses des IA</h3>
         <p className="bm-card__sub">
-          Audit complet de chaque réponse Mistral et des mentions détectées. Clique sur une ligne
+          Le détail de chaque réponse de Mistral et des mentions détectées. Cliquez sur une ligne
           pour voir le texte complet.
         </p>
         {responses.length === 0 ? (
-          <p className="bm-empty-data">Aucune réponse encore. Lance un run depuis l'onglet Dashboard.</p>
+          <p className="bm-empty-data">Aucune réponse pour l'instant. Lancez une analyse depuis l'onglet Tableau de bord.</p>
         ) : (
           <div className="bm-responses-wrap">
           <table className="bm-responses-table">
@@ -78,7 +78,7 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
                         .sort((a, b) => b.count - a.count)
                         .map(m => (
                           <span key={m.brand_id} className={`bm-chip ${m.isOwner ? 'bm-chip--owner' : ''} ${m.sentiment ? `bm-chip--sentiment-${m.sentiment}` : ''}`}>
-                            {sentimentIcon(m.sentiment)} {m.brandName}: {m.count}
+                            {sentimentIcon(m.sentiment)} {m.brandName} : {m.count}
                           </span>
                         ))
                     )}
@@ -101,10 +101,10 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
       </section>
 
       {openResp && (
-        <Modal title="Réponse LLM" size="lg" onClose={() => setOpenResp(null)}>
+        <Modal title="Réponse de l'IA" size="lg" onClose={() => setOpenResp(null)}>
           <div className="bm-resp-detail">
             <p className="bm-resp-detail__meta">
-              <strong>Prompt :</strong> {openResp.promptText ?? '(prompt supprimé)'}
+              <strong>Question :</strong> {openResp.promptText ?? '(prompt supprimé)'}
             </p>
             <p className="bm-resp-detail__meta">
               <strong>Modèle :</strong> {openResp.llm_model}
@@ -118,7 +118,7 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
             <div className="bm-resp-detail__mentions">
               {openResp.mentions.filter(m => m.count > 0).map(m => (
                 <span key={m.brand_id} className={`bm-chip ${m.isOwner ? 'bm-chip--owner' : ''} ${m.sentiment ? `bm-chip--sentiment-${m.sentiment}` : ''}`}>
-                  {sentimentIcon(m.sentiment)} {m.brandName}: {m.count}
+                  {sentimentIcon(m.sentiment)} {m.brandName} : {m.count}
                 </span>
               ))}
             </div>
