@@ -3,7 +3,7 @@
    ───────────────────────────────────────────────────────────── */
 
 /* ── API Docs ────────────────────────────────────────────────── */
-.apidoc { min-height: 100vh; background: var(--neutral-50); font-family: var(--font-ui); }
+.apidoc { min-height: 100vh; min-height: 100dvh; background: var(--neutral-50); font-family: var(--font-ui); }
 
 .apidoc-header { background: var(--neutral-900); color: var(--neutral-0); padding: 0 32px; }
 .apidoc-header__inner {

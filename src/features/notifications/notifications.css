@@ -16,7 +16,7 @@
 /* ── NotificationPanel ────────────────────────────────────────── */
 .notif-panel {
   position: fixed; top: 0; left: var(--sidenav-w);
-  width: 340px; height: 100vh;
+  width: 340px; height: 100vh; height: 100dvh;
   background: var(--neutral-0);
   border-right: 1px solid var(--neutral-100);
   box-shadow: var(--shadow-lg);

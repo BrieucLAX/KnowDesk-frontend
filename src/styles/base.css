@@ -68,7 +68,7 @@ html, body, #root {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100vh; min-height: 100dvh;
   background: var(--neutral-0);
 }
 
@@ -148,3 +148,15 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); }
   transition: transform var(--t-fast);
 }
 :where(details[open] > summary)::before { transform: rotate(90deg); }
+
+/* ── Champs sous 768 px : 16 px au moins (lot 6b) ───────────── */
+/* iOS zoome dans la page quand on touche un champ dont le texte fait moins de
+   16 px. Vaut pour tous les champs (Input, textarea, select, recherche,
+   ChipsInput, palette) : !important passe devant les tailles des composants. */
+@media (max-width: 767.98px) {
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="button"], [type="submit"], [type="reset"], [type="image"]),
+  textarea,
+  select {
+    font-size: max(16px, 1em) !important;
+  }
+}

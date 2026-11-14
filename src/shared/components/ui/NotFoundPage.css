@@ -8,7 +8,7 @@
 /* ── 404 fullscreen ──────────────────────────────────────── */
 .not-found {
   display: flex; align-items: center; justify-content: center;
-  min-height: 100vh;
+  min-height: 100vh; min-height: 100dvh;
   background: var(--neutral-50);
 }
 .not-found__content {

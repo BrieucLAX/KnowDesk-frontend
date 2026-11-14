@@ -6,7 +6,7 @@
 .knowledge-page-wrap {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - var(--topbar-h));
+  min-height: calc(100vh - var(--topbar-h)); min-height: calc(100dvh - var(--topbar-h));
 }
 /* PageHeader hérite de la padding standard de .app-layout__content
  * (32px 40px) — pas d'override, pour aligner avec le Dashboard. */

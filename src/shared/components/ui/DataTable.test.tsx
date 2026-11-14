@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, act } from '@testing-library/react';
 import { DataTable, type DataTableColumn } from './DataTable';
 import { mockViewportWidth } from '../../../test/matchMedia';
 
@@ -101,5 +101,53 @@ describe('DataTable — sous 768 px : liste de cartes', () => {
     ]);
     fireEvent.change(select, { target: { value: 'category:desc' } });
     expect(onSortChange).toHaveBeenCalledWith('category', 'desc');
+  });
+});
+
+describe('DataTable — tablette : cartes quand le tableau ne tient pas', () => {
+  // jsdom ne calcule pas de mise en page : on simule la largeur du conteneur
+  // (ResizeObserver, clientWidth) et celle dont le tableau a besoin (scrollWidth).
+  let resize: (width: number) => void = () => {};
+  let hostWidth = 470;
+  const originals: Array<() => void> = [];
+
+  function stub<T extends object>(proto: T, prop: string, get: () => number) {
+    const desc = Object.getOwnPropertyDescriptor(proto, prop);
+    Object.defineProperty(proto, prop, { configurable: true, get });
+    originals.push(() => { if (desc) Object.defineProperty(proto, prop, desc); else delete (proto as Record<string, unknown>)[prop]; });
+  }
+
+  afterEach(() => {
+    originals.splice(0).forEach(r => r());
+    delete (window as { ResizeObserver?: unknown }).ResizeObserver;
+  });
+
+  it('passe en cartes si le tableau dépasse son conteneur, revient au tableau quand la place revient', () => {
+    restore = mockViewportWidth(800);   // au-dessus de 768 px : pas de mode mobile
+    hostWidth = 470;
+    stub(HTMLTableElement.prototype, 'scrollWidth', () => 780);
+    stub(HTMLElement.prototype, 'clientWidth', () => hostWidth);
+    (window as { ResizeObserver?: unknown }).ResizeObserver = class {
+      constructor(private cb: ResizeObserverCallback) { resize = w => { hostWidth = w; this.cb([{ contentRect: { width: w } } as ResizeObserverEntry], this as unknown as ResizeObserver); }; }
+      observe() { resize(hostWidth); }
+      disconnect() {}
+      unobserve() {}
+    };
+
+    render(<DataTable columns={columns} data={rows} rowKey={r => r.id} mobile={{ primary: 'title' }} />);
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('listitem')[0].querySelector('.data-table-card__title')).toHaveTextContent('Suivre un colis');
+
+    act(() => resize(900));
+    expect(screen.getByRole('table')).toBeInTheDocument();
+  });
+
+  it('reste un tableau quand il tient dans son conteneur', () => {
+    restore = mockViewportWidth(1024);
+    hostWidth = 726;
+    stub(HTMLTableElement.prototype, 'scrollWidth', () => 700);
+    stub(HTMLElement.prototype, 'clientWidth', () => hostWidth);
+    render(<DataTable columns={columns} data={rows} rowKey={r => r.id} />);
+    expect(screen.getByRole('table')).toBeInTheDocument();
   });
 });

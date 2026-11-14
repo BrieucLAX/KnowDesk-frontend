@@ -325,6 +325,7 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
             value={tree.visibility}
             onChange={e => updateTree({ visibility: e.target.value as 'internal' | 'public' })}
             title="Visibilité du processus"
+            aria-label="Visibilité du processus"
             style={{ maxWidth: 220 }}
           >
             <option value="internal">Interne</option>

@@ -317,3 +317,33 @@
 }
 .tree-page__back:hover, .tree-page__restart:hover { color: var(--ink); }
 .tree-page__back:focus-visible, .tree-page__restart:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* ── Éditeur de processus sous 768 px (lot 6b) ───────────────── */
+/* La barre passe sur deux lignes ; la zone de dessin défile dans son propre
+   cadre quand les étapes imbriquées dépassent la largeur, jamais la page. */
+@media (max-width: 767.98px) {
+  .tree-editor__topbar { flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
+  .tree-editor__back { min-height: 44px; }
+  .tree-editor__topbar-center { flex: 1; min-width: 0; }
+  .tree-editor__title { min-height: 44px; text-align: left; overflow-wrap: anywhere; }
+  .tree-editor__title-edit { flex-wrap: wrap; }
+  .tree-editor__title-input { min-width: 0; width: 100%; }
+  .tree-editor__topbar-actions { flex-basis: 100%; flex-wrap: wrap; }
+  .tree-editor__topbar-actions select.field-input { flex: 1 1 100%; min-height: 44px; }
+  .tree-editor__topbar-actions .btn { flex: 1 1 auto; min-height: 44px; }
+  .tree-editor__canvas {
+    padding: 16px 0 calc(16px + env(safe-area-inset-bottom));
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+  .tree-roots, .tree-editor__canvas > .tree-add-node { min-width: min-content; }
+  .tree-node { min-width: 260px; margin-left: calc(var(--tree-depth, 0) * 12px); padding: 12px; }
+  .tree-add-child, .tree-add-root, .tree-add-node { margin-left: calc(var(--tree-depth, 0) * 12px); }
+  .tree-add-child, .tree-add-root, .tree-add-answer-btn { min-height: 44px; }
+  .tree-node__action, .tree-answer__delete {
+    min-width: 44px; min-height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .tree-node__header { margin: -8px -8px 8px 0; }
+}

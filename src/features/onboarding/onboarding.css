@@ -4,7 +4,7 @@
 
 /* ── Onboarding ────────────────────────────────────────────────── */
 .onboarding {
-  min-height: 100vh; display: flex; flex-direction: column;
+  min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   background: var(--neutral-50); padding: 40px 24px; gap: 16px;
 }

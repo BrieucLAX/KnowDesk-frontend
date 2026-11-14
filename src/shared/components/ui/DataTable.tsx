@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Skeleton } from './Skeleton';
 import './DataTable.css';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
@@ -28,6 +28,8 @@ export interface DataTableMobile {
   primary?: string;
   /** Colonnes secondaires masquées sur mobile. */
   hidden?:  ReadonlyArray<string>;
+  /** Cartes quelle que soit la largeur (l'écran décide lui-même quand les montrer). */
+  always?:  boolean;
 }
 
 interface DataTableProps<T> {
@@ -90,6 +92,35 @@ export function DataTable<T>({
   mobile,
 }: DataTableProps<T>) {
   const isMobile = useIsMobile();
+
+  // ── Cartes aussi quand le tableau ne tient pas dans sa largeur ──
+  // (tablette avec la barre latérale, lot 6b) : on mesure la largeur dont le
+  // tableau a besoin et celle de son conteneur, et on repasse en tableau dès
+  // que la place revient.
+  const [host, setHost] = useState<HTMLDivElement | null>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
+  const [hostWidth,  setHostWidth]  = useState<number | null>(null);
+  const [tableNeeds, setTableNeeds] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    if (!host || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(entries => {
+      const w = entries[0]?.contentRect.width;
+      if (w) setHostWidth(Math.round(w));
+    });
+    ro.observe(host);
+    return () => ro.disconnect();
+  }, [host]);
+
+  useLayoutEffect(() => {
+    const table = tableRef.current;
+    if (!table || !host) return;
+    // Tableau affiché : il déborde s'il est plus large que son conteneur.
+    const needs = table.scrollWidth;
+    if (needs > host.clientWidth + 1) setTableNeeds(needs);
+  });
+
+  const compact = isMobile || !!mobile?.always || (tableNeeds !== null && hostWidth !== null && hostWidth < tableNeeds);
   const toggleSort = (key: string) => {
     if (!onSortChange) return;
     if (sortBy === key) {
@@ -170,14 +201,14 @@ export function DataTable<T>({
     col.render ? col.render(row) : (row as Record<string, unknown>)[col.key] as React.ReactNode;
 
   // ── Sous 768 px : liste de cartes (fiche Card) ─────────────────
-  if (isMobile) {
+  if (compact) {
     const primaryCol = columns.find(c => c.key === mobile?.primary) ?? columns[0];
     const fieldCols  = columns.filter(c => c !== primaryCol && !mobile?.hidden?.includes(c.key));
     const sortCols   = onSortChange ? columns.filter(c => c.sortable) : [];
     const sortValue  = sortBy && sortCols.some(c => c.key === sortBy) ? `${sortBy}:${sortDir ?? 'asc'}` : '';
 
     return (
-      <div className="data-table-cards">
+      <div className="data-table-cards" ref={setHost}>
         {(selectable || sortCols.length > 0) && (
           <div className="data-table-cards__toolbar">
             {selectable && (
@@ -262,8 +293,8 @@ export function DataTable<T>({
   }
 
   return (
-    <div className="data-table">
-      <table className="data-table__table" role="table">
+    <div className="data-table" ref={setHost}>
+      <table className="data-table__table" role="table" ref={tableRef}>
         <thead>
           <tr>
             {selectable && (

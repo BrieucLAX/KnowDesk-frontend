@@ -4,7 +4,7 @@
 
 /* ── Superadmin ─────────────────────────────────────────────── */
 .sa-login {
-  min-height: 100vh;
+  min-height: 100vh; min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,7 +21,7 @@
 .sa-login__error  { background: var(--danger-soft); color: var(--danger); padding: 10px 14px; border-radius: var(--radius-md); font-size: 13px; margin-bottom: 16px; }
 .sa-login__form   { display: flex; flex-direction: column; gap: 16px; }
 
-.sa-app    { min-height: 100vh; background: var(--neutral-50); }
+.sa-app    { min-height: 100vh; min-height: 100dvh; background: var(--neutral-50); }
 .sa-header {
   background: var(--surface-raised);
   color: var(--ink);
@@ -129,4 +129,25 @@
 .sa-banner--info    .sa-banner__icon { color: var(--info); }
 @media (max-width: 640px) {
   .sa-metrics { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Sous 1024 px : liste des organisations en cartes (SuperadminApp). */
+.sa-cards { padding: 16px 24px 24px; }
+
+/* Sous 768 px : en-tête sur plusieurs lignes, organisations en cartes (lot 6b).
+   Outil interne : utilisable, sans plus. */
+@media (max-width: 767.98px) {
+  .sa-header {
+    flex-wrap: wrap; height: auto;
+    padding: calc(8px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left));
+  }
+  .sa-header__user { flex-wrap: wrap; gap: 4px 8px; width: 100%; }
+  .sa-header__email { flex-basis: 100%; overflow-wrap: anywhere; }
+  .sa-main { padding: 16px max(16px, env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+  .sa-section { background: none; border: none; overflow: visible; }
+  .sa-section__header { padding: 0 0 12px; border-bottom: none; flex-wrap: wrap; gap: 8px; }
+  .sa-metric { padding: 14px 16px; }
+  .sa-metric__value { font-size: 24px; }
+  .sa-card--disabled { color: var(--ink-muted); }
+  .sa-cards { padding: 0; }
 }
