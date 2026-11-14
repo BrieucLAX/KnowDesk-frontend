@@ -5,7 +5,7 @@ import {
 } from '../../lib/baseDocument';
 import {
   canCreateChapters, chapterRequests, expertEntered, firstSentence, toVerifyCounts, recordedAnswer, itemLabel, itemRank, kindLabel, NEW_CHAPTER_LABEL, originLabel, outcomeLabel, partialSummary, retiredSourceSentence,
-  pendingSentences, reasonGroups, removedAsObsolete, reviewProgressLabel, SHOWN_REASONS, type ReasonGroup, type RemovedAsObsolete,
+  pendingSentences, reasonGroups, removedAsObsolete, uncoveredCount, uncoveredInCorrection, type UncoveredCorrection, reviewProgressLabel, SHOWN_REASONS, type ReasonGroup, type RemovedAsObsolete,
   type BaseCorrection, type Convention, type Modification, type SectionFix,
 } from '../../lib/correction';
 import type { BaseReview } from '../../hooks/useBaseReview';
@@ -93,6 +93,8 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
   const reviewed = [...state.reviews.values()].filter(r => r.verdict !== null).length;
   const obsolete = removedAsObsolete(base, state.reviews, outdatedCardIds);
   const sectionTitle = (key: string) => titles.get(key) ?? null;
+  /** Lot C, PR 6 : les points non couverts, lus dans la base corrigée. */
+  const uncovered = uncoveredInCorrection(base, sectionTitle);
 
   const modificationCard = (m: Modification) => (
     <ReviewCard
@@ -288,6 +290,10 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
         </p>
       )}
 
+      {uncoveredCount(uncovered) > 0 && (
+        <UncoveredCorrectionView uncovered={uncovered} cardTitles={cardTitles} sectionTitle={sectionTitle} />
+      )}
+
       {(base.retired_sources ?? []).length > 0 && (
         <section className="obp-base-chapter" aria-labelledby="obp-base-retired">
           <h2 id="obp-base-retired" className="obp-base-chapter__title">Anciennes versions retirées des sources</h2>
@@ -328,6 +334,56 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
         </section>
       ))}
     </div>
+  );
+}
+
+/**
+ * « Points non couverts par vos documents » en mode correction (plan-construire-v1, lot C, PR 6) :
+ * ce que la correction n'a pas écrit dans la base, lu tel quel dans la base corrigée (cartes en
+ * attente, modifications non appliquées, chiffres ou dates sans source). Rien n'entre dans la base.
+ */
+function UncoveredCorrectionView({ uncovered, cardTitles, sectionTitle }: {
+  uncovered:    UncoveredCorrection;
+  cardTitles:   ReadonlyMap<string, string>;
+  sectionTitle: (key: string) => string | null;
+}) {
+  const card = (id: string) => cardTitles.get(id) ?? 'Une carte';
+  const groups = [
+    { title: 'Cartes en attente', items: uncovered.pending.map((p, i) => (
+      <li key={`p${i}`}><strong>{card(p.cardId)}</strong><p className="obp-muted">{p.text}</p></li>
+    )) },
+    { title: 'Modifications non appliquées', items: uncovered.notApplied.map(m => (
+      <li key={m.id}>
+        <strong><a href={`#${anchorOf(m.id)}`}>{itemLabel(m.id)}</a>, carte « {card(m.cardId)} »</strong>
+        <p className="obp-muted">{m.text}</p>
+      </li>
+    )) },
+    { title: 'Chiffres ou dates sans source', items: uncovered.withoutSource.map((v, i) => (
+      <li key={`v${i}`}>
+        <p className="obp-base-obsolete__where">
+          {sectionTitle(v.sectionKey) ?? 'Une section'}
+          {v.modificationId && <>{' · '}<a href={`#${anchorOf(v.modificationId)}`}>{itemLabel(v.modificationId)}</a></>}
+        </p>
+        <blockquote className="obp-base-obsolete__text"><p>{v.text}</p></blockquote>
+        <p className="obp-muted">Aucun de vos documents ne donne ce chiffre ou cette date : la ligne n'a pas été reprise.</p>
+      </li>
+    )) },
+  ].filter(g => g.items.length > 0);
+  return (
+    <section className="obp-base-chapter obp-base-uncovered" aria-labelledby="obp-base-uncovered">
+      <h2 id="obp-base-uncovered" className="obp-base-chapter__title">
+        Points non couverts par vos documents ({uncoveredCount(uncovered)})
+      </h2>
+      <p className="obp-muted">
+        Ce que vos documents ne donnent pas n'est jamais écrit dans la base. Ces points sont à compléter par votre équipe.
+      </p>
+      {groups.map(g => (
+        <div key={g.title} className="obp-base-uncovered__group">
+          <h3 className="obp-base-section__title">{g.title} ({g.items.length})</h3>
+          <ul className="obp-base-obsolete__list">{g.items}</ul>
+        </div>
+      ))}
+    </section>
   );
 }
 

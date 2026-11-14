@@ -654,3 +654,52 @@ export function expertEntered(day: string): string {
   const [y, m, d] = day.split('-');
   return `Saisi par l'expert le ${d}/${m}/${y}.`;
 }
+
+// ── Points non couverts par vos documents, en mode correction (plan-construire-v1, lot C, PR 6) ──
+
+/** Une carte en attente, en clair : pourquoi rien n'est écrit dans la base pour elle. */
+export const PENDING_POINT_LABEL: Record<PendingReason, string> = {
+  unanswered:      'Carte sans réponse : la base n\'a pas été modifiée pour elle.',
+  no_section:      'Répondue, mais aucune section de la base ne porte ce sujet : votre réponse n\'est écrite nulle part.',
+  no_modification: 'Répondue, mais votre réponse ne demandait aucune modification possible de la base.',
+  new_chapter:     'Répondue, mais elle demande un chapitre qu\'aucun document importé ne porte : il n\'a pas été créé.',
+};
+
+export interface UncoveredCorrection {
+  /** Les cartes en attente (`pending`), avec leur raison. */
+  pending:       Array<{ cardId: string; text: string }>;
+  /** Les modifications non appliquées, avec la première raison donnée. */
+  notApplied:    Array<{ id: string; cardId: string; text: string }>;
+  /** Les lignes défaites parce qu'un chiffre ou une date n'avait pas de source. */
+  withoutSource: Array<{ modificationId: string | null; sectionKey: string; text: string }>;
+}
+
+/**
+ * La liste « Points non couverts par vos documents » d'une base corrigée, lue telle quelle dans la
+ * correction (0.5.0 et précédentes, sans changement de contrat) : les cartes en attente et leur
+ * raison, les modifications non appliquées et la leur, les lignes défaites faute de source. Rien
+ * de cette liste n'est écrit dans la base.
+ */
+export function uncoveredInCorrection(
+  base: Pick<BaseCorrection, 'sheets' | 'modifications' | 'pending'>,
+  sectionTitle: (key: string) => string | null,
+): UncoveredCorrection {
+  const pending = (base.pending ?? []).map(p => ({
+    cardId: p.card_id,
+    text:   p.reason ? PENDING_POINT_LABEL[p.reason] : 'En attente : la base n\'a pas été modifiée pour elle.',
+  }));
+  const notApplied = base.modifications
+    .filter(m => m.outcome === 'not_applicable')
+    .sort((a, b) => itemRank(a.id) - itemRank(b.id))
+    .map(m => {
+      const reason = partialSummary(reasonGroups(m.reasons ?? [], sectionTitle));
+      return { id: m.id, cardId: m.origin.card_id, text: reason ? reason.text : 'Elle n\'a pas pu être appliquée.' };
+    });
+  const withoutSource = base.sheets.flatMap(s => s.sections).flatMap(s => (s.changes ?? [])
+    .filter(c => !c.kept && c.undo_reason === 'value_without_source' && (c.after || c.before).trim() !== '')
+    .map(c => ({ modificationId: c.modification_id, sectionKey: s.key, text: (c.after || c.before).trim() })));
+  return { pending, notApplied, withoutSource };
+}
+
+export const uncoveredCount = (u: UncoveredCorrection): number =>
+  u.pending.length + u.notApplied.length + u.withoutSource.length;
