@@ -826,6 +826,8 @@
 /* Rédaction des articles (plan-construire-v1, lot C) */
 .obp-build-panel { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
 .obp-build-panel:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+/* « Voir l'article » amène l'article en haut de la vue : sous l'en-tête fixe de l'application (68 px), le titre et la question resteraient cachés. */
+.obp-build-article { scroll-margin-top: 84px; }
 .obp-build-article__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
 .obp-build-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--color-warning-bg); color: var(--neutral-900); font-size: 12px; font-weight: 600; }
 .obp-build-intertitle { margin: 8px 0 0; font-size: 14px; font-weight: 600; color: var(--neutral-900); }
