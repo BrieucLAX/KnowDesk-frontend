@@ -67,9 +67,9 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
             <tbody>
               {responses.map(r => (
                 <tr key={r.id} onClick={() => setOpenResp(r)} className="bm-responses-table__row">
-                  <td>{formatRelative(r.created_at)}</td>
+                  <td data-label="Date">{formatRelative(r.created_at)}</td>
                   <td className="bm-responses-table__prompt">{r.promptText ?? '(prompt supprimé)'}</td>
-                  <td>
+                  <td data-label="Mentions">
                     {r.mentions.filter(m => m.count > 0).length === 0 ? (
                       <span className="bm-responses-table__nomention">aucune</span>
                     ) : (
@@ -83,15 +83,15 @@ export function ResponsesView({ projectId }: ResponsesViewProps) {
                         ))
                     )}
                   </td>
-                  <td className="bm-responses-table__num">
+                  <td data-label="Sources" className="bm-responses-table__num">
                     {r.sources && r.sources.length > 0 ? (
                       <span className="bm-chip bm-chip--sources">{r.sources.length}</span>
                     ) : (
                       <span className="bm-responses-table__nomention">—</span>
                     )}
                   </td>
-                  <td className="bm-responses-table__num">{r.input_tokens + r.output_tokens}</td>
-                  <td className="bm-responses-table__num">{Number(r.cost_eur).toFixed(4)} €</td>
+                  <td data-label="Tokens" className="bm-responses-table__num">{r.input_tokens + r.output_tokens}</td>
+                  <td data-label="Coût" className="bm-responses-table__num">{Number(r.cost_eur).toFixed(4)} €</td>
                 </tr>
               ))}
             </tbody>

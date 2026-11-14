@@ -133,3 +133,73 @@
   box-shadow: 0 0 0 3px var(--brand-100);
 }
 
+
+/* ── Présentation mobile (sous 768 px) ───────────────────────── */
+/* AppLayout ne rend plus la barre latérale : la barre du haut porte le bouton
+   « Menu », le nom KnowDesk et le bouton de recherche ; la navigation s'ouvre
+   dans un volet (MobileNavDrawer). Zones protégées : env(safe-area-inset-*). */
+.app-layout--mobile { grid-template-columns: minmax(0, 1fr); }
+.app-layout--mobile .app-layout__content {
+  padding: 20px max(16px, env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+.topbar--mobile {
+  height: calc(56px + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left));
+  gap: 4px;
+}
+.topbar__icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; flex-shrink: 0;
+  border: none; border-radius: var(--radius-md);
+  background: none; color: var(--ink);
+  cursor: pointer; transition: background var(--t-fast);
+}
+.topbar__icon-btn:hover { background: var(--neutral-100); }
+.topbar__icon-btn--end { margin-left: auto; }
+.topbar__brand {
+  font-family: var(--font-brand); font-size: 18px; color: var(--neutral-900);
+  margin-left: 4px;
+}
+.topbar--mobile .topbar__search-wrap--open { flex: 1; min-width: 0; max-width: none; margin: 0; }
+
+/* Volet de navigation */
+.mobile-nav { position: fixed; inset: 0; z-index: 150; }
+.mobile-nav__overlay {
+  position: absolute; inset: 0;
+  background: var(--overlay);
+  animation: mobile-nav-fade 0.2s ease;
+}
+.mobile-nav__panel {
+  position: absolute; top: 0; bottom: 0; left: 0;
+  width: min(85vw, 320px);
+  display: flex; flex-direction: column;
+  background: var(--neutral-0);
+  box-shadow: var(--shadow-lg);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  animation: mobile-nav-slide 0.2s ease;
+}
+.mobile-nav__panel .sidenav {
+  position: static; height: auto; flex: 1;
+  border-right: none; overflow: visible;
+}
+.mobile-nav__panel .sidenav__logo { min-height: 44px; margin-right: 60px; }
+.mobile-nav__panel .sidenav__item { height: 44px; }
+.mobile-nav__panel .sidenav__label { font-size: 15px; }
+.mobile-nav__close {
+  position: absolute; top: calc(10px + env(safe-area-inset-top)); right: 8px; z-index: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px;
+  border: none; border-radius: var(--radius-md);
+  background: none; color: var(--ink); cursor: pointer;
+}
+.mobile-nav__close:hover { background: var(--neutral-100); }
+.mobile-nav__footer {
+  padding: 8px 8px 16px;
+  border-top: 1px solid var(--neutral-100);
+}
+@keyframes mobile-nav-slide { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes mobile-nav-fade { from { opacity: 0; } to { opacity: 1; } }

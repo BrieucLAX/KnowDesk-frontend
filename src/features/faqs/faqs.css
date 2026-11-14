@@ -407,7 +407,8 @@
   0%   { background: var(--brand-50); box-shadow: inset 3px 0 0 var(--brand-500); }
   100% { background: transparent;     box-shadow: inset 3px 0 0 transparent; }
 }
-.data-table__row.faqs-row--focused {
+.data-table__row.faqs-row--focused,
+.data-table-card.faqs-row--focused {
   animation: faqs-row-pulse 2.5s ease-out;
 }
 

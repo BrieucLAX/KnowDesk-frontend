@@ -44,10 +44,7 @@ html, body, #root {
   .dashboard__stats { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 720px) {
-  .app-layout { grid-template-columns: 1fr; }
-  .sidenav { display: none; }
   .app-layout__content { padding: 20px 16px; }
-  .topbar { padding: 0 16px; }
   .dashboard__stats { grid-template-columns: repeat(2, 1fr); }
   .article-page { padding: 24px 20px; }
 }

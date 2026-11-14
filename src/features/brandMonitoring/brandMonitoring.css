@@ -626,3 +626,29 @@
 .bm-prompts, .bm-settings { display: flex; flex-direction: column; gap: var(--space-4); }
 .bm-responses-wrap { overflow-x: auto; }
 .bm-provider.is-disabled.is-active { border-color: var(--line); }
+
+/* Sous 768 px : une carte par réponse (fiche Card). Le prompt sert de titre,
+   les autres colonnes deviennent des lignes « libellé : valeur » (data-label). */
+@media (max-width: 767.98px) {
+  .bm-responses-wrap { overflow: visible; }
+  .bm-responses-table, .bm-responses-table tbody { display: block; }
+  .bm-responses-table thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap;
+  }
+  .bm-responses-table tr.bm-responses-table__row {
+    display: flex; flex-direction: column; gap: 6px;
+    margin-bottom: 8px; padding: 12px 16px;
+    background: var(--surface-raised);
+    border: 1px solid var(--line); border-radius: var(--radius-lg);
+  }
+  .bm-responses-table td { padding: 0; border-bottom: none; text-align: left; }
+  .bm-responses-table .bm-responses-table__prompt {
+    order: -1; max-width: none;
+    font-size: 15px; font-weight: 600; color: var(--ink); overflow-wrap: anywhere;
+  }
+  .bm-responses-table td[data-label] { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+  .bm-responses-table td[data-label]::before {
+    content: attr(data-label) "\00a0:"; color: var(--ink-muted); flex-shrink: 0;
+  }
+}

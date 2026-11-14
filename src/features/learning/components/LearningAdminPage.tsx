@@ -309,6 +309,7 @@ export function LearningAdminPage({ onEditPath }: LearningAdminPageProps) {
             onSortChange={(k, d) => { setSortBy(k as 'name' | 'updated_at'); setSortDir(d); }}
             onRowClick={p => onEditPath(p.id)}
             rowActions={renderRowActions}
+            mobile={{ primary: 'name', hidden: ['renewal'] }}
             emptyState={emptyState}
           />
         )}

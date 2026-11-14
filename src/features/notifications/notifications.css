@@ -117,3 +117,12 @@
   width: 8px; height: 8px; border-radius: 50%;
   background: var(--brand-500); display: block;
 }
+
+/* Sous 768 px, le panneau s'ouvre par-dessus le volet de menu, sur toute la largeur. */
+@media (max-width: 767.98px) {
+  .notif-panel {
+    left: 0; width: 100%;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

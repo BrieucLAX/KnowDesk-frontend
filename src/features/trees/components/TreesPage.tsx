@@ -339,6 +339,7 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
             onSortChange={handleSortChange}
             onRowClick={t => onOpenTree(t.id)}
             rowActions={renderRowActions}
+            mobile={{ primary: 'title' }}
             selectable={isAdmin}
             selectedIds={selectedIds}
             onSelectionChange={setSelectedIds}
