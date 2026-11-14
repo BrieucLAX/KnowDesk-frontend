@@ -10,6 +10,9 @@ import { endTestDescription, orgStatus } from '../lib/testOrgStatus';
 import { RotateCw } from 'lucide-react';
 import { StatusIcon } from '../../../shared/components/ui/StatusIcon';
 import { Badge } from '../../../shared/components/ui/StatusBadge';
+import { DataTable, type DataTableColumn } from '../../../shared/components/ui/DataTable';
+import { ActionMenu } from '../../../shared/components/ui/ActionMenu';
+import { useMediaQuery } from '../../../shared/lib/useMediaQuery';
 
 /** Organisation de test : créée par la route superadmin, module onboarding seul. */
 const isTestOrg = (org: { enabled_modules?: string[] }) => org.enabled_modules?.includes('onboarding') ?? false;
@@ -22,6 +25,9 @@ export function SuperadminApp() {
     login, logout, disableOrg, enableOrg, impersonate, reindexSearch, recomputeResolutions,
     createTestOrg, endTest, listOnboardingProjects, purgeTestData,
   } = useSuperadmin();
+  // Sous 1024 px, le tableau des organisations (8 colonnes) ne tient plus :
+  // une carte par organisation, actions dans l'ActionMenu (lot 6b).
+  const compactList = useMediaQuery('(max-width: 1023.98px)');
 
   const [email,        setEmail]        = useState('');
   const [password,     setPassword]     = useState('');
@@ -141,6 +147,54 @@ export function SuperadminApp() {
 
   // ── Dashboard ─────────────────────────────────────────────
 
+  type Org = typeof orgs[number];
+  /** Actions d'une organisation : boutons sur bureau, ActionMenu dans les cartes mobiles. */
+  const orgActions = (org: Org): { label: string; variant: 'ghost' | 'primary' | 'danger'; onClick: () => void }[] => {
+    const actions: { label: string; variant: 'ghost' | 'primary' | 'danger'; onClick: () => void }[] = [];
+    // Test terminé : réactivation refusée par le back (TEST_ENDED).
+    if (!org.test_ended_at) {
+      if (org.disabled_at) {
+        actions.push({ label: 'Réactiver', variant: 'ghost', onClick: () => setConfirm({ orgId: org.id, action: 'enable' }) });
+      } else {
+        actions.push({ label: 'Désactiver', variant: 'ghost', onClick: () => setConfirm({ orgId: org.id, action: 'disable' }) });
+        actions.push({ label: 'Accéder', variant: 'primary', onClick: () => impersonate(org.id, org.name) });
+      }
+    }
+    if (isTestOrg(org) && !org.test_ended_at) {
+      actions.push({ label: 'Terminer le test', variant: 'danger', onClick: () => { setEndTestError(''); setEndTestTarget({ id: org.id, name: org.name }); } });
+    }
+    // Avant comme après la fin du test : suppression immédiate sur demande.
+    if (isTestOrg(org)) {
+      actions.push({ label: 'Données de test', variant: 'ghost', onClick: () => setTestDataOrg({ id: org.id, name: org.name }) });
+    }
+    return actions;
+  };
+
+  const renderOrgName = (org: Org) => (
+    <>
+      <div className="sa-org-name">
+        {org.name}
+        {isTestOrg(org) && <span className="sa-badge-test">Test</span>}
+      </div>
+      <div className="sa-org-slug">{org.slug}</div>
+    </>
+  );
+  const renderStatus = (org: Org) => {
+    const status = orgStatus(org);
+    return <Badge tone={SA_TONE[status.tone]} title={status.title}>{status.label}</Badge>;
+  };
+
+  /** Sous 1024 px : une carte par organisation (DataTable), actions dans l'ActionMenu. */
+  const mobileColumns: DataTableColumn<Org>[] = [
+    { key: 'name',     label: 'Organisation', render: renderOrgName },
+    { key: 'plan',     label: 'Plan', render: org => <span className={`sa-plan sa-plan--${org.plan}`}>{org.plan}</span> },
+    { key: 'active',   label: 'Membres actifs', render: org => org.stats.membersActive },
+    { key: 'disabled', label: 'Membres désactivés', render: org => org.stats.membersDisabled },
+    { key: 'articles', label: 'Articles', render: org => org.stats.articlesCount },
+    { key: 'created',  label: 'Créée', render: org => formatRelative(org.created_at) },
+    { key: 'status',   label: 'Statut', render: renderStatus },
+  ];
+
   const totalOrgs     = orgs.length;
   const activeOrgs    = orgs.filter(o => !o.disabled_at).length;
   const totalMembers  = orgs.reduce((sum, o) => sum + o.stats.membersActive, 0);
@@ -228,6 +282,25 @@ export function SuperadminApp() {
 
           {loading ? (
             <p className="sa-loading">Chargement…</p>
+          ) : compactList ? (
+            <div className="sa-cards">
+              <DataTable<Org>
+                columns={mobileColumns}
+                data={orgs}
+                rowKey={org => org.id}
+                mobile={{ primary: 'name', always: true }}
+                rowClassName={org => org.disabled_at ? 'sa-card--disabled' : undefined}
+                rowActions={org => {
+                  const actions = orgActions(org);
+                  return actions.length === 0 ? null : (
+                    <ActionMenu
+                      ariaLabel={`Actions pour ${org.name}`}
+                      items={actions.map(a => ({ label: a.label, onClick: a.onClick, variant: a.variant === 'danger' ? 'danger' : 'default' }))}
+                    />
+                  );
+                }}
+              />
+            </div>
           ) : (
             <div className="sa-table-wrap">
               <table className="sa-table">
@@ -246,59 +319,22 @@ export function SuperadminApp() {
                 <tbody>
                   {orgs.map(org => (
                     <tr key={org.id} className={org.disabled_at ? 'sa-table__row--disabled' : ''}>
-                      <td>
-                        <div className="sa-org-name">
-                          {org.name}
-                          {isTestOrg(org) && <span className="sa-badge-test">Test</span>}
-                        </div>
-                        <div className="sa-org-slug">{org.slug}</div>
-                      </td>
+                      <td>{renderOrgName(org)}</td>
                       <td><span className={`sa-plan sa-plan--${org.plan}`}>{org.plan}</span></td>
                       <td>{org.stats.membersActive}</td>
                       <td>{org.stats.membersDisabled}</td>
                       <td>{org.stats.articlesCount}</td>
                       <td>{formatRelative(org.created_at)}</td>
+                      <td>{renderStatus(org)}</td>
                       <td>
-                        {(() => {
-                          const status = orgStatus(org);
-                          return <Badge tone={SA_TONE[status.tone]} title={status.title}>{status.label}</Badge>;
-                        })()}
+                        <div className="sa-org__actions">
+                          {orgActions(org).map(a => (
+                            <Button key={a.label} variant={a.variant} size="sm" onClick={a.onClick}>
+                              {a.label}
+                            </Button>
+                          ))}
+                        </div>
                       </td>
-                      <td>
-  <div className="sa-org__actions">
-    {/* Test terminé : réactivation refusée par le back (TEST_ENDED). */}
-    {org.test_ended_at ? null : org.disabled_at ? (
-      <Button variant="ghost" size="sm"
-        onClick={() => setConfirm({ orgId: org.id, action: 'enable' })}>
-        Réactiver
-      </Button>
-    ) : (
-      <>
-        <Button variant="ghost" size="sm"
-          onClick={() => setConfirm({ orgId: org.id, action: 'disable' })}>
-          Désactiver
-        </Button>
-        <Button variant="primary" size="sm"
-          onClick={() => impersonate(org.id, org.name)}>
-          Accéder
-        </Button>
-      </>
-    )}
-    {isTestOrg(org) && !org.test_ended_at && (
-      <Button variant="danger" size="sm"
-        onClick={() => { setEndTestError(''); setEndTestTarget({ id: org.id, name: org.name }); }}>
-        Terminer le test
-      </Button>
-    )}
-    {/* Avant comme après la fin du test : suppression immédiate sur demande. */}
-    {isTestOrg(org) && (
-      <Button variant="ghost" size="sm"
-        onClick={() => setTestDataOrg({ id: org.id, name: org.name })}>
-        Données de test
-      </Button>
-    )}
-  </div>
-</td>
                     </tr>
                   ))}
                 </tbody>

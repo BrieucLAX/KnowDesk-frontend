@@ -6,6 +6,7 @@ import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import type { Timeline } from '../types';
 import { chartSeriesStyle, CHART_GRID, CHART_AXIS } from '../../../shared/lib/chartColors';
 import { Star } from 'lucide-react';
+import { useIsMobile } from '../../../shared/lib/useMediaQuery';
 
 interface TimelineChartProps {
   projectId: string;
@@ -23,6 +24,9 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
   const [bucket, setBucket] = useState<Bucket>('week');
   const [rangeDays, setRangeDays] = useState<number>(90);
   const [loading, setLoading] = useState(true);
+  // Sous 768 px, la légende passe sur plusieurs lignes sous le graphique : on
+  // donne plus de hauteur pour que le tracé ne soit pas écrasé (lot 6b).
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     let cancel = false;
@@ -101,8 +105,8 @@ export function TimelineChart({ projectId }: TimelineChartProps) {
 
       {!loading && chartData.length > 0 && (
         <div className="bm-timeline__chart">
-          <ResponsiveContainer width="100%" height={320}>
-            <LineChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 0 }}>
+          <ResponsiveContainer width="100%" height={isMobile ? 380 : 320}>
+            <LineChart data={chartData} margin={{ top: 10, right: isMobile ? 8 : 16, left: isMobile ? -12 : 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID} />
               <XAxis dataKey="bucket" fontSize={11} stroke={CHART_AXIS} />
               <YAxis

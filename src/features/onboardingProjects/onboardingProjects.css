@@ -793,3 +793,11 @@
 /* Titre de la page projet : les onglets suivent, l'écart vient de .obp-page. */
 .obp-page > .page-header { margin-bottom: 0; align-items: center; }
 .obp-clarify-base .obp-section-title svg { color: var(--info); }
+
+/* « À clarifier » sous 768 px : les documents passent sous le titre de la carte
+   au lieu d'être coupés en milieu de mot, le statut à la suite (lot 6b). */
+@media (max-width: 767.98px) {
+  .obp-clarify-row__open { min-height: 44px; }
+  .obp-clarify-row__docs { flex: 1 1 100%; order: 1; overflow-wrap: break-word; }
+  .obp-clarify-row__open .obp-arb__status { order: 2; }
+}

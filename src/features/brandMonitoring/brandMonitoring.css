@@ -285,7 +285,7 @@
   margin-bottom: 16px;
 }
 
-.bm-timeline__controls { display: flex; gap: 12px; }
+.bm-timeline__controls { display: flex; flex-wrap: wrap; gap: 12px; max-width: 100%; }
 
 .bm-timeline__ctrl {
   display: flex;
@@ -627,9 +627,9 @@
 .bm-responses-wrap { overflow-x: auto; }
 .bm-provider.is-disabled.is-active { border-color: var(--line); }
 
-/* Sous 768 px : une carte par réponse (fiche Card). Le prompt sert de titre,
+/* Quand le tableau ne tient plus : une carte par réponse (fiche Card). Le prompt sert de titre,
    les autres colonnes deviennent des lignes « libellé : valeur » (data-label). */
-@media (max-width: 767.98px) {
+@container bm-responses (max-width: 559.98px) {
   .bm-responses-wrap { overflow: visible; }
   .bm-responses-table, .bm-responses-table tbody { display: block; }
   .bm-responses-table thead {
@@ -651,4 +651,15 @@
   .bm-responses-table td[data-label]::before {
     content: attr(data-label) "\00a0:"; color: var(--ink-muted); flex-shrink: 0;
   }
+}
+
+/* Cartes dès que le tableau ne tient plus dans la carte (téléphone, tablette). */
+.bm-responses .bm-card { container: bm-responses / inline-size; }
+
+/* Sous 768 px : les deux listes du graphique d'évolution se partagent la
+   largeur, sur deux lignes si besoin (lot 6b). */
+@media (max-width: 767.98px) {
+  .bm-timeline__controls { width: 100%; }
+  .bm-timeline__ctrl { flex: 1 1 140px; min-width: 0; }
+  .bm-timeline__ctrl .bm-select { width: 100%; min-height: 44px; }
 }

@@ -18,7 +18,10 @@
   align-items: center;
   gap: 8px;
 }
-.page-toolbar__right { flex: 1; justify-content: flex-end; min-width: 0; }
+/* La partie gauche (onglets) garde sa largeur : si la ligne manque de place,
+   la recherche passe à la ligne au lieu de recouvrir les onglets (lot 6b). */
+.page-toolbar__left { flex: 0 0 auto; max-width: 100%; }
+.page-toolbar__right { flex: 1 1 200px; justify-content: flex-end; min-width: 0; }
 .page-toolbar__extra {
   display: flex;
   flex-wrap: wrap;

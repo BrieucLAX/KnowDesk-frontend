@@ -131,9 +131,10 @@
 .member-sk-status  { height: 20px; width: 70px; border-radius: var(--radius-full); }
 .member-sk-date    { height: 12px; width: 80px; }
 
-/* ── Sous 768 px : chaque membre devient une carte (fiche Card) ───── */
+/* ── Chaque membre devient une carte (fiche Card) dès que le tableau ne tient
+   plus : téléphone, et tablette avec la barre latérale (lot 6b). */
 /* Identité en titre, puis lignes « libellé : valeur » (data-label), actions en bas. */
-@media (max-width: 767.98px) {
+@container members (max-width: 719.98px) {
   .members-table-wrap { overflow: visible; border: none; background: none; }
   .members-table, .members-table tbody { display: block; }
   .members-table thead {
@@ -159,3 +160,5 @@
   .members-table .member-row__actions:empty { display: none; }
   .member-action { min-height: 44px; padding: 8px 14px; }
 }
+
+.members-page { container: members / inline-size; }

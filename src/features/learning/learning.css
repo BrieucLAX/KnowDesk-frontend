@@ -357,7 +357,7 @@
 /* ── Player module ─────────────────────────────────────────── */
 .learning-player {
   display: flex; flex-direction: column;
-  min-height: 100vh;
+  min-height: 100vh; min-height: 100dvh;
   background: var(--neutral-50);
 }
 .learning-player__topbar {

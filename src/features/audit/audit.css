@@ -103,10 +103,10 @@
 .audit-detail__resource-id    { font-size: 11px; color: var(--neutral-500); }
 .audit-table-wrap { overflow-x: auto; }
 
-/* Sous 768 px : une carte par action (fiche Card). L'action sert de titre,
+/* Quand le tableau ne tient plus : une carte par action (fiche Card). L'action sert de titre,
    « Quand » et « Qui » deviennent des lignes « libellé : valeur », le bouton
    de détail va en bas de la carte. */
-@media (max-width: 767.98px) {
+@container audit (max-width: 559.98px) {
   .audit-table-wrap { overflow: visible; }
   .audit-table, .audit-table tbody { display: block; }
   .audit-table thead {
@@ -125,4 +125,13 @@
   .audit-table td[data-label]::before { content: attr(data-label) "\00a0:"; color: var(--ink-muted); }
   .audit-table__detail-cell { padding-top: 4px; }
   .audit-table__detail-btn { min-height: 44px; }
+}
+
+/* Cartes dès que le tableau ne tient plus dans la page (téléphone, tablette). */
+.audit-page { container: audit / inline-size; }
+
+/* Filtres sous 768 px : chaque champ prend toute la largeur disponible (lot 6b). */
+@media (max-width: 767.98px) {
+  .audit-page__filter-select { max-width: 100%; min-width: 0; width: 100%; }
+  .audit-page__filter-date { flex-wrap: wrap; }
 }

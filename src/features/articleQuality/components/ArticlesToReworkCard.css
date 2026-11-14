@@ -174,3 +174,10 @@
   font-size: 13px;
   margin: 0;
 }
+
+/* Sous 768 px : les trois paliers tiennent sur une ligne sans couper
+   « À retravailler » en deux (lot 6b). */
+@media (max-width: 767.98px) {
+  .article-rework-card__tier { padding: 12px 8px; min-height: 44px; }
+  .article-rework-card__tier-label { text-transform: none; letter-spacing: 0; font-size: 12px; }
+}

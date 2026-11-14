@@ -18,7 +18,7 @@
 .login-page {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
-  min-height: 100vh;
+  min-height: 100vh; min-height: 100dvh;
 }
 
 /* Left brand panel */

@@ -16,7 +16,7 @@
   /* Limite la hauteur pour que les modales avec beaucoup de contenu
      (ex: éditeur de module Learning avec un quiz de 5 questions)
      restent scrollables au lieu de déborder en dessous de l'écran. */
-  max-height: calc(100vh - 48px);
+  max-height: calc(100vh - 48px); max-height: calc(100dvh - 48px);
   display: flex; flex-direction: column;
   background: var(--surface-raised);
   color: var(--ink);
@@ -72,3 +72,27 @@
 /* ConfirmDialog — variante étroite de Modal. */
 .confirm-dialog { max-width: 380px; }
 .confirm-dialog__desc { margin: 0; font-size: 15px; line-height: 24px; color: var(--ink); }
+
+/* ── Sous 768 px (lot 6b) ───────────────────────────────────────
+   Toute la largeur moins 16 px de marge de chaque côté, zones protégées
+   comprises ; boutons empilés sur toute la largeur, l'action principale en
+   haut (par convention, elle est le dernier bouton du footer). */
+@media (max-width: 767.98px) {
+  .modal-overlay {
+    padding:
+      max(16px, env(safe-area-inset-top))
+      max(16px, env(safe-area-inset-right))
+      max(16px, env(safe-area-inset-bottom))
+      max(16px, env(safe-area-inset-left));
+  }
+  .modal,
+  .modal--sm,
+  .modal--md,
+  .modal--lg,
+  .confirm-dialog { max-width: none; max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); }
+  .modal__header { padding: 12px 12px 0 20px; margin-bottom: 12px; }
+  .modal__close { width: 44px; height: 44px; }
+  .modal__body { padding: 0 20px 24px; }
+  .modal__actions { flex-direction: column-reverse; align-items: stretch; }
+  .modal__actions > .btn { width: 100%; min-height: 44px; justify-content: center; }
+}
