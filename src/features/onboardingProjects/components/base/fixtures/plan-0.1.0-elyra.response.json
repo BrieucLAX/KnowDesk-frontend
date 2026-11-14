@@ -1,0 +1,321 @@
+{
+  "planId": "5f0c1d2e-0000-4000-8000-000000000001",
+  "schemaVersion": "0.1.0",
+  "plan": {
+    "schema_version": "0.1.0",
+    "audit_schema_version": "0.16.0",
+    "generated_at": "2026-11-14T10:00:00+00:00",
+    "decision_ids": [
+      "dec_remplacement"
+    ],
+    "chapters": [
+      {
+        "id": "ch_offres",
+        "title": "Offres et prix",
+        "subject_ids": [
+          "sub_gaz_indexe"
+        ]
+      },
+      {
+        "id": "ch_contrat",
+        "title": "Souscription et résiliation",
+        "subject_ids": [
+          "sub_resiliation"
+        ]
+      },
+      {
+        "id": "ch_service",
+        "title": "Service client",
+        "subject_ids": [
+          "sub_horaires"
+        ]
+      }
+    ],
+    "subjects": [
+      {
+        "id": "sub_resiliation",
+        "chapter_id": "ch_contrat",
+        "title": "Frais de résiliation",
+        "question": "Combien coûte une résiliation pour un particulier ?",
+        "audience": "particuliers",
+        "sources": [
+          {
+            "page": 1,
+            "zone": "text",
+            "format": "pdf",
+            "excerpt": "Aucun frais de résiliation\n\nConformément au code de la consommation, aucun frais ni aucune indemnité ne peut être réclamé au client résidentiel en cas de résiliation, y compris pour les offres à prix fixe.",
+            "image_id": null,
+            "table_cell": null,
+            "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+            "excerpt_origin": "source_text"
+          },
+          {
+            "zone": "text",
+            "format": "docx",
+            "excerpt": "Pour l'offre Elyra Fixe 2 ans, des frais de résiliation anticipée de 50 € TTC s'appliquent si le client part avant 12 mois.",
+            "image_id": null,
+            "block_kind": "paragraph",
+            "table_cell": null,
+            "block_index": 0,
+            "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+            "heading_path": [
+              "Résiliation",
+              "Y a-t-il des frais si je résilie ?"
+            ],
+            "excerpt_origin": "source_text"
+          },
+          {
+            "page": 1,
+            "zone": "image",
+            "format": "pdf",
+            "excerpt": "Sur ma facture de clôture du 30 septembre, vous m’avez facturé 50 € TTC de « frais de résiliation anticipée ».",
+            "image_id": "img_3b0dfd44b73a0cd3",
+            "table_cell": null,
+            "document_id": "doc_courrier_reclamation_lambert_2026_10_06_pdf_c2128cf1",
+            "excerpt_origin": "vision_unverified"
+          }
+        ],
+        "units": [
+          {
+            "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+            "kind": "page",
+            "number": 1
+          },
+          {
+            "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+            "kind": "section",
+            "heading_path": [
+              "Résiliation",
+              "Y a-t-il des frais si je résilie ?"
+            ]
+          },
+          {
+            "document_id": "doc_courrier_reclamation_lambert_2026_10_06_pdf_c2128cf1",
+            "kind": "page",
+            "number": 1
+          }
+        ],
+        "card_ids": [
+          "card_49acfa339577d3d3"
+        ],
+        "origin": "plan_sujets"
+      },
+      {
+        "id": "sub_gaz_indexe",
+        "chapter_id": "ch_offres",
+        "title": "Offre Gaz Indexé",
+        "question": "Quel est le prix de l'offre Gaz Indexé ?",
+        "audience": "particuliers",
+        "sources": [
+          {
+            "zone": "text",
+            "format": "docx",
+            "excerpt": "Elyra Gaz Indexé propose un prix du kWh qui suit le tarif réglementé du gaz (TRV), avec une remise permanente de 5 % sur le prix HT du kWh.",
+            "image_id": null,
+            "block_kind": "paragraph",
+            "table_cell": null,
+            "block_index": 0,
+            "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+            "heading_path": [
+              "L'offre en bref"
+            ],
+            "excerpt_origin": "source_text"
+          },
+          {
+            "zone": "text",
+            "format": "eml",
+            "excerpt": "Depuis juillet 2023, notre offre Gaz Indexé est calée sur le prix repère publié chaque mois par la CRE, avec une remise de 4 % sur le prix HT (et non 5 %).",
+            "image_id": null,
+            "block_kind": "paragraph",
+            "table_cell": null,
+            "block_index": 6,
+            "document_id": "doc_2026_06_04_re_question_offre_gaz_indexe_eml_a12b132f",
+            "heading_path": [
+              "RE: Question offre Gaz Indexé – client qui conteste"
+            ],
+            "excerpt_origin": "source_text"
+          },
+          {
+            "page": 1,
+            "zone": "table",
+            "format": "pdf",
+            "excerpt": "Elyra Gaz Indexé | 22,40 | Prix repère CRE – 4 %",
+            "image_id": null,
+            "table_cell": null,
+            "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+            "excerpt_origin": "source_text"
+          }
+        ],
+        "units": [
+          {
+            "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+            "kind": "section",
+            "heading_path": [
+              "L'offre en bref"
+            ]
+          },
+          {
+            "document_id": "doc_2026_06_04_re_question_offre_gaz_indexe_eml_a12b132f",
+            "kind": "section",
+            "heading_path": [
+              "RE: Question offre Gaz Indexé – client qui conteste"
+            ]
+          },
+          {
+            "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+            "kind": "page",
+            "number": 1
+          }
+        ],
+        "card_ids": [
+          "card_e3975ef276e90c40"
+        ],
+        "origin": "plan_sujets"
+      },
+      {
+        "id": "sub_horaires",
+        "chapter_id": "ch_service",
+        "title": "Horaires du service client",
+        "question": "Quand le service client répond-il ?",
+        "audience": null,
+        "sources": [
+          {
+            "zone": "text",
+            "slide": 3,
+            "format": "pptx",
+            "excerpt": "50 € de remise pour le parrain et 50 € pour le filleul",
+            "image_id": null,
+            "table_cell": null,
+            "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+            "excerpt_origin": "source_text"
+          },
+          {
+            "zone": "image",
+            "slide": 2,
+            "format": "pptx",
+            "excerpt": "50 €\nofferts au parrain ET au filleul",
+            "image_id": "img_838703f4cb4711cd",
+            "table_cell": null,
+            "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+            "excerpt_origin": "vision_unverified"
+          },
+          {
+            "zone": "table",
+            "format": "docx",
+            "excerpt": "Lancement le 1er octobre 2026 : 30 € pour le parrain et 30 € pour le filleul, plafond 10 parrainages/an",
+            "image_id": null,
+            "block_kind": "table",
+            "table_cell": null,
+            "block_index": 0,
+            "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+            "heading_path": [
+              "Synthèse des décisions"
+            ],
+            "excerpt_origin": "source_text"
+          }
+        ],
+        "units": [
+          {
+            "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+            "kind": "slide",
+            "number": 3
+          },
+          {
+            "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+            "kind": "slide",
+            "number": 2
+          },
+          {
+            "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+            "kind": "section",
+            "heading_path": [
+              "Synthèse des décisions"
+            ]
+          }
+        ],
+        "card_ids": [
+          "card_99fcfa15353f74a7"
+        ],
+        "origin": "plan_complement"
+      }
+    ],
+    "coverage": {
+      "units_total": 12,
+      "units_covered": 10
+    },
+    "attention": {
+      "retired_documents_detection": "available",
+      "retired_documents": [
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v1_2025_08_01_pdf_b281f8c1",
+          "document_path": "Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+          "replaced_by_document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "replaced_by_document_path": "Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf",
+          "card_id": "card_24fcb03db294f6f6",
+          "decision_id": "dec_remplacement"
+        }
+      ],
+      "uncovered_units": [
+        {
+          "unit": {
+            "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+            "kind": "section",
+            "heading_path": [
+              "Ordre du jour"
+            ]
+          },
+          "document_path": "CR_Comite_Offres_2026-09-22.docx",
+          "excerpt": "Ordre du jour",
+          "reason": "internal"
+        },
+        {
+          "unit": {
+            "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+            "kind": "slide",
+            "number": 1
+          },
+          "document_path": "2026-01-15_Formation_Onboarding_Conseillers_Energie.pptx",
+          "excerpt": "Formation Onboarding",
+          "reason": "no_content"
+        }
+      ],
+      "merged_subjects": [
+        {
+          "subject_id": "sub_resiliation",
+          "titles": [
+            "Frais de résiliation",
+            "Résilier un contrat particulier"
+          ],
+          "reason": "same_passages"
+        }
+      ],
+      "unattached_cards": [
+        {
+          "card_id": "card_2012651dc44fa745",
+          "reason": "no_subject_passage"
+        }
+      ],
+      "rejected_subjects": [],
+      "unverified_quotes": 1
+    },
+    "run": {
+      "model": "mistral-large-2512",
+      "prompts": [
+        {
+          "prompt_id": "plan_sujets",
+          "prompt_version": 1
+        },
+        {
+          "prompt_id": "plan_complement",
+          "prompt_version": 1
+        }
+      ],
+      "calls": 2,
+      "cost_usd": 0.041,
+      "duration_seconds": 180.0,
+      "pipeline_commit": null
+    }
+  },
+  "createdAt": "2026-11-14T10:05:00Z",
+  "commentable": true
+}

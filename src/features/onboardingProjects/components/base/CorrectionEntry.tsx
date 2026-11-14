@@ -12,6 +12,8 @@ import {
   type CorrectionQuota, type OnboardingCorrection,
 } from '../../lib/correction';
 import { ArrowRight } from 'lucide-react';
+import { hasPlan } from '../../lib/plan';
+import { PlanEntry } from './PlanEntry';
 
 interface CorrectionEntryProps {
   projectId:     string;
@@ -50,6 +52,10 @@ export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, c
     load().catch(() => setCorrections([]));
   }, [correctable, load]);
 
+  // Mode construire sur un audit 0.16.0 : le plan (lot B) prend la place du message d'avant.
+  if (hasPlan(schemaVersion, base)) {
+    return <PlanEntry projectId={projectId} analysisId={analysisId} cards={cards} current={current} onOpenBase={onOpenBase} />;
+  }
   if (noBase) {
     return <p className="obp-muted obp-correction-entry" role="status">{NO_BASE_TO_PREPARE}</p>;
   }

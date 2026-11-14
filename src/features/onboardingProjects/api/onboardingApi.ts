@@ -10,6 +10,7 @@ import type {
   BaseVersion, ChainCancelResult, CorrectionQuota, OnboardingCorrection, Review, ReviewsState, SectionComment, SectionFix, Validation,
   ValidationSummary, Verdict,
 } from '../lib/correction';
+import type { OnboardingPlan, PlanComment, PlanContent, PlanQuota } from '../lib/plan';
 import type { KnowledgeBaseCreation, KnowledgeBasePreview, LatestKnowledgeBaseCreation } from '../lib/knowledgeBase';
 
 const BASE = '/onboarding';
@@ -102,6 +103,29 @@ export const onboardingApi = {
   /** Toutes les images conservées de l'analyse (citées par l'audit ou non), sans leurs octets. */
   listAuditImages: (projectId: string, analysisId: string) =>
     apiClient.get<Array<{ imageId: string }>>(`${BASE}/projects/${projectId}/analyses/${analysisId}/images`),
+
+  // ── Plan d'une base à construire (plan-construire-v1, lot B) ──
+  /**
+   * 202 : le plan part en file. Refus : CARDS_PENDING (message qui nomme la carte de version),
+   * PLAN_IN_PROGRESS, BASE_EXISTS, ANALYSIS_NOT_LATEST, PLAN_QUOTA_EXCEEDED, 422 AUDIT_NOT_PLANNABLE,
+   * 503 PLAN_UNAVAILABLE (avant la migration du back).
+   */
+  launchPlan: (projectId: string, analysisId: string) =>
+    apiClient.post<OnboardingPlan>(`${BASE}/projects/${projectId}/analyses/${analysisId}/plans`, {}),
+  /** Les plans de l'analyse, le plus récent d'abord ; le quota de l'organisation en meta. */
+  listPlans: (projectId: string, analysisId: string) =>
+    apiClient.getWithMeta<OnboardingPlan[], { quota: PlanQuota }>(`${BASE}/projects/${projectId}/analyses/${analysisId}/plans`),
+  /** Le plan tel que livré (plan 0.1.0) ; 404 avant la réussite. */
+  getPlanContent: (projectId: string, planId: string) =>
+    apiClient.get<PlanContent>(`${BASE}/projects/${projectId}/plans/${planId}/content`),
+  /** Le commentaire courant du plan et de chaque sujet commenté. */
+  listPlanComments: (projectId: string, planId: string) =>
+    apiClient.get<PlanComment[]>(`${BASE}/projects/${projectId}/plans/${planId}/comments`),
+  /** 201 ; 409 COMMENT_CONFLICT si le commentaire courant a changé, PLAN_READ_ONLY sur un plan remplacé. */
+  commentPlan: (projectId: string, planId: string, body: { subjectId: string | null; expectedCurrentId: string | null; comment: string }) =>
+    apiClient.post<PlanComment>(`${BASE}/projects/${projectId}/plans/${planId}/comments`, body),
+  cancelPlanComment: (projectId: string, planId: string, commentId: string) =>
+    apiClient.post<{ cancelled: PlanComment; current: PlanComment | null }>(`${BASE}/projects/${projectId}/plans/${planId}/comments/${commentId}/cancel`, {}),
 
   // ── Correction de la base (plan-correction-produit.md, lot 3) ──
   /**

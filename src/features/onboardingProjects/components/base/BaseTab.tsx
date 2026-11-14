@@ -10,6 +10,9 @@ import { cardTitles, isCorrectionActive, SUPPORTED_CORRECTION_SCHEMAS, type Base
 import type { Decision } from '../../lib/decisions';
 import { cardTitle, codeCheck, NATURES, orderedCards, type ReadingCard } from '../../lib/reading';
 import { useBaseReview } from '../../hooks/useBaseReview';
+import { normalizeAudit, type Audit } from '../../lib/audit';
+import { hasPlan } from '../../lib/plan';
+import { PlanTab } from './PlanTab';
 import type { OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from '../audit/AuditSource';
 import { BaseReviewView } from './BaseReviewView';
@@ -71,6 +74,12 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
   const analysisId = loaded.state === 'loading' ? null : loaded.analysisId;
   const [cards, setCards] = useState<ReadingCard[]>([]);
   const [decisions, setDecisions] = useState<ReadonlyMap<string, Decision>>(new Map());
+  /**
+   * Mode construire sur un audit 0.16.0 (lot B) : l'onglet montre le plan, avec l'inventaire de
+   * l'audit pour nommer les documents. null : pas de plan (correction, ou audit plus ancien) ;
+   * undefined : l'audit n'est pas encore lu.
+   */
+  const [planAudit, setPlanAudit] = useState<Audit | null | undefined>(undefined);
 
   useEffect(() => {
     if (shownId === null) { setBase(null); return; }
@@ -87,8 +96,12 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
     if (analysisId === null) return;
     let cancelled = false;
     onboardingApi.getAudit(project.id, analysisId)
-      .then(res => { if (!cancelled && res.reading) { setTitles(cardTitles(res.reading.cards)); setCards(res.reading.cards); } })
-      .catch(() => {});
+      .then(res => {
+        if (cancelled) return;
+        if (res.reading) { setTitles(cardTitles(res.reading.cards)); setCards(res.reading.cards); }
+        setPlanAudit(res.reading && hasPlan(res.schemaVersion, res.reading.base) ? normalizeAudit(res.audit) : null);
+      })
+      .catch(() => { if (!cancelled) setPlanAudit(null); });
     // Les réponses courantes : cartes encore bloquantes (écran vide), réponse d'une carte en attente.
     onboardingApi.listDecisions(project.id, analysisId)
       .then(res => { if (!cancelled) setDecisions(new Map(res.decisions.map(d => [d.cardId ?? d.questionId, d]))); })
@@ -127,6 +140,13 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
   };
 
   if (loaded.state === 'loading') return <Skeleton className="obp-skeleton-block" />;
+  // Le plan d'une base à construire (lot B) : il prend la place de la préparation.
+  if (analysisId !== null && planAudit === undefined) return <Skeleton className="obp-skeleton-block" />;
+  if (analysisId !== null && planAudit) {
+    return <AuditImagesContext.Provider value={images}>
+      <PlanTab projectId={project.id} analysisId={analysisId} audit={planAudit} cards={cards} onGoToClarify={onGoToClarify} />
+    </AuditImagesContext.Provider>;
+  }
   if (loaded.state === 'none') {
     // Les cartes qui bloquent encore la préparation, nommées, chacune ouvrable (plan v4, point 12).
     const blocking = orderedCards(cards)

@@ -8,6 +8,7 @@ import BASE_PILOTE_03 from '../components/base/fixtures/base-0.3.0-pilote.respon
 import BASE_BANC_04 from '../components/base/fixtures/base-0.4.0-banc-v5-g1.response.json';
 import { READING_AUDIT_SCHEMAS } from './reading';
 import VERSIONS from './contract-versions.json';
+import { SUPPORTED_PLAN_SCHEMAS, UNCOVERED_REASON_LABEL } from './plan';
 
 /**
  * `contract-versions.json` est la copie, à l'identique, du fichier du back
@@ -26,6 +27,11 @@ const BACK = Object.values(import.meta.glob<unknown>(
 /** Les copies consignées des schémas de correction du back voisin ; absentes ailleurs. */
 const BACK_CORRECTIONS = import.meta.glob<unknown>(
   '../../../../../KnowDesk/src/modules/onboarding/schemas/correction-*.schema.json', { eager: true, import: 'default' },
+);
+
+/** Les copies consignées des schémas de plan du back voisin ; absentes ailleurs. */
+const BACK_PLANS = import.meta.glob<unknown>(
+  '../../../../../KnowDesk/src/modules/onboarding/schemas/plan-*.schema.json', { eager: true, import: 'default' },
 );
 
 type Node = { properties?: Record<string, Node>; enum?: string[]; const?: string; anyOf?: Node[]; oneOf?: Node[] };
@@ -63,6 +69,10 @@ describe('Versions de contrat acceptées par le back', () => {
     expect([...SUPPORTED_CORRECTION_SCHEMAS]).toEqual(VERSIONS.corrections.accepted);
   });
 
+  it('chaque plan accepté s\'affiche dans « Nouvelle base » (lot B)', () => {
+    expect([...SUPPORTED_PLAN_SCHEMAS]).toEqual(VERSIONS.plans.accepted);
+  });
+
   // Sans le dépôt du back à côté de celui-ci, le test ne peut rien comparer : il est sauté.
   it.skipIf(BACK === undefined)('la copie est celle du back voisin (../KnowDesk)', () => {
     expect(VERSIONS).toEqual(BACK);
@@ -94,5 +104,17 @@ describe('Raisons de la base corrigée : listes fermées, un libellé par valeur
     expect(backValues('undo_reason')).toEqual([...UNDO_REASONS].sort());
     // `reason` : celle d'une information en attente, et (0.4.0) celle d'une ligne « À vérifier ».
     expect(backValues('reason')).toEqual([...PENDING_REASONS, ...TO_VERIFY_REASONS].sort());
+  });
+});
+
+describe('Raisons du plan : liste fermée, un libellé par valeur', () => {
+  it.skipIf(Object.keys(BACK_PLANS).length === 0)('chaque raison d\'un passage sans sujet a son libellé', () => {
+    const reasons = new Set<string>();
+    for (const schema of Object.values(BACK_PLANS)) {
+      const defs = (schema as { $defs?: Record<string, { properties?: Record<string, { enum?: string[] }> }> }).$defs ?? {};
+      for (const v of defs.UncoveredUnit?.properties?.reason?.enum ?? []) reasons.add(v);
+    }
+    expect(reasons.size).toBeGreaterThan(0);
+    expect([...reasons].sort()).toEqual(Object.keys(UNCOVERED_REASON_LABEL).sort());
   });
 });
