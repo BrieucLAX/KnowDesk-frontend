@@ -8,6 +8,8 @@ vi.mock('../../api/onboardingApi', () => ({
     listCorrections: vi.fn(), launchCorrection: vi.fn(), getBase: vi.fn(),
     listPlans: vi.fn(), launchPlan: vi.fn(), getPlanContent: vi.fn(), listPlanComments: vi.fn(),
     commentPlan: vi.fn(), cancelPlanComment: vi.fn(),
+    listBuilds: vi.fn(), launchBuild: vi.fn(), getBuildContent: vi.fn(), listBuildComments: vi.fn(),
+    commentBuild: vi.fn(), cancelBuildComment: vi.fn(),
     listReviews: vi.fn(), listSectionComments: vi.fn(), listSectionFixes: vi.fn(), listValidations: vi.fn(),
   },
 }));
@@ -142,6 +144,9 @@ describe('« Nouvelle base » en mode construire : le plan en lecture seule', ()
     vi.mocked(onboardingApi.listPlans).mockResolvedValue({ data: plans, meta: { quota: { used: 1, max: 30 } } });
     vi.mocked(onboardingApi.getPlanContent).mockResolvedValue(content);
     vi.mocked(onboardingApi.listPlanComments).mockResolvedValue(comments);
+    vi.mocked(onboardingApi.listBuilds).mockResolvedValue({
+      data: [], meta: { quota: { used: 0, max: 30 }, launch: { allowed: true } },
+    });
   }
 
   it('le plan, ses points d\'attention, ses chapitres et les sources de chaque sujet, sans aucun code', async () => {
@@ -172,8 +177,9 @@ describe('« Nouvelle base » en mode construire : le plan en lecture seule', ()
     expect(within(subject).getByText(/Cartes liées \(1\)/)).toBeInTheDocument();
     expect(within(subject).getByRole('button', { name: 'Remise sur l\'offre Gaz Indexé' })).toBeInTheDocument();
 
-    expect(screen.getByText(/La rédaction de la base à partir de ce plan arrive bientôt/)).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Rédiger|Créer la base/ })).not.toBeInTheDocument();
+    // Lot C : la rédaction se lance sous le plan ; la création dans la base n'existe pas encore.
+    expect(await screen.findByRole('button', { name: 'Rédiger les 3 articles' })).toBeEnabled();
+    expect(screen.queryByRole('button', { name: /Créer la base/ })).not.toBeInTheDocument();
     expect(container.textContent).not.toMatch(TECHNICAL);
   });
 

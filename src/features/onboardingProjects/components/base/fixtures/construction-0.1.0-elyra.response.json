@@ -1,0 +1,521 @@
+{
+  "buildId": "7a1e2b3c-0000-4000-8000-000000000001",
+  "planId": "5f0c1d2e-0000-4000-8000-000000000001",
+  "schemaVersion": "0.1.0",
+  "construction": {
+    "schema_version": "0.1.0",
+    "audit_schema_version": "0.16.0",
+    "plan_schema_version": "0.1.0",
+    "plan_generated_at": "2026-11-14T10:00:00+00:00",
+    "generated_at": "2026-11-14T11:00:00+00:00",
+    "preparation_date": "2026-11-14",
+    "decision_ids": [
+      "dec_remplacement"
+    ],
+    "chapters": [
+      {
+        "id": "ch_offres",
+        "title": "Offres et prix",
+        "subject_ids": [
+          "sub_prix_fixe",
+          "sub_gaz_indexe",
+          "sub_parrainage",
+          "sub_tarifs_2025"
+        ]
+      },
+      {
+        "id": "ch_contrat",
+        "title": "Souscription et résiliation",
+        "subject_ids": [
+          "sub_resiliation"
+        ]
+      },
+      {
+        "id": "ch_service",
+        "title": "Service client",
+        "subject_ids": [
+          "sub_horaires"
+        ]
+      }
+    ],
+    "articles": [
+      {
+        "subject_id": "sub_prix_fixe",
+        "chapter_id": "ch_offres",
+        "title": "Prix d'Elyra Fixe 2 ans",
+        "question": "Quel est le prix du kWh d'Elyra Fixe 2 ans ?",
+        "audience": "particuliers",
+        "card_ids": [
+          "card_cb3ece6251e02e32"
+        ],
+        "status": "written",
+        "blocks": [
+          {
+            "id": "blk_1",
+            "kind": "text",
+            "origin": "document",
+            "text": "Depuis le 1er septembre 2026, le kWh d'Elyra Fixe 2 ans en option Base coûte 0,1952 € TTC.",
+            "sources": [
+              {
+                "page": 1,
+                "zone": "table",
+                "format": "pdf",
+                "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |",
+                "image_id": null,
+                "table_cell": null,
+                "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+                "excerpt_origin": "source_text"
+              }
+            ],
+            "to_verify": [
+              {
+                "reason": "sentence_below_quotes",
+                "passages": [
+                  "Depuis le 1er septembre 2026, le kWh d'Elyra Fixe 2 ans en option Base coûte 0,1952 € TTC."
+                ]
+              }
+            ]
+          },
+          {
+            "id": "blk_2",
+            "kind": "table",
+            "origin": "document",
+            "header": [
+              "Offre",
+              "Option",
+              "Abonnement",
+              "Prix du kWh"
+            ],
+            "rows": [
+              [
+                "Elyra Fixe 2 ans",
+                "Base",
+                "16,20",
+                "0,1952"
+              ]
+            ],
+            "sources": [
+              {
+                "page": 1,
+                "zone": "table",
+                "format": "pdf",
+                "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |",
+                "image_id": null,
+                "table_cell": null,
+                "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+                "excerpt_origin": "source_text"
+              }
+            ]
+          }
+        ],
+        "removed": [
+          {
+            "id": "blk_3",
+            "kind": "text",
+            "text": "La fiche offre indique 0,1925 € TTC le kWh.",
+            "reason": "discarded_value",
+            "card_id": "card_cb3ece6251e02e32",
+            "passages": [
+              {
+                "zone": "table",
+                "format": "docx",
+                "excerpt": "| Prix du kWh Base (6 kVA) | 0,1925 € TTC |",
+                "image_id": null,
+                "block_kind": "table",
+                "table_cell": null,
+                "block_index": 0,
+                "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+                "heading_path": [
+                  "Caractéristiques"
+                ],
+                "excerpt_origin": "source_text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "subject_id": "sub_gaz_indexe",
+        "chapter_id": "ch_offres",
+        "title": "Offre Gaz Indexé",
+        "question": "Quel est le prix de l'offre Gaz Indexé ?",
+        "audience": "particuliers",
+        "card_ids": [
+          "card_e3975ef276e90c40"
+        ],
+        "status": "written",
+        "blocks": [
+          {
+            "id": "blk_4",
+            "kind": "intertitle",
+            "origin": "document",
+            "text": "Comment le prix est calculé"
+          },
+          {
+            "id": "blk_5",
+            "kind": "list",
+            "origin": "document",
+            "items": [
+              "Le prix suit le prix repère publié chaque mois par la CRE.",
+              "Une remise de 4 % s'applique sur le prix HT."
+            ],
+            "sources": [
+              {
+                "zone": "text",
+                "format": "eml",
+                "excerpt": "Depuis juillet 2023, notre offre Gaz Indexé est calée sur le prix repère publié chaque mois par la CRE, avec une remise de 4 % sur le prix HT (et non 5 %).",
+                "image_id": null,
+                "block_kind": "paragraph",
+                "table_cell": null,
+                "block_index": 6,
+                "document_id": "doc_2026_06_04_re_question_offre_gaz_indexe_eml_a12b132f",
+                "heading_path": [
+                  "RE: Question offre Gaz Indexé – client qui conteste"
+                ],
+                "excerpt_origin": "source_text"
+              },
+              {
+                "page": 1,
+                "zone": "table",
+                "format": "pdf",
+                "excerpt": "Elyra Gaz Indexé | 22,40 | Prix repère CRE – 4 %",
+                "image_id": null,
+                "table_cell": null,
+                "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+                "excerpt_origin": "source_text"
+              }
+            ]
+          }
+        ],
+        "removed": [
+          {
+            "id": "blk_6",
+            "kind": "text",
+            "text": "Le prix suit le tarif réglementé du gaz, avec une remise de 5 %.",
+            "reason": "discarded_source",
+            "card_id": "card_e3975ef276e90c40",
+            "passages": [
+              {
+                "zone": "text",
+                "format": "docx",
+                "excerpt": "Elyra Gaz Indexé propose un prix du kWh qui suit le tarif réglementé du gaz (TRV), avec une remise permanente de 5 % sur le prix HT du kWh.",
+                "image_id": null,
+                "block_kind": "paragraph",
+                "table_cell": null,
+                "block_index": 0,
+                "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+                "heading_path": [
+                  "L'offre en bref"
+                ],
+                "excerpt_origin": "source_text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "subject_id": "sub_parrainage",
+        "chapter_id": "ch_offres",
+        "title": "Le parrainage",
+        "question": "Combien rapporte le parrainage, et à quelles conditions ?",
+        "audience": "conseillers",
+        "card_ids": [
+          "card_99fcfa15353f74a7"
+        ],
+        "status": "written",
+        "blocks": [
+          {
+            "id": "blk_7",
+            "kind": "text",
+            "origin": "document",
+            "text": "Le parrainage donne 30 € au parrain et 30 € au filleul. La remise s'applique si le filleul souscrit Elyra Pro Sérénité.",
+            "sources": [
+              {
+                "zone": "table",
+                "format": "docx",
+                "excerpt": "Lancement le 1er octobre 2026 : 30 € pour le parrain et 30 € pour le filleul, plafond 10 parrainages/an",
+                "image_id": null,
+                "block_kind": "table",
+                "table_cell": null,
+                "block_index": 0,
+                "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+                "heading_path": [
+                  "Synthèse des décisions"
+                ],
+                "excerpt_origin": "source_text"
+              },
+              {
+                "zone": "text",
+                "format": "docx",
+                "excerpt": "Elyra Pro Sérénité : prix fixe, engagement 3 ans",
+                "image_id": null,
+                "block_kind": "paragraph",
+                "table_cell": null,
+                "block_index": 0,
+                "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+                "heading_path": [
+                  "Rappel de la gamme"
+                ],
+                "excerpt_origin": "source_text"
+              }
+            ],
+            "to_verify": [
+              {
+                "reason": "joined_passages",
+                "passages": [
+                  "La remise s'applique si le filleul souscrit Elyra Pro Sérénité."
+                ]
+              }
+            ]
+          },
+          {
+            "id": "blk_8",
+            "kind": "text",
+            "origin": "expert",
+            "text": "Le parrainage est limité à 10 filleuls par an et par parrain.",
+            "expert": {
+              "card_id": "card_99fcfa15353f74a7",
+              "decision_id": "dec_parrainage",
+              "text": "Le parrainage est limité à 10 filleuls par an et par parrain.",
+              "entered_on": "2026-11-13"
+            }
+          }
+        ],
+        "removed": [
+          {
+            "id": "blk_9",
+            "kind": "text",
+            "text": "Le flyer d'octobre annonce 50 € pour le parrain et 50 € pour le filleul.",
+            "reason": "discarded_source",
+            "card_id": "card_99fcfa15353f74a7",
+            "passages": [
+              {
+                "zone": "text",
+                "slide": 3,
+                "format": "pptx",
+                "excerpt": "50 € de remise pour le parrain et 50 € pour le filleul",
+                "image_id": null,
+                "table_cell": null,
+                "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+                "excerpt_origin": "source_text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "subject_id": "sub_tarifs_2025",
+        "chapter_id": "ch_offres",
+        "title": "Tarifs 2025",
+        "question": "Quels étaient les prix de la grille 2025 ?",
+        "audience": null,
+        "card_ids": [],
+        "status": "empty",
+        "empty_reason": "no_source"
+      },
+      {
+        "subject_id": "sub_resiliation",
+        "chapter_id": "ch_contrat",
+        "title": "Frais de résiliation",
+        "question": "Combien coûte une résiliation pour un particulier ?",
+        "audience": "particuliers",
+        "card_ids": [
+          "card_49acfa339577d3d3"
+        ],
+        "status": "written",
+        "blocks": [
+          {
+            "id": "blk_10",
+            "kind": "text",
+            "origin": "document",
+            "text": "Aucun frais ni aucune indemnité ne peut être réclamé au client résidentiel en cas de résiliation, y compris pour les offres à prix fixe.",
+            "sources": [
+              {
+                "page": 1,
+                "zone": "text",
+                "format": "pdf",
+                "excerpt": "Aucun frais de résiliation\n\nConformément au code de la consommation, aucun frais ni aucune indemnité ne peut être réclamé au client résidentiel en cas de résiliation, y compris pour les offres à prix fixe.",
+                "image_id": null,
+                "table_cell": null,
+                "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+                "excerpt_origin": "source_text"
+              }
+            ]
+          }
+        ],
+        "removed": [
+          {
+            "id": "blk_11",
+            "kind": "text",
+            "text": "Une résiliation avant 12 mois coûte 75 € TTC.",
+            "reason": "value_without_source"
+          },
+          {
+            "id": "blk_12",
+            "kind": "text",
+            "text": "Pour Elyra Fixe 2 ans, des frais de 50 € TTC s'appliquent avant 12 mois.",
+            "reason": "discarded_source",
+            "card_id": "card_49acfa339577d3d3",
+            "passages": [
+              {
+                "zone": "text",
+                "format": "docx",
+                "excerpt": "Pour l'offre Elyra Fixe 2 ans, des frais de résiliation anticipée de 50 € TTC s'appliquent si le client part avant 12 mois.",
+                "image_id": null,
+                "block_kind": "paragraph",
+                "table_cell": null,
+                "block_index": 0,
+                "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+                "heading_path": [
+                  "Résiliation",
+                  "Y a-t-il des frais si je résilie ?"
+                ],
+                "excerpt_origin": "source_text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "subject_id": "sub_horaires",
+        "chapter_id": "ch_service",
+        "title": "Horaires du service client",
+        "question": "Quand le service client répond-il ?",
+        "audience": null,
+        "card_ids": [
+          "card_5c0d236c1475a43f"
+        ],
+        "status": "written",
+        "blocks": [
+          {
+            "id": "blk_13",
+            "kind": "text",
+            "origin": "document",
+            "text": "À compter du lundi 2 novembre 2026, le service client est ouvert du lundi au vendredi de 9h à 18h ; il est fermé le samedi.",
+            "sources": [
+              {
+                "zone": "text",
+                "format": "eml",
+                "excerpt": "les horaires d'ouverture du service client évoluent à compter du lundi 2 novembre 2026 :\n\n- Du lundi au vendredi : 9h – 18h\n\n- Samedi : fermé",
+                "image_id": null,
+                "block_kind": "paragraph",
+                "table_cell": null,
+                "block_index": 4,
+                "document_id": "doc_2026_10_01_changement_horaires_service_client_eml_b47ec27c",
+                "heading_path": [
+                  "Nouveaux horaires du service client à compter du 2 novembre"
+                ],
+                "excerpt_origin": "source_text"
+              }
+            ]
+          }
+        ],
+        "removed": [
+          {
+            "id": "blk_14",
+            "kind": "text",
+            "text": "Le service client répond du lundi au vendredi de 8h à 19h et le samedi de 9h à 12h.",
+            "reason": "ended_measure"
+          }
+        ]
+      }
+    ],
+    "uncovered": [
+      {
+        "id": "pt_1",
+        "kind": "card_without_article",
+        "card_id": "card_1b9961bd7843699b",
+        "decision_id": "dec_vert_local",
+        "passages": [
+          {
+            "zone": "table",
+            "format": "docx",
+            "excerpt": "Elyra Vert Local | Ouverture des souscriptions maintenue au 1er novembre 2026",
+            "image_id": null,
+            "block_kind": "table",
+            "table_cell": null,
+            "block_index": 0,
+            "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+            "heading_path": [
+              "Synthèse des décisions"
+            ],
+            "excerpt_origin": "source_text"
+          },
+          {
+            "zone": "table",
+            "slide": 5,
+            "format": "pptx",
+            "excerpt": "15 novembre | Ouverture des souscriptions",
+            "image_id": null,
+            "table_cell": null,
+            "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+            "excerpt_origin": "source_text"
+          }
+        ]
+      },
+      {
+        "id": "pt_2",
+        "kind": "missing_information",
+        "subject_id": "sub_resiliation",
+        "note": "Le délai de prise en compte d'une résiliation demandée par le client."
+      },
+      {
+        "id": "pt_3",
+        "kind": "value_without_source",
+        "subject_id": "sub_resiliation",
+        "removed_block_id": "blk_11"
+      },
+      {
+        "id": "pt_4",
+        "kind": "article_without_text",
+        "subject_id": "sub_tarifs_2025"
+      },
+      {
+        "id": "pt_5",
+        "kind": "unresolved_card",
+        "card_id": "card_2b35fe27346c6527",
+        "decision_id": "dec_retractation",
+        "passages": [
+          {
+            "zone": "text",
+            "format": "docx",
+            "excerpt": "Le client dispose d'un délai de rétractation de 7 jours à compter de la souscription",
+            "image_id": null,
+            "block_kind": "paragraph",
+            "table_cell": null,
+            "block_index": 1,
+            "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+            "heading_path": [
+              "4. Mentions obligatoires"
+            ],
+            "excerpt_origin": "source_text"
+          }
+        ]
+      }
+    ],
+    "controls": {
+      "articles_written": 5,
+      "articles_empty": 1,
+      "blocks_kept": 6,
+      "blocks_removed": 6,
+      "sentences_to_verify": 2,
+      "expert_texts": 1
+    },
+    "run": {
+      "model": "mistral-large-2512",
+      "prompts": [
+        {
+          "prompt_id": "redaction_sujet",
+          "prompt_version": 1
+        }
+      ],
+      "calls": 5,
+      "retries": 0,
+      "cost_usd": 0.031,
+      "duration_seconds": 212.0,
+      "pipeline_commit": null
+    }
+  },
+  "createdAt": "2026-11-14T11:00:00Z",
+  "commentable": true
+}

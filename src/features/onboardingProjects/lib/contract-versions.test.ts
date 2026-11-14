@@ -9,6 +9,7 @@ import BASE_BANC_04 from '../components/base/fixtures/base-0.4.0-banc-v5-g1.resp
 import { READING_AUDIT_SCHEMAS } from './reading';
 import VERSIONS from './contract-versions.json';
 import { SUPPORTED_PLAN_SCHEMAS, UNCOVERED_REASON_LABEL } from './plan';
+import { SUPPORTED_BUILD_SCHEMAS } from './build';
 
 /**
  * `contract-versions.json` est la copie, à l'identique, du fichier du back
@@ -71,6 +72,10 @@ describe('Versions de contrat acceptées par le back', () => {
 
   it('chaque plan accepté s\'affiche dans « Nouvelle base » (lot B)', () => {
     expect([...SUPPORTED_PLAN_SCHEMAS]).toEqual(VERSIONS.plans.accepted);
+  });
+
+  it('chaque rédaction acceptée s\'affiche dans « Nouvelle base » (lot C)', () => {
+    expect([...SUPPORTED_BUILD_SCHEMAS]).toEqual(VERSIONS.builds.accepted);
   });
 
   // Sans le dépôt du back à côté de celui-ci, le test ne peut rien comparer : il est sauté.
