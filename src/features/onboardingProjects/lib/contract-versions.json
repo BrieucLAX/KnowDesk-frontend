@@ -9,5 +9,8 @@
   },
   "plans": {
     "accepted": ["0.1.0"]
+  },
+  "builds": {
+    "accepted": ["0.1.0"]
   }
 }

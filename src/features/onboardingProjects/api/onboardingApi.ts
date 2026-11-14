@@ -11,6 +11,7 @@ import type {
   ValidationSummary, Verdict,
 } from '../lib/correction';
 import type { OnboardingPlan, PlanComment, PlanContent, PlanQuota } from '../lib/plan';
+import type { BuildComment, BuildContent, BuildsMeta, OnboardingBuild } from '../lib/build';
 import type { KnowledgeBaseCreation, KnowledgeBasePreview, LatestKnowledgeBaseCreation } from '../lib/knowledgeBase';
 
 const BASE = '/onboarding';
@@ -126,6 +127,29 @@ export const onboardingApi = {
     apiClient.post<PlanComment>(`${BASE}/projects/${projectId}/plans/${planId}/comments`, body),
   cancelPlanComment: (projectId: string, planId: string, commentId: string) =>
     apiClient.post<{ cancelled: PlanComment; current: PlanComment | null }>(`${BASE}/projects/${projectId}/plans/${planId}/comments/${commentId}/cancel`, {}),
+
+  // ── Rédaction des articles d'une base à construire (plan-construire-v1, lot C) ──
+  /**
+   * 202 : la rédaction part en file. Refus : PLAN_NOT_LATEST, ANSWERS_CHANGED (réponses changées
+   * depuis le plan, C-Q1), CARDS_PENDING, ANALYSIS_IN_PROGRESS, PLAN_IN_PROGRESS, BUILD_IN_PROGRESS,
+   * BUILD_QUOTA_EXCEEDED, 503 BUILD_UNAVAILABLE (avant la migration du back).
+   */
+  launchBuild: (projectId: string, planId: string) =>
+    apiClient.post<OnboardingBuild>(`${BASE}/projects/${projectId}/plans/${planId}/builds`, {}),
+  /** Les rédactions du plan, la plus récente d'abord ; le quota et ce que le back dit du lancement en meta. */
+  listBuilds: (projectId: string, planId: string) =>
+    apiClient.getWithMeta<OnboardingBuild[], BuildsMeta>(`${BASE}/projects/${projectId}/plans/${planId}/builds`),
+  /** La rédaction telle que livrée (construction 0.1.0) ; 404 avant la réussite. */
+  getBuildContent: (projectId: string, buildId: string) =>
+    apiClient.get<BuildContent>(`${BASE}/projects/${projectId}/builds/${buildId}/content`),
+  /** Le commentaire courant de la rédaction et de chaque article commenté. */
+  listBuildComments: (projectId: string, buildId: string) =>
+    apiClient.get<BuildComment[]>(`${BASE}/projects/${projectId}/builds/${buildId}/comments`),
+  /** 201 ; 409 COMMENT_CONFLICT si le commentaire courant a changé, BUILD_READ_ONLY sur une rédaction remplacée. */
+  commentBuild: (projectId: string, buildId: string, body: { subjectId: string | null; expectedCurrentId: string | null; comment: string }) =>
+    apiClient.post<BuildComment>(`${BASE}/projects/${projectId}/builds/${buildId}/comments`, body),
+  cancelBuildComment: (projectId: string, buildId: string, commentId: string) =>
+    apiClient.post<{ cancelled: BuildComment; current: BuildComment | null }>(`${BASE}/projects/${projectId}/builds/${buildId}/comments/${commentId}/cancel`, {}),
 
   // ── Correction de la base (plan-correction-produit.md, lot 3) ──
   /**
