@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useId, useState } from 'react';
+import React, { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import { EmptyState } from '../../../../shared/components/ui/EmptyState';
+import { Tabs, TabPanel } from '../../../../shared/components/ui/Tabs';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { useToast } from '../../../../shared/lib/useToast';
 import { usePolling } from '../../../../shared/lib/usePolling';
@@ -8,15 +9,24 @@ import { formatFull } from '../../../../shared/lib/formatDate';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { onboardingApi } from '../../api/onboardingApi';
 import type { Audit } from '../../lib/audit';
-import { cardTitle, orderedCards, type ReadingCard } from '../../lib/reading';
+import { cardTitle, NATURES, orderedCards, type ReadingCard } from '../../lib/reading';
 import {
   isPlanActive, PLAN_COMMENT_HINT, PLAN_STEPS, planFailureMessage, planStepStates, planSummary, readPlan,
   SUPPORTED_PLAN_SCHEMAS, type OnboardingPlan, type Plan, type PlanComment, type PlanContent, type PlanSubject,
 } from '../../lib/plan';
+import {
+  isBuildActive, readConstruction, SUPPORTED_BUILD_SCHEMAS, type BuildComment, type BuildContent, type BuildsMeta, type OnboardingBuild,
+} from '../../lib/build';
 import { AuditSource } from '../audit/AuditSource';
+import { articleAnchor, BuildArticles, BuildEntry, BuildProgress, UncoveredList } from './BuildView';
 
 /** Intervalle de relecture d'un plan en préparation. */
 export const PLAN_POLL_MS = 5000;
+
+/** Intervalle de relecture d'une rédaction en cours (lot C). */
+export const BUILD_POLL_MS = 5000;
+
+type BaseView = 'plan' | 'articles' | 'uncovered';
 
 const STEP_STATE_LABEL = { done: 'terminée', current: 'en cours', pending: 'à venir' } as const;
 
@@ -34,8 +44,8 @@ interface PlanTabProps {
  * Onglet « Nouvelle base » en mode construire (plan-construire-v1, lot B) : le plan en préparation
  * (étapes), puis le plan prêt, en lecture seule (D7) : ses points d'attention, ses chapitres et
  * sujets avec leurs sources, les cartes rattachées, et les commentaires (un par sujet, un pour le
- * plan, B-Q3). La rédaction de la base à partir du plan n'existe pas encore (lot C) : rien ne la
- * propose.
+ * plan, B-Q3). Lot C : trois vues, « Plan », « Articles rédigés » et « Points non couverts » ; la
+ * rédaction se lance sous le plan, depuis le plan le plus récent (C-Q1 : réponses inchangées).
  */
 export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: PlanTabProps) {
   const toast = useToast();
@@ -43,6 +53,13 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
   const [selected, setSelected] = useState<string | null>(null);
   const [content,  setContent]  = useState<PlanContent | null>(null);
   const [comments, setComments] = useState<PlanComment[]>([]);
+  const [view,     setView]     = useState<BaseView>('plan');
+  const [focus,    setFocus]    = useState<string | null>(null);
+  const [builds,   setBuilds]   = useState<OnboardingBuild[] | null>(null);
+  const [buildsMeta, setBuildsMeta] = useState<BuildsMeta | null>(null);
+  const [buildContent, setBuildContent] = useState<BuildContent | null>(null);
+  const [buildComments, setBuildComments] = useState<BuildComment[]>([]);
+  const [launching, setLaunching] = useState(false);
 
   const refresh = useCallback(async () => {
     const res = await onboardingApi.listPlans(projectId, analysisId);
@@ -71,6 +88,48 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
     return () => { cancelled = true; };
   }, [projectId, shownId, toast]);
 
+  // Rédactions du plan affiché (lot C) : la liste, puis la plus récente réussie.
+  const refreshBuilds = useCallback(async () => {
+    if (shownId === null) return;
+    const res = await onboardingApi.listBuilds(projectId, shownId);
+    setBuilds(res.data);
+    setBuildsMeta(res.meta);
+  }, [projectId, shownId]);
+
+  useEffect(() => {
+    setBuilds(null); setBuildsMeta(null);
+    if (shownId === null) return;
+    refreshBuilds().catch(() => { setBuilds([]); setBuildsMeta(null); });
+  }, [refreshBuilds, shownId]);
+
+  const latestBuild = builds?.[0] ?? null;
+  usePolling(refreshBuilds, BUILD_POLL_MS, latestBuild !== null && isBuildActive(latestBuild));
+  const shownBuildId = (builds ?? []).find(b => b.status === 'succeeded')?.id ?? null;
+
+  useEffect(() => {
+    if (shownBuildId === null) { setBuildContent(null); setBuildComments([]); return; }
+    let cancelled = false;
+    onboardingApi.getBuildContent(projectId, shownBuildId)
+      .then(c => { if (!cancelled) setBuildContent(c); })
+      .catch(err => { if (!cancelled) toast.error(getErrorMessage(err)); });
+    onboardingApi.listBuildComments(projectId, shownBuildId)
+      .then(c => { if (!cancelled) setBuildComments(c); })
+      .catch(() => { if (!cancelled) setBuildComments([]); });
+    return () => { cancelled = true; };
+  }, [projectId, shownBuildId, toast]);
+
+  const construction = useMemo(
+    () => (buildContent !== null && buildContent.buildId === shownBuildId && SUPPORTED_BUILD_SCHEMAS.includes(buildContent.schemaVersion)
+      ? readConstruction(buildContent.construction) : null),
+    [buildContent, shownBuildId],
+  );
+
+  // Aller à un article depuis les points non couverts : la vue, puis l'ancre (une fois rendue).
+  useEffect(() => {
+    if (view !== 'articles' || focus === null) return;
+    document.getElementById(articleAnchor(focus))?.scrollIntoView?.({ block: 'start' });
+  }, [view, focus]);
+
   if (plans === null) return <Skeleton className="obp-skeleton-block" />;
   if (plans.length === 0) {
     return (
@@ -90,6 +149,69 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
     setComments(list => [...list.filter(c => c.subjectId !== saved.subjectId), saved]);
   const onCancelled = (subjectId: string | null, current: PlanComment | null) =>
     setComments(list => [...list.filter(c => c.subjectId !== subjectId), ...(current ? [current] : [])]);
+  const onBuildSaved = (saved: BuildComment) =>
+    setBuildComments(list => [...list.filter(c => c.subjectId !== saved.subjectId), saved]);
+  const onBuildCancelled = (subjectId: string | null, current: BuildComment | null) =>
+    setBuildComments(list => [...list.filter(c => c.subjectId !== subjectId), ...(current ? [current] : [])]);
+
+  const launchBuild = async () => {
+    if (shownId === null) return;
+    setLaunching(true);
+    try {
+      await onboardingApi.launchBuild(projectId, shownId);
+      await refreshBuilds();
+      setView('articles');
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+      void refreshBuilds().catch(() => {});
+    } finally {
+      setLaunching(false);
+    }
+  };
+
+  const titles = new Map(orderedCards(cards).map((c, i) => [c.id, cardTitle(c, i + 1)]));
+  const ctx = {
+    audit,
+    cardTitle: (id: string) => titles.get(id) ?? 'une carte',
+    onGoToClarify,
+  };
+  const blocking = (id: string) => {
+    const card = cards.find(c => c.id === id);
+    return card !== undefined && NATURES[card.nature].blocking;
+  };
+  const views = [
+    { id: 'plan' as const, label: 'Plan' },
+    { id: 'articles' as const, label: 'Articles rédigés' },
+    { id: 'uncovered' as const, label: construction ? `Points non couverts (${construction.uncovered.length})` : 'Points non couverts' },
+  ];
+  const buildProgress = latestBuild !== null && latestBuild.status !== 'succeeded'
+    ? <BuildProgress build={latestBuild} onBackToPlan={() => setView('plan')} /> : null;
+  const noArticles = (
+    <EmptyState
+      title="Aucun article rédigé pour l'instant"
+      description="La rédaction se lance sous le plan, une fois le plan prêt."
+      ctaLabel="Revenir au plan"
+      onCta={() => setView('plan')}
+    />
+  );
+  const builtHead = shownBuildId !== null && (
+    <h2 className="obp-section-title">
+      Articles rédigés le {formatFull((builds ?? []).find(b => b.id === shownBuildId)?.finishedAt ?? null)}, à partir du plan
+      du {formatFull(succeeded.find(p => p.id === shownId)?.finishedAt ?? null)}
+    </h2>
+  );
+  const constructionBody = (body: (c: NonNullable<typeof construction>) => React.ReactNode) => {
+    if (shownBuildId === null) return buildProgress ? null : noArticles;
+    if (buildContent === null || buildContent.buildId !== shownBuildId) return <Skeleton className="obp-skeleton-block" />;
+    if (construction === null) {
+      return (
+        <p className="obp-audit-unsupported" role="status">
+          Cette rédaction est dans un format que cette version de l'application ne sait pas afficher.
+        </p>
+      );
+    }
+    return body(construction);
+  };
 
   return (
     <>
@@ -117,11 +239,43 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
             Ce plan est dans un format que cette version de l'application ne sait pas afficher.
           </p>
         ) : (
-          <PlanView
-            projectId={projectId} planId={content.planId} plan={plan} audit={audit} cards={cards}
-            comments={comments} commentable={content.commentable}
-            onSaved={onSaved} onCancelled={onCancelled} onGoToClarify={onGoToClarify}
-          />
+          <>
+            <Tabs id="obp-build-views" items={views} value={view} onChange={v => { setFocus(null); setView(v); }} ariaLabel="Nouvelle base" />
+            <TabPanel id="obp-build-views" value={view} className="obp-build-panel">
+              {view === 'plan' && (
+                <PlanView
+                  projectId={projectId} planId={content.planId} plan={plan} audit={audit} cards={cards}
+                  comments={comments} commentable={content.commentable}
+                  onSaved={onSaved} onCancelled={onCancelled} onGoToClarify={onGoToClarify}
+                  footer={
+                    <BuildEntry
+                      articleCount={plan.subjectCount} builds={builds} meta={buildsMeta} launching={launching}
+                      onLaunch={() => { void launchBuild(); }} onOpenArticles={() => setView('articles')}
+                    />
+                  }
+                />
+              )}
+              {view === 'articles' && (
+                <>
+                  {buildProgress}
+                  {builtHead}
+                  {constructionBody(c => (
+                    <BuildArticles
+                      projectId={projectId} buildId={shownBuildId!} construction={c} comments={buildComments}
+                      commentable={buildContent!.commentable} focus={focus}
+                      onSaved={onBuildSaved} onCancelled={onBuildCancelled} onShowUncovered={() => setView('uncovered')} {...ctx}
+                    />
+                  ))}
+                </>
+              )}
+              {view === 'uncovered' && constructionBody(c => (
+                <UncoveredList
+                  construction={c} isBlocking={blocking} {...ctx}
+                  onOpenArticle={id => { setFocus(id); setView('articles'); }}
+                />
+              ))}
+            </TabPanel>
+          </>
         )
       )}
     </>
@@ -180,10 +334,12 @@ interface PlanViewProps {
   onSaved:       (saved: PlanComment) => void;
   onCancelled:   (subjectId: string | null, current: PlanComment | null) => void;
   onGoToClarify: (cardId?: string) => void;
+  /** Le bas du plan : la rédaction des articles (lot C). */
+  footer?:       React.ReactNode;
 }
 
 /** Le plan prêt, en lecture seule : points d'attention, chapitres, sujets, commentaires. */
-export function PlanView({ projectId, planId, plan, audit, cards, comments, commentable, onSaved, onCancelled, onGoToClarify }: PlanViewProps) {
+export function PlanView({ projectId, planId, plan, audit, cards, comments, commentable, onSaved, onCancelled, onGoToClarify, footer }: PlanViewProps) {
   const titles = new Map(orderedCards(cards).map((c, i) => [c.id, cardTitle(c, i + 1)]));
   const subjectTitles = new Map(plan.chapters.flatMap(c => c.subjects).map(s => [s.id, s.title]));
   const commentOf = (subjectId: string | null) => comments.find(c => c.subjectId === subjectId) ?? null;
@@ -297,10 +453,11 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
         {box(null, 'Commentaire sur le plan (facultatif)')}
       </section>
 
-      <p className="obp-plan__next">
-        La rédaction de la base à partir de ce plan arrive bientôt. Vous pouvez encore modifier vos réponses dans
-        « À clarifier », puis préparer le plan à nouveau.
-      </p>
+      {footer ?? (
+        <p className="obp-plan__next">
+          Vous pouvez encore modifier vos réponses dans « À clarifier », puis préparer le plan à nouveau.
+        </p>
+      )}
     </div>
   );
 }
@@ -344,13 +501,17 @@ interface PlanCommentBoxProps {
   editable:    boolean;
   onSaved:     (saved: PlanComment) => void;
   onCancelled: (subjectId: string | null, current: PlanComment | null) => void;
+  /** Enregistrement et annulation ailleurs que sur le plan (la rédaction, lot C) ; le plan par défaut. */
+  submit?:     (body: { subjectId: string | null; expectedCurrentId: string | null; comment: string }) => Promise<PlanComment>;
+  cancel?:     (commentId: string) => Promise<{ current: PlanComment | null }>;
+  hint?:       string;
 }
 
 /**
  * Commentaire sur un sujet, ou sur le plan entier (B-Q3) : lu par l'équipe, jamais envoyé au
  * pipeline, jamais dans la base. Un nouveau commentaire remplace le courant ; « Retirer » l'annule.
  */
-export function PlanCommentBox({ projectId, planId, subjectId, label, current, editable, onSaved, onCancelled }: PlanCommentBoxProps) {
+export function PlanCommentBox({ projectId, planId, subjectId, label, current, editable, onSaved, onCancelled, submit, cancel, hint }: PlanCommentBoxProps) {
   const id = useId();
   const [text, setText] = useState(current?.comment ?? '');
   const [busy, setBusy] = useState(false);
@@ -371,10 +532,11 @@ export function PlanCommentBox({ projectId, planId, subjectId, label, current, e
     } finally { setBusy(false); }
   };
   const save = () => run(async () => {
-    onSaved(await onboardingApi.commentPlan(projectId, planId, { subjectId, expectedCurrentId: current?.id ?? null, comment: text.trim() }));
+    const body = { subjectId, expectedCurrentId: current?.id ?? null, comment: text.trim() };
+    onSaved(await (submit ? submit(body) : onboardingApi.commentPlan(projectId, planId, body)));
   });
   const remove = () => run(async () => {
-    const res = await onboardingApi.cancelPlanComment(projectId, planId, current!.id);
+    const res = await (cancel ? cancel(current!.id) : onboardingApi.cancelPlanComment(projectId, planId, current!.id));
     onCancelled(subjectId, res.current);
   });
   const changed = text.trim() !== (current?.comment ?? '') && text.trim() !== '';
@@ -383,7 +545,7 @@ export function PlanCommentBox({ projectId, planId, subjectId, label, current, e
     <div className="obp-clarify-comment">
       <label htmlFor={id} className="obp-base-label">{label}</label>
       <textarea id={id} className="obp-base-textarea" rows={2} maxLength={5000} value={text} onChange={e => setText(e.target.value)} />
-      <p className="obp-muted">{PLAN_COMMENT_HINT}</p>
+      <p className="obp-muted">{hint ?? PLAN_COMMENT_HINT}</p>
       {current && <p className="obp-muted">Commentaire enregistré par {current.author.name}, {formatFull(current.createdAt)}.</p>}
       {error && <p className="field-error" role="alert">{error}</p>}
       <div className="obp-decision__actions">

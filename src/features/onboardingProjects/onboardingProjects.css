@@ -822,3 +822,27 @@
 .obp-plan-subject__sources summary { cursor: pointer; font-size: 14px; }
 .obp-plan-subject__cards { margin: 0; font-size: 14px; }
 .obp-plan__next { margin: 0; font-size: 14px; color: var(--neutral-700); }
+
+/* Rédaction des articles (plan-construire-v1, lot C) */
+.obp-build-panel { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.obp-build-panel:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+.obp-build-article__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.obp-build-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--color-warning-bg); color: var(--neutral-900); font-size: 12px; font-weight: 600; }
+.obp-build-intertitle { margin: 8px 0 0; font-size: 14px; font-weight: 600; color: var(--neutral-900); }
+.obp-build-block { display: flex; flex-direction: column; gap: 4px; padding-left: 12px; border-left: 2px solid var(--neutral-100); }
+.obp-build-text { margin: 0; font-size: 14px; line-height: 1.55; color: var(--neutral-900); }
+.obp-build-list { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.55; }
+.obp-build-table-wrap { overflow-x: auto; max-width: 100%; }
+.obp-build-table { border-collapse: collapse; font-size: 13px; }
+.obp-build-table th, .obp-build-table td { border: 1px solid var(--neutral-200); padding: 4px 8px; text-align: left; }
+.obp-build-table th { background: var(--neutral-50); font-weight: 600; }
+.obp-build-verify-note { margin: 0; font-size: 13px; color: var(--neutral-700); }
+.obp-build-expert { display: flex; flex-direction: column; gap: 4px; padding: 8px 12px; border-radius: var(--radius-md); background: var(--neutral-50); border: 1px solid var(--neutral-200); }
+.obp-build-expert__label { margin: 0; font-size: 13px; font-weight: 600; color: var(--neutral-800); }
+.obp-build-expert p { margin: 0; }
+.obp-build-removed summary { cursor: pointer; font-size: 14px; color: var(--neutral-700); }
+.obp-build-removed ul { margin: 4px 0 0; padding-left: 20px; font-size: 13px; color: var(--neutral-700); }
+.obp-build-points { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 12px; font-size: 14px; }
+.obp-build-point p { margin: 0 0 4px; }
+.obp-build-point__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.obp-build-point__links { display: flex; gap: 16px; }
