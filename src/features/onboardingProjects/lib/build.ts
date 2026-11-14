@@ -13,6 +13,8 @@
 import VERSIONS from './contract-versions.json';
 import { sourceRef, type SourceRef } from './audit';
 import type { PlanComment, PlanQuota, StepState } from './plan';
+import type { Decision } from './decisions';
+import { answerLabel, describeCardAnswer, type PlainAnswerCode, type ReadingCard } from './reading';
 
 // ── Contrat du back (onboarding.builds.ts) ────────────────────
 
@@ -155,6 +157,8 @@ export interface UncoveredPoint {
   removedText: string | null;
   /** Ce que la rédaction signale comme manquant (ses mots, jamais dans la base). */
   note:      string | null;
+  /** La décision qui l'a produit, si le point en nomme une. */
+  decisionId: string | null;
   passages:  SourceRef[];
 }
 
@@ -251,6 +255,7 @@ export function readConstruction(raw: unknown): Construction | null {
       expert:      expertOf(p.expert),
       removedText: removedId ? removedText.get(removedId) ?? null : null,
       note:        strOrNull(p.note),
+      decisionId:  strOrNull(p.decision_id),
       passages:    refs(p.passages),
     }];
   });
@@ -282,6 +287,39 @@ export function buildSummary(c: Construction): string {
     plural(c.expertCount, 'texte saisi par l\'expert', 'textes saisis par l\'expert'),
     plural(c.uncovered.length, 'point non couvert', 'points non couverts'),
   ].join(' · ');
+}
+
+// ── Réponse d'une carte sans article (C-Q3) ───────────────────
+
+/** La décision d'un point : celle qu'il nomme, sinon la décision courante de sa carte ; null sinon. */
+export function pointDecision(
+  p: Pick<UncoveredPoint, 'cardId'> & { decisionId?: string | null },
+  decisions: ReadonlyMap<string, Decision>,
+): Decision | null {
+  const all = [...decisions.values()];
+  return (p.decisionId ? all.find(d => d.id === p.decisionId) : undefined)
+    ?? (p.cardId ? decisions.get(p.cardId) ?? null : null);
+}
+
+/** Le jour d'une décision, à Paris : « 13/11/2026 ». */
+export const decisionDay = (iso: string): string =>
+  new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(iso));
+
+/**
+ * « Votre réponse : Retenir « 1er novembre 2026 » (13/11/2026) », avec les libellés des réponses de
+ * la carte. Quand le texte de l'expert est montré à part (`withoutText`), seul le libellé est repris.
+ */
+export function pointAnswer(
+  decision: Decision, card: ReadingCard | undefined, name: (documentId: string) => string, withoutText = false,
+): string {
+  const a = decision.action as { type: string; group?: string; text?: string };
+  let label: string;
+  const group = a.type === 'retain_value' ? card?.valueGroups?.find(g => g.id === a.group) : undefined;
+  if (group) label = `Retenir « ${group.label} »`;
+  else if (withoutText && typeof a.text === 'string' && a.type !== 'follow_recommendation') {
+    label = answerLabel(card, a.type as PlainAnswerCode).label;
+  } else label = describeCardAnswer(decision.action, card, name);
+  return `Votre réponse : ${label} (${decisionDay(decision.decidedAt)})`;
 }
 
 // ── Progression ───────────────────────────────────────────────

@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import {
-  buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, readConstruction, REMOVED_LABEL, removedLabel,
+  buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, pointAnswer, pointDecision, readConstruction, REMOVED_LABEL, removedLabel,
   SUPPORTED_BUILD_SCHEMAS, TO_VERIFY_LABEL, UNCOVERED_KINDS,
 } from './build';
 import VERSIONS from './contract-versions.json';
+import type { Decision } from './decisions';
+import type { ReadingCard } from './reading';
+import AUDIT_ELYRA from '../components/clarify/fixtures/audit-0.16.0-elyra-v2-lecture-4.response.json';
 import BUILD_ELYRA from '../components/base/fixtures/construction-0.1.0-elyra.response.json';
 
 /**
@@ -153,5 +156,29 @@ describe('Avancement et échecs', () => {
     );
     expect(buildFailureMessage('build_invalid')).toMatch(/problème de notre côté.*ne compte pas dans votre quota/);
     expect(buildFailureMessage(null)).toMatch(/^La rédaction a échoué\. Elle ne compte pas/);
+  });
+});
+
+describe('Réponse d\'une carte sans article (C-Q3)', () => {
+  const cards = (AUDIT_ELYRA as unknown as { reading: { cards: ReadingCard[] } }).reading.cards;
+  const gaz = cards.find(c => c.id === 'card_e3975ef276e90c40')!;
+  const d = (id: string, cardId: string, action: Decision['action'], decidedAt = '2026-11-13T23:30:00Z'): Decision => ({
+    id, questionId: cardId, cardId, groupId: null, conflictIds: null, action, supersedesId: null,
+    decidedBy: { id: 'u1', name: 'Camille Martin' }, decidedAt, cancelledAt: null, cancelledBy: null,
+  });
+
+  it('« Retenir « valeur » » et le jour de la décision, à Paris', () => {
+    const group = gaz.valueGroups!.find(g => g.label !== '5 %')!;
+    expect(pointAnswer(d('d1', gaz.id, { type: 'retain_value', group: group.id }), gaz, () => ''))
+      .toBe(`Votre réponse : Retenir « ${group.label} » (14/11/2026)`);
+  });
+
+  it('la décision nommée par le point d\'abord, sinon la décision courante de la carte, sinon rien', () => {
+    const current = d('d2', gaz.id, { type: 'later' });
+    const named = d('d1', 'autre', { type: 'later' });
+    const decisions = new Map([[gaz.id, current], ['autre', named]]);
+    expect(pointDecision({ cardId: gaz.id, decisionId: 'd1' }, decisions)).toBe(named);
+    expect(pointDecision({ cardId: gaz.id, decisionId: null }, decisions)).toBe(current);
+    expect(pointDecision({ cardId: 'inconnue', decisionId: 'absente' }, decisions)).toBeNull();
   });
 });

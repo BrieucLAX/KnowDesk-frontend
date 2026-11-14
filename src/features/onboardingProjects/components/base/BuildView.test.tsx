@@ -18,6 +18,7 @@ import { onboardingApi } from '../../api/onboardingApi';
 import { BaseTab } from './BaseTab';
 import type { AuditResponse } from '../../lib/audit';
 import type { BuildContent, BuildLaunch, OnboardingBuild } from '../../lib/build';
+import type { Decision } from '../../lib/decisions';
 import type { OnboardingPlan, PlanContent } from '../../lib/plan';
 import type { ExistingBase, ReadingCard } from '../../lib/reading';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
@@ -54,11 +55,17 @@ const buildRow = (over: Partial<OnboardingBuild> = {}): OnboardingBuild => ({
   errorCode: null, decisionCount: 14, createdAt: '2026-11-14T10:50:00Z', submittedAt: null, finishedAt: '2026-11-14T11:00:00Z', ...over,
 });
 
-function mock(builds: OnboardingBuild[] = [], launch: BuildLaunch = { allowed: true }, audit: AuditResponse = AUDIT) {
+const VERT_LOCAL = 'card_1b9961bd7843699b';
+const decision = (id: string, cardId: string, action: Decision['action']): Decision => ({
+  id, questionId: cardId, cardId, groupId: null, conflictIds: null, action, supersedesId: null,
+  decidedBy: { id: 'u1', name: 'Camille Martin' }, decidedAt: '2026-11-13T10:00:00Z', cancelledAt: null, cancelledBy: null,
+});
+
+function mock(builds: OnboardingBuild[] = [], launch: BuildLaunch = { allowed: true }, audit: AuditResponse = AUDIT, decisions: Decision[] = []) {
   vi.mocked(onboardingApi.listAnalyses).mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
   vi.mocked(onboardingApi.getAudit).mockResolvedValue(audit);
   vi.mocked(onboardingApi.listAuditImages).mockResolvedValue([]);
-  vi.mocked(onboardingApi.listDecisions).mockResolvedValue({ decisions: [], counts: { decided: 0, later: 0, skipped: 0 }, arbitrable: true });
+  vi.mocked(onboardingApi.listDecisions).mockResolvedValue({ decisions, counts: { decided: decisions.length, later: 0, skipped: 0 }, arbitrable: true });
   vi.mocked(onboardingApi.listCorrections).mockResolvedValue({ data: [], meta: { quota: { used: 0, max: 30 } } });
   vi.mocked(onboardingApi.listPlans).mockResolvedValue({ data: [planRow], meta: { quota: { used: 1, max: 30 } } });
   vi.mocked(onboardingApi.getPlanContent).mockResolvedValue(PLAN);
@@ -239,6 +246,40 @@ describe('« Points non couverts par vos documents »', () => {
     expect(within(list).getByText('Signalé par la rédaction : aucune source de cet article ne donne cette information.')).toBeInTheDocument();
     expect(within(list).getByText('Une résiliation avant 12 mois coûte 75 € TTC.')).toBeInTheDocument();
     expect(container.textContent).not.toMatch(TECHNICAL);
+  });
+
+  it('C-Q3 : une carte sans article montre la réponse retenue et sa date (décision nommée par le point)', async () => {
+    const vertLocal = (AUDIT.reading.cards.find(c => c.id === VERT_LOCAL)!).sides;
+    const crSide = vertLocal.find(side => JSON.stringify(side).includes('doc_cr_comite_offres'))!.label;
+    mock([buildRow()], { allowed: true }, AUDIT, [decision('dec_vert_local', VERT_LOCAL, { type: 'accept_side', side: crSide })]);
+    show();
+    await openTab('Points non couverts (5)');
+    const card = (await screen.findByText('Date d\'ouverture des souscriptions pour Elyra Vert Local')).closest('li')!;
+    expect(await within(card).findByText(`Votre réponse : Côté ${crSide} retenu : CR_Comite_Offres_2026-09-22.docx (13/11/2026)`)).toBeInTheDocument();
+  });
+
+  it('C-Q3 : le texte de l\'expert, mot pour mot, « saisi par l\'expert le … », écrit dans aucun article', async () => {
+    const built = JSON.parse(JSON.stringify(BUILD)) as BuildContent & { construction: { uncovered: Array<Record<string, unknown>> } };
+    built.construction.uncovered[0].expert = {
+      card_id: VERT_LOCAL, decision_id: 'dec_vert_local', text: 'Ouverture des souscriptions le 1er novembre 2026.', entered_on: '2026-11-13',
+    };
+    mock([buildRow()], { allowed: true }, AUDIT, [decision('dec_vert_local', VERT_LOCAL, { type: 'other_answer', text: 'Ouverture des souscriptions le 1er novembre 2026.' })]);
+    vi.mocked(onboardingApi.getBuildContent).mockResolvedValue(built);
+    show();
+    await openTab('Points non couverts (5)');
+    const card = (await screen.findByText('Date d\'ouverture des souscriptions pour Elyra Vert Local')).closest('li')!;
+    expect(await within(card).findByText('Votre réponse : Autre réponse (13/11/2026)')).toBeInTheDocument();
+    expect(within(card).getByText('« Ouverture des souscriptions le 1er novembre 2026. »')).toBeInTheDocument();
+    expect(card).toHaveTextContent('Saisi par l\'expert le 13/11/2026. Ce texte n\'est écrit dans aucun article.');
+  });
+
+  it('C-Q3 : sans décision connue pour la carte, aucune réponse affichée', async () => {
+    mock([buildRow()]);
+    show();
+    await openTab('Points non couverts (5)');
+    const card = (await screen.findByText('Date d\'ouverture des souscriptions pour Elyra Vert Local')).closest('li')!;
+    expect(card).toHaveTextContent('votre réponse n\'apparaît dans aucun article');
+    expect(within(card).queryByText(/^Votre réponse :/)).not.toBeInTheDocument();
   });
 
   it('« Voir la carte » ouvre la carte ; « Voir l\'article » ouvre l\'article dans « Articles rédigés »', async () => {

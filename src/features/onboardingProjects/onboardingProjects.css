@@ -846,3 +846,4 @@
 .obp-build-point p { margin: 0 0 4px; }
 .obp-build-point__title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
 .obp-build-point__links { display: flex; gap: 16px; }
+.obp-build-point__answer { font-weight: 600; color: var(--neutral-800); }

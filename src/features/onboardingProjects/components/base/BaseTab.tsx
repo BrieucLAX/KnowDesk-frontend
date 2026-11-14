@@ -144,7 +144,7 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
   if (analysisId !== null && planAudit === undefined) return <Skeleton className="obp-skeleton-block" />;
   if (analysisId !== null && planAudit) {
     return <AuditImagesContext.Provider value={images}>
-      <PlanTab projectId={project.id} analysisId={analysisId} audit={planAudit} cards={cards} onGoToClarify={onGoToClarify} />
+      <PlanTab projectId={project.id} analysisId={analysisId} audit={planAudit} cards={cards} decisions={decisions} onGoToClarify={onGoToClarify} />
     </AuditImagesContext.Provider>;
   }
   if (loaded.state === 'none') {

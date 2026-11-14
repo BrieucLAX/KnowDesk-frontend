@@ -3,10 +3,12 @@ import { Button } from '../../../../shared/components/ui/Button';
 import { ConfirmDialog } from '../../../../shared/components/ui/ConfirmDialog';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { onboardingApi } from '../../api/onboardingApi';
-import type { Audit } from '../../lib/audit';
+import { documentName, type Audit } from '../../lib/audit';
+import type { Decision } from '../../lib/decisions';
+import type { ReadingCard } from '../../lib/reading';
 import {
   BUILD_COMMENT_HINT, BUILD_STEPS, buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, isBuildActive,
-  removedLabel, TO_VERIFY_LABEL, UNCOVERED_GROUPS,
+  pointAnswer, pointDecision, removedLabel, TO_VERIFY_LABEL, UNCOVERED_GROUPS,
   type BuildComment, type BuildsMeta, type BuiltArticle, type BuiltBlock, type Construction, type OnboardingBuild,
   type UncoveredPoint,
 } from '../../lib/build';
@@ -336,12 +338,15 @@ export function BuildArticles({
 
 interface UncoveredListProps extends Ctx {
   construction:   Construction;
+  /** Décisions courantes de l'analyse, par carte (celles que la page a déjà chargées). */
+  decisions:      ReadonlyMap<string, Decision>;
+  cards:          ReadingCard[];
   isBlocking:     (cardId: string) => boolean;
   onOpenArticle:  (subjectId: string) => void;
 }
 
 /** « Points non couverts par vos documents » (D3, D4) : jamais dans un article, pour l'équipe. */
-export function UncoveredList({ construction, isBlocking, onOpenArticle, ...ctx }: UncoveredListProps) {
+export function UncoveredList({ construction, decisions, cards, isBlocking, onOpenArticle, ...ctx }: UncoveredListProps) {
   const titles = new Map(construction.chapters.flatMap(c => c.articles).map(a => [a.subjectId, a.title]));
   const articleLink = (subjectId: string | null) => subjectId !== null && (
     <button type="button" className="obp-link" onClick={() => onOpenArticle(subjectId)}>Voir l'article</button>
@@ -350,13 +355,19 @@ export function UncoveredList({ construction, isBlocking, onOpenArticle, ...ctx 
 
   const point = (p: UncoveredPoint) => {
     switch (p.kind) {
-      case 'card_without_article':
+      case 'card_without_article': {
+        // C-Q3 : la carte avec sa réponse ; sans décision connue, rien plutôt qu'une valeur inventée.
+        const decision = pointDecision(p, decisions);
+        const card = cards.find(c => c.id === p.cardId);
         return (
           <>
             <p className="obp-build-point__title">
               <strong>{p.cardId ? ctx.cardTitle(p.cardId) : 'Une carte'}</strong>
               {p.cardId && isBlocking(p.cardId) && <span className="obp-build-chip">carte bloquante</span>}
             </p>
+            {decision && (
+              <p className="obp-build-point__answer">{pointAnswer(decision, card, id => documentName(ctx.audit, id), p.expert !== null)}</p>
+            )}
             <p>Aucun article du plan ne cite les passages de cette carte : votre réponse n'apparaît dans aucun article.</p>
             {p.expert && (
               <>
@@ -366,6 +377,7 @@ export function UncoveredList({ construction, isBlocking, onOpenArticle, ...ctx 
             )}
           </>
         );
+      }
       case 'missing_information':
         return (
           <>

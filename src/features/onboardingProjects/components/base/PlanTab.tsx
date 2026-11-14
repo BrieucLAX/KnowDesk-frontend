@@ -9,6 +9,7 @@ import { formatFull } from '../../../../shared/lib/formatDate';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { onboardingApi } from '../../api/onboardingApi';
 import type { Audit } from '../../lib/audit';
+import type { Decision } from '../../lib/decisions';
 import { cardTitle, NATURES, orderedCards, type ReadingCard } from '../../lib/reading';
 import {
   isPlanActive, PLAN_COMMENT_HINT, PLAN_STEPS, planFailureMessage, planStepStates, planSummary, readPlan,
@@ -36,6 +37,8 @@ interface PlanTabProps {
   /** L'inventaire de l'audit : les documents nommés par leur nom de fichier. */
   audit:         Audit;
   cards:         ReadingCard[];
+  /** Décisions courantes, par carte : la réponse d'une carte sans article (C-Q3). */
+  decisions?:    ReadonlyMap<string, Decision>;
   /** Ouvre « À clarifier », sur une carte si elle est donnée. */
   onGoToClarify: (cardId?: string) => void;
 }
@@ -47,7 +50,9 @@ interface PlanTabProps {
  * plan, B-Q3). Lot C : trois vues, « Plan », « Articles rédigés » et « Points non couverts » ; la
  * rédaction se lance sous le plan, depuis le plan le plus récent (C-Q1 : réponses inchangées).
  */
-export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: PlanTabProps) {
+const NO_DECISIONS: ReadonlyMap<string, Decision> = new Map();
+
+export function PlanTab({ projectId, analysisId, audit, cards, decisions = NO_DECISIONS, onGoToClarify }: PlanTabProps) {
   const toast = useToast();
   const [plans,    setPlans]    = useState<OnboardingPlan[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
@@ -270,7 +275,7 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
               )}
               {view === 'uncovered' && constructionBody(c => (
                 <UncoveredList
-                  construction={c} isBlocking={blocking} {...ctx}
+                  construction={c} decisions={decisions} cards={cards} isBlocking={blocking} {...ctx}
                   onOpenArticle={id => { setFocus(id); setView('articles'); }}
                 />
               ))}
