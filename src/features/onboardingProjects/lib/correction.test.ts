@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
+  PENDING_REASONS,
+  PENDING_POINT_LABEL, uncoveredCount, uncoveredInCorrection,
   blockingCardsLeft, blockingLeftLabel, correctionFailureMessage, correctionStepStates, firstSentence, itemLabel, originLabel, outcomeLabel,
   partialSummary, pendingSentences, reasonGroups,
   canCreateChapters, kindLabel, reasonLabel, retiredSourceSentence, reviewProgressLabel, toVerifyCounts, toVerifyLabel, type BaseCorrection, type Modification,
@@ -202,5 +204,37 @@ describe('Correction 0.5.0 : libellés en clair', () => {
   it('une mise à jour de valeurs et une ancienne version retirée des sources', () => {
     expect(kindLabel('version_update')).toBe('Valeurs mises à jour');
     expect(retiredSourceSentence({ document_path: 'jeu.zip/Grille_v1.pdf' })).toBe('Grille_v1.pdf : ancienne version, elle n\'est plus une source de cette base.');
+  });
+});
+
+describe('uncoveredInCorrection (lot C, PR 6)', () => {
+  const mod = (id: string, outcome: 'applied' | 'not_applicable', reasons: string[] = []) => ({
+    id, kind: 'kept_side' as const, outcome, reasons, instruction: '', section_keys: [],
+    origin: { card_id: `card_${id}`, card_rank: 1, decision_id: 'd', action_type: 'accept_side', decided_at: '2026-11-14T10:00:00Z' },
+  });
+  it('les cartes en attente, les modifications non appliquées et les lignes sans source, lues telles quelles', () => {
+    const u = uncoveredInCorrection({
+      pending: [{ card_id: 'card_a', card_rank: 2, reason: 'no_section' }, { card_id: 'card_b', card_rank: 3 }],
+      modifications: [mod('M5', 'not_applicable', ['s1: value_without_source']), mod('M2', 'not_applicable'), mod('M1', 'applied')],
+      sheets: [{ document_id: 'd', document_path: 'd.md', markdown: '', sections: [{
+        key: 's1', heading_path: ['Tarifs'], original_markdown: '', corrected_markdown: '', changes: [
+          { kind: 'insert', line_kind: 'paragraph', before: '', after: 'Le prix est de 12 €.', modification_id: 'M5', kept: false, undo_reason: 'value_without_source' },
+          { kind: 'insert', line_kind: 'paragraph', before: '', after: 'Gardée.', modification_id: 'M5', kept: true },
+          { kind: 'insert', line_kind: 'paragraph', before: '', after: 'Autre raison.', modification_id: 'M5', kept: false, undo_reason: 'not_decided' },
+        ],
+      }] }],
+    }, key => (key === 's1' ? 'Tarifs' : null));
+    expect(u.pending).toEqual([
+      { cardId: 'card_a', text: PENDING_POINT_LABEL.no_section },
+      { cardId: 'card_b', text: 'En attente : la base n\'a pas été modifiée pour elle.' },
+    ]);
+    expect(u.notApplied.map(m => m.id)).toEqual(['M2', 'M5']);
+    expect(u.notApplied[1].text).toBe('Le texte proposé contenait un chiffre ou une date absents de vos documents ; il n\'a pas été repris');
+    expect(u.withoutSource).toEqual([{ modificationId: 'M5', sectionKey: 's1', text: 'Le prix est de 12 €.' }]);
+    expect(uncoveredCount(u)).toBe(5);
+  });
+
+  it('chaque raison d\'attente du contrat a son libellé', () => {
+    for (const r of PENDING_REASONS) expect(PENDING_POINT_LABEL[r]).toMatch(/\.$/);
   });
 });
