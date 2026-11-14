@@ -1265,6 +1265,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
           selectable={isAdmin}
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
+          mobile={{ primary: 'title', hidden: ['views'] }}
         />
       ) : loadingArticles ? (
         <ul className="article-list" aria-busy="true">

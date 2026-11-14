@@ -208,10 +208,10 @@ export function AuditPage({ embed = false }: AuditPageProps = {}) {
           <tbody>
             {items.map(item => (
               <tr key={item.id}>
-                <td title={item.createdAt}>{formatRelative(item.createdAt)}</td>
-                <td>{userLabel(item)}</td>
-                <td><span className="audit-table__action">{ACTION_LABEL[item.action] ?? item.action}</span></td>
-                <td>
+                <td data-label="Quand" title={item.createdAt}>{formatRelative(item.createdAt)}</td>
+                <td data-label="Qui">{userLabel(item)}</td>
+                <td className="audit-table__action-cell"><span className="audit-table__action">{ACTION_LABEL[item.action] ?? item.action}</span></td>
+                <td className="audit-table__detail-cell">
                   <button
                     type="button"
                     className="audit-table__detail-btn"

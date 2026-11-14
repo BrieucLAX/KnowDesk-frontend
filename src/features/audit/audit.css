@@ -102,3 +102,27 @@
 .audit-detail__resource-title { font-weight: 600; color: var(--neutral-900); margin-bottom: 2px; }
 .audit-detail__resource-id    { font-size: 11px; color: var(--neutral-500); }
 .audit-table-wrap { overflow-x: auto; }
+
+/* Sous 768 px : une carte par action (fiche Card). L'action sert de titre,
+   « Quand » et « Qui » deviennent des lignes « libellé : valeur », le bouton
+   de détail va en bas de la carte. */
+@media (max-width: 767.98px) {
+  .audit-table-wrap { overflow: visible; }
+  .audit-table, .audit-table tbody { display: block; }
+  .audit-table thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap;
+  }
+  .audit-table tbody tr {
+    display: flex; flex-direction: column; gap: 4px;
+    margin-bottom: 8px; padding: 12px 16px;
+    background: var(--surface-raised);
+    border: 1px solid var(--line); border-radius: var(--radius-lg);
+  }
+  .audit-table td { padding: 0; }
+  .audit-table .audit-table__action-cell { order: -1; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .audit-table td[data-label] { display: flex; gap: 8px; }
+  .audit-table td[data-label]::before { content: attr(data-label) "\00a0:"; color: var(--ink-muted); }
+  .audit-table__detail-cell { padding-top: 4px; }
+  .audit-table__detail-btn { min-height: 44px; }
+}

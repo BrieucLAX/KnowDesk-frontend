@@ -56,7 +56,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
   // nettoie l'URL pour ne pas re-déclencher au reload.
   const focusId = new URLSearchParams(location.search).get('focus');
   const [highlightedId, setHighlightedId] = useState<string | null>(focusId);
-  const focusedRowRef = useRef<HTMLTableRowElement | null>(null);
+  const focusedRowRef = useRef<HTMLElement | null>(null);
 
   const [tab,        setTab]        = useState<FilterTab>('all');
   const [search,     setSearch]     = useState('');
@@ -362,6 +362,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
           selectable={canEdit}
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
+          mobile={{ primary: 'question', hidden: ['views'] }}
           rowClassName={faq => faq.id === highlightedId ? 'faqs-row--focused' : undefined}
           rowRef={(faq, el) => {
             if (faq.id === focusId) focusedRowRef.current = el;

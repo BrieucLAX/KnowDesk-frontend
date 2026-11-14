@@ -62,7 +62,7 @@ export function MemberRow({
       </td>
 
       {/* Role selector */}
-      <td className="member-row__cell">
+      <td data-label="Rôle" className="member-row__cell">
         {isCurrentUser || member.status === 'disabled' ? (
           <span className="member-row__role-static">
             {ROLE_LABELS[member.role]}
@@ -83,14 +83,14 @@ export function MemberRow({
       </td>
 
       {/* Status */}
-      <td className="member-row__cell">
+      <td data-label="Statut" className="member-row__cell">
         <Badge tone={statusCfg.tone}>
           {statusCfg.label}
         </Badge>
       </td>
 
       {/* Joined / Invited date */}
-      <td className="member-row__cell member-row__date">
+      <td data-label="Rejoint" className="member-row__cell member-row__date">
         {member.status === 'active' && member.joinedAt ? (
           <time dateTime={member.joinedAt}>
             {formatRelative(member.joinedAt)}
