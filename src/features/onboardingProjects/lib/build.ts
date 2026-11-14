@@ -143,6 +143,11 @@ export interface BuiltArticle {
   emptyReason: EmptyReason | null;
   blocks:      BuiltBlock[];
   removed:     RemovedBlock[];
+  /**
+   * C-Q9 : les manques signalés par la rédaction pour cet article (ses mots, jamais dans la base),
+   * tous gardés, repliés sous l'article, « Précisions à apporter (n) ».
+   */
+  precisions:  string[];
 }
 
 export interface BuiltChapter { id: string; title: string; articles: BuiltArticle[] }
@@ -219,6 +224,15 @@ function blockOf(b: Obj): BuiltBlock | null {
 export function readConstruction(raw: unknown): Construction | null {
   if (!isObj(raw) || !Array.isArray(raw.articles) || !Array.isArray(raw.chapters)) return null;
   const articles = new Map(objs(raw.articles).map(a => [str(a.subject_id), a]));
+  // C-Q9 : un manque signalé pour un article est montré sous cet article, pas dans la liste.
+  const precisionOf = (p: Record<string, unknown>) =>
+    p.kind === 'missing_information' && typeof p.subject_id === 'string' && articles.has(p.subject_id) && typeof p.note === 'string'
+      ? p.subject_id : null;
+  const precisions = new Map<string, string[]>();
+  for (const p of objs(raw.uncovered)) {
+    const subjectId = precisionOf(p);
+    if (subjectId !== null) precisions.set(subjectId, [...(precisions.get(subjectId) ?? []), str(p.note)]);
+  }
   const removedText = new Map<string, string>();
   const chapters: BuiltChapter[] = objs(raw.chapters).map(c => ({
     id:       str(c.id),
@@ -240,10 +254,12 @@ export function readConstruction(raw: unknown): Construction | null {
         emptyReason: oneOf(EMPTY, a.empty_reason),
         blocks:      objs(a.blocks).map(blockOf).filter((b): b is BuiltBlock => b !== null),
         removed,
+        precisions:  precisions.get(str(a.subject_id)) ?? [],
       };
     }),
   }));
   const uncovered: UncoveredPoint[] = objs(raw.uncovered).flatMap(p => {
+    if (precisionOf(p) !== null) return [];
     const kind = oneOf(UNCOVERED_KINDS, p.kind);
     if (kind === null) return [];
     const removedId = strOrNull(p.removed_block_id);

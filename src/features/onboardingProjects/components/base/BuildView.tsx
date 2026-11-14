@@ -265,6 +265,15 @@ function ArticleView({ article, ctx, onShowUncovered, children }: {
           </ul>
         </details>
       )}
+      {article.precisions.length > 0 && (
+        <details className="obp-build-removed obp-build-precisions">
+          <summary>Précisions à apporter ({article.precisions.length})</summary>
+          <p className="obp-muted">Aucune source de cet article ne donne ces informations : elles ne sont pas écrites dans l'article.</p>
+          <ul>
+            {article.precisions.map((note, i) => <li key={i}>{note}</li>)}
+          </ul>
+        </details>
+      )}
       {article.cardIds.length > 0 && (
         <p className="obp-plan-subject__cards">
           Cartes liées ({article.cardIds.length}) :{' '}
@@ -382,7 +391,7 @@ export function UncoveredList({ construction, decisions, cards, isBlocking, onOp
         return (
           <>
             <p>Article {article(p.subjectId)} : {p.note}</p>
-            <p className="obp-muted">Signalé par la rédaction : aucune source de cet article ne donne cette information.</p>
+            <p className="obp-muted">Précision à apporter : aucune source de cet article ne donne cette information.</p>
           </>
         );
       case 'value_without_source':

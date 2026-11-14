@@ -124,7 +124,8 @@ describe('readConstruction', () => {
   });
 
   it('compte les phrases à vérifier, les textes de l\'expert et les points non couverts', () => {
-    expect(buildSummary(c)).toBe('6 articles · 2 phrases à vérifier · 1 texte saisi par l\'expert · 5 points non couverts');
+    expect(buildSummary(c)).toBe('6 articles · 2 phrases à vérifier · 1 texte saisi par l\'expert · 4 points non couverts');
+    expect(c.chapters.flatMap(ch => ch.articles).flatMap(a => a.precisions)).toEqual(['Le délai de prise en compte d\'une résiliation demandée par le client.']);
     expect(c.uncovered.find(p => p.kind === 'value_without_source')?.removedText).toBe('Une résiliation avant 12 mois coûte 75 € TTC.');
   });
 
@@ -133,7 +134,7 @@ describe('readConstruction', () => {
     expect(readConstruction({ chapters: [] })).toBeNull();
     const raw = JSON.parse(JSON.stringify(RAW)) as { uncovered: Array<{ kind: string }> };
     raw.uncovered[0].kind = 'nouvelle_raison';
-    expect(readConstruction(raw)!.uncovered).toHaveLength(4);
+    expect(readConstruction(raw)!.uncovered).toHaveLength(3);
   });
 
   it('la raison d\'un retrait nomme la carte qui l\'a décidé', () => {
