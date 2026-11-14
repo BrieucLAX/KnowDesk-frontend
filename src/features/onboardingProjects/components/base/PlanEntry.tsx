@@ -71,7 +71,7 @@ export function PlanEntry({ projectId, analysisId, cards, current, onOpenBase }:
     <>
       <h3 className="obp-plan-entry__title">Plan de la nouvelle base</h3>
       <p className="obp-muted">
-        Knowdesk propose des chapitres et des sujets, chacun avec ses sources dans vos documents.
+        Knowdesk propose des catégories et des articles, chacun avec ses sources dans vos documents.
         Vous pourrez le lire et le commenter.
       </p>
     </>

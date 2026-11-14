@@ -147,23 +147,25 @@ describe('« Nouvelle base » en mode construire : le plan en lecture seule', ()
   it('le plan, ses points d\'attention, ses chapitres et les sources de chaque sujet, sans aucun code', async () => {
     mockPlan();
     const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
-    expect(await screen.findByText('3 chapitres · 3 sujets · 10 passages couverts sur 12')).toBeInTheDocument();
+    expect(await screen.findByText('3 catégories · 3 articles · 10 passages couverts sur 12')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /^Plan du / })).toBeInTheDocument();
 
     const attention = screen.getByRole('region', { name: 'Points d\'attention' });
     expect(within(attention).getByText('Documents écartés comme obsolètes (1)')).toBeInTheDocument();
     expect(within(attention).getByText('Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf')).toBeInTheDocument();
     expect(within(attention).getByText(/remplacé par Grille_Tarifaire_Particuliers_v2_2026-09-01\.pdf, confirmé par vous/)).toBeInTheDocument();
-    expect(within(attention).getByText('Passages sans sujet (2)')).toBeInTheDocument();
+    expect(within(attention).getByText('Passages sans article (2)')).toBeInTheDocument();
     expect(within(attention).getByText(/note de travail interne/)).toBeInTheDocument();
-    expect(within(attention).getByText('Sujets réunis (1)')).toBeInTheDocument();
-    expect(within(attention).getByText(/« Frais de résiliation » et « Résilier un contrat particulier » : mêmes passages, un seul sujet/)).toBeInTheDocument();
-    expect(within(attention).getByText(/Une carte n'est rattachée à aucun sujet/)).toBeInTheDocument();
+    expect(within(attention).getByText('Articles réunis (1)')).toBeInTheDocument();
+    expect(within(attention).getByText(/« Frais de résiliation » et « Résilier un contrat particulier » : mêmes passages, un seul article/)).toBeInTheDocument();
+    expect(within(attention).getByText(/Une carte n'est rattachée à aucun article/)).toBeInTheDocument();
     expect(within(attention).getByText('Une citation introuvable dans vos documents a été écartée.')).toBeInTheDocument();
 
-    expect(screen.getByText('Chapitre 1 · Offres et prix')).toBeInTheDocument();
+    expect(screen.getByText('Catégorie 1 · Offres et prix')).toBeInTheDocument();
+    // Vocabulaire de l'écran (décision du porteur du 2026-11-14) : jamais « chapitre » ni « sujet ».
+    expect(container.textContent).not.toMatch(/[Cc]hapitre|[Ss]ujet/);
     const subject = screen.getByRole('heading', { name: 'Offre Gaz Indexé' }).closest('article')!;
-    expect(within(subject).getByText('Question : Quel est le prix de l\'offre Gaz Indexé ?')).toBeInTheDocument();
+    expect(within(subject).getByText('Cet article répondra à : Quel est le prix de l\'offre Gaz Indexé ?')).toBeInTheDocument();
     expect(within(subject).getByText('Public : particuliers')).toBeInTheDocument();
     expect(within(subject).getByText('Sources (3)')).toBeInTheDocument();
     expect(within(subject).getByText('Fiche_Offre_Gaz_Indexe.docx')).toBeInTheDocument();
@@ -192,10 +194,10 @@ describe('« Nouvelle base » en mode construire : le plan en lecture seule', ()
       author: { id: 'u1', name: 'Camille Martin' }, createdAt: '2026-11-14T11:00:00Z', cancelledAt: null, cancelledBy: null,
     }));
     render(<BaseTab project={project} onGoToClarify={() => {}} />);
-    await screen.findByText('3 chapitres · 3 sujets · 10 passages couverts sur 12');
+    await screen.findByText('3 catégories · 3 articles · 10 passages couverts sur 12');
 
     const subject = screen.getByRole('heading', { name: 'Offre Gaz Indexé' }).closest('article')!;
-    fireEvent.change(within(subject).getByLabelText('Commentaire sur ce sujet (facultatif)'), { target: { value: 'Sujet à scinder.' } });
+    fireEvent.change(within(subject).getByLabelText('Commentaire sur cet article (facultatif)'), { target: { value: 'Sujet à scinder.' } });
     fireEvent.click(within(subject).getByRole('button', { name: 'Enregistrer le commentaire' }));
     await waitFor(() => expect(onboardingApi.commentPlan).toHaveBeenCalledWith('p1', PLAN.planId, expect.anything()));
 

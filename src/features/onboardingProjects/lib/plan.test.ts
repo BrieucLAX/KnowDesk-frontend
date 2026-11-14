@@ -15,7 +15,7 @@ describe('Plan 0.1.0, lu pour l\'écran (lot B)', () => {
     expect(subject.sources).toHaveLength(3);
     expect(subject.sources[0].excerpt).toMatch(/\S/);
     expect(plan.chapters[2].subjects[0]).toMatchObject({ audience: null, fromComplement: true });
-    expect(planSummary(plan)).toBe('3 chapitres · 3 sujets · 10 passages couverts sur 12');
+    expect(planSummary(plan)).toBe('3 catégories · 3 articles · 10 passages couverts sur 12');
   });
 
   it('points d\'attention : document remplacé, passages sans sujet en clair, sujets réunis', () => {
@@ -54,7 +54,7 @@ describe('Plan 0.1.0, lu pour l\'écran (lot B)', () => {
 
   it('étapes : lecture, proposition, rattachement, couverture, enregistrement ; une étape inconnue compte comme la lecture', () => {
     expect(PLAN_STEPS.map(s => s.label)).toEqual([
-      'Lecture de vos documents', 'Proposition des chapitres et des sujets', 'Rattachement des passages restants',
+      'Lecture de vos documents', 'Proposition des catégories et des articles', 'Rattachement des passages restants',
       'Contrôle de la couverture', 'Enregistrement du plan',
     ]);
     expect(planStepStates({ status: 'running', stage: 'complement' })).toEqual(['done', 'done', 'current', 'pending', 'pending']);

@@ -183,12 +183,12 @@ export function readPlan(raw: unknown): Plan | null {
   };
 }
 
-/** « 6 chapitres · 31 sujets · 128 passages couverts sur 133 ». */
+/** « 6 catégories · 31 articles · 128 passages couverts sur 133 » (vocabulaire de l'écran, décision du porteur du 2026-11-14). */
 export function planSummary(plan: Plan): string {
   const n = (k: number, one: string, many: string) => `${k} ${k > 1 ? many : one}`;
   return [
-    n(plan.chapters.length, 'chapitre', 'chapitres'),
-    n(plan.subjectCount, 'sujet', 'sujets'),
+    n(plan.chapters.length, 'catégorie', 'catégories'),
+    n(plan.subjectCount, 'article', 'articles'),
     `${plan.coverage.covered} passage${plan.coverage.covered > 1 ? 's' : ''} couvert${plan.coverage.covered > 1 ? 's' : ''} sur ${plan.coverage.total}`,
   ].join(' · ');
 }
@@ -205,7 +205,7 @@ export interface PlanStep { label: string; stages: readonly string[]; counts?: b
  */
 export const PLAN_STEPS: readonly PlanStep[] = [
   { label: 'Lecture de vos documents',                 stages: ['download', 'parsing', 'images'], counts: true },
-  { label: 'Proposition des chapitres et des sujets',  stages: ['plan'] },
+  { label: 'Proposition des catégories et des articles', stages: ['plan'] },
   { label: 'Rattachement des passages restants',       stages: ['complement'] },
   { label: 'Contrôle de la couverture',                stages: ['coverage'] },
   { label: 'Enregistrement du plan',                   stages: ['storing'] },

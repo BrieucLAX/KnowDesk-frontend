@@ -223,9 +223,9 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
         </div>
 
         <div className="obp-plan-attention__group">
-          <h4>Passages sans sujet ({plan.uncovered.length})</h4>
+          <h4>Passages sans article ({plan.uncovered.length})</h4>
           {plan.uncovered.length === 0 ? (
-            <p className="obp-muted">Chaque passage de vos documents est couvert par un sujet.</p>
+            <p className="obp-muted">Chaque passage de vos documents est couvert par un article.</p>
           ) : (
             <details>
               <summary>Voir les passages</summary>
@@ -242,14 +242,14 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
         </div>
 
         <div className="obp-plan-attention__group">
-          <h4>Sujets réunis ({plan.merged.length})</h4>
+          <h4>Articles réunis ({plan.merged.length})</h4>
           {plan.merged.length === 0 ? (
-            <p className="obp-muted">Aucun sujet en double.</p>
+            <p className="obp-muted">Aucun article en double.</p>
           ) : (
             <ul>
               {plan.merged.map(m => (
                 <li key={m.subjectId}>
-                  {m.titles.map(t => `« ${t} »`).join(' et ')} : mêmes passages, un seul sujet
+                  {m.titles.map(t => `« ${t} »`).join(' et ')} : mêmes passages, un seul article
                   {subjectTitles.has(m.subjectId) && <> (« {subjectTitles.get(m.subjectId)} »)</>}.
                 </li>
               ))}
@@ -263,7 +263,7 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
             <ul>
               {plan.unattachedCardIds.length > 0 && (
                 <li>
-                  {plan.unattachedCardIds.length > 1 ? `${plan.unattachedCardIds.length} cartes ne sont rattachées à aucun sujet : ` : 'Une carte n\'est rattachée à aucun sujet : '}
+                  {plan.unattachedCardIds.length > 1 ? `${plan.unattachedCardIds.length} cartes ne sont rattachées à aucun article : ` : 'Une carte n\'est rattachée à aucun article : '}
                   {plan.unattachedCardIds.map((id, i) => (
                     <React.Fragment key={id}>{i > 0 && ', '}
                       <button type="button" className="obp-link" onClick={() => onGoToClarify(id)}>{titles.get(id) ?? 'une carte'}</button>
@@ -272,7 +272,7 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
                 </li>
               )}
               {plan.rejectedTitles.length > 0 && (
-                <li>Sujets proposés sans source vérifiable, écartés : {plan.rejectedTitles.map(t => `« ${t} »`).join(', ')}.</li>
+                <li>Articles proposés sans source vérifiable, écartés : {plan.rejectedTitles.map(t => `« ${t} »`).join(', ')}.</li>
               )}
               {plan.unverifiedQuotes > 0 && (
                 <li>{plan.unverifiedQuotes > 1 ? `${plan.unverifiedQuotes} citations introuvables dans vos documents ont été écartées.` : 'Une citation introuvable dans vos documents a été écartée.'}</li>
@@ -284,10 +284,10 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
 
       {plan.chapters.map((chapter, ci) => (
         <details key={chapter.id} className="obp-plan-chapter" open={ci === 0}>
-          <summary className="obp-plan-chapter__title">Chapitre {ci + 1} · {chapter.title}</summary>
+          <summary className="obp-plan-chapter__title">Catégorie {ci + 1} · {chapter.title}</summary>
           {chapter.subjects.map(subject => (
             <SubjectBlock key={subject.id} subject={subject} audit={audit} titles={titles} onGoToClarify={onGoToClarify}>
-              {box(subject.id, 'Commentaire sur ce sujet (facultatif)')}
+              {box(subject.id, 'Commentaire sur cet article (facultatif)')}
             </SubjectBlock>
           ))}
         </details>
@@ -313,7 +313,7 @@ function SubjectBlock({ subject, audit, titles, onGoToClarify, children }: {
     <article className="obp-plan-subject">
       <h4 className="obp-plan-subject__title">{subject.title}</h4>
       <p className="obp-plan-subject__meta">
-        <span>Question : {subject.question}</span>
+        <span>Cet article répondra à : {subject.question}</span>
         {subject.audience && <span>Public : {subject.audience}</span>}
       </p>
       <details className="obp-plan-subject__sources">
