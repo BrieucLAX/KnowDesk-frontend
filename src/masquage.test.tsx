@@ -42,6 +42,7 @@ vi.mock('./shared/lib/apiClient', () => ({
           { id: 'c3', label: 'Voir l\'analyse',                completed: false, href: '/analytics' },
         ],
       });
+      if (path === '/article-quality/stats') return Promise.resolve({ published: 3, scored: 0, perfect: 0, good: 0, toRework: 0 });
       if (path.startsWith('/article-quality')) return Promise.resolve({ items: [], total: 0, stats: null });
       if (path.startsWith('/settings/org')) return Promise.resolve({});
       return Promise.resolve([]);
@@ -130,6 +131,27 @@ describe('Masquage global : le front suit les modules de /auth/me', () => {
     ]));
     for (const hidden of ['Chatbot public', 'API', 'Notifications', 'Audit']) expect(options).not.toContain(hidden);
     expect(maskedCalls()).toEqual([]);
+  });
+
+  it('éditeur : sans chatbot, pas de choix « Interne / Public » ni de mention du chatbot', async () => {
+    renderAt('/articles/new');
+    await screen.findByRole('navigation', { name: 'Navigation principale' });
+    expect(await screen.findByLabelText('Tags')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Visibilité')).not.toBeInTheDocument();
+    expect(screen.queryByText(/chatbot/i)).not.toBeInTheDocument();
+  });
+
+  it('éditeur : avec le chatbot, le choix de visibilité reste', async () => {
+    meOrg = { ...session.organization, enabledModules: [...KEPT, 'chatbot'] };
+    useAuthStore.setState({ session: { ...session, organization: meOrg } });
+    renderAt('/articles/new');
+    expect(await screen.findByLabelText('Visibilité')).toBeInTheDocument();
+  });
+
+  it('tableau de bord : la carte de l\'auditeur s\'appelle « Qualité des articles »', async () => {
+    renderAt('/');
+    expect(await screen.findByRole('heading', { name: 'Qualité des articles' })).toBeInTheDocument();
+    expect(screen.queryByText(/KB Health Score/)).not.toBeInTheDocument();
   });
 
   it('organisation sans le masquage : tout reste comme avant (processus, palette, Paramètres)', async () => {

@@ -51,6 +51,9 @@ export function ArticleEditor({ articleId, onSaved, onCancel }: ArticleEditorPro
   const role    = useAuthStore(selectUserRole);
   // Qualité des articles : rôle et module (vérifié aussi par le back).
   const qualityModule = hasModule(useAuthStore(s => s.session?.organization), 'article_quality');
+  // « Public » ne sert qu'au chatbot (l'API publique ne lit pas la visibilité) : sans le module,
+  // le choix est masqué et la valeur enregistrée est renvoyée telle quelle.
+  const chatbotModule = hasModule(useAuthStore(s => s.session?.organization), 'chatbot');
   const canSeeQuality = qualityModule && (role === 'admin' || role === 'manager');
   const canArchive    = role === 'admin' || role === 'manager';
   const [confirmArchive, setConfirmArchive] = useState(false);
@@ -268,7 +271,7 @@ if (!isEdit) {
       {confirmArchive && (
         <ConfirmDialog
           title="Archiver cet article ?"
-          description={`« ${form.title} » ne sera plus visible des conseillers${hasModule(useAuthStore.getState().session?.organization, 'chatbot') ? ' ni du chatbot' : ''}. Vous pourrez le désarchiver ; il reviendra en brouillon.`}
+          description={`« ${form.title} » ne sera plus visible des conseillers${chatbotModule ? ' ni du chatbot' : ''}. Vous pourrez le désarchiver ; il reviendra en brouillon.`}
           confirmLabel="Archiver l'article"
           loading={isArchiving}
           onConfirm={handleArchive}
@@ -342,7 +345,7 @@ if (!isEdit) {
             />
             <p className="field-hint">10 tags au maximum. Appuyez sur Entrée ou tapez une virgule après chaque tag.</p>
           </div>
-          <div className="field">
+          {chatbotModule && <div className="field">
             <label htmlFor="visibility-select" className="field-label">Visibilité</label>
             <select
               id="visibility-select"
@@ -356,7 +359,7 @@ if (!isEdit) {
             <p className="field-hint">
               Le chatbot de votre site, s'il est activé, peut s'appuyer sur les articles publics.
             </p>
-          </div>
+          </div>}
         </div>
 
         <input

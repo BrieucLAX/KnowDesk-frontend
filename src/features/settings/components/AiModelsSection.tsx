@@ -88,7 +88,7 @@ export function AiModelsSection() {
               Le coût relatif est estimé par rapport au modèle de référence{' '}
               <code>Mistral Small</code> (×1). Un modèle ×10 coûte 10 fois plus
               par requête. La rapidité affichée est indicative : le temps
-              d'attente du visiteur dépend aussi de la longueur de la
+              d'attente {chatbot ? 'du visiteur ' : ''}dépend aussi de la longueur de la
               réponse générée.
             </>
           } />

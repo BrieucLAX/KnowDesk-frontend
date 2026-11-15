@@ -56,5 +56,5 @@ Ces noms sont voulus par le porteur : ils ne se traduisent pas et s'écrivent to
 |---|---|---|
 | Brand monitoring | masculin : « le Brand monitoring », « un projet Brand monitoring » | Module qui suit la présence de la marque dans les réponses des IA. Majuscule initiale seulement. |
 | prompt, prompts | masculin : « un prompt », « ce prompt sera envoyé », « les prompts importés » | Question posée aux IA par le Brand monitoring. Onglet « Prompts ». |
-| KB Health Score IA | masculin : « le KB Health Score IA » | Carte de l'auditeur qualité des articles. |
+| Qualité des articles | féminin : « la carte Qualité des articles » | Carte de l'auditeur qualité des articles (anciennement « KB Health Score IA »). |
 | Score helpful | masculin : « le Score helpful d'une FAQ » | Part des votes « utile » d'une FAQ, en %. Colonne de la liste des FAQ et statistique de l'éditeur. |
