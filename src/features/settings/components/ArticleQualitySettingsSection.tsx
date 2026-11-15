@@ -5,6 +5,7 @@ import { Skeleton }  from '../../../shared/components/ui/Skeleton';
 import { useToast }  from '../../../shared/lib/useToast';
 import { ApiError }  from '../../../shared/lib/apiClient';
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
+import { hasModule } from '../../../shared/lib/modules';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import { articleQualityApi, type QualityStats } from '../../articleQuality/api/articleQualityApi';
 import { CircleAlert, CircleCheck, RotateCw, Sparkles, TriangleAlert } from 'lucide-react';
@@ -19,6 +20,7 @@ import { CircleAlert, CircleCheck, RotateCw, Sparkles, TriangleAlert } from 'luc
 export function ArticleQualitySettingsSection() {
   const toast   = useToast();
   const role    = useAuthStore(selectUserRole);
+  const organization = useAuthStore(s => s.session?.organization);
   const isAdmin = role === 'admin';
   const [enabled,    setEnabled]   = useState<boolean | null>(null);
   const [stats,      setStats]     = useState<QualityStats | null>(null);
@@ -96,7 +98,7 @@ export function ArticleQualitySettingsSection() {
         <p className="settings-section__desc">
           L'IA évalue vos articles publiés sur 6 dimensions
           (Clarté, Actionnable, Titre et contenu, Structure, Fraîcheur, Vocabulaire)
-          et signale ceux à retravailler dans l'écran Analyse. L'évaluation se lance
+          et signale ceux à retravailler {hasModule(organization, 'analytics') ? 'dans l\'écran Analyse' : 'sur le tableau de bord'}. L'évaluation se lance
           automatiquement environ 30 secondes après chaque modification d'un article, et une
           évaluation hebdomadaire couvre les articles pas encore évalués.
         </p>

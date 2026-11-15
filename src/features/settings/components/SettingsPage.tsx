@@ -23,13 +23,19 @@ import { useUnsavedChanges }     from '../../../shared/lib/useUnsavedChanges';
 import { LastModifiedBadge }     from './LastModifiedBadge';
 import type { SettingsSection, NotifPreferences } from '../types';
 import { ChevronRight } from 'lucide-react';
+import { hasModule, type ModuleName } from '../../../shared/lib/modules';
+import type { Organization } from '../../../shared/types';
 
 interface SettingsPageProps {
   initialSection?: SettingsSection;
 }
 
 export function SettingsPage({ initialSection = 'general' }: SettingsPageProps) {
-  const [activeSection, setActiveSection] = useState<SettingsSection>(initialSection);
+  const organization = useAuthStore(s => s.session?.organization ?? null);
+  // Un onglet masqué (module absent ou masquage global) ouvert par lien direct : Général.
+  const [activeSection, setActiveSection] = useState<SettingsSection>(
+    () => sectionAllowed(organization, initialSection) ? initialSection : 'general',
+  );
   // Section "en attente" — l'admin a cliqué dessus alors qu'il y a des
   // modifs non sauvegardées. On affiche un ConfirmDialog avant le switch.
   const [pendingSection, setPendingSection] = useState<SettingsSection | null>(null);
@@ -61,30 +67,30 @@ export function SettingsPage({ initialSection = 'general' }: SettingsPageProps) 
         />
         <div className="settings-page">
           <MobileSettingsNav
-            tree={navTree(role === 'admin')}
+            tree={navTree(role === 'admin', organization)}
             activeSection={activeSection}
             onNavigate={handleSectionClick}
           />
           <div className="settings-page__sidebar">
             <PlanBadge />
             <SettingsNav
-              tree={navTree(role === 'admin')}
+              tree={navTree(role === 'admin', organization)}
               activeSection={activeSection}
               onNavigate={handleSectionClick}
             />
           </div>
           <div className="settings-page__body">
             {activeSection === 'general'       && <SectionGeneral />}
-            {activeSection === 'ai'            && <AiSettingsSection />}
-            {activeSection === 'chatbot'       && <ChatbotSettingsSection />}
-            {activeSection === 'ai-quality'    && <ArticleQualitySettingsSection />}
+            {activeSection === 'ai' && sectionAllowed(organization, 'ai') && <AiSettingsSection />}
+            {activeSection === 'chatbot' && sectionAllowed(organization, 'chatbot') && <ChatbotSettingsSection />}
+            {activeSection === 'ai-quality' && sectionAllowed(organization, 'ai-quality') && <ArticleQualitySettingsSection />}
             {activeSection === 'ai-models'     && <AiModelsSection />}
-            {activeSection === 'notifications' && <SectionNotifications />}
-            {activeSection === 'api' && <ApiKeysSection />}
-            {activeSection === 'search'        && <SearchSettingsSection />}
-            {activeSection === 'tags'          && <TagsSettingsSection />}
-            {activeSection === 'imports'       && <ImportsSettingsSection />}
-            {activeSection === 'audit'         && <AuditPage embed />}
+            {activeSection === 'notifications' && sectionAllowed(organization, 'notifications') && <SectionNotifications />}
+            {activeSection === 'api' && sectionAllowed(organization, 'api') && <ApiKeysSection />}
+            {activeSection === 'search' && sectionAllowed(organization, 'search') && <SearchSettingsSection />}
+            {activeSection === 'tags' && sectionAllowed(organization, 'tags') && <TagsSettingsSection />}
+            {activeSection === 'imports' && sectionAllowed(organization, 'imports') && <ImportsSettingsSection />}
+            {activeSection === 'audit' && sectionAllowed(organization, 'audit') && <AuditPage embed />}
             {activeSection === 'billing'       && <SectionBilling />}
             {activeSection === 'danger'        && <SectionDanger />}
           </div>
@@ -165,6 +171,27 @@ interface NavLeaf {
   adminOnly?: boolean;
   isDanger?:  boolean;
 }
+
+/**
+ * Module de chaque onglet des Paramètres (séquence 1 du masquage) : un onglet sans son module
+ * n'apparaît pas et ne s'ouvre pas, même par lien direct. Sans entrée : l'onglet suit `settings`.
+ */
+export const SECTION_MODULES: Partial<Record<SettingsSection, ModuleName>> = {
+  'ai':            'ai_answer',
+  'chatbot':       'chatbot',
+  'ai-quality':    'article_quality',
+  'notifications': 'notifications',
+  'search':        'knowledge',
+  'tags':          'knowledge',
+  'api':           'api_keys',
+  'imports':       'imports',
+  'audit':         'audit',
+};
+
+export function sectionAllowed(org: Pick<Organization, 'enabledModules'> | null, section: SettingsSection): boolean {
+  const module = SECTION_MODULES[section];
+  return !module || hasModule(org, module);
+}
 interface NavCategory {
   type:       'category';
   id:         string;            // identifiant pour persister expand state
@@ -174,7 +201,7 @@ interface NavCategory {
 }
 type NavEntry = NavLeaf | NavCategory;
 
-function navTree(isAdmin: boolean): NavEntry[] {
+function navTree(isAdmin: boolean, org: Pick<Organization, 'enabledModules'> | null): NavEntry[] {
   const tree: NavEntry[] = [
     { type: 'leaf', id: 'general', label: 'Général',
       keywords: ['nom', 'organisation', 'fuseau', 'horaire', 'timezone'] },
@@ -207,7 +234,10 @@ function navTree(isAdmin: boolean): NavEntry[] {
     { type: 'leaf', id: 'danger', label: 'Zone de danger', isDanger: true, adminOnly: true,
       keywords: ['supprimer', 'delete', 'suppression', 'organisation'] },
   ];
-  return tree.filter(e => isAdmin || !e.adminOnly);
+  return tree
+    .filter(e => isAdmin || !e.adminOnly)
+    .map(e => e.type === 'category' ? { ...e, children: e.children.filter(c => sectionAllowed(org, c.id)) } : e)
+    .filter(e => e.type === 'category' ? e.children.length > 0 : sectionAllowed(org, e.id));
 }
 
 /* Filtrage local de l'arbre (S4-T3). Match sur label OU keywords (case

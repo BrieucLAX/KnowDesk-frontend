@@ -17,6 +17,7 @@ import { formatRelative } from '../../../shared/lib/formatDate';
 import { apiClient, ApiError } from '../../../shared/lib/apiClient';
 import { useToast }       from '../../../shared/lib/useToast';
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
+import { hasModule }      from '../../../shared/lib/modules';
 import { tagsApi, type OrgTag } from '../../articles/api/tagsApi';
 import type { FaqListItem, FaqStatus, FaqSortBy, FaqSortDir } from '../types';
 import type { Category }  from '../../knowledge/types';
@@ -236,7 +237,9 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
       {bulkConfirmOpen && (
         <ConfirmDialog
           title={`Supprimer ${selectedIds.size} FAQ ?`}
-          description="Les FAQ sélectionnées seront supprimées, sauf celles utilisées dans des parcours. Cette action est définitive."
+          description={hasModule(useAuthStore.getState().session?.organization, 'learning')
+            ? 'Les FAQ sélectionnées seront supprimées, sauf celles utilisées dans des parcours. Cette action est définitive.'
+            : 'Les FAQ sélectionnées seront supprimées. Cette action est définitive.'}
           confirmLabel={selectedIds.size > 1 ? 'Supprimer les FAQ' : 'Supprimer la FAQ'}
           variant="danger"
           loading={bulkDeleting}

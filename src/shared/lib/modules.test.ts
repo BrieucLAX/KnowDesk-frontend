@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { LEGACY_MODULES, SCREEN_MODULES, canSeeScreen, hasModule, isTestOrganization } from './modules';
+import { LEGACY_MODULES, SCREEN_MODULES, canSeeScreen, hasModule, isTestOrganization, linkAllowed } from './modules';
 
 const legacyOrg  = { enabledModules: [...LEGACY_MODULES] };
 const testOrg    = { enabledModules: ['onboarding'] };
@@ -46,5 +46,24 @@ describe('canSeeScreen', () => {
 
   it('refuse un écran inconnu', () => {
     expect(canSeeScreen(legacyOrg, 'nope')).toBe(false);
+  });
+});
+
+describe('masquage global (séquence 1)', () => {
+  it('une session sans enabledModules garde aussi les modules dérivés', () => {
+    expect(hasModule(staleOrg, 'kbscore')).toBe(true);
+    expect(hasModule(staleOrg, 'analytics_collect')).toBe(true);
+    expect(hasModule(staleOrg, 'audit')).toBe(true);
+  });
+
+  it('linkAllowed retire les liens vers une fonction masquée, garde les autres', () => {
+    const org = { enabledModules: ['knowledge', 'faqs', 'members'] };
+    expect(linkAllowed(org, '/articles/new')).toBe(true);
+    expect(linkAllowed(org, '/faqs?focus=1')).toBe(true);
+    expect(linkAllowed(org, '/settings/members')).toBe(true);
+    expect(linkAllowed(org, '/trees')).toBe(false);
+    expect(linkAllowed(org, '/trees/abc')).toBe(false);
+    expect(linkAllowed(org, '/analytics')).toBe(false);
+    expect(linkAllowed(org, '/audit')).toBe(false);
   });
 });

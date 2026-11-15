@@ -12,6 +12,6 @@ export function trackEvent(
   opts?: { targetType?: string; targetId?: string; payload?: Record<string, unknown> },
 ): void {
   // POST /events est derrière le module analytics côté back (404 sinon).
-  if (!hasModule(useAuthStore.getState().session?.organization, 'analytics')) return;
+  if (!hasModule(useAuthStore.getState().session?.organization, 'analytics_collect')) return;
   apiClient.post('/events', { type, ...opts }).catch(() => { /* ignore */ });
 }

@@ -7,6 +7,7 @@ import { useSearch }           from '../hooks/useSearch';
 import { useAiTrigger }        from '../hooks/useAiTrigger';
 import { useAiAnswer, type AiSource } from '../hooks/useAiAnswer';
 import { useAuthStore }        from '../../../store/authStore';
+import { hasModule }           from '../../../shared/lib/modules';
 import { useToast }            from '../../../shared/lib/useToast';
 import type { SearchResult, SearchResultType }   from '../types';
 import { CircleHelp, FileText, ListOrdered, Search, Sparkles, X } from 'lucide-react';
@@ -123,7 +124,9 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
 
   // Réponse IA : trigger + état stream
   const aiTriggered = useAiTrigger(state.query);
-  const aiVisible   = aiTriggered && !dismissed && state.query.trim().length > 0;
+  // Réponse IA : seulement avec son module (sinon aucun appel, aucune carte en erreur).
+  const aiModule    = hasModule(useAuthStore(s => s.session?.organization), 'ai_answer');
+  const aiVisible   = aiModule && aiTriggered && !dismissed && state.query.trim().length > 0;
   const aiState     = useAiAnswer(state.query, aiVisible);
 
   const handleSelectSource = useCallback((source: AiSource) => {
