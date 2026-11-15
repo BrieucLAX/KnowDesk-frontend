@@ -31,7 +31,23 @@ export const LEGACY_MODULES = [
 
 export const ONBOARDING_MODULE = 'onboarding' as const;
 
-export type ModuleName = typeof LEGACY_MODULES[number] | typeof ONBOARDING_MODULE;
+/**
+ * Modules dérivés (séquence 1 du masquage, 2026-11-15), donnés par le back à toute organisation
+ * qui a le module source, sauf s'ils sont dans la liste globale `DISABLED_MODULES` :
+ * `kbscore` (score de la base, depuis `knowledge`), `analytics_collect` (collecte des vues et des
+ * recherches, depuis `analytics`), `audit` (écran du journal, depuis `settings`).
+ */
+export const DERIVED_MODULES = {
+  kbscore:           'knowledge',
+  analytics_collect: 'analytics',
+  audit:             'settings',
+} as const;
+
+export type ModuleName =
+  | typeof LEGACY_MODULES[number] | typeof ONBOARDING_MODULE | keyof typeof DERIVED_MODULES;
+
+/** Modules d'une organisation historique sans `enabledModules` : tout, modules dérivés compris. */
+const FALLBACK_MODULES: readonly string[] = [...LEGACY_MODULES, ...Object.keys(DERIVED_MODULES)];
 
 /**
  * Vrai si l'organisation a le module. Sans `enabledModules` (session gardée
@@ -40,7 +56,7 @@ export type ModuleName = typeof LEGACY_MODULES[number] | typeof ONBOARDING_MODUL
  */
 export function hasModule(org: Pick<Organization, 'enabledModules'> | null | undefined, module: ModuleName): boolean {
   if (!org) return false;
-  const modules: readonly string[] = org.enabledModules ?? LEGACY_MODULES;
+  const modules: readonly string[] = org.enabledModules ?? FALLBACK_MODULES;
   return modules.includes(module);
 }
 
@@ -89,4 +105,25 @@ export function canSeeScreen(org: Pick<Organization, 'enabledModules'> | null | 
  */
 export function canRunSetupWizard(org: Pick<Organization, 'enabledModules'> | null | undefined): boolean {
   return hasModule(org, 'members') && hasModule(org, 'knowledge');
+}
+
+/**
+ * Module de l'écran vers lequel pointe un lien interne (liste « Démarrer avec KnowDesk », etc.) ;
+ * `null` : lien toujours permis. Sert à retirer un lien vers une fonction masquée.
+ */
+const PATH_MODULES: Array<[RegExp, ModuleName]> = [
+  [/^\/(faqs)(\/|$|\?)/,                 'faqs'],
+  [/^\/(trees)(\/|$|\?)/,                'trees'],
+  [/^\/(learning)(\/|$|\?)/,             'learning'],
+  [/^\/(analytics)(\/|$|\?)/,            'analytics'],
+  [/^\/(chats)(\/|$|\?)/,                'chats'],
+  [/^\/(brand-monitoring)(\/|$|\?)/,     'brand_monitoring'],
+  [/^\/(onboarding)(\/|$|\?)/,           ONBOARDING_MODULE],
+  [/^\/(team|members|settings\/members)(\/|$|\?)/, 'members'],
+  [/^\/(audit)(\/|$|\?)/,                'audit'],
+];
+
+export function linkAllowed(org: Pick<Organization, 'enabledModules'> | null | undefined, href: string): boolean {
+  const entry = PATH_MODULES.find(([re]) => re.test(href));
+  return !entry || hasModule(org, entry[1]);
 }

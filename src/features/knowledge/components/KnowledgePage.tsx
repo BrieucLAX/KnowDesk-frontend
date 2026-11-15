@@ -29,6 +29,7 @@ import { tagsApi, type OrgTag } from '../../articles/api/tagsApi';
 import { archiveApi }       from '../../articles/api/archiveApi';
 
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
+import { hasModule }        from '../../../shared/lib/modules';
 import { formatRelative }   from '../../../shared/lib/formatDate';
 import { ImportModal }      from '../../imports/components/ImportModal';
 import type { Category }    from '../types';
@@ -103,6 +104,8 @@ async function loadArticles(categoryId: string | null, sort: SortKey): Promise<A
 export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProps) {
   const role    = useAuthStore(selectUserRole);
   const isAdmin = role === 'admin' || role === 'manager';
+  // Imports de documents : seulement avec leur module (vérifié aussi par le back).
+  const importsEnabled = hasModule(useAuthStore(s => s.session?.organization), 'imports');
   const toast   = useToast();
   const location = useLocation();
   const navigate = useNavigate();
@@ -414,7 +417,7 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
         orgTags={orgTags}
         onOpenArticle={onOpenArticle}
         onNewArticle={onNewArticle}
-        onOpenImport={() => setShowImportModal(true)}
+        onOpenImport={importsEnabled ? () => setShowImportModal(true) : undefined}
         importModal={showImportModal ? (
           <ImportModal
             onClose={() => setShowImportModal(false)}
@@ -438,9 +441,11 @@ export function KnowledgePage({ onOpenArticle, onNewArticle }: KnowledgePageProp
         subtitle="Articles de référence pour vos équipes."
         actions={isAdmin && (
           <>
-            <Button variant="ghost" size="md" onClick={() => setShowImportModal(true)}>
-              Importer un document
-            </Button>
+            {importsEnabled && (
+              <Button variant="ghost" size="md" onClick={() => setShowImportModal(true)}>
+                Importer un document
+              </Button>
+            )}
             <Button variant="primary" size="md" onClick={onNewArticle}>
               <Plus size={20} />Nouvel article
             </Button>
@@ -903,7 +908,8 @@ interface KnowledgeListViewProps {
   orgTags:         OrgTag[];
   onOpenArticle:   (id: string) => void;
   onNewArticle?:   () => void;
-  onOpenImport:    () => void;
+  /** Absent : pas d'import (module `imports` masqué). */
+  onOpenImport?:   () => void;
   importModal:     React.ReactNode;
 }
 
@@ -1130,7 +1136,9 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       {bulkConfirmOpen && (
         <ConfirmDialog
           title={`Supprimer ${selectedIds.size} article${selectedIds.size > 1 ? 's' : ''} ?`}
-          description="Les articles sélectionnés seront supprimés, sauf ceux utilisés dans des parcours. Cette action est définitive."
+          description={hasModule(useAuthStore.getState().session?.organization, 'learning')
+            ? 'Les articles sélectionnés seront supprimés, sauf ceux utilisés dans des parcours. Cette action est définitive.'
+            : 'Les articles sélectionnés seront supprimés. Cette action est définitive.'}
           confirmLabel={selectedIds.size > 1 ? 'Supprimer les articles' : 'Supprimer l\'article'}
           variant="danger"
           loading={bulkDeleting}
@@ -1141,7 +1149,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
       {confirmArchive && (
         <ConfirmDialog
           title="Archiver cet article ?"
-          description={`« ${confirmArchive.title} » ne sera plus visible des conseillers ni du chatbot. Vous pourrez le désarchiver depuis l'onglet Archivés ; il reviendra en brouillon.`}
+          description={`« ${confirmArchive.title} » ne sera plus visible des conseillers${hasModule(useAuthStore.getState().session?.organization, 'chatbot') ? ' ni du chatbot' : ''}. Vous pourrez le désarchiver depuis l'onglet Archivés ; il reviendra en brouillon.`}
           confirmLabel="Archiver l'article"
           loading={archiving}
           onConfirm={handleArchive}
@@ -1164,7 +1172,7 @@ function KnowledgeListView(props: KnowledgeListViewProps) {
         subtitle="Articles de référence pour vos équipes."
         actions={isAdmin && (
           <>
-            <Button variant="ghost" size="md" onClick={onOpenImport}>Importer un document</Button>
+            {onOpenImport && <Button variant="ghost" size="md" onClick={onOpenImport}>Importer un document</Button>}
             <Button variant="primary" size="md" onClick={onNewArticle}><Plus size={20} />Nouvel article</Button>
           </>
         )}

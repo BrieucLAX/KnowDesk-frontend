@@ -41,6 +41,8 @@ import {
   useAuthStore, selectIsLoggedIn, selectUserRole, selectOrganization,
 } from './store/authStore';
 import { canRunSetupWizard, canSeeScreen, hasModule } from './shared/lib/modules';
+import { sectionAllowed } from './features/settings/components/SettingsPage';
+import type { SettingsSection } from './features/settings/types';
 import type { AuthSession }  from './features/auth/types';
 import type { SearchResult } from './features/search/types';
 
@@ -187,7 +189,9 @@ function viewToPath(view: View): string | null {
     case 'learning':      return '/learning';
     case 'learning-edit': return `/learning/${view.pathId}/edit`;
     case 'learning-play': return `/learning/play/${view.moduleId}`;
-    case 'settings':    return '/settings';
+    // /audit garde son adresse : sans elle, un lien direct masqué réécrivait l'URL pendant le
+    // retour à l'accueil, et les deux synchronisations se relançaient sans fin.
+    case 'settings':    return view.section === 'audit' ? '/audit' : '/settings';
     case 'account':     return '/account';
     case 'faqs':        return '/faqs';
     case 'faq-editor':  return view.faqId ? `/faqs/${view.faqId}/edit` : '/faqs/new';
@@ -213,10 +217,11 @@ function isScreenAllowed(org: Parameters<typeof canSeeScreen>[0], role: string |
 
 /**
  * Écran d'accueil d'une organisation : le tableau de bord si elle a le module,
- * sinon l'Onboarding, sinon Mon compte (toujours permis).
+ * sinon les articles, sinon l'Onboarding, sinon Mon compte (toujours permis).
  */
 function homeView(org: Parameters<typeof canSeeScreen>[0], role: string | null): View {
   if (isScreenAllowed(org, role, 'dashboard'))  return { screen: 'dashboard' };
+  if (isScreenAllowed(org, role, 'knowledge'))  return { screen: 'knowledge' };
   if (isScreenAllowed(org, role, 'onboarding')) return { screen: 'onboarding' };
   return { screen: 'account' };
 }
@@ -328,7 +333,9 @@ export function App() {
   // (lien direct, URL inconnue, retour arrière) est remplacé par l'accueil de
   // l'organisation. `shown` est rendu tout de suite, sans monter l'écran refusé
   // ni déclencher ses appels ; l'effet réaligne l'état et l'URL.
-  const allowed = isScreenAllowed(organization, role, view.screen);
+  // Un onglet des Paramètres masqué ouvert par lien direct (/audit) mène aussi à l'accueil.
+  const allowed = isScreenAllowed(organization, role, view.screen)
+    && (view.screen !== 'settings' || !view.section || sectionAllowed(organization, view.section as SettingsSection));
   const shown: View = allowed ? view : homeView(organization, role);
   useEffect(() => {
     if (isLoggedIn && !allowed) setView(homeView(organization, role));

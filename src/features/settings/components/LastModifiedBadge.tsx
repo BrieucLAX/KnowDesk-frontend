@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { auditApi, type AuditAction, type AuditLogItem } from '../../audit/api/auditApi';
 import { formatRelative } from '../../../shared/lib/formatDate';
+import { hasModule } from '../../../shared/lib/modules';
+import { useAuthStore } from '../../../store/authStore';
 
 interface LastModifiedBadgeProps {
   /** Liste d'actions audit à interroger. Si plusieurs, on prend la
@@ -19,12 +21,15 @@ interface LastModifiedBadgeProps {
  */
 export function LastModifiedBadge({ actions }: LastModifiedBadgeProps) {
   const [item, setItem] = useState<AuditLogItem | null>(null);
+  // Journal d'audit masqué : aucun appel, aucun badge (l'écriture du journal continue).
+  const auditVisible = hasModule(useAuthStore(s => s.session?.organization), 'audit');
 
   // Memoization simple sur le tableau d'actions (les actions sont
   // typiquement des string literals constants par section).
   const key = actions.join(',');
 
   useEffect(() => {
+    if (!auditVisible) return;
     let cancelled = false;
     Promise.all(actions.map(a => auditApi.list({ action: a, perPage: 1 })))
       .then(responses => {
@@ -38,9 +43,9 @@ export function LastModifiedBadge({ actions }: LastModifiedBadgeProps) {
       .catch(() => { /* silent — pas critique */ });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]);
+  }, [key, auditVisible]);
 
-  if (!item) return null;
+  if (!auditVisible || !item) return null;
 
   const userName = item.user?.firstName
     ? `${item.user.firstName} ${item.user.lastName ?? ''}`.trim()

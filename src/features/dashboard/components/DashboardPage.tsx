@@ -13,6 +13,7 @@ import { useDashboard }        from '../hooks/useDashboard';
 import { useAuthStore, selectUser, selectUserRole } from '../../../store/authStore';
 import { formatRelative }      from '../../../shared/lib/formatDate';
 import { Plus } from 'lucide-react';
+import { hasModule, linkAllowed } from '../../../shared/lib/modules';
 
 /**
  * DashboardPage — first screen after login.
@@ -39,6 +40,10 @@ export function DashboardPage({ onArticleClick, onNewArticle }: DashboardPagePro
   const isError    = state.status === 'error';
   const data       = state.status === 'success' ? state.data : null;
   const isAdmin    = role === 'admin' || role === 'manager';
+  // Séquence 1 du masquage : rien ne pointe vers une fonction masquée (score, processus…).
+  const organization = useAuthStore(s => s.session?.organization);
+  const has = (m: Parameters<typeof hasModule>[1]) => hasModule(organization, m);
+  const checklist = (data?.checklist ?? []).filter(item => linkAllowed(organization, item.href));
 
   const handleArticleClick = useCallback((id: string) => {
     onArticleClick?.(id);
@@ -54,7 +59,9 @@ export function DashboardPage({ onArticleClick, onNewArticle }: DashboardPagePro
         title={greeting}
         subtitle={isAdmin
           ? 'Voici l\'état de votre base de connaissance.'
-          : 'Recherchez un processus ou parcourez les catégories.'}
+          : has('trees')
+            ? 'Recherchez un processus ou parcourez les catégories.'
+            : 'Recherchez un article ou parcourez les catégories.'}
         actions={isAdmin && (
           <Button variant="primary" size="md" onClick={onNewArticle}>
             <Plus size={20} />Nouvel article
@@ -73,8 +80,8 @@ export function DashboardPage({ onArticleClick, onNewArticle }: DashboardPagePro
       {/* ── Cartes IA — KbScoreCard puis Auditeur qualité (admin/manager) ── */}
       {isAdmin && (
         <>
-          <KbScoreCard />
-          <ArticlesToReworkCard onOpen={handleArticleClick} />
+          {has('kbscore') && <KbScoreCard />}
+          {has('article_quality') && <ArticlesToReworkCard onOpen={handleArticleClick} />}
         </>
       )}
 
@@ -82,8 +89,8 @@ export function DashboardPage({ onArticleClick, onNewArticle }: DashboardPagePro
       <div className="dashboard__stats" role="region" aria-label="Statistiques">
         <StatCard label="Articles publiés" value={data?.stats.publishedArticles ?? 0} loading={isLoading} />
         <StatCard label="Articles au total"  value={data?.stats.totalArticles     ?? 0} loading={isLoading} />
-        <StatCard label="FAQ créées"        value={data?.stats.totalFaqs         ?? 0} loading={isLoading} />
-        <StatCard label="Membres actifs"    value={data?.stats.teamMembers       ?? 0} loading={isLoading} />
+        {has('faqs') && <StatCard label="FAQ créées"        value={data?.stats.totalFaqs         ?? 0} loading={isLoading} />}
+        {has('members') && <StatCard label="Membres actifs"    value={data?.stats.teamMembers       ?? 0} loading={isLoading} />}
       </div>
 
       {/* ── Main content: two columns ── */}
@@ -93,8 +100,8 @@ export function DashboardPage({ onArticleClick, onNewArticle }: DashboardPagePro
         <div className="dashboard__main">
 
           {/* Activation checklist — admin only */}
-          {isAdmin && data?.checklist && data.checklist.length > 0 && (
-            <ActivationChecklist items={data.checklist} />
+          {isAdmin && checklist.length > 0 && (
+            <ActivationChecklist items={checklist} />
           )}
 
           {/* Recent articles */}

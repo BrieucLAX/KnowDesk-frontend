@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { hasModule, type ModuleName } from '../../../shared/lib/modules';
 import { useNavigate } from 'react-router-dom';
 import '../search.css';
 import { apiClient } from '../../../shared/lib/apiClient';
@@ -40,22 +41,24 @@ interface ActionItem {
   /** Cible navigation. Pour les créations spéciales, on encode via query param. */
   path:      string;
   adminOnly: boolean;
+  /** Module requis (séquence 1 du masquage) : sans lui, l'action n'est pas proposée. */
+  module?:   ModuleName;
 }
 
 const ACTIONS: ActionItem[] = [
   // Navigation
-  { id: 'go-dashboard', label: 'Aller à l\'accueil',                 icon: <House size={16} />, keywords: 'tableau bord dashboard accueil home',  path: '/',          adminOnly: false },
-  { id: 'go-knowledge', label: 'Aller aux articles',                icon: <BookOpen size={16} />, keywords: 'base connaissance knowledge articles',  path: '/knowledge', adminOnly: false },
-  { id: 'go-faqs',      label: 'Aller aux FAQ',                     icon: <CircleHelp size={16} />, keywords: 'faq questions',                         path: '/faqs',      adminOnly: false },
-  { id: 'go-trees',     label: 'Aller aux processus',               icon: <ListOrdered size={16} />, keywords: 'processus arbres trees',                 path: '/trees',     adminOnly: false },
-  { id: 'go-analytics', label: 'Aller à l\'analyse',                 icon: <ChartColumn size={16} />, keywords: 'analytics statistiques stats',           path: '/analytics', adminOnly: true },
-  { id: 'go-members',   label: 'Aller à l\'équipe',                 icon: <Users size={16} />, keywords: 'équipe team members membres',           path: '/members',   adminOnly: true },
-  { id: 'go-settings',  label: 'Aller aux paramètres',              icon: <Settings size={16} />, keywords: 'paramètres settings réglages config',    path: '/settings',  adminOnly: false },
+  { id: 'go-dashboard', label: 'Aller à l\'accueil',                 icon: <House size={16} />, keywords: 'tableau bord dashboard accueil home',  path: '/',          adminOnly: false, module: 'dashboard' },
+  { id: 'go-knowledge', label: 'Aller aux articles',                icon: <BookOpen size={16} />, keywords: 'base connaissance knowledge articles',  path: '/knowledge', adminOnly: false, module: 'knowledge' },
+  { id: 'go-faqs',      label: 'Aller aux FAQ',                     icon: <CircleHelp size={16} />, keywords: 'faq questions',                         path: '/faqs',      adminOnly: false, module: 'faqs' },
+  { id: 'go-trees',     label: 'Aller aux processus',               icon: <ListOrdered size={16} />, keywords: 'processus arbres trees',                 path: '/trees',     adminOnly: false, module: 'trees' },
+  { id: 'go-analytics', label: 'Aller à l\'analyse',                 icon: <ChartColumn size={16} />, keywords: 'analytics statistiques stats',           path: '/analytics', adminOnly: true, module: 'analytics' },
+  { id: 'go-members',   label: 'Aller à l\'équipe',                 icon: <Users size={16} />, keywords: 'équipe team members membres',           path: '/members',   adminOnly: true, module: 'members' },
+  { id: 'go-settings',  label: 'Aller aux paramètres',              icon: <Settings size={16} />, keywords: 'paramètres settings réglages config',    path: '/settings',  adminOnly: false, module: 'settings' },
   { id: 'go-account',   label: 'Aller à mon compte',                icon: <User size={16} />, keywords: 'compte profil account profile',         path: '/account',   adminOnly: false },
   // Création (admin / manager)
-  { id: 'new-article',  label: 'Créer un nouvel article',           icon: <Plus size={16} />, keywords: 'nouvel article créer create new',       path: '/articles/new',                       adminOnly: true },
-  { id: 'new-faq',      label: 'Créer une nouvelle FAQ',            icon: <Plus size={16} />, keywords: 'nouvelle faq créer create new',         path: '/faqs/new',                           adminOnly: true },
-  { id: 'new-category', label: 'Créer une nouvelle catégorie',      icon: <Plus size={16} />, keywords: 'nouvelle catégorie créer create new',   path: '/knowledge?action=new-category',     adminOnly: true },
+  { id: 'new-article',  label: 'Créer un nouvel article',           icon: <Plus size={16} />, keywords: 'nouvel article créer create new',       path: '/articles/new',                       adminOnly: true, module: 'knowledge' },
+  { id: 'new-faq',      label: 'Créer une nouvelle FAQ',            icon: <Plus size={16} />, keywords: 'nouvelle faq créer create new',         path: '/faqs/new',                           adminOnly: true, module: 'faqs' },
+  { id: 'new-category', label: 'Créer une nouvelle catégorie',      icon: <Plus size={16} />, keywords: 'nouvelle catégorie créer create new',   path: '/knowledge?action=new-category',     adminOnly: true, module: 'knowledge' },
 ];
 
 interface FlatItem {
@@ -80,6 +83,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
   const navigate = useNavigate();
   const role     = useAuthStore(selectUserRole);
   const isAdmin  = role === 'admin' || role === 'manager';
+  const organization = useAuthStore(s => s.session?.organization);
 
   const [open,           setOpen]           = useState(false);
   const [query,          setQuery]          = useState('');
@@ -156,6 +160,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
     // Actions — toutes si query vide, filter par includes sinon
     const visibleActions = ACTIONS
       .filter(a => isAdmin || !a.adminOnly)
+      .filter(a => !a.module || hasModule(organization, a.module))
       .filter(a => !q || a.label.toLowerCase().includes(q) || a.keywords.toLowerCase().includes(q));
     if (visibleActions.length > 0) {
       out.push({
@@ -190,8 +195,8 @@ export function CommandPalette({ className }: CommandPaletteProps) {
     // Articles / FAQs / Processus — uniquement si query présente
     if (q) {
       const articles = searchResults.filter(r => r.type === 'article');
-      const faqs     = searchResults.filter(r => r.type === 'faq');
-      const trees    = searchResults.filter(r => r.type === 'tree');
+      const faqs     = hasModule(organization, 'faqs')  ? searchResults.filter(r => r.type === 'faq')  : [];
+      const trees    = hasModule(organization, 'trees') ? searchResults.filter(r => r.type === 'tree') : [];
 
       if (articles.length > 0) {
         out.push({
@@ -233,7 +238,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
     }
 
     return out;
-  }, [query, categories, searchResults, isAdmin, goPath]);
+  }, [query, categories, searchResults, isAdmin, goPath, organization]);
 
   // Liste à plat pour la navigation clavier (skip les headers naturellement)
   const flatItems = useMemo(() => sections.flatMap(s => s.items), [sections]);

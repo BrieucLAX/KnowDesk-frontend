@@ -5,6 +5,8 @@ import { Skeleton }       from '../../../shared/components/ui/Skeleton';
 import { HelpPopover }    from '../../../shared/components/ui/HelpPopover';
 import { LastModifiedBadge } from './LastModifiedBadge';
 import { ApiError }       from '../../../shared/lib/apiClient';
+import { hasModule, type ModuleName } from '../../../shared/lib/modules';
+import { useAuthStore }   from '../../../store/authStore';
 import type {
   AiServicesPayload, AiServiceItem, ChatModelId, ChatModelMeta,
 } from '../types';
@@ -20,6 +22,8 @@ import { BookOpen, Globe, GraduationCap, LockKeyhole, MessageCircle, Radar, Sear
  */
 export function AiModelsSection() {
   const toast = useToast();
+  const organization = useAuthStore(s => s.session?.organization);
+  const chatbot = hasModule(organization, 'chatbot');
   const [data, setData] = useState<AiServicesPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -91,17 +95,22 @@ export function AiModelsSection() {
         </h2>
         <p className="settings-section__desc">
           Cette plateforme utilise plusieurs services d'intelligence artificielle.
-          Vous pouvez choisir ci-dessous le modèle utilisé par le chatbot. Les autres
-          services utilisent le modèle par défaut.
+          {chatbot
+            ? <> Vous pouvez choisir ci-dessous le modèle utilisé par le chatbot. Les autres
+              services utilisent le modèle par défaut.</>
+            : <> Ils utilisent le modèle par défaut.</>}
         </p>
-        <LastModifiedBadge actions={['org.chat_model.changed']} />
+        {chatbot && <LastModifiedBadge actions={['org.chat_model.changed']} />}
       </header>
 
       <div className="ai-models__list">
         {(data.categories ?? []).length === 0 ? (
           // Fallback : backend pas encore redéployé OU services anciens
           // sans `category`. On affiche les services à plat sans groupage.
-          data.services.map(svc => (
+          data.services.filter(svc => {
+            const module = svc.category ? CATEGORY_MODULE[svc.category] : undefined;
+            return !module || hasModule(organization, module);
+          }).map(svc => (
             <ServiceCard
               key={svc.key}
               service={svc}
@@ -112,6 +121,9 @@ export function AiModelsSection() {
           ))
         ) : (
           data.categories.map(cat => {
+            // Groupe d'une fonction masquée (chatbot, formations, veille de marque) : non affiché.
+            const module = CATEGORY_MODULE[cat.key];
+            if (module && !hasModule(organization, module)) return null;
             const servicesInCat = data.services.filter(s => s.category === cat.key);
             if (servicesInCat.length === 0) return null;
             return (
@@ -156,6 +168,13 @@ const CATEGORY_ICON: Record<string, React.ReactNode> = {
   kb:               <BookOpen size={20} />,
   learning:         <GraduationCap size={20} />,
   brand_monitoring: <Radar size={20} />,
+};
+/** Module de chaque groupe de modèles (séquence 1 du masquage). */
+const CATEGORY_MODULE: Record<string, ModuleName> = {
+  chatbot:          'chatbot',
+  search:           'ai_answer',
+  learning:         'learning',
+  brand_monitoring: 'brand_monitoring',
 };
 const stripLeadingEmoji = (label: string) => label.replace(/^[\p{Extended_Pictographic}\uFE0F\s]+/u, '');
 
