@@ -47,6 +47,8 @@ const SORT_TO_COL: Record<FaqSortBy, string> = {
 
 export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
   const role    = useAuthStore(selectUserRole);
+  // Cadenas « Interne — non utilisée par le chatbot » : sans le chatbot, il ne dit rien d'utile.
+  const chatbotModule = hasModule(useAuthStore(s => s.session?.organization), 'chatbot');
   const canEdit = role === 'admin' || role === 'manager';
   const toast   = useToast();
   const location = useLocation();
@@ -306,7 +308,7 @@ export function FaqsPage({ onNewFaq, onEditFaq }: FaqsPageProps) {
               render: faq => (
                 <div className="faqs-cell-question">
                   <div className="faqs-cell-question__text">
-                    {faq.visibility === 'internal' && (
+                    {chatbotModule && faq.visibility === 'internal' && (
                       <span className="visibility-icon" title="Interne — non utilisée par le chatbot de votre site"><Lock size={16} role="img" aria-label="FAQ interne" /></span>
                     )}
                     {faq.question}
