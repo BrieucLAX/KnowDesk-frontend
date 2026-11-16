@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   PENDING_REASONS,
-  PENDING_POINT_LABEL, uncoveredCount, uncoveredInCorrection,
+  PENDING_POINT_LABEL, unappliedAnswersInCorrection, unappliedAnswersTitle, unappliedCount,
   blockingCardsLeft, blockingLeftLabel, correctionFailureMessage, correctionStepStates, firstSentence, itemLabel, originLabel, outcomeLabel,
   partialSummary, pendingSentences, reasonGroups,
   canCreateChapters, kindLabel, reasonLabel, retiredSourceSentence, reviewProgressLabel, toVerifyCounts, toVerifyLabel, type BaseCorrection, type Modification,
@@ -207,31 +207,26 @@ describe('Correction 0.5.0 : libellés en clair', () => {
   });
 });
 
-describe('uncoveredInCorrection (lot C, PR 6)', () => {
+describe('unappliedAnswersInCorrection (lot C, PR 6 ; C-Q11)', () => {
   const mod = (id: string, outcome: 'applied' | 'not_applicable', reasons: string[] = []) => ({
     id, kind: 'kept_side' as const, outcome, reasons, instruction: '', section_keys: [],
     origin: { card_id: `card_${id}`, card_rank: 1, decision_id: 'd', action_type: 'accept_side', decided_at: '2026-11-14T10:00:00Z' },
   });
-  it('les cartes en attente, les modifications non appliquées et les lignes sans source, lues telles quelles', () => {
-    const u = uncoveredInCorrection({
-      pending: [{ card_id: 'card_a', card_rank: 2, reason: 'no_section' }, { card_id: 'card_b', card_rank: 3 }],
+  it('seules les réponses de l\'expert non appliquées : cartes répondues en attente et modifications non appliquées', () => {
+    const u = unappliedAnswersInCorrection({
+      pending: [
+        { card_id: 'card_a', card_rank: 2, reason: 'no_section' }, { card_id: 'card_b', card_rank: 3 },
+        { card_id: 'card_c', card_rank: 4, reason: 'unanswered' },
+      ],
       modifications: [mod('M5', 'not_applicable', ['s1: value_without_source']), mod('M2', 'not_applicable'), mod('M1', 'applied')],
-      sheets: [{ document_id: 'd', document_path: 'd.md', markdown: '', sections: [{
-        key: 's1', heading_path: ['Tarifs'], original_markdown: '', corrected_markdown: '', changes: [
-          { kind: 'insert', line_kind: 'paragraph', before: '', after: 'Le prix est de 12 €.', modification_id: 'M5', kept: false, undo_reason: 'value_without_source' },
-          { kind: 'insert', line_kind: 'paragraph', before: '', after: 'Gardée.', modification_id: 'M5', kept: true },
-          { kind: 'insert', line_kind: 'paragraph', before: '', after: 'Autre raison.', modification_id: 'M5', kept: false, undo_reason: 'not_decided' },
-        ],
-      }] }],
     }, key => (key === 's1' ? 'Tarifs' : null));
-    expect(u.pending).toEqual([
-      { cardId: 'card_a', text: PENDING_POINT_LABEL.no_section },
-      { cardId: 'card_b', text: 'En attente : la base n\'a pas été modifiée pour elle.' },
-    ]);
+    expect(u.pending).toEqual([{ cardId: 'card_a', text: PENDING_POINT_LABEL.no_section }]);
     expect(u.notApplied.map(m => m.id)).toEqual(['M2', 'M5']);
     expect(u.notApplied[1].text).toBe('Le texte proposé contenait un chiffre ou une date absents de vos documents ; il n\'a pas été repris');
-    expect(u.withoutSource).toEqual([{ modificationId: 'M5', sectionKey: 's1', text: 'Le prix est de 12 €.' }]);
-    expect(uncoveredCount(u)).toBe(5);
+    expect(u).not.toHaveProperty('withoutSource');
+    expect(unappliedCount(u)).toBe(3);
+    expect(unappliedAnswersTitle(3)).toBe('3 de vos réponses ne figurent pas dans la base');
+    expect(unappliedAnswersTitle(1)).toBe('1 de vos réponses ne figure pas dans la base');
   });
 
   it('chaque raison d\'attente du contrat a son libellé', () => {

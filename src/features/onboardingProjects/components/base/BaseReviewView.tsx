@@ -5,7 +5,7 @@ import {
 } from '../../lib/baseDocument';
 import {
   canCreateChapters, chapterRequests, expertEntered, firstSentence, toVerifyCounts, recordedAnswer, itemLabel, itemRank, kindLabel, NEW_CHAPTER_LABEL, originLabel, outcomeLabel, partialSummary, retiredSourceSentence,
-  pendingSentences, reasonGroups, removedAsObsolete, uncoveredCount, uncoveredInCorrection, type UncoveredCorrection, reviewProgressLabel, SHOWN_REASONS, type ReasonGroup, type RemovedAsObsolete,
+  pendingSentences, reasonGroups, removedAsObsolete, unappliedAnswersInCorrection, unappliedAnswersTitle, unappliedCount, type UnappliedAnswers, reviewProgressLabel, SHOWN_REASONS, type ReasonGroup, type RemovedAsObsolete,
   type BaseCorrection, type Convention, type Modification, type SectionFix,
 } from '../../lib/correction';
 import type { BaseReview } from '../../hooks/useBaseReview';
@@ -29,6 +29,8 @@ interface BaseReviewViewProps {
   review:     BaseReview;
   /** Audit 0.11.0 : les cartes « Contenu périmé » ; leurs retraits acceptés se listent dans « Retirés comme obsolètes ». */
   outdatedCardIds?: ReadonlySet<string>;
+  /** Ouvre « À clarifier » sur une carte : le lien de chaque réponse non appliquée (C-Q11). */
+  onGoToClarify?: (cardId: string) => void;
 }
 
 const NO_CARDS: ReadonlySet<string> = new Set();
@@ -41,7 +43,7 @@ const anchorOf = (id: string) => `obp-base-${id.toLowerCase()}`;
  * inchangées repliées à leur place, un avis par modification et par convention, un commentaire
  * possible sur n'importe quelle section, et « n sur N relues » en tête.
  */
-export function BaseReviewView({ base, cardTitles, decisions = new Map(), editable, review, outdatedCardIds = NO_CARDS }: BaseReviewViewProps) {
+export function BaseReviewView({ base, cardTitles, decisions = new Map(), editable, review, outdatedCardIds = NO_CARDS, onGoToClarify }: BaseReviewViewProps) {
   const sheets = useMemo(() => sheetViews(base), [base]);
   const titles = useMemo(() => sectionTitleIndex(sheets), [sheets]);
   const placement = useMemo(() => modificationPlacement(sheets, base.modifications), [sheets, base.modifications]);
@@ -94,7 +96,7 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
   const obsolete = removedAsObsolete(base, state.reviews, outdatedCardIds);
   const sectionTitle = (key: string) => titles.get(key) ?? null;
   /** Lot C, PR 6 : les points non couverts, lus dans la base corrigée. */
-  const uncovered = uncoveredInCorrection(base, sectionTitle);
+  const unapplied = unappliedAnswersInCorrection(base, sectionTitle);
 
   const modificationCard = (m: Modification) => (
     <ReviewCard
@@ -290,8 +292,8 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
         </p>
       )}
 
-      {uncoveredCount(uncovered) > 0 && (
-        <UncoveredCorrectionView uncovered={uncovered} cardTitles={cardTitles} sectionTitle={sectionTitle} />
+      {unappliedCount(unapplied) > 0 && (
+        <UnappliedAnswersView unapplied={unapplied} cardTitles={cardTitles} onGoToClarify={onGoToClarify} />
       )}
 
       {(base.retired_sources ?? []).length > 0 && (
@@ -338,51 +340,36 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
 }
 
 /**
- * « Points non couverts par vos documents » en mode correction (plan-construire-v1, lot C, PR 6) :
- * ce que la correction n'a pas écrit dans la base, lu tel quel dans la base corrigée (cartes en
- * attente, modifications non appliquées, chiffres ou dates sans source). Rien n'entre dans la base.
+ * « N de vos réponses ne figurent pas dans la base » en mode correction (C-Q11, 2026-11-16, à la
+ * place des « Points non couverts » de la PR 6) : seules les réponses de l'expert non appliquées,
+ * chacune avec le titre de sa carte, un lien vers elle et la raison ; rien sur ce que les
+ * documents ne donnent pas.
  */
-function UncoveredCorrectionView({ uncovered, cardTitles, sectionTitle }: {
-  uncovered:    UncoveredCorrection;
-  cardTitles:   ReadonlyMap<string, string>;
-  sectionTitle: (key: string) => string | null;
+function UnappliedAnswersView({ unapplied, cardTitles, onGoToClarify }: {
+  unapplied:      UnappliedAnswers;
+  cardTitles:     ReadonlyMap<string, string>;
+  onGoToClarify?: (cardId: string) => void;
 }) {
-  const card = (id: string) => cardTitles.get(id) ?? 'Une carte';
-  const groups = [
-    { title: 'Cartes en attente', items: uncovered.pending.map((p, i) => (
-      <li key={`p${i}`}><strong>{card(p.cardId)}</strong><p className="obp-muted">{p.text}</p></li>
-    )) },
-    { title: 'Modifications non appliquées', items: uncovered.notApplied.map(m => (
-      <li key={m.id}>
-        <strong><a href={`#${anchorOf(m.id)}`}>{itemLabel(m.id)}</a>, carte « {card(m.cardId)} »</strong>
-        <p className="obp-muted">{m.text}</p>
-      </li>
-    )) },
-    { title: 'Chiffres ou dates sans source', items: uncovered.withoutSource.map((v, i) => (
-      <li key={`v${i}`}>
-        <p className="obp-base-obsolete__where">
-          {sectionTitle(v.sectionKey) ?? 'Une section'}
-          {v.modificationId && <>{' · '}<a href={`#${anchorOf(v.modificationId)}`}>{itemLabel(v.modificationId)}</a></>}
-        </p>
-        <blockquote className="obp-base-obsolete__text"><p>{v.text}</p></blockquote>
-        <p className="obp-muted">Aucun de vos documents ne donne ce chiffre ou cette date : la ligne n'a pas été reprise.</p>
-      </li>
-    )) },
-  ].filter(g => g.items.length > 0);
+  const card = (id: string) => {
+    const title = cardTitles.get(id) ?? 'Une carte';
+    return onGoToClarify
+      ? <button type="button" className="obp-link" onClick={() => onGoToClarify(id)}>{title}</button>
+      : <>{title}</>;
+  };
   return (
-    <section className="obp-base-chapter obp-base-uncovered" aria-labelledby="obp-base-uncovered">
-      <h2 id="obp-base-uncovered" className="obp-base-chapter__title">
-        Points non couverts par vos documents ({uncoveredCount(uncovered)})
-      </h2>
-      <p className="obp-muted">
-        Ce que vos documents ne donnent pas n'est jamais écrit dans la base. Ces points sont à compléter par votre équipe.
-      </p>
-      {groups.map(g => (
-        <div key={g.title} className="obp-base-uncovered__group">
-          <h3 className="obp-base-section__title">{g.title} ({g.items.length})</h3>
-          <ul className="obp-base-obsolete__list">{g.items}</ul>
-        </div>
-      ))}
+    <section className="obp-base-chapter obp-base-uncovered" aria-labelledby="obp-base-unapplied">
+      <h2 id="obp-base-unapplied" className="obp-base-chapter__title">{unappliedAnswersTitle(unappliedCount(unapplied))}</h2>
+      <ul className="obp-base-obsolete__list">
+        {unapplied.pending.map((p, i) => (
+          <li key={`p${i}`}><strong>{card(p.cardId)}</strong><p className="obp-muted">{p.text}</p></li>
+        ))}
+        {unapplied.notApplied.map(m => (
+          <li key={m.id}>
+            <strong>{card(m.cardId)}</strong> · <a href={`#${anchorOf(m.id)}`}>{itemLabel(m.id)}</a> non appliquée
+            <p className="obp-muted">{m.text}</p>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

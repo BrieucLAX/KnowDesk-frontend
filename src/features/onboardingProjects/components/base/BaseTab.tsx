@@ -144,7 +144,7 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
   if (analysisId !== null && planAudit === undefined) return <Skeleton className="obp-skeleton-block" />;
   if (analysisId !== null && planAudit) {
     return <AuditImagesContext.Provider value={images}>
-      <PlanTab projectId={project.id} analysisId={analysisId} audit={planAudit} cards={cards} decisions={decisions} onGoToClarify={onGoToClarify} />
+      <PlanTab projectId={project.id} analysisId={analysisId} audit={planAudit} cards={cards} onGoToClarify={onGoToClarify} />
     </AuditImagesContext.Provider>;
   }
   if (loaded.state === 'none') {
@@ -223,7 +223,7 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
                 footer={footer}
               />
             )}
-            <BaseReviewView base={base.base} cardTitles={titles} decisions={decisions} editable={base.reviewable} review={review}
+            <BaseReviewView base={base.base} cardTitles={titles} decisions={decisions} onGoToClarify={onGoToClarify} editable={base.reviewable} review={review}
               outdatedCardIds={outdatedCardIds} />
             <div ref={setFooter} />
           </AuditImagesContext.Provider>

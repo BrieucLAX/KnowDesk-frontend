@@ -291,7 +291,7 @@ describe('Nouvelle base : relecture', () => {
     expect(screen.getByText('Saisi par l\'expert le 09/11/2026.')).toBeInTheDocument();
   });
 
-  it('lot C, PR 6 : « Points non couverts par vos documents », lus dans la correction 0.5.0 (cartes en attente, non appliquées, sans source)', async () => {
+  it('C-Q11 : seules les réponses de l\'expert non appliquées, lues dans la correction 0.5.0, avec un lien vers leur carte', async () => {
     const real = BASE_PILOTE_03 as unknown as BaseVersion;
     const base = { ...real, schemaVersion: '0.5.0', base: { ...real.base, schema_version: '0.5.0' } };
     mockBase(base, [correction({ id: base.correctionId })]);
@@ -299,16 +299,16 @@ describe('Nouvelle base : relecture', () => {
       ...c, mergedRanks: [], documentIds: [], sides: [], answers: [], unverifiedQuotes: [],
     }));
     vi.mocked(onboardingApi.getAudit).mockResolvedValue({ schemaVersion: '0.8.0', reading: { cards } } as unknown as AuditResponse);
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
-    const list = (await screen.findByRole('heading', { level: 2, name: 'Points non couverts par vos documents (5)' })).closest('section')!;
-    expect([...list.querySelectorAll('h3')].map(h => h.textContent)).toEqual([
-      'Cartes en attente (1)', 'Modifications non appliquées (3)', 'Chiffres ou dates sans source (1)',
-    ]);
-    expect(list).toHaveTextContent('Service de téléconsultation médicale');
+    const onGoToClarify = vi.fn();
+    const { container } = render(<BaseTab project={project} onGoToClarify={onGoToClarify} />);
+    const list = (await screen.findByRole('heading', { level: 2, name: '4 de vos réponses ne figurent pas dans la base' })).closest('section')!;
+    expect(within(list).getAllByRole('listitem')).toHaveLength(4);
     expect(list).toHaveTextContent('Répondue, mais elle demande un chapitre qu\'aucun document importé ne porte : il n\'a pas été créé.');
     expect(within(list).getAllByRole('link').map(a => a.getAttribute('href'))).toEqual(expect.arrayContaining(['#obp-base-m3', '#obp-base-m5', '#obp-base-m9']));
-    expect(list).toHaveTextContent('Aucun de vos documents ne donne ce chiffre ou cette date : la ligne n\'a pas été reprise.');
-    expect(list).toHaveTextContent('Ce que vos documents ne donnent pas n\'est jamais écrit dans la base.');
+    fireEvent.click(within(list).getByRole('button', { name: 'Service de téléconsultation médicale' }));
+    expect(onGoToClarify).toHaveBeenCalledTimes(1);
+    expect(list).not.toHaveTextContent('Aucun de vos documents ne donne ce chiffre ou cette date');
+    expect(container.textContent).not.toMatch(/Points non couverts|Chiffres ou dates sans source/);
     expect(container.textContent).not.toMatch(TECHNICAL);
   });
 
@@ -323,13 +323,13 @@ describe('Nouvelle base : relecture', () => {
     } });
     render(<BaseTab project={project} onGoToClarify={() => {}} />);
     await screen.findByText(/sur \d+ relues?/);
-    expect(screen.queryByRole('heading', { name: /Points non couverts/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /de vos réponses ne figur/ })).not.toBeInTheDocument();
   });
 
   it('titre chaque fiche par son premier titre, et chaque section une seule fois (Essai 5)', async () => {
     const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
     await screen.findByText('0 sur 6 relues');
-    // Les fiches seulement : la liste des points non couverts (lot C, PR 6) n'est pas une fiche.
+    // Les fiches seulement : l'encart des réponses non appliquées (C-Q11) n'est pas une fiche.
     const chapters = [...container.querySelectorAll('.obp-base-chapter:not(.obp-base-uncovered) > .obp-base-chapter__title')].map(h => h.textContent);
     expect(chapters[0]).toBe('Base de connaissance interne — Alviva Mutuelle');
     expect(chapters).not.toContain('00-sommaire.md');
