@@ -6,15 +6,16 @@
  * sources. Un article ne contient que deux sortes de texte : des passages des documents, chacun
  * avec ses sources, et le texte de l'expert (« Autre réponse » ou précision d'une carte, D11),
  * mot pour mot, « saisi par l'expert le … ». Ce que les documents ne donnent pas n'est jamais
- * écrit : c'est la liste « Points non couverts par vos documents » (D3, D4). Ici : le contrat lu
+ * écrit, ni ailleurs à l'écran : Knowdesk n'affirme rien sur ce qui n'est pas dans les documents
+ * (C-Q11, 2026-11-16, remplace C-Q3, C-Q4 et C-Q9). Les phrases retirées restent sous leur article ;
+ * les réponses de l'expert qu'aucun article ne porte font l'encart en tête des articles. Le contrat
+ * ne change pas : ses autres points (`missing_information`…) sont lus, jamais affichés. Ici : le contrat lu
  * (construction 0.1.0, telle que le back la rend), les étapes, les libellés en clair. Aucun code
  * (identifiant d'article, de carte, de raison) ne sort de ce module vers l'écran.
  */
 import VERSIONS from './contract-versions.json';
 import { sourceRef, type SourceRef } from './audit';
 import type { PlanComment, PlanQuota, StepState } from './plan';
-import type { Decision } from './decisions';
-import { answerLabel, describeCardAnswer, type PlainAnswerCode, type ReadingCard } from './reading';
 
 // ── Contrat du back (onboarding.builds.ts) ────────────────────
 
@@ -104,15 +105,13 @@ export const EMPTY_LABEL: Readonly<Record<EmptyReason, string>> = {
 export type UncoveredKind =
   | 'card_without_article' | 'missing_information' | 'value_without_source' | 'article_without_text' | 'unresolved_card';
 
-/** Les groupes de « Points non couverts par vos documents », dans l'ordre de l'écran (C-Q3 : cartes en tête). */
-export const UNCOVERED_GROUPS: ReadonlyArray<{ title: string; kinds: readonly UncoveredKind[] }> = [
-  { title: 'Cartes sans article',                    kinds: ['card_without_article'] },
-  { title: 'Informations absentes de vos documents', kinds: ['missing_information', 'value_without_source'] },
-  { title: 'Articles sans texte',                    kinds: ['article_without_text'] },
-  { title: 'Points non tranchés',                    kinds: ['unresolved_card'] },
+/**
+ * Les points du contrat (`uncovered`), tous connus pour valider la lecture ; seul
+ * `card_without_article` s'affiche (C-Q11) : une réponse de l'expert qu'aucun article ne porte.
+ */
+export const UNCOVERED_KINDS: readonly UncoveredKind[] = [
+  'card_without_article', 'missing_information', 'value_without_source', 'article_without_text', 'unresolved_card',
 ];
-
-export const UNCOVERED_KINDS: readonly UncoveredKind[] = UNCOVERED_GROUPS.flatMap(g => g.kinds);
 
 // ── Construction 0.1.0, lue ───────────────────────────────────
 
@@ -143,33 +142,17 @@ export interface BuiltArticle {
   emptyReason: EmptyReason | null;
   blocks:      BuiltBlock[];
   removed:     RemovedBlock[];
-  /**
-   * C-Q9 : les manques signalés par la rédaction pour cet article (ses mots, jamais dans la base),
-   * tous gardés, repliés sous l'article, « Précisions à apporter (n) ».
-   */
-  precisions:  string[];
 }
 
 export interface BuiltChapter { id: string; title: string; articles: BuiltArticle[] }
 
-export interface UncoveredPoint {
-  id:        string;
-  kind:      UncoveredKind;
-  subjectId: string | null;
-  cardId:    string | null;
-  expert:    ExpertText | null;
-  /** Le texte retiré, pour une valeur sans source. */
-  removedText: string | null;
-  /** Ce que la rédaction signale comme manquant (ses mots, jamais dans la base). */
-  note:      string | null;
-  /** La décision qui l'a produit, si le point en nomme une. */
-  decisionId: string | null;
-  passages:  SourceRef[];
-}
+/** Une réponse de l'expert qu'aucun article ne porte (`card_without_article`, C-Q11). */
+export interface UnplacedAnswer { cardId: string }
 
 export interface Construction {
   chapters:        BuiltChapter[];
-  uncovered:       UncoveredPoint[];
+  /** Les cartes répondues dont la réponse ne figure dans aucun article, une fois chacune. */
+  unplacedAnswers: UnplacedAnswer[];
   preparationDate: string;
   articleCount:    number;
   writtenCount:    number;
@@ -224,16 +207,6 @@ function blockOf(b: Obj): BuiltBlock | null {
 export function readConstruction(raw: unknown): Construction | null {
   if (!isObj(raw) || !Array.isArray(raw.articles) || !Array.isArray(raw.chapters)) return null;
   const articles = new Map(objs(raw.articles).map(a => [str(a.subject_id), a]));
-  // C-Q9 : un manque signalé pour un article est montré sous cet article, pas dans la liste.
-  const precisionOf = (p: Record<string, unknown>) =>
-    p.kind === 'missing_information' && typeof p.subject_id === 'string' && articles.has(p.subject_id) && typeof p.note === 'string'
-      ? p.subject_id : null;
-  const precisions = new Map<string, string[]>();
-  for (const p of objs(raw.uncovered)) {
-    const subjectId = precisionOf(p);
-    if (subjectId !== null) precisions.set(subjectId, [...(precisions.get(subjectId) ?? []), str(p.note)]);
-  }
-  const removedText = new Map<string, string>();
   const chapters: BuiltChapter[] = objs(raw.chapters).map(c => ({
     id:       str(c.id),
     title:    str(c.title),
@@ -241,7 +214,6 @@ export function readConstruction(raw: unknown): Construction | null {
       const removed: RemovedBlock[] = objs(a.removed).flatMap(r => {
         const reason = oneOf(REMOVED, r.reason);
         if (reason === null) return [];
-        removedText.set(str(r.id), str(r.text));
         return [{ id: str(r.id), text: str(r.text), reason, cardId: strOrNull(r.card_id), passages: refs(r.passages) }];
       });
       return {
@@ -254,32 +226,20 @@ export function readConstruction(raw: unknown): Construction | null {
         emptyReason: oneOf(EMPTY, a.empty_reason),
         blocks:      objs(a.blocks).map(blockOf).filter((b): b is BuiltBlock => b !== null),
         removed,
-        precisions:  precisions.get(str(a.subject_id)) ?? [],
       };
     }),
   }));
-  const uncovered: UncoveredPoint[] = objs(raw.uncovered).flatMap(p => {
-    if (precisionOf(p) !== null) return [];
-    const kind = oneOf(UNCOVERED_KINDS, p.kind);
-    if (kind === null) return [];
-    const removedId = strOrNull(p.removed_block_id);
-    return [{
-      id:          str(p.id),
-      kind,
-      subjectId:   strOrNull(p.subject_id),
-      cardId:      strOrNull(p.card_id),
-      expert:      expertOf(p.expert),
-      removedText: removedId ? removedText.get(removedId) ?? null : null,
-      note:        strOrNull(p.note),
-      decisionId:  strOrNull(p.decision_id),
-      passages:    refs(p.passages),
-    }];
-  });
+  // C-Q11 : seules les réponses de l'expert qu'aucun article ne porte ; une carte une fois.
+  const unplaced = new Set<string>();
+  for (const p of objs(raw.uncovered)) {
+    const cardId = oneOf(UNCOVERED_KINDS, p.kind) === 'card_without_article' ? strOrNull(p.card_id) : null;
+    if (cardId !== null) unplaced.add(cardId);
+  }
   const all = chapters.flatMap(c => c.articles);
   const blocks = all.flatMap(a => a.blocks);
   return {
     chapters,
-    uncovered,
+    unplacedAnswers: [...unplaced].map(cardId => ({ cardId })),
     preparationDate: str(raw.preparation_date),
     articleCount:    all.length,
     writtenCount:    all.filter(a => a.written).length,
@@ -295,48 +255,18 @@ export function removedLabel(r: Pick<RemovedBlock, 'reason' | 'cardId'>, cardTit
 
 const plural = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : one}`;
 
-/** « 6 articles · 2 phrases à vérifier · 1 texte saisi par l'expert · 5 points non couverts ». */
+/** « 6 articles · 2 phrases à vérifier · 1 texte saisi par l'expert ». */
 export function buildSummary(c: Construction): string {
   return [
     plural(c.articleCount, 'article', 'articles'),
     plural(c.toVerifyCount, 'phrase à vérifier', 'phrases à vérifier'),
     plural(c.expertCount, 'texte saisi par l\'expert', 'textes saisis par l\'expert'),
-    plural(c.uncovered.length, 'point non couvert', 'points non couverts'),
   ].join(' · ');
 }
 
-// ── Réponse d'une carte sans article (C-Q3) ───────────────────
-
-/** La décision d'un point : celle qu'il nomme, sinon la décision courante de sa carte ; null sinon. */
-export function pointDecision(
-  p: Pick<UncoveredPoint, 'cardId'> & { decisionId?: string | null },
-  decisions: ReadonlyMap<string, Decision>,
-): Decision | null {
-  const all = [...decisions.values()];
-  return (p.decisionId ? all.find(d => d.id === p.decisionId) : undefined)
-    ?? (p.cardId ? decisions.get(p.cardId) ?? null : null);
-}
-
-/** Le jour d'une décision, à Paris : « 13/11/2026 ». */
-export const decisionDay = (iso: string): string =>
-  new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(iso));
-
-/**
- * « Votre réponse : Retenir « 1er novembre 2026 » (13/11/2026) », avec les libellés des réponses de
- * la carte. Quand le texte de l'expert est montré à part (`withoutText`), seul le libellé est repris.
- */
-export function pointAnswer(
-  decision: Decision, card: ReadingCard | undefined, name: (documentId: string) => string, withoutText = false,
-): string {
-  const a = decision.action as { type: string; group?: string; text?: string };
-  let label: string;
-  const group = a.type === 'retain_value' ? card?.valueGroups?.find(g => g.id === a.group) : undefined;
-  if (group) label = `Retenir « ${group.label} »`;
-  else if (withoutText && typeof a.text === 'string' && a.type !== 'follow_recommendation') {
-    label = answerLabel(card, a.type as PlainAnswerCode).label;
-  } else label = describeCardAnswer(decision.action, card, name);
-  return `Votre réponse : ${label} (${decisionDay(decision.decidedAt)})`;
-}
+/** Titre de l'encart (C-Q11) : « 3 de vos réponses ne figurent dans aucun article ». */
+export const unplacedAnswersTitle = (n: number): string =>
+  n > 1 ? `${n} de vos réponses ne figurent dans aucun article` : `${n} de vos réponses ne figure dans aucun article`;
 
 // ── Progression ───────────────────────────────────────────────
 

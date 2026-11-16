@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
-  buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, pointAnswer, pointDecision, readConstruction, REMOVED_LABEL, removedLabel,
-  SUPPORTED_BUILD_SCHEMAS, TO_VERIFY_LABEL, UNCOVERED_KINDS,
+  buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, readConstruction, REMOVED_LABEL, removedLabel,
+  SUPPORTED_BUILD_SCHEMAS, TO_VERIFY_LABEL, UNCOVERED_KINDS, unplacedAnswersTitle,
 } from './build';
 import VERSIONS from './contract-versions.json';
 import type { Decision } from './decisions';
@@ -123,10 +123,18 @@ describe('readConstruction', () => {
     expect(parrainage.blocks[1]).toMatchObject({ fromExpert: true, sources: [], expert: { enteredOn: '2026-11-13' } });
   });
 
-  it('compte les phrases à vérifier, les textes de l\'expert et les points non couverts', () => {
-    expect(buildSummary(c)).toBe('6 articles · 2 phrases à vérifier · 1 texte saisi par l\'expert · 4 points non couverts');
-    expect(c.chapters.flatMap(ch => ch.articles).flatMap(a => a.precisions)).toEqual(['Le délai de prise en compte d\'une résiliation demandée par le client.']);
-    expect(c.uncovered.find(p => p.kind === 'value_without_source')?.removedText).toBe('Une résiliation avant 12 mois coûte 75 € TTC.');
+  it('compte les phrases à vérifier et les textes de l\'expert, jamais de points non couverts (C-Q11)', () => {
+    expect(buildSummary(c)).toBe('6 articles · 2 phrases à vérifier · 1 texte saisi par l\'expert');
+  });
+
+  it('C-Q11 : seules les réponses de l\'expert qu\'aucun article ne porte sont gardées, une fois par carte', () => {
+    expect(c.unplacedAnswers).toEqual([{ cardId: 'card_1b9961bd7843699b' }]);
+    const raw = JSON.parse(JSON.stringify(RAW)) as { uncovered: Array<Record<string, unknown>> };
+    raw.uncovered.push({ ...raw.uncovered[0], id: 'unc_double' });
+    expect(readConstruction(raw)!.unplacedAnswers).toHaveLength(1);
+    expect(JSON.stringify(c)).not.toContain('Le délai de prise en compte');
+    expect(unplacedAnswersTitle(1)).toBe('1 de vos réponses ne figure dans aucun article');
+    expect(unplacedAnswersTitle(3)).toBe('3 de vos réponses ne figurent dans aucun article');
   });
 
   it('un contenu illisible donne null ; une raison inconnue est ignorée, jamais affichée', () => {
@@ -134,7 +142,7 @@ describe('readConstruction', () => {
     expect(readConstruction({ chapters: [] })).toBeNull();
     const raw = JSON.parse(JSON.stringify(RAW)) as { uncovered: Array<{ kind: string }> };
     raw.uncovered[0].kind = 'nouvelle_raison';
-    expect(readConstruction(raw)!.uncovered).toHaveLength(3);
+    expect(readConstruction(raw)!.unplacedAnswers).toHaveLength(0);
   });
 
   it('la raison d\'un retrait nomme la carte qui l\'a décidé', () => {
@@ -157,29 +165,5 @@ describe('Avancement et échecs', () => {
     );
     expect(buildFailureMessage('build_invalid')).toMatch(/problème de notre côté.*ne compte pas dans votre quota/);
     expect(buildFailureMessage(null)).toMatch(/^La rédaction a échoué\. Elle ne compte pas/);
-  });
-});
-
-describe('Réponse d\'une carte sans article (C-Q3)', () => {
-  const cards = (AUDIT_ELYRA as unknown as { reading: { cards: ReadingCard[] } }).reading.cards;
-  const gaz = cards.find(c => c.id === 'card_e3975ef276e90c40')!;
-  const d = (id: string, cardId: string, action: Decision['action'], decidedAt = '2026-11-13T23:30:00Z'): Decision => ({
-    id, questionId: cardId, cardId, groupId: null, conflictIds: null, action, supersedesId: null,
-    decidedBy: { id: 'u1', name: 'Camille Martin' }, decidedAt, cancelledAt: null, cancelledBy: null,
-  });
-
-  it('« Retenir « valeur » » et le jour de la décision, à Paris', () => {
-    const group = gaz.valueGroups!.find(g => g.label !== '5 %')!;
-    expect(pointAnswer(d('d1', gaz.id, { type: 'retain_value', group: group.id }), gaz, () => ''))
-      .toBe(`Votre réponse : Retenir « ${group.label} » (14/11/2026)`);
-  });
-
-  it('la décision nommée par le point d\'abord, sinon la décision courante de la carte, sinon rien', () => {
-    const current = d('d2', gaz.id, { type: 'later' });
-    const named = d('d1', 'autre', { type: 'later' });
-    const decisions = new Map([[gaz.id, current], ['autre', named]]);
-    expect(pointDecision({ cardId: gaz.id, decisionId: 'd1' }, decisions)).toBe(named);
-    expect(pointDecision({ cardId: gaz.id, decisionId: null }, decisions)).toBe(current);
-    expect(pointDecision({ cardId: 'inconnue', decisionId: 'absente' }, decisions)).toBeNull();
   });
 });

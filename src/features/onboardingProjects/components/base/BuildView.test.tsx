@@ -56,10 +56,6 @@ const buildRow = (over: Partial<OnboardingBuild> = {}): OnboardingBuild => ({
 });
 
 const VERT_LOCAL = 'card_1b9961bd7843699b';
-const decision = (id: string, cardId: string, action: Decision['action']): Decision => ({
-  id, questionId: cardId, cardId, groupId: null, conflictIds: null, action, supersedesId: null,
-  decidedBy: { id: 'u1', name: 'Camille Martin' }, decidedAt: '2026-11-13T10:00:00Z', cancelledAt: null, cancelledBy: null,
-});
 
 function mock(builds: OnboardingBuild[] = [], launch: BuildLaunch = { allowed: true }, audit: AuditResponse = AUDIT, decisions: Decision[] = []) {
   vi.mocked(onboardingApi.listAnalyses).mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
@@ -82,10 +78,10 @@ beforeEach(() => { mock(); });
 afterEach(() => { vi.clearAllMocks(); });
 
 describe('« Nouvelle base » en mode construire : lancer la rédaction depuis le plan', () => {
-  it('trois vues : Plan, Articles rédigés, Points non couverts ; le plan d\'abord', async () => {
+  it('deux vues : Plan, Articles rédigés (C-Q11 : plus de « Points non couverts ») ; le plan d\'abord', async () => {
     show();
     const tabs = await screen.findAllByRole('tab');
-    expect(tabs.map(t => t.textContent)).toEqual(['Plan', 'Articles rédigés', 'Points non couverts']);
+    expect(tabs.map(t => t.textContent)).toEqual(['Plan', 'Articles rédigés']);
     expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
   });
 
@@ -148,7 +144,7 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
     mock([buildRow()]);
     const { container } = show();
     await openTab('Articles rédigés');
-    expect(await screen.findByText('6 articles · 2 phrases à vérifier · 1 texte saisi par l\'expert · 4 points non couverts')).toBeInTheDocument();
+    expect(await screen.findByText('6 articles · 2 phrases à vérifier · 1 texte saisi par l\'expert')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /^Articles rédigés le .*, à partir du plan du / })).toBeInTheDocument();
     expect(screen.getByText('Catégorie 1 · Offres et prix')).toBeInTheDocument();
 
@@ -199,14 +195,13 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
     expect(removed).toHaveTextContent('Flyer_Parrainage_Octobre2026.pptx');
   });
 
-  it('un article sans texte le dit, et renvoie aux points non couverts', async () => {
+  it('un article sans texte le dit, sans renvoi ailleurs', async () => {
     mock([buildRow()]);
     show();
     await openTab('Articles rédigés');
     const tarifs = (await screen.findByRole('heading', { name: 'Tarifs 2025' })).closest('article')!;
     expect(tarifs).toHaveTextContent('Aucun texte gardé : toutes ses sources sont écartées par vos réponses.');
-    fireEvent.click(within(tarifs).getByRole('button', { name: 'Voir les points non couverts' }));
-    expect(await screen.findByRole('heading', { name: 'Points non couverts par vos documents (4)' })).toBeInTheDocument();
+    expect(within(tarifs).queryByRole('button', { name: /points non couverts/i })).not.toBeInTheDocument();
   });
 
   it('un commentaire par article et un pour la rédaction, jamais dans la base', async () => {
@@ -229,91 +224,41 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
   });
 });
 
-describe('C-Q9 : « Précisions à apporter (n) »', () => {
-  it('les manques signalés par la rédaction, tous gardés, repliés sous leur article', async () => {
+describe('C-Q11 : les réponses de l\'expert qui ne figurent dans aucun article, rien d\'autre', () => {
+  it('un encart en tête de « Articles rédigés » : le titre de chaque carte, avec un lien vers elle', async () => {
     mock([buildRow()]);
-    show();
+    const onGoToClarify = vi.fn();
+    const { container } = render(<BaseTab project={project} onGoToClarify={onGoToClarify} />);
     await openTab('Articles rédigés');
-    const article = (await screen.findByRole('heading', { name: 'Frais de résiliation' })).closest('article')!;
-    const details = within(article).getByText('Précisions à apporter (1)').closest('details')!;
-    expect(details).not.toHaveAttribute('open');
-    expect(within(details).getByText('Le délai de prise en compte d\'une résiliation demandée par le client.')).toBeInTheDocument();
-    expect(details).toHaveTextContent('elles ne sont pas écrites dans l\'article');
-    expect(screen.queryByText(/Signalé(e)?s? par la rédaction/)).not.toBeInTheDocument();
-  });
-});
-
-describe('« Points non couverts par vos documents »', () => {
-  it('les cartes sans article en tête, puis les informations absentes, les articles sans texte, les points non tranchés', async () => {
-    mock([buildRow()]);
-    const { container } = show();
-    await openTab('Points non couverts (4)');
-    const list = await screen.findByRole('region', { name: 'Points non couverts par vos documents (4)' });
-    expect([...list.querySelectorAll('h3')].map(h => h.textContent)).toEqual([
-      'Cartes sans article (1)', 'Informations absentes de vos documents (1)', 'Articles sans texte (1)', 'Points non tranchés (1)',
-    ]);
-    expect(within(list).getByText(/Ce que vos documents ne donnent pas n'est jamais écrit dans un article/)).toBeInTheDocument();
-    const card = within(list).getByText('Date d\'ouverture des souscriptions pour Elyra Vert Local').closest('li')!;
-    expect(card).toHaveTextContent('carte bloquante');
-    expect(card).toHaveTextContent('votre réponse n\'apparaît dans aucun article');
-    expect(within(card).getByText('Passages (2)')).toBeInTheDocument();
-    // C-Q9 : un manque signalé par la rédaction est sous son article, pas dans la liste.
-    expect(within(list).queryByText('Le délai de prise en compte d\'une résiliation demandée par le client.')).not.toBeInTheDocument();
-    expect(within(list).getByText('Une résiliation avant 12 mois coûte 75 € TTC.')).toBeInTheDocument();
+    const box = await screen.findByRole('region', { name: '1 de vos réponses ne figure dans aucun article' });
+    expect(box.compareDocumentPosition(screen.getByText('Catégorie 1 · Offres et prix')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(box).getAllByRole('listitem')).toHaveLength(1);
+    fireEvent.click(within(box).getByRole('button', { name: 'Date d\'ouverture des souscriptions pour Elyra Vert Local' }));
+    expect(onGoToClarify).toHaveBeenCalledWith(VERT_LOCAL);
     expect(container.textContent).not.toMatch(TECHNICAL);
   });
 
-  it('C-Q3 : une carte sans article montre la réponse retenue et sa date (décision nommée par le point)', async () => {
-    const vertLocal = (AUDIT.reading.cards.find(c => c.id === VERT_LOCAL)!).sides;
-    const crSide = vertLocal.find(side => JSON.stringify(side).includes('doc_cr_comite_offres'))!.label;
-    mock([buildRow()], { allowed: true }, AUDIT, [decision('dec_vert_local', VERT_LOCAL, { type: 'accept_side', side: crSide })]);
-    show();
-    await openTab('Points non couverts (4)');
-    const card = (await screen.findByText('Date d\'ouverture des souscriptions pour Elyra Vert Local')).closest('li')!;
-    expect(await within(card).findByText(`Votre réponse : Côté ${crSide} retenu : CR_Comite_Offres_2026-09-22.docx (13/11/2026)`)).toBeInTheDocument();
+  it('les suggestions de l\'IA ne s\'affichent nulle part ; une phrase retirée reste sous son article', async () => {
+    mock([buildRow()]);
+    const { container } = show();
+    await openTab('Articles rédigés');
+    const article = (await screen.findByRole('heading', { name: 'Frais de résiliation' })).closest('article')!;
+    expect(container.textContent).not.toMatch(/Précisions? à apporter|Points non couverts|Le délai de prise en compte/);
+    expect(screen.queryByText(/Signalé(e)?s? par la rédaction/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Points non tranchés|Informations absentes/)).not.toBeInTheDocument();
+    const removed = within(article).getByText(/^Retiré de cet article/).closest('details')!;
+    expect(removed).toHaveTextContent('Une résiliation avant 12 mois coûte 75 € TTC.');
   });
 
-  it('C-Q3 : le texte de l\'expert, mot pour mot, « saisi par l\'expert le … », écrit dans aucun article', async () => {
+  it('aucune réponse sans article : pas d\'encart', async () => {
     const built = JSON.parse(JSON.stringify(BUILD)) as BuildContent & { construction: { uncovered: Array<Record<string, unknown>> } };
-    built.construction.uncovered[0].expert = {
-      card_id: VERT_LOCAL, decision_id: 'dec_vert_local', text: 'Ouverture des souscriptions le 1er novembre 2026.', entered_on: '2026-11-13',
-    };
-    mock([buildRow()], { allowed: true }, AUDIT, [decision('dec_vert_local', VERT_LOCAL, { type: 'other_answer', text: 'Ouverture des souscriptions le 1er novembre 2026.' })]);
+    built.construction.uncovered = built.construction.uncovered.filter(p => p.kind !== 'card_without_article');
+    mock([buildRow()]);
     vi.mocked(onboardingApi.getBuildContent).mockResolvedValue(built);
     show();
-    await openTab('Points non couverts (4)');
-    const card = (await screen.findByText('Date d\'ouverture des souscriptions pour Elyra Vert Local')).closest('li')!;
-    expect(await within(card).findByText('Votre réponse : Autre réponse (13/11/2026)')).toBeInTheDocument();
-    expect(within(card).getByText('« Ouverture des souscriptions le 1er novembre 2026. »')).toBeInTheDocument();
-    expect(card).toHaveTextContent('Saisi par l\'expert le 13/11/2026. Ce texte n\'est écrit dans aucun article.');
-  });
-
-  it('C-Q3 : sans décision connue pour la carte, aucune réponse affichée', async () => {
-    mock([buildRow()]);
-    show();
-    await openTab('Points non couverts (4)');
-    const card = (await screen.findByText('Date d\'ouverture des souscriptions pour Elyra Vert Local')).closest('li')!;
-    expect(card).toHaveTextContent('votre réponse n\'apparaît dans aucun article');
-    expect(within(card).queryByText(/^Votre réponse :/)).not.toBeInTheDocument();
-  });
-
-  it('« Voir la carte » ouvre la carte ; « Voir l\'article » ouvre l\'article dans « Articles rédigés »', async () => {
-    mock([buildRow()]);
-    const onGoToClarify = vi.fn();
-    render(<BaseTab project={project} onGoToClarify={onGoToClarify} />);
-    await openTab('Points non couverts (4)');
-    const list = await screen.findByRole('region', { name: 'Points non couverts par vos documents (4)' });
-    fireEvent.click(within(list).getAllByRole('button', { name: 'Voir la carte' })[0]);
-    expect(onGoToClarify).toHaveBeenCalledWith('card_1b9961bd7843699b');
-    fireEvent.click(within(list).getAllByRole('button', { name: 'Voir l\'article' })[0]);
-    expect(screen.getByRole('tab', { name: 'Articles rédigés' })).toHaveAttribute('aria-selected', 'true');
-    expect(await screen.findByRole('heading', { name: 'Frais de résiliation' })).toBeInTheDocument();
-  });
-
-  it('sans rédaction : rien à lister, retour au plan', async () => {
-    show();
-    await openTab('Points non couverts');
-    expect(await screen.findByText('Aucun article rédigé pour l\'instant')).toBeInTheDocument();
+    await openTab('Articles rédigés');
+    await screen.findByText('Catégorie 1 · Offres et prix');
+    expect(screen.queryByText(/de vos réponses ne figur/)).not.toBeInTheDocument();
   });
 });
 

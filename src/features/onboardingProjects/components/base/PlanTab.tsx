@@ -9,8 +9,7 @@ import { formatFull } from '../../../../shared/lib/formatDate';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { onboardingApi } from '../../api/onboardingApi';
 import type { Audit } from '../../lib/audit';
-import type { Decision } from '../../lib/decisions';
-import { cardTitle, NATURES, orderedCards, type ReadingCard } from '../../lib/reading';
+import { cardTitle, orderedCards, type ReadingCard } from '../../lib/reading';
 import {
   isPlanActive, PLAN_COMMENT_HINT, PLAN_STEPS, planFailureMessage, planStepStates, planSummary, readPlan,
   SUPPORTED_PLAN_SCHEMAS, type OnboardingPlan, type Plan, type PlanComment, type PlanContent, type PlanSubject,
@@ -19,7 +18,7 @@ import {
   isBuildActive, readConstruction, SUPPORTED_BUILD_SCHEMAS, type BuildComment, type BuildContent, type BuildsMeta, type OnboardingBuild,
 } from '../../lib/build';
 import { AuditSource } from '../audit/AuditSource';
-import { articleAnchor, BuildArticles, BuildEntry, BuildProgress, UncoveredList } from './BuildView';
+import { BuildArticles, BuildEntry, BuildProgress } from './BuildView';
 
 /** Intervalle de relecture d'un plan en préparation. */
 export const PLAN_POLL_MS = 5000;
@@ -27,7 +26,7 @@ export const PLAN_POLL_MS = 5000;
 /** Intervalle de relecture d'une rédaction en cours (lot C). */
 export const BUILD_POLL_MS = 5000;
 
-type BaseView = 'plan' | 'articles' | 'uncovered';
+type BaseView = 'plan' | 'articles';
 
 const STEP_STATE_LABEL = { done: 'terminée', current: 'en cours', pending: 'à venir' } as const;
 
@@ -37,8 +36,6 @@ interface PlanTabProps {
   /** L'inventaire de l'audit : les documents nommés par leur nom de fichier. */
   audit:         Audit;
   cards:         ReadingCard[];
-  /** Décisions courantes, par carte : la réponse d'une carte sans article (C-Q3). */
-  decisions?:    ReadonlyMap<string, Decision>;
   /** Ouvre « À clarifier », sur une carte si elle est donnée. */
   onGoToClarify: (cardId?: string) => void;
 }
@@ -47,19 +44,17 @@ interface PlanTabProps {
  * Onglet « Nouvelle base » en mode construire (plan-construire-v1, lot B) : le plan en préparation
  * (étapes), puis le plan prêt, en lecture seule (D7) : ses points d'attention, ses chapitres et
  * sujets avec leurs sources, les cartes rattachées, et les commentaires (un par sujet, un pour le
- * plan, B-Q3). Lot C : trois vues, « Plan », « Articles rédigés » et « Points non couverts » ; la
- * rédaction se lance sous le plan, depuis le plan le plus récent (C-Q1 : réponses inchangées).
+ * plan, B-Q3). Lot C : deux vues, « Plan » et « Articles rédigés » (C-Q11 : plus de « Points non
+ * couverts ») ; la rédaction se lance sous le plan, depuis le plan le plus récent (C-Q1 : réponses
+ * inchangées).
  */
-const NO_DECISIONS: ReadonlyMap<string, Decision> = new Map();
-
-export function PlanTab({ projectId, analysisId, audit, cards, decisions = NO_DECISIONS, onGoToClarify }: PlanTabProps) {
+export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: PlanTabProps) {
   const toast = useToast();
   const [plans,    setPlans]    = useState<OnboardingPlan[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [content,  setContent]  = useState<PlanContent | null>(null);
   const [comments, setComments] = useState<PlanComment[]>([]);
   const [view,     setView]     = useState<BaseView>('plan');
-  const [focus,    setFocus]    = useState<string | null>(null);
   const [builds,   setBuilds]   = useState<OnboardingBuild[] | null>(null);
   const [buildsMeta, setBuildsMeta] = useState<BuildsMeta | null>(null);
   const [buildContent, setBuildContent] = useState<BuildContent | null>(null);
@@ -129,12 +124,6 @@ export function PlanTab({ projectId, analysisId, audit, cards, decisions = NO_DE
     [buildContent, shownBuildId],
   );
 
-  // Aller à un article depuis les points non couverts : la vue, puis l'ancre (une fois rendue).
-  useEffect(() => {
-    if (view !== 'articles' || focus === null) return;
-    document.getElementById(articleAnchor(focus))?.scrollIntoView?.({ block: 'start' });
-  }, [view, focus]);
-
   if (plans === null) return <Skeleton className="obp-skeleton-block" />;
   if (plans.length === 0) {
     return (
@@ -180,14 +169,9 @@ export function PlanTab({ projectId, analysisId, audit, cards, decisions = NO_DE
     cardTitle: (id: string) => titles.get(id) ?? 'une carte',
     onGoToClarify,
   };
-  const blocking = (id: string) => {
-    const card = cards.find(c => c.id === id);
-    return card !== undefined && NATURES[card.nature].blocking;
-  };
   const views = [
     { id: 'plan' as const, label: 'Plan' },
     { id: 'articles' as const, label: 'Articles rédigés' },
-    { id: 'uncovered' as const, label: construction ? `Points non couverts (${construction.uncovered.length})` : 'Points non couverts' },
   ];
   const buildProgress = latestBuild !== null && latestBuild.status !== 'succeeded'
     ? <BuildProgress build={latestBuild} onBackToPlan={() => setView('plan')} /> : null;
@@ -245,7 +229,7 @@ export function PlanTab({ projectId, analysisId, audit, cards, decisions = NO_DE
           </p>
         ) : (
           <>
-            <Tabs id="obp-build-views" items={views} value={view} onChange={v => { setFocus(null); setView(v); }} ariaLabel="Nouvelle base" />
+            <Tabs id="obp-build-views" items={views} value={view} onChange={v => setView(v)} ariaLabel="Nouvelle base" />
             <TabPanel id="obp-build-views" value={view} className="obp-build-panel">
               {view === 'plan' && (
                 <PlanView
@@ -267,18 +251,12 @@ export function PlanTab({ projectId, analysisId, audit, cards, decisions = NO_DE
                   {constructionBody(c => (
                     <BuildArticles
                       projectId={projectId} buildId={shownBuildId!} construction={c} comments={buildComments}
-                      commentable={buildContent!.commentable} focus={focus}
-                      onSaved={onBuildSaved} onCancelled={onBuildCancelled} onShowUncovered={() => setView('uncovered')} {...ctx}
+                      commentable={buildContent!.commentable}
+                      onSaved={onBuildSaved} onCancelled={onBuildCancelled} {...ctx}
                     />
                   ))}
                 </>
               )}
-              {view === 'uncovered' && constructionBody(c => (
-                <UncoveredList
-                  construction={c} decisions={decisions} cards={cards} isBlocking={blocking} {...ctx}
-                  onOpenArticle={id => { setFocus(id); setView('articles'); }}
-                />
-              ))}
             </TabPanel>
           </>
         )

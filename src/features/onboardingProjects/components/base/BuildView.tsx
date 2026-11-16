@@ -3,14 +3,11 @@ import { Button } from '../../../../shared/components/ui/Button';
 import { ConfirmDialog } from '../../../../shared/components/ui/ConfirmDialog';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { onboardingApi } from '../../api/onboardingApi';
-import { documentName, type Audit } from '../../lib/audit';
-import type { Decision } from '../../lib/decisions';
-import type { ReadingCard } from '../../lib/reading';
+import type { Audit } from '../../lib/audit';
 import {
   BUILD_COMMENT_HINT, BUILD_STEPS, buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, isBuildActive,
-  pointAnswer, pointDecision, removedLabel, TO_VERIFY_LABEL, UNCOVERED_GROUPS,
+  removedLabel, TO_VERIFY_LABEL, unplacedAnswersTitle,
   type BuildComment, type BuildsMeta, type BuiltArticle, type BuiltBlock, type Construction, type OnboardingBuild,
-  type UncoveredPoint,
 } from '../../lib/build';
 import { expertEntered } from '../../lib/correction';
 import { AuditSource } from '../audit/AuditSource';
@@ -18,7 +15,7 @@ import { PlanCommentBox } from './PlanTab';
 
 const STEP_STATE_LABEL = { done: 'terminée', current: 'en cours', pending: 'à venir' } as const;
 
-/** L'ancre d'un article dans « Articles rédigés », pour y aller depuis les points non couverts. */
+/** L'ancre d'un article dans « Articles rédigés ». */
 export const articleAnchor = (subjectId: string) => `obp-build-article-${subjectId}`;
 
 // ── Lancement, sous le plan ───────────────────────────────────
@@ -231,9 +228,7 @@ function BlockView({ block, ctx }: { block: BuiltBlock; ctx: Ctx }) {
   );
 }
 
-function ArticleView({ article, ctx, onShowUncovered, children }: {
-  article: BuiltArticle; ctx: Ctx; onShowUncovered: () => void; children: React.ReactNode;
-}) {
+function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: Ctx; children: React.ReactNode }) {
   const toVerify = article.blocks.reduce((n, b) => n + b.toVerify.reduce((k, m) => k + m.passages.length, 0), 0);
   return (
     <article className="obp-plan-subject obp-build-article" id={articleAnchor(article.subjectId)}>
@@ -247,8 +242,7 @@ function ArticleView({ article, ctx, onShowUncovered, children }: {
       </p>
       {!article.written && (
         <p className="obp-muted">
-          Aucun texte gardé : {article.emptyReason ? EMPTY_LABEL[article.emptyReason] : 'aucun texte n\'a pu être gardé'}.{' '}
-          <button type="button" className="obp-link" onClick={onShowUncovered}>Voir les points non couverts</button>.
+          Aucun texte gardé : {article.emptyReason ? EMPTY_LABEL[article.emptyReason] : 'aucun texte n\'a pu être gardé'}.
         </p>
       )}
       {article.blocks.map(b => <BlockView key={b.id} block={b} ctx={ctx} />)}
@@ -262,15 +256,6 @@ function ArticleView({ article, ctx, onShowUncovered, children }: {
                 {r.passages.map((s, i) => <AuditSource key={i} audit={ctx.audit} source={s} />)}
               </li>
             ))}
-          </ul>
-        </details>
-      )}
-      {article.precisions.length > 0 && (
-        <details className="obp-build-removed obp-build-precisions">
-          <summary>Précisions à apporter ({article.precisions.length})</summary>
-          <p className="obp-muted">Aucune source de cet article ne donne ces informations : elles ne sont pas écrites dans l'article.</p>
-          <ul>
-            {article.precisions.map((note, i) => <li key={i}>{note}</li>)}
           </ul>
         </details>
       )}
@@ -291,19 +276,18 @@ interface BuildArticlesProps extends Ctx {
   construction:  Construction;
   comments:      BuildComment[];
   commentable:   boolean;
-  focus:         string | null;
   onSaved:       (saved: BuildComment) => void;
   onCancelled:   (subjectId: string | null, current: BuildComment | null) => void;
-  onShowUncovered: () => void;
 }
 
 /**
  * Les articles rédigés, par catégorie : chaque passage avec ses sources, les phrases « À vérifier »,
  * le texte de l'expert « saisi par l'expert le … » (D11), ce qui a été retiré et pourquoi, et un
- * commentaire par article et un pour la rédaction (C-Q2 : lire et commenter, rien d'autre).
+ * commentaire par article et un pour la rédaction (C-Q2 : lire et commenter, rien d'autre). En tête,
+ * les réponses de l'expert qu'aucun article ne porte (C-Q11) ; aucune suggestion de l'IA.
  */
 export function BuildArticles({
-  projectId, buildId, construction, comments, commentable, focus, onSaved, onCancelled, onShowUncovered, ...ctx
+  projectId, buildId, construction, comments, commentable, onSaved, onCancelled, ...ctx
 }: BuildArticlesProps) {
   const commentOf = (subjectId: string | null) => comments.find(c => c.subjectId === subjectId) ?? null;
   const box = (subjectId: string | null, label: string) => (
@@ -318,6 +302,7 @@ export function BuildArticles({
   return (
     <div className="obp-plan">
       <p className="obp-plan__summary">{buildSummary(construction)}</p>
+      <UnplacedAnswers construction={construction} ctx={ctx} />
       {!commentable && (
         <p className="obp-muted" role="status">Cette rédaction a été remplacée par une plus récente : elle se consulte, mais ne se commente plus.</p>
       )}
@@ -326,10 +311,10 @@ export function BuildArticles({
         ou elle relie deux passages différents de vos documents.
       </p>
       {construction.chapters.map((chapter, ci) => (
-        <details key={chapter.id} className="obp-plan-chapter" open={ci === 0 || chapter.articles.some(a => a.subjectId === focus)}>
+        <details key={chapter.id} className="obp-plan-chapter" open={ci === 0}>
           <summary className="obp-plan-chapter__title">Catégorie {ci + 1} · {chapter.title}</summary>
           {chapter.articles.map(article => (
-            <ArticleView key={article.subjectId} article={article} ctx={ctx} onShowUncovered={onShowUncovered}>
+            <ArticleView key={article.subjectId} article={article} ctx={ctx}>
               {box(article.subjectId, 'Commentaire sur cet article (facultatif)')}
             </ArticleView>
           ))}
@@ -343,114 +328,23 @@ export function BuildArticles({
   );
 }
 
-// ── Points non couverts ───────────────────────────────────────
+// ── Réponses qui ne figurent dans aucun article (C-Q11) ──────
 
-interface UncoveredListProps extends Ctx {
-  construction:   Construction;
-  /** Décisions courantes de l'analyse, par carte (celles que la page a déjà chargées). */
-  decisions:      ReadonlyMap<string, Decision>;
-  cards:          ReadingCard[];
-  isBlocking:     (cardId: string) => boolean;
-  onOpenArticle:  (subjectId: string) => void;
-}
-
-/** « Points non couverts par vos documents » (D3, D4) : jamais dans un article, pour l'équipe. */
-export function UncoveredList({ construction, decisions, cards, isBlocking, onOpenArticle, ...ctx }: UncoveredListProps) {
-  const titles = new Map(construction.chapters.flatMap(c => c.articles).map(a => [a.subjectId, a.title]));
-  const articleLink = (subjectId: string | null) => subjectId !== null && (
-    <button type="button" className="obp-link" onClick={() => onOpenArticle(subjectId)}>Voir l'article</button>
-  );
-  const article = (subjectId: string | null) => `« ${subjectId !== null ? titles.get(subjectId) ?? 'un article' : 'un article'} »`;
-
-  const point = (p: UncoveredPoint) => {
-    switch (p.kind) {
-      case 'card_without_article': {
-        // C-Q3 : la carte avec sa réponse ; sans décision connue, rien plutôt qu'une valeur inventée.
-        const decision = pointDecision(p, decisions);
-        const card = cards.find(c => c.id === p.cardId);
-        return (
-          <>
-            <p className="obp-build-point__title">
-              <strong>{p.cardId ? ctx.cardTitle(p.cardId) : 'Une carte'}</strong>
-              {p.cardId && isBlocking(p.cardId) && <span className="obp-build-chip">carte bloquante</span>}
-            </p>
-            {decision && (
-              <p className="obp-build-point__answer">{pointAnswer(decision, card, id => documentName(ctx.audit, id), p.expert !== null)}</p>
-            )}
-            <p>Aucun article du plan ne cite les passages de cette carte : votre réponse n'apparaît dans aucun article.</p>
-            {p.expert && (
-              <>
-                <p className="obp-base-quote">« {p.expert.text} »</p>
-                <p className="obp-muted">{expertEntered(p.expert.enteredOn)} Ce texte n'est écrit dans aucun article.</p>
-              </>
-            )}
-          </>
-        );
-      }
-      case 'missing_information':
-        return (
-          <>
-            <p>Article {article(p.subjectId)} : {p.note}</p>
-            <p className="obp-muted">Précision à apporter : aucune source de cet article ne donne cette information.</p>
-          </>
-        );
-      case 'value_without_source':
-        return (
-          <>
-            <p>Article {article(p.subjectId)} : une valeur a été retirée, faute de source.</p>
-            {p.removedText && <blockquote className="obp-plan__excerpt">{p.removedText}</blockquote>}
-          </>
-        );
-      case 'article_without_text': {
-        const a = construction.chapters.flatMap(c => c.articles).find(x => x.subjectId === p.subjectId);
-        return <p>Article {article(p.subjectId)} : {a?.emptyReason ? EMPTY_LABEL[a.emptyReason] : 'aucun texte gardé'}.</p>;
-      }
-      case 'unresolved_card':
-        return (
-          <>
-            <p className="obp-build-point__title"><strong>{p.cardId ? ctx.cardTitle(p.cardId) : 'Une carte'}</strong></p>
-            <p>Carte laissée « Plus tard » ou sans réponse : les passages en désaccord sont retirés des articles.</p>
-          </>
-        );
-    }
-  };
-
+/**
+ * « N de vos réponses ne figurent dans aucun article » : les cartes répondues qu'aucun article du
+ * plan ne cite, chacune avec son titre et un lien vers elle. Rien d'autre : ni suggestion de l'IA,
+ * ni information « absente de vos documents ».
+ */
+export function UnplacedAnswers({ construction, ctx }: { construction: Construction; ctx: Ctx }) {
+  const answers = construction.unplacedAnswers;
+  if (answers.length === 0) return null;
   return (
-    <section className="obp-plan obp-build-uncovered" aria-labelledby="obp-build-uncovered-title">
-      <h2 id="obp-build-uncovered-title" className="obp-section-title">
-        Points non couverts par vos documents ({construction.uncovered.length})
-      </h2>
-      <p className="obp-muted">
-        Ce que vos documents ne donnent pas n'est jamais écrit dans un article. Ces points sont à compléter
-        par votre équipe ; ils n'entrent pas dans la base.
-      </p>
-      {construction.uncovered.length === 0 && <p>Vos documents couvrent chaque article : aucun point à compléter.</p>}
-      {UNCOVERED_GROUPS.map(group => {
-        const points = construction.uncovered.filter(p => group.kinds.includes(p.kind));
-        if (points.length === 0) return null;
-        return (
-          <div key={group.title} className="obp-plan-attention__group">
-            <h3 className="obp-plan-attention__title">{group.title} ({points.length})</h3>
-            <ol className="obp-build-points">
-              {points.map(p => (
-                <li key={p.id} className="obp-build-point">
-                  {point(p)}
-                  {p.passages.length > 0 && (
-                    <details className="obp-plan-subject__sources">
-                      <summary>Passages ({p.passages.length})</summary>
-                      {p.passages.map((s, i) => <AuditSource key={i} audit={ctx.audit} source={s} />)}
-                    </details>
-                  )}
-                  <p className="obp-build-point__links">
-                    {p.cardId && <button type="button" className="obp-link" onClick={() => ctx.onGoToClarify(p.cardId!)}>Voir la carte</button>}
-                    {p.kind !== 'card_without_article' && p.kind !== 'unresolved_card' && articleLink(p.subjectId)}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        );
-      })}
+    <section className="obp-build-unplaced" aria-labelledby="obp-build-unplaced-title">
+      <h3 id="obp-build-unplaced-title" className="obp-build-unplaced__title">{unplacedAnswersTitle(answers.length)}</h3>
+      <p className="obp-muted">Aucun article du plan ne cite les passages de ces cartes : votre réponse n'est écrite nulle part.</p>
+      <ul className="obp-build-unplaced__list">
+        {answers.map(a => <li key={a.cardId}><CardLink id={a.cardId} ctx={ctx} /></li>)}
+      </ul>
     </section>
   );
 }
