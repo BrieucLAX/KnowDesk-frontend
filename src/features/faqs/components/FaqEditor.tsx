@@ -15,6 +15,8 @@ import { cn }           from '../../../shared/lib/cn';
 import type { FaqVisibility } from '../types';
 import { ArrowLeft } from 'lucide-react';
 import { Alert } from '../../../shared/components/ui/Alert';
+import { useAuthStore } from '../../../store/authStore';
+import { hasModule } from '../../../shared/lib/modules';
 
 interface Category {
   id:       string;
@@ -60,6 +62,9 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
   const [categoryId,       setCategoryId]       = useState<string>('');
   const [linkedArticleId,  setLinkedArticleId]  = useState<string>('');
   const [visibility,       setVisibility]       = useState<FaqVisibility>('internal');
+  // « Public » ne sert qu'au chatbot : sans le module, le choix est masqué et la valeur enregistrée
+  // de la FAQ est renvoyée telle quelle (séquence 2 du masquage, comme pour les articles).
+  const chatbotModule = hasModule(useAuthStore(s => s.session?.organization), 'chatbot');
   const [tags,             setLocalTags]        = useState<string[]>([]);
   const [categories,       setCategories]       = useState<Category[]>([]);
 
@@ -238,7 +243,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
 
         {faqId && <FaqHistoryPanel faqId={faqId} />}
 
-        <div className="field">
+        {chatbotModule && <div className="field">
           <label className="field-label">Visibilité</label>
           <div className="faq-editor__visibility">
             <label className={cn('faq-editor__radio', visibility === 'internal' && 'faq-editor__radio--active')}>
@@ -267,7 +272,7 @@ export function FaqEditor({ faqId, initialQuestion, onSaved, onCancel }: FaqEdit
               <span className="faq-editor__radio-desc">Utilisable sur votre site (bientôt disponible)</span>
             </label>
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );

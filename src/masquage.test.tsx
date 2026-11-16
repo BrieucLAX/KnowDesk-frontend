@@ -154,6 +154,18 @@ describe('Masquage global : le front suit les modules de /auth/me', () => {
     expect(screen.queryByText(/KB Health Score/)).not.toBeInTheDocument();
   });
 
+  it('éditeur de FAQ : sans chatbot, pas de choix « Interne / Public » ; avec, il reste', async () => {
+    const { unmount } = renderAt('/faqs/new');
+    expect(await screen.findByText('Question')).toBeInTheDocument();
+    expect(screen.queryByText('Visibilité')).not.toBeInTheDocument();
+    expect(screen.queryByText(/chatbot/i)).not.toBeInTheDocument();
+    unmount();
+    meOrg = { ...session.organization, enabledModules: [...KEPT, 'chatbot'] };
+    useAuthStore.setState({ session: { ...session, organization: meOrg } });
+    renderAt('/faqs/new');
+    expect(await screen.findByText('Visibilité')).toBeInTheDocument();
+  });
+
   it('organisation sans le masquage : tout reste comme avant (processus, palette, Paramètres)', async () => {
     meOrg = { ...session.organization, enabledModules: undefined };
     useAuthStore.setState({ session: { ...session, organization: meOrg } });

@@ -36,7 +36,7 @@ export function resolveHelpText(md: string, org: Org): string {
 }
 
 export function articleVisible(article: HelpArticle, org: Org): boolean {
-  return (article.modules ?? []).every(m => hasModule(org, m));
+  return !article.hidden && (article.modules ?? []).every(m => hasModule(org, m));
 }
 
 /** Rubriques et articles visibles, contenu résolu ; une rubrique sans article visible disparaît. */

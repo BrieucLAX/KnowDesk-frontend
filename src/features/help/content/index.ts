@@ -9,6 +9,12 @@ export interface HelpArticle {
    * citent une autre fonction sont entre balises `[[if module]]…[[else]]…[[/if]]` (voir `filter.ts`).
    */
   modules?: ModuleName[];
+  /**
+   * Article masqué pour toutes les organisations, texte gardé. Sert à « Signaler une information
+   * incorrecte » tant que le bouton ne fait rien (décision du PO du 2026-11-16, réparation en lot
+   * séparé) : retirer `hidden` une fois le bouton réparé, et rétablir ses renvois.
+   */
+  hidden?: boolean;
   content: string; // Markdown, balises de condition comprises
 }
 
@@ -74,7 +80,7 @@ Une nouvelle entrée **FAQ** est disponible dans le menu de gauche. Une FAQ est 
 Ce qui change pour les conseillers :
 - Avec Cmd+K, saisissez un mot : la FAQ apparaît **en premier** dans les résultats, avec un badge violet.
 - Cliquez sur la FAQ : la réponse complète s'affiche, avec le bouton **Copier la réponse**.
-- Donnez votre avis avec les pouces pour signaler les bonnes réponses, et les mauvaises.
+- Donnez votre avis avec les pouces pour indiquer les bonnes réponses, et les mauvaises.
 
 Ce qui change pour les administrateurs :
 [[if analytics]]- Page Analyse : un nouvel encart **FAQ à créer** propose automatiquement les questions recherchées sans résultat (au moins 3 fois en 7 jours).
@@ -414,14 +420,14 @@ Dans le menu **···** de la ligne, ou dans l'éditeur, cliquez sur **Archiver*
 KnowDesk conserve toutes les versions publiées de vos articles.
 
 **Consulter l'historique**
-1. Ouvrez un article dans l'éditeur.
-2. Cliquez sur **Historique** en haut à droite.
-3. Le panneau affiche toutes les versions avec leur date.
+1. Ouvrez l'article.
+2. En bas de la page de l'article, cliquez sur **Historique des versions**.
+3. La liste affiche toutes les versions avec leur auteur et leur date.
 
-**Restaurer une version**
-1. Dans le panneau Historique, repérez la version souhaitée.
+**Restaurer une version** (administrateurs et managers)
+1. Dans l'historique, repérez la version souhaitée.
 2. Cliquez sur **Restaurer**.
-3. Le contenu de l'éditeur est remplacé par cette version, et l'article repasse en brouillon.
+3. L'article reprend le contenu de cette version et repasse en brouillon.
 4. Vérifiez le contenu, puis cliquez sur **Publier** pour rendre la version restaurée disponible aux conseillers.
 
 > 💡 **Astuce** : La restauration ne publie rien automatiquement : vous pouvez relire et ajuster avant de remettre l'article en ligne.
@@ -463,8 +469,6 @@ Si vous pouvez répondre en moins de 3 phrases, c'est une FAQ. S'il vous faut pl
 **Exemples qui ne sont pas des FAQ** :
 - *Comment configurer son compte* : c'est un guide, donc un article.
 - *Procédure de réclamation pour un produit défectueux* : plusieurs étapes, donc un article[[if trees]] ou un processus guidé[[/if]].
-
-> 💡 **Astuce** : Une FAQ peut **renvoyer vers un article** complet grâce au champ « Article lié ». Pratique quand la réponse courte suffit dans 80 % des cas, mais que certains clients ont besoin de plus de détails.
         `.trim(),
       },
       {
@@ -488,11 +492,10 @@ Si vous pouvez répondre en moins de 3 phrases, c'est une FAQ. S'il vous faut pl
 - **Réponse** (obligatoire, 2 000 caractères au plus ; visez plutôt 500). Au-delà, préférez un article complet.
 - **Catégorie** : les mêmes catégories que les articles.
 - **Tags** : jusqu'à 10, les mêmes que sur les articles.
-- **Article lié** (facultatif) : pour les clients qui veulent plus de détails.
-- **Visibilité** :
+[[if chatbot]]- **Visibilité** :
   - *Interne* (par défaut) : visible par votre équipe seulement.
   - *Public* : prête pour une future publication sur le web.
-
+[[/if]]
 **Bonnes pratiques de rédaction :**
 
 - Allez à l'essentiel : 1 à 3 phrases.
@@ -539,7 +542,7 @@ Sous la réponse, vous pouvez voter :
 
 **Si la FAQ ne suffit pas :**
 
-Si la FAQ a un **article lié**, un lien permet d'ouvrir l'article complet (procédure détaillée, captures…). Sinon, lancez une recherche plus large pour trouver l'article correspondant.
+Lancez une recherche plus large pour trouver l'article complet correspondant (procédure détaillée, captures…).
         `.trim(),
       },
       {
@@ -1084,7 +1087,7 @@ Un **processus guidé** est une suite de questions et de réponses qui vous mèn
 **Bon à savoir**
 - Vous pouvez **revenir en arrière** à tout moment si vous vous êtes trompé de réponse.
 - Certaines étapes renvoient vers un **article** complémentaire ; un clic suffit pour l'ouvrir dans un autre onglet.
-- Si une étape n'est pas claire, signalez-le (voir l'article *Signaler une information incorrecte*).
+- Si une étape n'est pas claire, parlez-en à un administrateur ou à un manager.
 
 > 💡 **Astuce** : Pendant un appel, gardez le processus ouvert dans un onglet à part pour ne pas perdre le fil de la conversation.
         `.trim(),
@@ -1092,6 +1095,7 @@ Un **processus guidé** est une suite de questions et de réponses qui vous mèn
       {
         id:    'report-issue',
         title: 'Signaler une information incorrecte',
+        hidden: true,
         modules: ['knowledge'],
         content: `
 ## Signaler une information incorrecte
@@ -1268,7 +1272,7 @@ Si vous êtes administrateur, vous n'avez pas à tout faire seul. Le rôle **Man
 3. Changez son rôle en **Manager**.
 
 **Une bonne répartition**
-- Les **conseillers** repèrent les contenus à corriger (avec *Signaler une information incorrecte*).
+- Les **conseillers** repèrent les contenus à corriger et en parlent aux managers.
 - Les **managers** créent et entretiennent la base au quotidien[[if analytics]], et consultent la page **Analyse** chaque semaine[[/if]].
 - L'**administrateur** garde la main sur le vocabulaire (synonymes, tags) et sur les orientations.
 
@@ -1337,7 +1341,6 @@ Pour chaque question repérée :
 - une réponse en 1 à 3 phrases, à copier telle quelle ;
 - un tag de thème, pour la regrouper avec les FAQ proches ;
 - une catégorie, pour la retrouver facilement ;
-- un lien vers un article complet si des détails sont nécessaires.
 
 Visez **20 à 50 FAQ** pour couvrir 80 % des questions courantes.
 

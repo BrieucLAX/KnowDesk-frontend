@@ -22,19 +22,20 @@ const MASKED_ARTICLES = [
   'advisor-notifications',                                               // notifications
   'measure-impact', 'find-gaps',                                         // cas d'usage sur l'Analyse seule
   'analytics-overview', 'chats-overview', 'api-keys',
+  'report-issue',                                                        // bouton sans effet (masqué partout)
 ];
 const MASKED_SECTIONS = ['trees', 'analytics', 'chats'];
 
 /** Ce qu'un texte visible ne doit jamais citer avec la valeur actuelle. */
-const MASKED_WORDS = /processus|chatbot|\bAnalyse\b|notification|Conversations|\bAPI\b|webhook|passage à un humain|résumé hebdomadaire|KB Health Score/i;
+const MASKED_WORDS = /processus|chatbot|\bAnalyse\b|notification|Conversations|\bAPI\b|webhook|passage à un humain|résumé hebdomadaire|KB Health Score|signaler|signalement|article lié|Interne \/ Public|\*Public\*/i;
 
 const ids = (sections: ReturnType<typeof visibleHelp>) => sections.flatMap(s => s.articles.map(a => a.id));
 
 describe('aide filtrée selon les modules', () => {
-  it('tous les modules actifs : les 47 articles et les 12 rubriques sont présents, balises résolues', () => {
+  it('tous les modules actifs : 46 des 47 articles (« Signaler » masqué partout) et les 12 rubriques', () => {
     const sections = visibleHelp(all);
     expect(ALL_IDS).toHaveLength(47);
-    expect(ids(sections)).toEqual(ALL_IDS);
+    expect(ids(sections)).toEqual(ALL_IDS.filter(id => id !== 'report-issue'));
     expect(sections).toHaveLength(HELP_CONTENT.length);
     for (const a of sections.flatMap(s => s.articles)) expect(a.content, a.id).not.toMatch(/\[\[|\]\]/);
   });
@@ -44,7 +45,7 @@ describe('aide filtrée selon les modules', () => {
     const visible = ids(sections);
     for (const id of MASKED_ARTICLES) expect(visible, id).not.toContain(id);
     expect(visible).toEqual(ALL_IDS.filter(id => !MASKED_ARTICLES.includes(id)));
-    expect(visible).toHaveLength(34);
+    expect(visible).toHaveLength(33);
     for (const id of MASKED_SECTIONS) expect(sections.map(s => s.id)).not.toContain(id);
     for (const s of sections) expect(s.articles.length, s.id).toBeGreaterThan(0);
     // Gardés : articles, catégories, tags, synonymes, recherche, réponse IA et son réglage, FAQ,
@@ -62,7 +63,7 @@ describe('aide filtrée selon les modules', () => {
     }
   });
 
-  it.each(['processus', 'chatbot', 'analyse', 'notification', 'API', 'conversation', 'humain'])(
+  it.each(['processus', 'chatbot', 'analyse', 'notification', 'API', 'conversation', 'humain', 'signaler', 'article lié'])(
     'recherche d\'aide « %s » : aucun résultat ne décrit une fonction masquée', term => {
       const q = term.toLowerCase();
       const hits = helpIndex(visibleHelp(prod)).filter(i => i.title.toLowerCase().includes(q) || i.content.toLowerCase().includes(q));
@@ -70,13 +71,30 @@ describe('aide filtrée selon les modules', () => {
       // La recherche de l'aide porte sur des morceaux de mots : « api » trouve « rapide », « conversation »
       // trouve « conversation client », « humain » trouve « humaine ». Ces trois termes et « analyse »
       // peuvent donc donner des articles gardés, qui ne citent aucune fonction masquée (test précédent).
-      if (['processus', 'chatbot', 'notification'].includes(term)) expect(hits.map(h => h.articleId)).toEqual([]);
+      if (['processus', 'chatbot', 'notification', 'signaler', 'article lié'].includes(term)) expect(hits.map(h => h.articleId)).toEqual([]);
     });
 
   it('« Premiers pas » ne cite aucune fonction masquée, et l\'assistant a 2 étapes', () => {
     const start = visibleHelp(prod).find(s => s.id === 'getting-started')!;
     for (const a of start.articles) expect(a.content, a.id).not.toMatch(MASKED_WORDS);
     expect(start.articles.find(a => a.id === 'create-workspace')!.content).toContain('2 étapes');
+  });
+
+  it('« Signaler une information incorrecte » reste masqué même avec tous les modules', () => {
+    expect(ids(visibleHelp(all))).not.toContain('report-issue');
+    expect(HELP_CONTENT.flatMap(x => x.articles).find(a => a.id === 'report-issue')!.content).toContain('Signaler');
+  });
+
+  it('historique des versions : en bas de la page de l\'article', () => {
+    const a = visibleHelp(prod).flatMap(x => x.articles).find(x => x.id === 'versions')!;
+    expect(a.content).toContain('En bas de la page de l\'article, cliquez sur **Historique des versions**');
+    expect(a.content).not.toMatch(/en haut à droite/);
+  });
+
+  it('créer une FAQ : la visibilité n\'est décrite qu\'avec le chatbot', () => {
+    const text = (mods: string[]) => visibleHelp({ enabledModules: mods }).flatMap(x => x.articles).find(a => a.id === 'create-faq')!.content;
+    expect(text(PRODUCTION)).not.toContain('**Visibilité**');
+    expect(text([...PRODUCTION, 'chatbot'])).toContain('**Visibilité**');
   });
 
   it.each([
