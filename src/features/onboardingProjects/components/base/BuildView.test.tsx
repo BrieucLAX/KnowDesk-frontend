@@ -195,6 +195,18 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
     expect(removed).toHaveTextContent('Flyer_Parrainage_Octobre2026.pptx');
   });
 
+  it('décision A (16/11) : « valeur non retenue », avec un lien vers la carte', async () => {
+    mock([buildRow()]);
+    const onGoToClarify = vi.fn();
+    render(<BaseTab project={project} onGoToClarify={onGoToClarify} />);
+    await openTab('Articles rédigés');
+    const prix = (await screen.findByRole('heading', { name: 'Prix d\'Elyra Fixe 2 ans' })).closest('article')!;
+    const removed = within(prix).getByText(/^Retiré de cet article/).closest('details')!;
+    expect(removed).toHaveTextContent('« La fiche offre indique 0,1925 € TTC le kWh. » : valeur non retenue par votre réponse à la carte « Écart entre documents : ELYRA FIXE 2 ANS ».');
+    fireEvent.click(within(removed).getByRole('button', { name: 'Écart entre documents : ELYRA FIXE 2 ANS' }));
+    expect(onGoToClarify).toHaveBeenCalledWith('card_cb3ece6251e02e32');
+  });
+
   it('un article sans texte le dit, sans renvoi ailleurs', async () => {
     mock([buildRow()]);
     show();

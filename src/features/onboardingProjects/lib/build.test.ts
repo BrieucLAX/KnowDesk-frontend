@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, readConstruction, REMOVED_LABEL, removedLabel,
+  buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, readConstruction, REMOVED_LABEL, removedLabel, removedLabelAround,
   SUPPORTED_BUILD_SCHEMAS, TO_VERIFY_LABEL, UNCOVERED_KINDS, unplacedAnswersTitle,
 } from './build';
 import VERSIONS from './contract-versions.json';
@@ -149,6 +149,15 @@ describe('readConstruction', () => {
     expect(removedLabel({ reason: 'discarded_source', cardId: 'c1' }, () => 'Montant du parrainage'))
       .toBe('passage écarté par votre réponse à la carte « Montant du parrainage ».');
     expect(removedLabel({ reason: 'value_without_source', cardId: null }, () => '')).toBe('valeur qu\'aucune source citée ne donne.');
+  });
+
+  it('décision A (16/11) : une valeur non retenue, quel que soit le document, nomme la carte, coupée pour un lien', () => {
+    expect(removedLabel({ reason: 'discarded_value', cardId: 'c1' }, () => 'TRV gaz'))
+      .toBe('valeur non retenue par votre réponse à la carte « TRV gaz ».');
+    expect(removedLabelAround({ reason: 'discarded_value', cardId: 'c1' }))
+      .toEqual({ before: 'valeur non retenue par votre réponse à la carte « ', after: ' ».' });
+    expect(removedLabelAround({ reason: 'discarded_value', cardId: null })).toBeNull();
+    expect(removedLabelAround({ reason: 'value_without_source', cardId: null })).toBeNull();
   });
 });
 
