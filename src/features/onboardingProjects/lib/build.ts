@@ -87,7 +87,9 @@ export const REMOVED_LABEL: Readonly<Record<RemovedReason, string>> = {
   quote_not_verified:           'aucune de ses sources ne se retrouve dans vos documents.',
   value_without_source:         'valeur qu\'aucune source citée ne donne.',
   discarded_source:             'passage écarté par votre réponse à la carte « {card} ».',
-  discarded_value:              'valeur d\'un passage écarté par votre réponse à la carte « {card} ».',
+  // Décision A du porteur (2026-11-16) : une valeur non retenue pour l'objet d'une carte est retirée
+  // quel que soit le document qui la porte.
+  discarded_value:              'valeur non retenue par votre réponse à la carte « {card} ».',
   retired_source:               'passage d\'une version remplacée (carte « {card} »).',
   ended_measure:                'mesure terminée à la date de la rédaction.',
   introduction_without_content: 'titre ou introduction sans texte gardé après lui.',
@@ -251,6 +253,14 @@ export function readConstruction(raw: unknown): Construction | null {
 /** La raison d'un retrait, en clair, avec le titre de la carte qui l'a décidé. */
 export function removedLabel(r: Pick<RemovedBlock, 'reason' | 'cardId'>, cardTitle: (id: string) => string): string {
   return REMOVED_LABEL[r.reason].replace('{card}', r.cardId ? cardTitle(r.cardId) : 'une carte');
+}
+
+/** La raison d'un retrait coupée autour de la carte, pour en faire un lien : `null` sans carte. */
+export function removedLabelAround(r: Pick<RemovedBlock, 'reason' | 'cardId'>): { before: string; after: string } | null {
+  const label = REMOVED_LABEL[r.reason];
+  const at = label.indexOf('{card}');
+  if (!r.cardId || at < 0) return null;
+  return { before: label.slice(0, at), after: label.slice(at + '{card}'.length) };
 }
 
 const plural = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : one}`;

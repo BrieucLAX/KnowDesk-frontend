@@ -6,7 +6,7 @@ import { onboardingApi } from '../../api/onboardingApi';
 import type { Audit } from '../../lib/audit';
 import {
   BUILD_COMMENT_HINT, BUILD_STEPS, buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, isBuildActive,
-  removedLabel, TO_VERIFY_LABEL, unplacedAnswersTitle,
+  removedLabel, removedLabelAround, TO_VERIFY_LABEL, unplacedAnswersTitle,
   type BuildComment, type BuildsMeta, type BuiltArticle, type BuiltBlock, type Construction, type OnboardingBuild,
 } from '../../lib/build';
 import { expertEntered } from '../../lib/correction';
@@ -183,6 +183,13 @@ function CardLink({ id, ctx }: { id: string; ctx: Ctx }) {
   return <button type="button" className="obp-link" onClick={() => ctx.onGoToClarify(id)}>{ctx.cardTitle(id)}</button>;
 }
 
+/** La raison d'un retrait ; la carte qui l'a décidé est un lien vers elle. */
+function RemovedReason({ removed, ctx }: { removed: Pick<BuiltArticle['removed'][number], 'reason' | 'cardId'>; ctx: Ctx }) {
+  const around = removedLabelAround(removed);
+  if (!around || !removed.cardId) return <>{removedLabel(removed, ctx.cardTitle)}</>;
+  return <>{around.before}<CardLink id={removed.cardId} ctx={ctx} />{around.after}</>;
+}
+
 function BlockView({ block, ctx }: { block: BuiltBlock; ctx: Ctx }) {
   if (block.kind === 'intertitle') return <h5 className="obp-build-intertitle">{block.text}</h5>;
   if (block.fromExpert) {
@@ -252,7 +259,7 @@ function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: C
           <ul>
             {article.removed.map(r => (
               <li key={r.id}>
-                « {r.text} » : {removedLabel(r, ctx.cardTitle)}
+                « {r.text} » : <RemovedReason removed={r} ctx={ctx} />
                 {r.passages.map((s, i) => <AuditSource key={i} audit={ctx.audit} source={s} />)}
               </li>
             ))}
