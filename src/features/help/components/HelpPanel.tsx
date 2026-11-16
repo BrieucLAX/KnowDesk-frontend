@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { HELP_CONTENT, HELP_INDEX } from '../content';
+import { visibleHelp, helpIndex } from '../content/filter';
+import { useAuthStore } from '../../../store/authStore';
 import '../help.css';
-import type { HelpSection, HelpArticle } from '../content';
 import { ArrowLeft, ChevronRight, X } from 'lucide-react';
 
 interface HelpPanelProps {
@@ -41,23 +41,30 @@ function renderMarkdown(md: string): string {
 }
 
 export function HelpPanel({ onClose, currentScreen }: HelpPanelProps) {
-  const defaultSection = currentScreen ? (SCREEN_TO_SECTION[currentScreen] ?? 'getting-started') : 'getting-started';
+  // Seules les rubriques et les articles des fonctions actives (séquence 2 du masquage).
+  const organization = useAuthStore(s => s.session?.organization);
+  const sections = useMemo(() => visibleHelp(organization), [organization]);
+  const index    = useMemo(() => helpIndex(sections), [sections]);
+  const wanted = currentScreen ? (SCREEN_TO_SECTION[currentScreen] ?? 'getting-started') : 'getting-started';
+  const visibleId = (id: string) => sections.some(s => s.id === id);
+  // Rubrique de l'écran masquée (processus, analyse…) : « Premiers pas », comme sans écran connu.
+  const defaultSection = visibleId(wanted) ? wanted : visibleId('getting-started') ? 'getting-started' : (sections[0]?.id ?? 'getting-started');
 
   const [activeSectionId, setActiveSectionId] = useState(defaultSection);
   const [activeArticleId, setActiveArticleId] = useState<string | null>(null);
   const [query,           setQuery]           = useState('');
 
-  const activeSection = HELP_CONTENT.find(s => s.id === activeSectionId) ?? HELP_CONTENT[0];
+  const activeSection = sections.find(s => s.id === activeSectionId) ?? sections[0];
   const activeArticle = activeSection.articles.find(a => a.id === activeArticleId) ?? null;
 
   const searchResults = useMemo(() => {
     if (!query.trim()) return [];
     const q = query.toLowerCase();
-    return HELP_INDEX.filter(item =>
+    return index.filter(item =>
       item.title.toLowerCase().includes(q) ||
       item.content.toLowerCase().includes(q)
     ).slice(0, 8);
-  }, [query]);
+  }, [query, index]);
 
   const handleArticleClick = (sectionId: string, articleId: string) => {
     setActiveSectionId(sectionId);
@@ -118,7 +125,7 @@ export function HelpPanel({ onClose, currentScreen }: HelpPanelProps) {
         <div className="help-panel__body">
           {/* Sidebar navigation */}
           <nav className="help-nav" aria-label="Sections d'aide">
-            {HELP_CONTENT.map(section => (
+            {sections.map(section => (
               <button
                 key={section.id}
                 type="button"

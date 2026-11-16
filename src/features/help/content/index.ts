@@ -1,8 +1,15 @@
+import type { ModuleName } from '../../../shared/lib/modules';
 import { Briefcase, ChartColumn, CircleHelp, FileText, Headphones, ListOrdered, MessageCircle, Newspaper, Rocket, Search, Settings, Users, type LucideIcon } from 'lucide-react';
 export interface HelpArticle {
   id:      string;
   title:   string;
-  content: string; // Markdown
+  /**
+   * Modules que l'article décrit, tous requis : sans l'un d'eux, l'article disparaît du menu, de la
+   * recherche et des renvois (séquence 2 du masquage). Absent : toujours visible. Les passages qui
+   * citent une autre fonction sont entre balises `[[if module]]…[[else]]…[[/if]]` (voir `filter.ts`).
+   */
+  modules?: ModuleName[];
+  content: string; // Markdown, balises de condition comprises
 }
 
 export interface HelpSection {
@@ -21,38 +28,41 @@ export const HELP_CONTENT: HelpSection[] = [
       {
         id:    'release-notes',
         title: 'Quoi de neuf récemment ?',
+        modules: ['knowledge'],
         content: `
 ## Quoi de neuf récemment ?
 
 Cette page récapitule les fonctionnalités livrées ces dernières semaines. Elle est mise à jour à chaque nouvelle version.
 
-### Juin 2026
+[[if chatbot|analytics]]### Juin 2026
 
-**Chatbot : un moteur de conversation complet**
-Le chatbot de votre site a beaucoup progressé :
-- **Conversations conservées** : chaque conversation est désormais enregistrée sur le serveur. Vous la relisez depuis la nouvelle page **Conversations**, avec une recherche par mot-clé.
-- **Question de clarification** : quand un visiteur pose une question trop vague, le chatbot pose **une** question pour préciser avant de répondre.
-- **Réponses rapides** : sous chaque réponse, le chatbot propose des boutons vers les sources les plus pertinentes.
-- **Avis sous chaque réponse** : deux pouces discrets permettent au visiteur de donner son avis. Un avis négatif affiche, dans la conversation, un message qui propose de laisser son adresse e-mail pour être recontacté. Aucune fenêtre ne vient interrompre l'échange.
-- **Bouton de contact** dans l'en-tête du chatbot pour demander à parler à une personne.
-- **Passage à un humain** : à chaque demande, KnowDesk peut envoyer la conversation par e-mail à votre équipe ou l'envoyer à votre webhook (CRM, Zendesk, Slack, n8n…). Le réglage se trouve dans **Paramètres > Chatbot public**.
-- **Thèmes des conversations** : chaque conversation est résumée automatiquement à sa clôture, en 3 à 6 mots. Ces résumés alimentent les thèmes les plus fréquents dans **Analyse**, plus utiles qu'une liste de messages bruts.
-- **Page Conversations** : une nouvelle entrée du menu de gauche, réservée aux administrateurs, pour relire les conversations, les filtrer par statut et les rechercher par mot-clé.
-
-Pour en savoir plus, consultez les rubriques **Conversations** et **Recherche**, article « Chatbot à intégrer à votre site web ».
-
-**Consigne du chatbot personnalisable**
-Vous pouvez désormais voir la consigne **réellement utilisée** par le chatbot à chaque message, dans **Paramètres > Chatbot public**, et la réécrire entièrement si besoin. Le bouton **Restaurer le défaut** revient à la version générée à partir des champs de personnalisation. Modifiez-la avec précaution : une consigne mal rédigée peut dérégler le chatbot.
-
-**Analyse : thèmes des conversations et questions dédoublonnées**
-- La liste **Top questions** de la Réponse IA ne contient plus les versions intermédiaires d'une même question saisie lettre par lettre. Les saisies successives d'un même membre en moins de 60 secondes sont regroupées, y compris dans l'historique.
-- Les thèmes les plus fréquents des conversations remplacent l'ancienne liste de messages bruts.
-- Un bloc Chatbot affiche le total des conversations, le taux de résolution, le taux de passage à un humain et la satisfaction moyenne.
-
+[[/if]][[if chatbot]]**Chatbot : un moteur de conversation complet**
+[[/if]][[if chatbot]]Le chatbot de votre site a beaucoup progressé :
+[[/if]][[if chatbot,chats]]- **Conversations conservées** : chaque conversation est désormais enregistrée sur le serveur. Vous la relisez depuis la nouvelle page **Conversations**, avec une recherche par mot-clé.
+[[/if]][[if chatbot]]- **Question de clarification** : quand un visiteur pose une question trop vague, le chatbot pose **une** question pour préciser avant de répondre.
+[[/if]][[if chatbot]]- **Réponses rapides** : sous chaque réponse, le chatbot propose des boutons vers les sources les plus pertinentes.
+[[/if]][[if chatbot]]- **Avis sous chaque réponse** : deux pouces discrets permettent au visiteur de donner son avis. Un avis négatif affiche, dans la conversation, un message qui propose de laisser son adresse e-mail pour être recontacté. Aucune fenêtre ne vient interrompre l'échange.
+[[/if]][[if chatbot]]- **Bouton de contact** dans l'en-tête du chatbot pour demander à parler à une personne.
+[[/if]][[if chatbot]]- **Passage à un humain** : à chaque demande, KnowDesk peut envoyer la conversation par e-mail à votre équipe ou l'envoyer à votre webhook (CRM, Zendesk, Slack, n8n…). Le réglage se trouve dans **Paramètres > Chatbot public**.
+[[/if]][[if chatbot,analytics]]- **Thèmes des conversations** : chaque conversation est résumée automatiquement à sa clôture, en 3 à 6 mots. Ces résumés alimentent les thèmes les plus fréquents dans **Analyse**, plus utiles qu'une liste de messages bruts.
+[[/if]][[if chatbot,chats]]- **Page Conversations** : une nouvelle entrée du menu de gauche, réservée aux administrateurs, pour relire les conversations, les filtrer par statut et les rechercher par mot-clé.
+[[/if]]
+[[if chatbot,chats]]Pour en savoir plus, consultez les rubriques **Conversations** et **Recherche**, article « Chatbot à intégrer à votre site web ».
+[[/if]][[if chatbot,!chats]]Pour en savoir plus, consultez la rubrique **Recherche**, article « Chatbot à intégrer à votre site web ».
+[[/if]]
+[[if chatbot]]**Consigne du chatbot personnalisable**
+[[/if]][[if chatbot]]Vous pouvez désormais voir la consigne **réellement utilisée** par le chatbot à chaque message, dans **Paramètres > Chatbot public**, et la réécrire entièrement si besoin. Le bouton **Restaurer le défaut** revient à la version générée à partir des champs de personnalisation. Modifiez-la avec précaution : une consigne mal rédigée peut dérégler le chatbot.
+[[/if]]
+[[if analytics,chatbot]]**Analyse : thèmes des conversations et questions dédoublonnées**
+[[/if]][[if analytics,!chatbot]]**Analyse : questions dédoublonnées**
+[[/if]][[if analytics]]- La liste **Top questions** de la Réponse IA ne contient plus les versions intermédiaires d'une même question saisie lettre par lettre. Les saisies successives d'un même membre en moins de 60 secondes sont regroupées, y compris dans l'historique.
+[[/if]][[if analytics,chatbot]]- Les thèmes les plus fréquents des conversations remplacent l'ancienne liste de messages bruts.
+[[/if]][[if analytics,chatbot]]- Un bloc Chatbot affiche le total des conversations, le taux de résolution, le taux de passage à un humain et la satisfaction moyenne.
+[[/if]]
 ### Mai 2026
 
 **Barre de recherche améliorée**
-Les résultats sont désormais **regroupés par type** dans la liste : les FAQ d'abord, puis les articles, puis les processus. Chaque groupe a son icône, son nom et son nombre de résultats. Les groupes sans résultat sont masqués.
+Les résultats sont désormais **regroupés par type** dans la liste : les FAQ d'abord, puis les articles[[if trees]], puis les processus[[/if]]. Chaque groupe a son icône, son nom et son nombre de résultats. Les groupes sans résultat sont masqués.
 
 Autre confort : la barre se ferme quand vous cliquez en dehors, sans effacer votre recherche. Cliquez dans le champ pour la rouvrir.
 
@@ -67,23 +77,24 @@ Ce qui change pour les conseillers :
 - Donnez votre avis avec les pouces pour signaler les bonnes réponses, et les mauvaises.
 
 Ce qui change pour les administrateurs :
-- Page Analyse : un nouvel encart **FAQ à créer** propose automatiquement les questions recherchées sans résultat (au moins 3 fois en 7 jours).
-- Onglet **À réviser** dans la liste : les FAQ publiées et non modifiées depuis plus de 6 mois y sont signalées.
+[[if analytics]]- Page Analyse : un nouvel encart **FAQ à créer** propose automatiquement les questions recherchées sans résultat (au moins 3 fois en 7 jours).
+[[/if]]- Onglet **À réviser** dans la liste : les FAQ publiées et non modifiées depuis plus de 6 mois y sont signalées.
 - L'historique des modifications est visible dans l'éditeur.
 
 Pour en savoir plus, consultez la rubrique **FAQ**.
 
-**Analyse**
-Une nouvelle page **Analyse** est disponible pour les administrateurs et les managers. Elle réunit en un coup d'œil :
-- l'inventaire (articles publiés, brouillons, tags, processus) ;
-- l'activité de l'équipe (membres actifs aujourd'hui, sur 7 jours et sur 30 jours) ;
-- les articles à mettre à jour, les brouillons orphelins et les articles sans tag ;
-- les principaux contributeurs et la couverture par catégorie ;
-- les articles les plus et les moins consultés ;
-- les recherches les plus fréquentes et les **recherches sans résultat**, la meilleure source d'idées de contenu.
-
-Pour en savoir plus, consultez la rubrique **Analyse**.
-
+[[if analytics]]**Analyse**
+[[/if]][[if analytics]]Une nouvelle page **Analyse** est disponible pour les administrateurs et les managers. Elle réunit en un coup d'œil :
+[[/if]][[if analytics,trees]]- l'inventaire (articles publiés, brouillons, tags, processus) ;
+[[/if]][[if analytics,!trees]]- l'inventaire (articles publiés, brouillons, tags) ;
+[[/if]][[if analytics]]- l'activité de l'équipe (membres actifs aujourd'hui, sur 7 jours et sur 30 jours) ;
+[[/if]][[if analytics]]- les articles à mettre à jour, les brouillons orphelins et les articles sans tag ;
+[[/if]][[if analytics]]- les principaux contributeurs et la couverture par catégorie ;
+[[/if]][[if analytics]]- les articles les plus et les moins consultés ;
+[[/if]][[if analytics]]- les recherches les plus fréquentes et les **recherches sans résultat**, la meilleure source d'idées de contenu.
+[[/if]]
+[[if analytics]]Pour en savoir plus, consultez la rubrique **Analyse**.
+[[/if]]
 **Tags libres sur les articles**
 Vous pouvez désormais ajouter jusqu'à **10 tags** à un article depuis l'éditeur, avec une saisie semi-automatique à partir des tags déjà utilisés. Le filtre par tag est intégré à la liste des articles. Les administrateurs disposent d'une page **Paramètres > Tags** pour renommer ou supprimer des tags.
 
@@ -107,19 +118,19 @@ Pour en savoir plus, consultez la rubrique **Recherche**.
       {
         id:    'create-workspace',
         title: 'Créer votre organisation KnowDesk',
+        modules: ['knowledge', 'members'],
         content: `
 ## Créer votre organisation KnowDesk
 
-Lors de votre première connexion, KnowDesk vous guide en 3 étapes :
+Lors de votre première connexion, KnowDesk vous guide en 2 étapes. Chacune peut être passée avec **Passer cette étape**.
 
-**1. Nom de votre organisation**
-Choisissez un nom clair : c'est ce que verront les membres qui rejoignent votre équipe.
+**1. Inviter l'équipe**
+Saisissez les adresses e-mail des personnes à inviter. Vous pourrez aussi le faire plus tard depuis **Équipe**.
 
 **2. Première catégorie**
 Les catégories organisent votre base de connaissance. Commencez par une catégorie principale ; vous pourrez en ajouter autant que vous voulez ensuite.
 
-**3. Premier article**
-Rédigez un premier article pour essayer l'éditeur. Une procédure simple suffit.
+Ensuite, rédigez un premier article pour essayer l'éditeur. Une procédure simple suffit.
 
 > 💡 **Astuce** : Ne cherchez pas la perfection dès le départ. Commencez par quelques articles clés, puis enrichissez votre base au fil du temps.
         `.trim(),
@@ -127,6 +138,7 @@ Rédigez un premier article pour essayer l'éditeur. Une procédure simple suffi
       {
         id:    'invite-members',
         title: 'Inviter les premiers membres',
+        modules: ['members'],
         content: `
 ## Inviter les premiers membres
 
@@ -146,6 +158,7 @@ La personne reçoit un e-mail avec un lien d'activation valable **7 jours**. Ell
       {
         id:    'roles',
         title: 'Comprendre les rôles',
+        modules: ['members'],
         content: `
 ## Les rôles dans KnowDesk
 
@@ -155,18 +168,18 @@ KnowDesk propose 3 niveaux d'accès :
 - Accès complet à toutes les fonctionnalités
 - Gère les membres, les paramètres et la facturation
 - Crée, modifie et supprime tous les contenus
-- Accède à la page Analyse et à la gestion des tags et des synonymes
+- Accède [[if analytics]]à la page Analyse et [[/if]]à la gestion des tags et des synonymes
 
 **Manager**
-- Crée et publie des articles et des processus guidés
+- Crée et publie des articles[[if trees]] et des processus guidés[[/if]]
 - Invite et gère les conseillers
-- Accède à la page Analyse
-- Ne gère pas les paramètres avancés (tags, synonymes, facturation)
+[[if analytics]]- Accède à la page Analyse
+[[/if]]- Ne gère pas les paramètres avancés (tags, synonymes, facturation)
 
 **Conseiller**
 - Consulte la base de connaissance et y fait des recherches
-- Suit les processus guidés pendant les appels clients
-- Ne crée ni ne modifie de contenu
+[[if trees]]- Suit les processus guidés pendant les appels clients
+[[/if]]- Ne crée ni ne modifie de contenu
 
 > 💡 **Astuce** : Donnez le rôle **Manager** à vos responsables d'équipe : ils pourront tenir la base de connaissance à jour de façon autonome.
         `.trim(),
@@ -174,6 +187,7 @@ KnowDesk propose 3 niveaux d'accès :
       {
         id:    'settings-basics',
         title: 'Régler les paramètres de base',
+        modules: ['settings'],
         content: `
 ## Régler les paramètres de base
 
@@ -182,12 +196,11 @@ Ouvrez les paramètres depuis l'icône **Paramètres**, en bas du menu.
 **Nom de l'organisation**
 Modifiez le nom affiché dans l'interface et dans les e-mails envoyés aux membres.
 
-**Notifications**
+[[if notifications]]**Notifications**
 Choisissez les événements qui déclenchent une notification :
 - nouvel article publié ;
-- nouveau membre dans l'équipe ;
-- résumé hebdomadaire.
-
+- nouveau membre dans l'équipe.
+[[/if]]
 **Mon compte**
 Depuis l'icône **Mon compte** (vos initiales, en bas du menu), vous pouvez modifier votre prénom, votre nom, votre adresse e-mail et votre mot de passe.
         `.trim(),
@@ -202,6 +215,7 @@ Depuis l'icône **Mon compte** (vos initiales, en bas du menu), vous pouvez modi
       {
         id:    'create-article',
         title: 'Créer et structurer un article',
+        modules: ['knowledge'],
         content: `
 ## Créer et structurer un article
 
@@ -225,6 +239,7 @@ Pour créer un article :
       {
         id:    'categories',
         title: 'Organiser par catégories',
+        modules: ['knowledge'],
         content: `
 ## Organiser par catégories
 
@@ -260,6 +275,7 @@ Voyez vos catégories comme des classeurs. Quelques exemples :
       {
         id:    'add-tags',
         title: 'Ajouter des tags à un article',
+        modules: ['knowledge'],
         content: `
 ## Ajouter des tags à un article
 
@@ -287,6 +303,7 @@ Les tags complètent la catégorie : ils permettent un classement transversal, e
       {
         id:    'filter-by-tag',
         title: 'Filtrer la liste par tag',
+        modules: ['knowledge'],
         content: `
 ## Filtrer la liste par tag
 
@@ -307,6 +324,7 @@ Le filtre par tag se combine avec le filtre par catégorie du panneau de gauche 
       {
         id:    'insert-image',
         title: 'Insérer une image dans un article',
+        modules: ['knowledge'],
         content: `
 ## Insérer une image dans un article
 
@@ -331,6 +349,7 @@ L'image est envoyée automatiquement et apparaît à l'endroit du curseur. Cliqu
       {
         id:    'insert-link',
         title: 'Insérer un lien (interne ou externe)',
+        modules: ['knowledge'],
         content: `
 ## Insérer un lien (interne ou externe)
 
@@ -355,6 +374,7 @@ Quand un conseiller clique sur un lien interne dans un article, il ouvre directe
       {
         id:    'publish',
         title: 'Publier ou garder en brouillon',
+        modules: ['knowledge'],
         content: `
 ## Publier ou garder en brouillon
 
@@ -371,7 +391,7 @@ Un article a l'un de ces trois statuts :
 - Modifiable à tout moment
 
 **Archivé**
-- Retiré des articles publiés, de la recherche et du chatbot
+- Retiré des articles publiés[[if chatbot]], de la recherche et du chatbot[[else]] et de la recherche[[/if]]
 - Rangé dans l'onglet **Archivés** de la liste des articles
 - Non compté dans la limite d'articles de l'organisation
 
@@ -387,6 +407,7 @@ Dans le menu **···** de la ligne, ou dans l'éditeur, cliquez sur **Archiver*
       {
         id:    'versions',
         title: 'Historique des versions',
+        modules: ['knowledge'],
         content: `
 ## Historique des versions
 
@@ -416,6 +437,7 @@ KnowDesk conserve toutes les versions publiées de vos articles.
       {
         id:    'what-is-faq',
         title: 'Qu\'est-ce qu\'une FAQ ?',
+        modules: ['faqs'],
         content: `
 ## Qu'est-ce qu'une FAQ ?
 
@@ -440,7 +462,7 @@ Si vous pouvez répondre en moins de 3 phrases, c'est une FAQ. S'il vous faut pl
 
 **Exemples qui ne sont pas des FAQ** :
 - *Comment configurer son compte* : c'est un guide, donc un article.
-- *Procédure de réclamation pour un produit défectueux* : plusieurs étapes, donc un article ou un processus guidé.
+- *Procédure de réclamation pour un produit défectueux* : plusieurs étapes, donc un article[[if trees]] ou un processus guidé[[/if]].
 
 > 💡 **Astuce** : Une FAQ peut **renvoyer vers un article** complet grâce au champ « Article lié ». Pratique quand la réponse courte suffit dans 80 % des cas, mais que certains clients ont besoin de plus de détails.
         `.trim(),
@@ -448,16 +470,18 @@ Si vous pouvez répondre en moins de 3 phrases, c'est une FAQ. S'il vous faut pl
       {
         id:    'create-faq',
         title: 'Créer une FAQ',
+        modules: ['faqs'],
         content: `
 ## Créer une FAQ
 
 **Réservé aux administrateurs et aux managers.**
 
-**Deux façons de commencer :**
+[[if analytics]]**Deux façons de commencer :**
 
 1. **À la main** : depuis **FAQ** dans le menu de gauche, cliquez sur **Nouvelle FAQ**.
 2. **À partir d'une suggestion** : sur la page **Analyse**, l'encart **FAQ à créer** affiche les recherches restées sans résultat au moins 3 fois ces 7 derniers jours. Cliquez sur **Créer une FAQ** à côté d'une suggestion : l'éditeur s'ouvre avec la question déjà remplie.
-
+[[else]]**Pour commencer :** depuis **FAQ** dans le menu de gauche, cliquez sur **Nouvelle FAQ**.
+[[/if]]
 **Champs de l'éditeur :**
 
 - **Question** (obligatoire, 200 caractères au plus) : formulée comme un client la poserait.
@@ -488,6 +512,7 @@ Une FAQ en *brouillon* est invisible pour les conseillers. Elle n'apparaît dans
       {
         id:    'find-faq',
         title: 'Trouver une FAQ rapidement',
+        modules: ['faqs'],
         content: `
 ## Trouver une FAQ rapidement (conseillers)
 
@@ -510,7 +535,7 @@ Sous la réponse, vous pouvez voter :
 
 **Pourquoi c'est important** : votre vote remonte aux administrateurs, qui voient le Score helpful de chaque FAQ. Une FAQ souvent jugée inutile sera retravaillée. Une FAQ souvent jugée utile sera conservée, et pourra être publiée plus tard.
 
-> 💡 **Astuce** : Si vous cherchez souvent une question qui n'a pas de FAQ, vos recherches sont comptées automatiquement : les administrateurs verront une suggestion sur la page Analyse. Vous pouvez aussi leur en parler directement.
+> 💡 **Astuce** : Si vous cherchez souvent une question qui n'a pas de FAQ, [[if analytics]]vos recherches sont comptées automatiquement : les administrateurs verront une suggestion sur la page Analyse. Vous pouvez aussi leur en parler directement.[[else]]parlez-en à vos administrateurs.[[/if]]
 
 **Si la FAQ ne suffit pas :**
 
@@ -520,6 +545,7 @@ Si la FAQ a un **article lié**, un lien permet d'ouvrir l'article complet (proc
       {
         id:    'vote-faq',
         title: 'Donner votre avis sur une FAQ',
+        modules: ['faqs'],
         content: `
 ## Donner votre avis sur une FAQ
 
@@ -548,22 +574,23 @@ Votre vote est enregistré dans votre navigateur. Si vous changez de navigateur 
       {
         id:    'pilot-faqs',
         title: 'Suivre vos FAQ (administrateurs)',
+        modules: ['faqs'],
         content: `
 ## Suivre vos FAQ (administrateurs)
 
 **Réservé aux administrateurs et aux managers.**
 
-Une FAQ publiée doit être entretenue. Quatre outils vous y aident :
+Une FAQ publiée doit être entretenue. [[if analytics]]Quatre[[else]]Trois[[/if]] outils vous y aident :
 
-### 1. Suggestions automatiques (page Analyse)
-
-L'encart **FAQ à créer** apparaît sur la page Analyse dès qu'une recherche est restée sans résultat **au moins 3 fois ces 7 derniers jours**. Ce seuil est volontairement bas pour ne manquer aucun besoin.
-
-Exemple : *« délai livraison Belgique »* a été cherché 12 fois cette semaine sans résultat. La suggestion apparaît ; cliquez sur « Créer une FAQ » et l'éditeur s'ouvre avec la question déjà remplie.
-
-C'est votre meilleur indicateur des sujets que votre base ne couvre pas.
-
-### 2. FAQ à réviser (onglet de la liste)
+[[if analytics]]### 1. Suggestions automatiques (page Analyse)
+[[/if]]
+[[if analytics]]L'encart **FAQ à créer** apparaît sur la page Analyse dès qu'une recherche est restée sans résultat **au moins 3 fois ces 7 derniers jours**. Ce seuil est volontairement bas pour ne manquer aucun besoin.
+[[/if]]
+[[if analytics]]Exemple : *« délai livraison Belgique »* a été cherché 12 fois cette semaine sans résultat. La suggestion apparaît ; cliquez sur « Créer une FAQ » et l'éditeur s'ouvre avec la question déjà remplie.
+[[/if]]
+[[if analytics]]C'est votre meilleur indicateur des sujets que votre base ne couvre pas.
+[[/if]]
+### [[if analytics]]2[[else]]1[[/if]]. FAQ à réviser (onglet de la liste)
 
 Une FAQ publiée n'expire pas, mais **6 mois sans modification** est un signal d'alerte (politique modifiée, prix changé…).
 
@@ -573,7 +600,7 @@ Quand vous ouvrez une FAQ à réviser, un encart apparaît en haut de l'éditeur
 - si vous **modifiez** la réponse, la date de révision est mise à jour automatiquement ;
 - si **rien n'est à changer**, cliquez sur **C'est à jour** : la FAQ est marquée comme révisée, sans modifier son contenu.
 
-### 3. Score helpful de chaque FAQ
+### [[if analytics]]3[[else]]2[[/if]]. Score helpful de chaque FAQ
 
 Chaque FAQ affiche son score (en % et en nombre de votes) dans la liste et dans l'éditeur. Quelques repères :
 
@@ -582,14 +609,14 @@ Chaque FAQ affiche son score (en % et en nombre de votes) dans la liste et dans 
 - **Moins de 60 % avec au moins 5 votes** : reformulez-la en priorité, la réponse n'aide pas.
 - **Aucun vote** : pas encore d'avis.
 
-### 4. Historique des modifications
+### [[if analytics]]4[[else]]3[[/if]]. Historique des modifications
 
 Dans l'éditeur, ouvrez le panneau **Historique des modifications** pour voir qui a modifié la FAQ et quand. Utile pour comprendre l'évolution d'une réponse contestée ou retrouver la dernière personne à l'avoir modifiée.
 
 > 💡 **Astuce** : Prévoyez chaque mois quelques minutes pour passer en revue :
-> 1. Les suggestions « FAQ à créer » de la page Analyse
-> 2. L'onglet « À réviser » de la liste des FAQ
-> 3. Les FAQ dont le Score helpful est sous 60 %
+[[if analytics]]> 1. Les suggestions « FAQ à créer » de la page Analyse
+[[/if]]> [[if analytics]]2[[else]]1[[/if]]. L'onglet « À réviser » de la liste des FAQ
+> [[if analytics]]3[[else]]2[[/if]]. Les FAQ dont le Score helpful est sous 60 %
 >
 > 30 minutes par mois suffisent à garder une base saine, et votre équipe y gagne tout de suite.
         `.trim(),
@@ -604,10 +631,11 @@ Dans l'éditeur, ouvrez le panneau **Historique des modifications** pour voir qu
       {
         id:    'search-basics',
         title: 'Rechercher dans la base',
+        modules: ['knowledge'],
         content: `
 ## Rechercher dans la base
 
-La recherche de KnowDesk **tolère les fautes** et couvre les articles, les FAQ, les processus guidés et leurs tags.
+La recherche de KnowDesk **tolère les fautes** et couvre les articles, les FAQ[[if trees]], les processus guidés[[/if]] et leurs tags.
 
 **Lancer une recherche**
 - Cliquez sur la barre de recherche en haut de l'écran.
@@ -617,8 +645,8 @@ La recherche de KnowDesk **tolère les fautes** et couvre les articles, les FAQ,
 Inutile de saisir le mot exact. \`rembousement\` retrouve *remboursement*, \`livrazon\` retrouve *Livraisons*. La recherche corrige automatiquement les fautes courantes.
 
 **Ce qui est cherché**
-Pour chaque FAQ, article ou processus publié, la recherche porte sur :
-- la question (FAQ) ou le titre (article, processus) ;
+Pour chaque FAQ[[if trees]], article ou processus[[else]] ou article[[/if]] publié, la recherche porte sur :
+- la question (FAQ) ou le titre (article[[if trees]], processus[[/if]]) ;
 - la réponse (FAQ) ou le texte du contenu, avec les passages trouvés surlignés dans les résultats ;
 - la catégorie ;
 - les tags.
@@ -627,8 +655,8 @@ Pour chaque FAQ, article ou processus publié, la recherche porte sur :
 Les résultats sont **regroupés par type**, chaque groupe sous son propre titre :
 - **FAQ** d'abord : des réponses courtes, prêtes à coller. Cliquez pour afficher la réponse complète et le bouton **Copier la réponse**.
 - **Articles** ensuite : des guides détaillés. Cliquez pour ouvrir l'article.
-- **Processus** en dernier : des processus guidés pour les cas complexes.
-
+[[if trees]]- **Processus** en dernier : des processus guidés pour les cas complexes.
+[[/if]]
 Chaque groupe indique son nombre de résultats. Un groupe sans résultat est masqué.
 
 **Naviguer au clavier**
@@ -640,16 +668,17 @@ Chaque groupe indique son nombre de résultats. Un groupe sans résultat est mas
 - Au clavier : \`Échap\`.
 - À la souris : cliquez n'importe où en dehors de la barre. La liste se ferme mais votre recherche est conservée ; cliquez dans le champ pour la rouvrir.
 
-> 💡 **Astuce** : Si une recherche fréquente ne donne rien, signalez-le : c'est un sujet à couvrir. Les administrateurs et les managers retrouvent ces recherches sur la page **Analyse**, dans la carte **Recherches sans résultat**, et elles alimentent les suggestions de FAQ.
+> 💡 **Astuce** : Si une recherche fréquente ne donne rien, signalez-le : c'est un sujet à couvrir.[[if analytics]] Les administrateurs et les managers retrouvent ces recherches sur la page **Analyse**, dans la carte **Recherches sans résultat**, et elles alimentent les suggestions de FAQ.[[/if]]
         `.trim(),
       },
       {
         id:    'ai-answer',
         title: 'Comprendre la Réponse IA',
+        modules: ['ai_answer'],
         content: `
 ## Comprendre la Réponse IA
 
-Quand vous posez une **question** dans la barre de recherche, une carte « Réponse IA » apparaît en haut des résultats. Elle résume en quelques phrases les articles, FAQ et processus pertinents : un gain de temps pendant un appel client.
+Quand vous posez une **question** dans la barre de recherche, une carte « Réponse IA » apparaît en haut des résultats. Elle résume en quelques phrases les articles[[if trees]], FAQ et processus[[else]] et FAQ[[/if]] pertinents : un gain de temps pendant un appel client.
 
 **Quand l'IA répond-elle ?**
 La Réponse IA se déclenche automatiquement si votre recherche :
@@ -670,10 +699,10 @@ Une icône apparaît alors dans la barre pour indiquer que l'IA est active. Elle
 **Quand l'IA répond *« Je n'ai pas la réponse précise dans la base. »***
 C'est voulu. L'IA **n'invente jamais** d'information : si la réponse ne figure pas dans vos articles, elle le dit et affiche tout de même les articles les plus proches. En service client, mieux vaut un doute qu'une information fausse.
 
-Si ce message apparaît souvent sur des questions légitimes, signalez-le à un administrateur. Les questions sans réponse sont visibles sur la page **Analyse**, dans le bloc **Réponse IA**, et aident à repérer les contenus manquants.
+Si ce message apparaît souvent sur des questions légitimes, signalez-le à un administrateur.[[if analytics]] Les questions sans réponse sont visibles sur la page **Analyse**, dans le bloc **Réponse IA**, et aident à repérer les contenus manquants.[[/if]]
 
 **Votre avis compte**
-À la fin de chaque réponse, deux boutons pouce vous permettent de dire si elle a été utile. Ces votes alimentent les statistiques de qualité visibles par les administrateurs.
+À la fin de chaque réponse, deux boutons pouce vous permettent de dire si elle a été utile.[[if analytics]] Ces votes alimentent les statistiques de qualité visibles par les administrateurs.[[/if]]
 
 > ⚠️ **Avertissement** : L'IA peut se tromper, surtout sur des sujets sensibles (juridique, financier). **Vérifiez toujours les sources citées** avant de transmettre une information importante au client.
         `.trim(),
@@ -681,6 +710,7 @@ Si ce message apparaît souvent sur des questions légitimes, signalez-le à un 
       {
         id:    'ai-config',
         title: 'Régler l\'IA pour votre organisation (administrateurs)',
+        modules: ['ai_answer', 'settings'],
         content: `
 ## Régler la Réponse IA pour votre organisation
 
@@ -720,19 +750,20 @@ Exemples :
 
 > 💡 **Astuce** : Construisez votre glossaire au fil de l'eau. Inutile de tout définir d'un coup : ajoutez une paire quand vous repérez un mot employé par l'IA qui ne correspond pas à votre vocabulaire.
 
-**Suivre l'usage et la qualité**
-Sur la page **Analyse**, le bloc **Réponse IA** couvre les 30 derniers jours :
-- le nombre de réponses générées, dont celles « sans réponse précise » ;
-- la part de votes positifs parmi les avis reçus ;
-- les 5 questions les plus posées à l'IA ;
-- les 5 principales questions sans réponse, chacune avec un bouton **Créer une FAQ** pour combler le manque en un clic.
-
+[[if analytics]]**Suivre l'usage et la qualité**
+[[/if]][[if analytics]]Sur la page **Analyse**, le bloc **Réponse IA** couvre les 30 derniers jours :
+[[/if]][[if analytics]]- le nombre de réponses générées, dont celles « sans réponse précise » ;
+[[/if]][[if analytics]]- la part de votes positifs parmi les avis reçus ;
+[[/if]][[if analytics]]- les 5 questions les plus posées à l'IA ;
+[[/if]][[if analytics]]- les 5 principales questions sans réponse, chacune avec un bouton **Créer une FAQ** pour combler le manque en un clic.
+[[/if]]
 > **Fonctionnement** : la Réponse IA repose sur **Mistral Small**, un modèle d'IA français hébergé dans l'Union européenne. Chaque recherche reste limitée à votre organisation : aucune autre organisation KnowDesk ne voit votre contenu, et le modèle ne reçoit que les extraits envoyés à chaque question. Vos données ne servent pas à entraîner le modèle.
         `.trim(),
       },
       {
         id:    'chatbot-config',
         title: 'Chatbot à intégrer à votre site web',
+        modules: ['chatbot'],
         content: `
 ## Chatbot à intégrer à votre site web
 
@@ -742,11 +773,11 @@ KnowDesk peut alimenter un chatbot que vous intégrez au site web de votre entre
 
 **1. Rendre un contenu public**
 
-Pour chaque article, FAQ ou processus guidé que le chatbot doit pouvoir utiliser :
+Pour chaque article, FAQ[[if trees]] ou processus guidé[[/if]] que le chatbot doit pouvoir utiliser :
 - **Articles** : dans l'éditeur, champ **Visibilité** sous les tags, choisissez *Public*.
 - **FAQ** : dans l'éditeur, option **Visibilité**, choisissez *Public*.
-- **Processus guidés** : dans l'éditeur, liste de la barre du haut, choisissez *Public*.
-
+[[if trees]]- **Processus guidés** : dans l'éditeur, liste de la barre du haut, choisissez *Public*.
+[[/if]]
 Tous les contenus existants sont **internes** par défaut, pour ne rien exposer par erreur.
 
 **2. Régler le chatbot**
@@ -810,10 +841,10 @@ Le chatbot refuse :
 - les sites dont le domaine n'est pas autorisé ;
 - plus de 30 messages par minute depuis un même visiteur (protection contre les abus).
 
-**9. Suivi des conversations**
-
-Toutes les conversations sont consultables dans la page **Conversations** du menu de gauche (réservée aux administrateurs) : recherche par mot-clé, filtre par statut, lecture de la conversation complète. Consultez l'article *Suivre les conversations*.
-
+[[if chats]]**9. Suivi des conversations**
+[[/if]]
+[[if chats]]Toutes les conversations sont consultables dans la page **Conversations** du menu de gauche (réservée aux administrateurs) : recherche par mot-clé, filtre par statut, lecture de la conversation complète. Consultez l'article *Suivre les conversations*.
+[[/if]]
 > 💡 **Essai rapide** : une fois le chatbot actif sur votre site, ouvrez une page, cliquez sur la bulle et posez une question dont la réponse figure dans une FAQ publique. La réponse s'affiche au fur et à mesure. Cliquez sur le pouce baissé pour essayer la demande de contact dans la conversation.
 
 > ⚠️ **RGPD** : le chatbot ne recueille que ce que le visiteur saisit volontairement (y compris son adresse e-mail s'il choisit de la donner après un avis négatif). Aucune empreinte de l'appareil n'est conservée en clair sur le serveur, seulement un identifiant anonyme enregistré dans son navigateur. Un avertissement dans le chatbot et une durée de conservation réglable sont prévus dans une prochaine version.
@@ -822,6 +853,7 @@ Toutes les conversations sont consultables dans la page **Conversations** du men
       {
         id:    'chatbot-handoff',
         title: 'Passage à un humain',
+        modules: ['chatbot'],
         content: `
 ## Passage à un humain
 
@@ -843,15 +875,15 @@ Trois cas, tous décrits dans l'article *Chatbot à intégrer à votre site web*
 2. **Bouton de contact** dans l'en-tête du chatbot : ouvre directement le formulaire d'adresse e-mail, puis envoie la demande.
 3. **Sans adresse e-mail** : si le visiteur préfère ne pas la donner, il peut continuer la conversation. Son avis négatif reste compté et la conversation reste *escaladée*, mais rien n'est transmis à votre équipe.
 
-**Statistiques**
-
-Sur la page **Analyse**, le bloc Chatbot affiche :
-- le **taux de résolution** : conversations *résolues* sur le total des conversations closes ;
-- le **taux d'escalade** : conversations *escaladées* sur le total des conversations closes ;
-- la **satisfaction moyenne** des conversations notées.
-
-Le détail de chaque conversation escaladée (échange complet, adresse e-mail du visiteur, transmission réussie ou non) est disponible dans la page **Conversations**.
-
+[[if analytics]]**Statistiques**
+[[/if]]
+[[if analytics]]Sur la page **Analyse**, le bloc Chatbot affiche :
+[[/if]][[if analytics]]- le **taux de résolution** : conversations *résolues* sur le total des conversations closes ;
+[[/if]][[if analytics]]- le **taux d'escalade** : conversations *escaladées* sur le total des conversations closes ;
+[[/if]][[if analytics]]- la **satisfaction moyenne** des conversations notées.
+[[/if]]
+[[if chats]]Le détail de chaque conversation escaladée (échange complet, adresse e-mail du visiteur, transmission réussie ou non) est disponible dans la page **Conversations**.
+[[/if]]
 > 💡 **Astuce** : Commencez par le mode **E-mail** pour vérifier que le fonctionnement convient à votre équipe, puis passez au mode **Webhook** pour créer automatiquement des tickets dans votre outil de support.
 
 > ⚠️ **Sécurité du webhook** : votre adresse doit être publique (HTTPS) et accepter un POST JSON sans authentification. Une signature permettant de vérifier que la requête vient de KnowDesk est prévue dans une prochaine version. En attendant, ajoutez un code secret dans l'adresse elle-même (par exemple \`https://api.exemple.fr/hooks/knowdesk?token=XXXXX\`).
@@ -860,6 +892,7 @@ Le détail de chaque conversation escaladée (échange complet, adresse e-mail d
       {
         id:    'synonyms',
         title: 'Définir des synonymes (administrateurs)',
+        modules: ['knowledge', 'settings'],
         content: `
 ## Définir des synonymes propres à votre organisation
 
@@ -904,6 +937,7 @@ Sur chaque ligne de la liste :
       {
         id:    'what-is-tree',
         title: 'Comprendre les processus guidés',
+        modules: ['trees'],
         content: `
 ## Comprendre les processus guidés
 
@@ -927,6 +961,7 @@ Le conseiller voit une question et plusieurs réponses possibles. Selon la répo
       {
         id:    'create-tree',
         title: 'Créer un processus guidé',
+        modules: ['trees'],
         content: `
 ## Créer un processus guidé
 
@@ -945,6 +980,7 @@ Le conseiller voit une question et plusieurs réponses possibles. Selon la répo
       {
         id:    'tree-nodes',
         title: 'Ajouter questions, réponses et conclusions',
+        modules: ['trees'],
         content: `
 ## Ajouter questions, réponses et conclusions
 
@@ -969,6 +1005,7 @@ Chaque étape a un bouton de modification et un bouton de suppression, visibles 
       {
         id:    'tree-publish',
         title: 'Publier un processus',
+        modules: ['trees'],
         content: `
 ## Publier un processus
 
@@ -993,6 +1030,7 @@ Une fois publié, le processus apparaît dans la page **Processus** et devient a
       {
         id:    'find-info',
         title: 'Trouver une information pendant un appel',
+        modules: ['knowledge'],
         content: `
 ## Trouver une information pendant un appel
 
@@ -1012,21 +1050,22 @@ Un seul mot suffit souvent (*remboursement*, *retour*, *colis*). Plus la recherc
 - \`Entrée\` ouvre le résultat sélectionné.
 - \`Échap\` ferme la barre.
 
-**FAQ, articles ou processus**
+**FAQ[[if trees]], articles ou processus[[else]] ou articles[[/if]]**
 Chaque résultat porte un badge :
 - **FAQ** (violet) : une réponse courte, prête à coller. Les FAQ sont **toujours en haut des résultats**, car c'est le format le plus rapide. Cliquez pour afficher la réponse complète et le bouton **Copier la réponse** : un clic suffit pour la copier.
 - **Article** (vert) : un guide complet. Cliquez pour ouvrir l'article.
-- **Processus** (bleu) : un processus guidé. Pour une situation complexe (un cas client qui dépend de plusieurs critères), préférez un processus : il vous mène étape par étape à la bonne réponse.
-
+[[if trees]]- **Processus** (bleu) : un processus guidé. Pour une situation complexe (un cas client qui dépend de plusieurs critères), préférez un processus : il vous mène étape par étape à la bonne réponse.
+[[/if]]
 **Le bon réflexe : commencez par les FAQ**
 Si une FAQ répond à votre question, vous gagnez du temps par rapport à la lecture d'un article. Votez avec les pouces sous la réponse pour aider les administrateurs à suivre la qualité.
 
-> 💡 **Astuce** : Si une recherche fréquente ne donne rien, sachez qu'elle est comptée automatiquement. À partir de 3 recherches identiques en 7 jours, les administrateurs voient une suggestion sur la page Analyse et peuvent créer la FAQ manquante en 2 minutes.
+> 💡 **Astuce** : Si une recherche fréquente ne donne rien, [[if analytics]]sachez qu'elle est comptée automatiquement. À partir de 3 recherches identiques en 7 jours, les administrateurs voient une suggestion sur la page Analyse et peuvent créer la FAQ manquante en 2 minutes.[[else]]signalez-le à un administrateur : c'est un sujet à couvrir.[[/if]]
         `.trim(),
       },
       {
         id:    'follow-tree',
         title: 'Suivre un processus guidé efficacement',
+        modules: ['trees'],
         content: `
 ## Suivre un processus guidé efficacement
 
@@ -1053,6 +1092,7 @@ Un **processus guidé** est une suite de questions et de réponses qui vous mèn
       {
         id:    'report-issue',
         title: 'Signaler une information incorrecte',
+        modules: ['knowledge'],
         content: `
 ## Signaler une information incorrecte
 
@@ -1068,12 +1108,13 @@ Le signalement est envoyé aux administrateurs et aux managers de votre organisa
 **Pourquoi c'est important**
 Vous êtes **en première ligne** : vous repérez les contenus dépassés bien avant les managers. Chaque signalement améliore la base pour toute l'équipe.
 
-> 💡 **Astuce** : Vous pouvez aussi signaler un problème dans un processus guidé. Si une réponse vous a mené à une mauvaise conclusion, dites-le : c'est précieux pour corriger le processus.
-        `.trim(),
+[[if trees]]> 💡 **Astuce** : Vous pouvez aussi signaler un problème dans un processus guidé. Si une réponse vous a mené à une mauvaise conclusion, dites-le : c'est précieux pour corriger le processus.
+[[/if]]        `.trim(),
       },
       {
         id:    'advisor-notifications',
         title: 'Gérer vos notifications',
+        modules: ['notifications'],
         content: `
 ## Gérer vos notifications
 
@@ -1104,6 +1145,7 @@ Ouvrez **Paramètres > Notifications** pour activer ou désactiver chaque type :
       {
         id:    'seasonal-campaign',
         title: 'Préparer une campagne saisonnière',
+        modules: ['knowledge'],
         content: `
 ## Préparer une campagne saisonnière (Black Friday, soldes, fêtes…)
 
@@ -1115,16 +1157,17 @@ Dans l'éditeur de chaque article concerné par l'opération, ajoutez un tag cla
 **Étape 2 : repérez les contenus à adapter**
 Passez en revue vos articles de référence (politique de remboursement, délais de livraison, conditions…) et dupliquez ceux qui changent le temps de l'opération.
 
-**Étape 3 : créez un processus guidé pour la campagne**
-Un processus dédié à l'opération : qualification du cas, puis réponse adaptée. Bien plus rapide pour le conseiller que de chercher la question à chaque appel.
+[[if trees]]**Étape 3 : créez un processus guidé pour la campagne**
+[[/if]][[if trees]]Un processus dédié à l'opération : qualification du cas, puis réponse adaptée. Bien plus rapide pour le conseiller que de chercher la question à chaque appel.
+[[/if]]
+**Étape [[if trees]]4[[else]]3[[/if]] : prévenez l'équipe**
+Publiez un article de synthèse avec le tag de la campagne et des liens vers les[[if trees]] processus et[[/if]] articles utiles.[[if notifications]] Les conseillers reçoivent une notification dans leur panneau **Notifications**.[[/if]]
 
-**Étape 4 : prévenez l'équipe**
-Publiez un article de synthèse avec le tag de la campagne et des liens vers les processus et articles utiles. Les conseillers reçoivent une notification dans leur panneau **Notifications**.
-
-**Étape 5 : pendant l'opération, suivez la page Analyse**
-Utilisez la carte **Top recherches** pour repérer les nouveaux sujets, et la carte **Recherches sans résultat** pour combler les manques en cours d'opération.
-
-**Étape 6 : après l'opération**
+[[if analytics,trees]]**Étape 5 : pendant l'opération, suivez la page Analyse**
+[[/if]][[if analytics,!trees]]**Étape 4 : pendant l'opération, suivez la page Analyse**
+[[/if]][[if analytics]]Utilisez la carte **Top recherches** pour repérer les nouveaux sujets, et la carte **Recherches sans résultat** pour combler les manques en cours d'opération.
+[[/if]]
+**Étape [[if trees,analytics]]6[[/if]][[if trees,!analytics|!trees,analytics]]5[[/if]][[if !trees,!analytics]]4[[/if]] : après l'opération**
 Une fois la campagne terminée :
 - ouvrez **Paramètres > Tags** ;
 - supprimez le tag de la campagne. Les articles ne sont pas supprimés, ils perdent seulement ce tag.
@@ -1135,10 +1178,11 @@ Une fois la campagne terminée :
       {
         id:    'measure-impact',
         title: 'Mesurer l\'impact d\'un nouveau contenu',
+        modules: ['analytics'],
         content: `
 ## Mesurer l'impact d'un nouveau contenu
 
-Vous venez de publier un article ou un processus guidé important : comment savoir s'il sert ?
+Vous venez de publier un article[[if trees]] ou un processus guidé[[/if]] important : comment savoir s'il sert ?
 
 **Avant de publier**
 Notez la situation de départ sur la page **Analyse** :
@@ -1167,6 +1211,7 @@ Sur la page **Analyse**, ouvrez la carte **Articles les plus consultés**. Si vo
       {
         id:    'find-gaps',
         title: 'Repérer les sujets manquants',
+        modules: ['analytics'],
         content: `
 ## Repérer les sujets manquants
 
@@ -1200,16 +1245,17 @@ Prévoyez 30 minutes par mois pour parcourir ces deux cartes et créer ou ajuste
       {
         id:    'delegate-maintenance',
         title: 'Confier l\'entretien de la base à un manager',
+        modules: ['members'],
         content: `
 ## Confier l'entretien de la base à un manager
 
 Si vous êtes administrateur, vous n'avez pas à tout faire seul. Le rôle **Manager** permet de partager l'entretien de la base.
 
 **Ce qu'un manager peut faire**
-- Créer, publier, modifier et archiver des articles et des processus guidés
+- Créer, publier, modifier et archiver des articles[[if trees]] et des processus guidés[[/if]]
 - Inviter et désactiver des conseillers
-- Consulter la page Analyse
-
+[[if analytics]]- Consulter la page Analyse
+[[/if]]
 **Ce qu'un manager ne peut pas faire (réservé aux administrateurs)**
 - Gérer les **synonymes** (Paramètres > Synonymes)
 - Gérer les **tags** de l'organisation (renommer, supprimer : Paramètres > Tags)
@@ -1223,15 +1269,16 @@ Si vous êtes administrateur, vous n'avez pas à tout faire seul. Le rôle **Man
 
 **Une bonne répartition**
 - Les **conseillers** repèrent les contenus à corriger (avec *Signaler une information incorrecte*).
-- Les **managers** créent et entretiennent la base au quotidien, et consultent la page **Analyse** chaque semaine.
+- Les **managers** créent et entretiennent la base au quotidien[[if analytics]], et consultent la page **Analyse** chaque semaine[[/if]].
 - L'**administrateur** garde la main sur le vocabulaire (synonymes, tags) et sur les orientations.
 
-> 💡 **Astuce** : Fixez avec votre manager un rendez-vous hebdomadaire de 15 minutes sur la page Analyse. Une habitude simple suffit à garder la base à jour.
+> 💡 **Astuce** : Fixez avec votre manager un rendez-vous hebdomadaire de 15 minutes [[if analytics]]sur la page Analyse[[else]]pour passer la base en revue[[/if]]. Une habitude simple suffit à garder la base à jour.
         `.trim(),
       },
       {
         id:    'build-vocabulary',
         title: 'Construire un dictionnaire métier',
+        modules: ['knowledge', 'settings'],
         content: `
 ## Construire un dictionnaire métier (synonymes)
 
@@ -1245,9 +1292,11 @@ Chaque organisation a son **vocabulaire**. Votre équipe parle peut-être de *cl
 - **Anglicismes** : *refund* et *remboursement*
 
 **Comment vous y prendre**
-1. Pendant une semaine, surveillez la carte **Recherches sans résultat** de la page **Analyse**.
+[[if analytics]]1. Pendant une semaine, surveillez la carte **Recherches sans résultat** de la page **Analyse**.
 2. Notez les recherches qui ressemblent à des sujets déjà couverts dans la base, mais avec un autre mot.
-3. Ouvrez **Paramètres > Synonymes** et cliquez sur **Ajouter un synonyme**.
+[[else]]1. Pendant une semaine, notez les mots qu'emploient vos conseillers et vos clients.
+2. Repérez ceux qui désignent des sujets déjà couverts dans la base, mais avec un autre mot.
+[[/if]]3. Ouvrez **Paramètres > Synonymes** et cliquez sur **Ajouter un synonyme**.
 4. Saisissez le **terme** principal (le mot officiel ou interne) et ses **synonymes** (les autres mots entendus).
 
 **Exemple**
@@ -1267,6 +1316,7 @@ Inutile de saisir chaque sens. Si vous associez *annulation* et *résiliation*, 
       {
         id:    'industrialize-faqs',
         title: 'Systématiser les réponses récurrentes',
+        modules: ['faqs'],
         content: `
 ## Systématiser les réponses récurrentes
 
@@ -1274,11 +1324,11 @@ Si vos conseillers passent beaucoup de temps à **reformuler les mêmes réponse
 
 ### 1. Repérer les questions répétitives
 
-Trois sources :
+[[if analytics]]Trois sources :[[else]]La meilleure source :[[/if]]
 
-- **L'encart « FAQ à créer »** de la page Analyse : il repère automatiquement les recherches restées sans résultat au moins 3 fois en 7 jours.
-- **Top recherches**, sur la page Analyse : les recherches les plus fréquentes.
-- **Vos conseillers** : demandez-leur les 5 questions clients auxquelles ils répondent le plus souvent.
+[[if analytics]]- **L'encart « FAQ à créer »** de la page Analyse : il repère automatiquement les recherches restées sans résultat au moins 3 fois en 7 jours.
+[[/if]][[if analytics]]- **Top recherches**, sur la page Analyse : les recherches les plus fréquentes.
+[[/if]]- **Vos conseillers** : demandez-leur les 5 questions clients auxquelles ils répondent le plus souvent.
 
 ### 2. En faire des FAQ
 
@@ -1299,25 +1349,25 @@ Au bout d'un mois, regardez :
 |---|---|---|
 | **Vues par FAQ** | plus de 5 par mois pour les FAQ principales | Liste des FAQ (colonne « Vues ») |
 | **Score helpful moyen** | plus de 70 % | Liste des FAQ (colonne « Score helpful ») |
-| **Part des recherches qui ouvrent une FAQ** | plus de 30 % | Top recherches comparé aux vues des FAQ |
-| **Recherches sans résultat** | en baisse d'un mois à l'autre | Page Analyse, carte Recherches sans résultat |
-
+[[if analytics]]| **Part des recherches qui ouvrent une FAQ** | plus de 30 % | Top recherches comparé aux vues des FAQ |
+[[/if]][[if analytics]]| **Recherches sans résultat** | en baisse d'un mois à l'autre | Page Analyse, carte Recherches sans résultat |
+[[/if]]
 ### 4. Améliorer
 
 - FAQ sous 60 % (au moins 5 votes) : reformulez la réponse.
 - FAQ sans vue après 30 jours : reformulez la question (elle n'est pas trouvée) ou retirez-la.
-- Nouvelle suggestion sur la page Analyse : bouton « Créer une FAQ », même démarche.
-
+[[if analytics]]- Nouvelle suggestion sur la page Analyse : bouton « Créer une FAQ », même démarche.
+[[/if]]
 ### 5. Aller plus loin
 
-Quand vous avez plus de 50 FAQ avec un Score helpful moyen supérieur à 70 %, deux usages deviennent possibles :
+Quand vous avez plus de 50 FAQ avec un Score helpful moyen supérieur à 70 %, [[if chatbot]]deux usages deviennent possibles[[else]]un usage devient possible[[/if]] :
 
 - **Publication sur le web** (à venir) : vos FAQ apparaissent automatiquement sur votre site. Une seule rédaction pour deux usages (interne et externe), sans écart entre les deux.
-- **Chatbot** (à venir) : un chatbot s'appuie sur vos FAQ pour répondre directement aux clients.
+[[if chatbot]]- **Chatbot** (à venir) : un chatbot s'appuie sur vos FAQ pour répondre directement aux clients.
+[[/if]]
+[[if chatbot]]Ces deux usages démultiplient l'intérêt de vos FAQ, mais ils ne fonctionnent[[else]]Cet usage démultiplie l'intérêt de vos FAQ, mais il ne fonctionne[[/if]] bien qu'avec une base interne de qualité. C'est pourquoi la création et la qualité des FAQ viennent d'abord.
 
-Ces deux usages démultiplient l'intérêt de vos FAQ, mais ils ne fonctionnent bien qu'avec une base interne de qualité. C'est pourquoi la création et la qualité des FAQ viennent d'abord.
-
-> 💡 **Astuce** : 30 minutes par mois sur l'entretien de vos FAQ (suggestions, FAQ à réviser, scores sous 60 %) suffisent à garder la base saine, et votre équipe y gagne tout de suite.
+> 💡 **Astuce** : 30 minutes par mois sur l'entretien de vos FAQ ([[if analytics]]suggestions, [[/if]]FAQ à réviser, scores sous 60 %) suffisent à garder la base saine, et votre équipe y gagne tout de suite.
         `.trim(),
       },
     ],
@@ -1330,6 +1380,7 @@ Ces deux usages démultiplient l'intérêt de vos FAQ, mais ils ne fonctionnent 
       {
         id:    'invite',
         title: 'Inviter un membre',
+        modules: ['members'],
         content: `
 ## Inviter un membre
 
@@ -1348,6 +1399,7 @@ Dans la liste des membres, repérez la personne au statut *Invitation envoyée* 
       {
         id:    'manage-roles',
         title: 'Gérer les rôles et les droits',
+        modules: ['members'],
         content: `
 ## Gérer les rôles et les droits
 
@@ -1359,7 +1411,7 @@ Dans la liste des membres, repérez la personne au statut *Invitation envoyée* 
 
 **Les rôles disponibles**
 - **Administrateur** : accès complet
-- **Manager** : création de contenu, gestion des conseillers et page Analyse
+- **Manager** : création de contenu[[if analytics]], gestion des conseillers et page Analyse[[else]] et gestion des conseillers[[/if]]
 - **Conseiller** : consultation uniquement
 
 > ⚠️ **Attention** : Vous ne pouvez pas retirer son rôle au dernier administrateur de l'organisation.
@@ -1368,6 +1420,7 @@ Dans la liste des membres, repérez la personne au statut *Invitation envoyée* 
       {
         id:    'disable-member',
         title: 'Désactiver un membre',
+        modules: ['members'],
         content: `
 ## Désactiver un membre
 
@@ -1393,6 +1446,7 @@ Le membre ne peut plus se connecter, immédiatement. Vous pouvez le réactiver �
       {
         id:    'analytics-overview',
         title: 'Lire la page Analyse',
+        modules: ['analytics'],
         content: `
 ## Lire la page Analyse
 
@@ -1403,7 +1457,7 @@ Cliquez sur **Analyse** (icône en forme de graphique) dans le menu de gauche.
 
 **Rangée du haut : inventaire et activité**
 - **Articles publiés, brouillons, archivés** : l'état global de vos contenus.
-- **Tags** et **Processus guidés** : leur nombre.
+- **Tags**[[if trees]] et **Processus guidés**[[/if]] : leur nombre.
 - **Actifs aujourd'hui, sur 7 jours, sur 30 jours** : nombre de membres différents qui ont consulté un article ou fait une recherche.
 
 **Encart FAQ à créer**
@@ -1428,14 +1482,14 @@ Toutes les listes sont **cliquables** : un clic ouvre l'article concerné, et le
 - **Top questions** et **Questions sans réponse** : les variantes intermédiaires d'une même recherche saisie par un membre (« comment résilier », « comment résilier mon », « comment résilier mon forfait ») sont regroupées sur une seule ligne. Seule la recherche finale compte.
 - Un bouton **Créer une FAQ** sur chaque question sans réponse ouvre l'éditeur avec la question déjà remplie.
 
-**Bloc Chatbot (s'il est activé)**
-- **Total des conversations** sur 30 jours, réparti par statut (en cours, résolues, escaladées, abandonnées).
-- **Taux de résolution** : conversations résolues sur le total des conversations closes.
-- **Taux d'escalade** : conversations escaladées sur le total des conversations closes.
-- **Satisfaction moyenne** des conversations notées.
-- **Thèmes des conversations** : chaque conversation est résumée par un thème court à sa clôture (par exemple *« Résiliation forfait mobile »*, *« Activation eSIM »*). Les questions sur un même sujet sont regroupées sur la même ligne : une meilleure image des besoins des visiteurs que les messages bruts.
-- Pour examiner une conversation précise, ouvrez la page **Conversations**.
-
+[[if chatbot]]**Bloc Chatbot (s'il est activé)**
+[[/if]][[if chatbot]]- **Total des conversations** sur 30 jours, réparti par statut (en cours, résolues, escaladées, abandonnées).
+[[/if]][[if chatbot]]- **Taux de résolution** : conversations résolues sur le total des conversations closes.
+[[/if]][[if chatbot]]- **Taux d'escalade** : conversations escaladées sur le total des conversations closes.
+[[/if]][[if chatbot]]- **Satisfaction moyenne** des conversations notées.
+[[/if]][[if chatbot]]- **Thèmes des conversations** : chaque conversation est résumée par un thème court à sa clôture (par exemple *« Résiliation forfait mobile »*, *« Activation eSIM »*). Les questions sur un même sujet sont regroupées sur la même ligne : une meilleure image des besoins des visiteurs que les messages bruts.
+[[/if]][[if chatbot,chats]]- Pour examiner une conversation précise, ouvrez la page **Conversations**.
+[[/if]]
 **Période couverte**
 Les indicateurs d'activité (vues, recherches, membres actifs) couvrent les **30 derniers jours**. Les indicateurs sur les contenus (articles à vérifier, tags inutilisés…) reflètent l'état actuel.
 
@@ -1455,6 +1509,7 @@ Aucune donnée d'utilisation individuelle par conseiller n'est affichée. Les st
       {
         id:    'chats-overview',
         title: 'Suivre les conversations',
+        modules: ['chats'],
         content: `
 ## Suivre les conversations
 
@@ -1496,7 +1551,7 @@ Cliquez sur une ligne pour ouvrir la conversation complète :
 
 - **Contrôle hebdomadaire** : ouvrez les conversations *Escaladées* de la semaine et relisez-les pour comprendre où le chatbot a buté. Vous repérez ainsi les contenus à créer (FAQ, articles).
 - **Suivi d'un incident** : un visiteur signale par e-mail un problème avec le chatbot ; retrouvez sa conversation par mot-clé pour comprendre.
-- **Amélioration de la base** : repérez les thèmes fréquents mais mal couverts. Les thèmes sont aussi regroupés sur la page **Analyse**, dans le bloc Chatbot.
+- **Amélioration de la base** : repérez les thèmes fréquents mais mal couverts. [[if analytics]]Les thèmes sont aussi regroupés sur la page **Analyse**, dans le bloc Chatbot.[[/if]]
 
 > 💡 **Astuce** : Si une conversation révèle un manque dans la base, créez directement une **FAQ** avec la question type. Le chatbot l'utilisera dès qu'elle sera publique.
 
@@ -1513,6 +1568,7 @@ Cliquez sur une ligne pour ouvrir la conversation complète :
       {
         id:    'org-settings',
         title: 'Paramètres de l\'organisation',
+        modules: ['settings'],
         content: `
 ## Paramètres de l'organisation
 
@@ -1521,17 +1577,18 @@ Ouvrez les paramètres depuis l'entrée **Paramètres**, en bas du menu de gauch
 **Nom de l'organisation**
 C'est le nom affiché dans l'interface et dans les e-mails envoyés aux membres. Modifiez-le, puis cliquez sur **Enregistrer**.
 
-**Notifications**
-Choisissez les événements qui déclenchent une notification dans le panneau **Notifications**, en bas du menu de gauche :
-- **Article publié** : un nouvel article a été mis en ligne par votre équipe.
-- **Nouveau membre** : une personne vient de rejoindre l'organisation.
-
-> 💡 **Astuce** : Cliquez sur l'icône en forme de cloche, dans le menu de gauche, pour ouvrir le panneau et marquer les notifications comme lues.
-        `.trim(),
+[[if notifications]]**Notifications**
+[[/if]][[if notifications]]Choisissez les événements qui déclenchent une notification dans le panneau **Notifications**, en bas du menu de gauche :
+[[/if]][[if notifications]]- **Article publié** : un nouvel article a été mis en ligne par votre équipe.
+[[/if]][[if notifications]]- **Nouveau membre** : une personne vient de rejoindre l'organisation.
+[[/if]]
+[[if notifications]]> 💡 **Astuce** : Cliquez sur l'icône en forme de cloche, dans le menu de gauche, pour ouvrir le panneau et marquer les notifications comme lues.
+[[/if]]        `.trim(),
       },
       {
         id:    'manage-tags',
         title: 'Gérer les tags (administrateurs)',
+        modules: ['knowledge', 'settings'],
         content: `
 ## Gérer les tags de votre organisation
 
@@ -1558,8 +1615,8 @@ Si vous donnez à un tag le nom d'un autre tag existant (sans tenir compte des m
 **Supprimer un tag**
 Cliquez sur **Supprimer**. La confirmation indique combien d'articles sont concernés. Les articles ne sont **pas** supprimés : ils perdent seulement ce tag.
 
-> 💡 **Astuce** : Utilisez la page **Analyse** pour repérer les tags inutilisés et faire le tri.
-        `.trim(),
+[[if analytics]]> 💡 **Astuce** : Utilisez la page **Analyse** pour repérer les tags inutilisés et faire le tri.
+[[/if]]        `.trim(),
       },
       {
         id:    'account-settings',
@@ -1589,6 +1646,7 @@ Saisissez vos nouvelles informations, puis cliquez sur **Enregistrer**.
 {
   id:    'api-keys',
   title: 'Gérer les clés API',
+  modules: ['api_keys'],
   content: `
 ## Gérer les clés API
 
@@ -1608,8 +1666,8 @@ Ouvrez **Paramètres > API**.
 **Ce qu'une clé API permet**
 - Lire la liste des catégories
 - Lire la liste des articles publiés et leur contenu
-- Lire les processus guidés publiés et leur structure
-
+[[if trees]]- Lire les processus guidés publiés et leur structure
+[[/if]]
 **Ce qu'une clé API ne permet pas**
 - Créer ou modifier du contenu
 - Accéder aux brouillons
