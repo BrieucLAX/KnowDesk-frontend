@@ -11,6 +11,8 @@ import {
 } from '../../lib/build';
 import { expertEntered } from '../../lib/correction';
 import { AuditSource } from '../audit/AuditSource';
+import { AudienceFilter, AudienceTag } from './Audience';
+import { hasAudiences, matchesAudience, type AudienceFilter as Filter } from '../../lib/audience';
 import { PlanCommentBox } from './PlanTab';
 
 const STEP_STATE_LABEL = { done: 'terminée', current: 'en cours', pending: 'à venir' } as const;
@@ -245,7 +247,7 @@ function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: C
       </div>
       <p className="obp-plan-subject__meta">
         <span>Cet article répondra à : {article.question}</span>
-        {article.audience && <span>Public : {article.audience}</span>}
+        <AudienceTag value={article.audience} />
       </p>
       {!article.written && (
         <p className="obp-muted">
@@ -306,6 +308,8 @@ export function BuildArticles({
       hint={BUILD_COMMENT_HINT}
     />
   );
+  const [filter, setFilter] = useState<Filter>('all');
+  const values = construction.chapters.flatMap(c => c.articles.map(a => a.audience));
   return (
     <div className="obp-plan">
       <p className="obp-plan__summary">{buildSummary(construction)}</p>
@@ -316,10 +320,12 @@ export function BuildArticles({
       <p className="obp-muted">
         <mark className="obp-base-verify">Phrase à vérifier</mark> : {verifyLegend(construction)}
       </p>
-      {construction.chapters.map((chapter, ci) => (
-        <details key={chapter.id} className="obp-plan-chapter" open={ci === 0}>
+      {hasAudiences(values) && <AudienceFilter values={values} value={filter} onChange={setFilter} />}
+      {construction.chapters.map((chapter, ci) => ({ chapter, ci, shown: chapter.articles.filter(a => matchesAudience(a.audience, filter)) }))
+        .filter(x => x.shown.length > 0).map(({ chapter, ci, shown }) => (
+        <details key={chapter.id} className="obp-plan-chapter" open={ci === 0 || filter !== 'all'}>
           <summary className="obp-plan-chapter__title">Catégorie {ci + 1} · {chapter.title}</summary>
-          {chapter.articles.map(article => (
+          {shown.map(article => (
             <ArticleView key={article.subjectId} article={article} ctx={ctx}>
               {box(article.subjectId, 'Commentaire sur cet article (facultatif)')}
             </ArticleView>

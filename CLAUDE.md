@@ -22,6 +22,8 @@ Réponds toujours en français à l'utilisateur.
 
 - **« À vérifier » réduit (retours de l'experte, 2026-11-18, décision du porteur), sans changement de contrat** : le pipeline ne marque plus qu'une phrase qui relie deux passages différents (`joined_passages`). La légende de « Articles rédigés » dit alors « Phrase à vérifier : elle relie deux passages différents de vos documents. » (`verifyLegend`, lue sur `toVerifyReasons`) ; une rédaction déjà enregistrée qui porte encore `sentence_below_quotes` ou `dated_change_without_date` garde sa légende d'origine, ses libellés et ses compteurs. Les trois raisons restent dans `TO_VERIFY_LABEL` (contrat 0.1.0).
 
+- **Public des articles (retours de l'experte, 2026-11-18, décisions du porteur Q1 a, Q2 a), sans changement de contrat** : le pipeline écrit `audience` dans une liste fermée, « particuliers », « professionnels », « tous » (plan 0.1.0 et construction 0.1.0, champ libre inchangé). Chaque article du plan et des articles rédigés porte une étiquette « Particuliers », « Professionnels » ou « Particuliers et professionnels » (`AudienceTag`, `lib/audience.ts`) ; un filtre « Tous les publics · Particuliers · Professionnels » (`AudienceFilter`, `FilterTabs`) n'apparaît que si un article porte une valeur de la liste ; un article « tous » reste sous les deux filtres. Une valeur libre d'un plan ou d'une rédaction plus ancienne (« conseillers », « Particuliers ») ou absente s'affiche comme avant, « Public : … », et ne s'affiche que sans filtre. Au lot D, ce public deviendra les étiquettes « Particuliers » / « Professionnels » de la base (un article « tous » reçoit les deux).
+
 ## Références
 
 - Plan en cours : `onboarding-plan.md`, dans le dépôt privé **`KnowDesk-docs`**.

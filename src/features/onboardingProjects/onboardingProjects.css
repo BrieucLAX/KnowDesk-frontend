@@ -849,3 +849,8 @@
 .obp-build-unplaced__title { margin: 0 0 4px; font-size: 15px; font-weight: 600; color: var(--neutral-900); }
 .obp-build-unplaced p { margin: 0 0 8px; }
 .obp-build-unplaced__list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+
+/* Public d'un article (retours de l'experte, 2026-11-18) : étiquette du plan et des articles rédigés. */
+.obp-audience { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--neutral-200); background: var(--neutral-50); color: var(--neutral-900); }
+.obp-audience--particuliers { background: var(--brand-50); border-color: var(--brand-500); color: var(--brand-500); }
+.obp-audience--professionnels { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
