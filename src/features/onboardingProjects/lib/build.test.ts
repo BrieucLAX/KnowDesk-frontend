@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, readConstruction, REMOVED_LABEL, removedLabel, removedLabelAround,
-  SUPPORTED_BUILD_SCHEMAS, TO_VERIFY_LABEL, UNCOVERED_KINDS, unplacedAnswersTitle,
+  SUPPORTED_BUILD_SCHEMAS, TO_VERIFY_LABEL, UNCOVERED_KINDS, unplacedAnswersTitle, verifyLegend,
 } from './build';
 import VERSIONS from './contract-versions.json';
 import type { Decision } from './decisions';
@@ -125,6 +125,19 @@ describe('readConstruction', () => {
 
   it('compte les phrases à vérifier et les textes de l\'expert, jamais de points non couverts (C-Q11)', () => {
     expect(buildSummary(c)).toBe('6 articles · 2 phrases à vérifier · 1 texte saisi par l\'expert');
+  });
+
+  it('retours de l\'experte (18/11) : la légende ne dit que les deux passages reliés, sauf sur une rédaction plus ancienne', () => {
+    // La fixture porte encore « sentence_below_quotes » : une rédaction d'avant le 18/11 garde sa légende.
+    expect(c.toVerifyReasons).toEqual(['sentence_below_quotes', 'joined_passages']);
+    expect(verifyLegend(c)).toBe('vos documents ne la confirment pas mot pour mot, ou elle relie deux passages différents de vos documents.');
+    const raw = JSON.parse(JSON.stringify(RAW)) as { articles: Array<{ blocks?: Array<{ to_verify?: Array<{ reason: string }> }> }> };
+    for (const a of raw.articles) for (const b of a.blocks ?? []) b.to_verify = (b.to_verify ?? []).filter(m => m.reason === 'joined_passages');
+    const now = readConstruction(raw)!;
+    expect(now.toVerifyReasons).toEqual(['joined_passages']);
+    expect(now.toVerifyCount).toBe(1);
+    expect(verifyLegend(now)).toBe('elle relie deux passages différents de vos documents.');
+    expect(verifyLegend({ toVerifyReasons: [] })).toBe('elle relie deux passages différents de vos documents.');
   });
 
   it('C-Q11 : seules les réponses de l\'expert qu\'aucun article ne porte sont gardées, une fois par carte', () => {

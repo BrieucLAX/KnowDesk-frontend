@@ -6,7 +6,7 @@ import { onboardingApi } from '../../api/onboardingApi';
 import type { Audit } from '../../lib/audit';
 import {
   BUILD_COMMENT_HINT, BUILD_STEPS, buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, isBuildActive,
-  removedLabel, removedLabelAround, TO_VERIFY_LABEL, unplacedAnswersTitle,
+  removedLabel, removedLabelAround, TO_VERIFY_LABEL, unplacedAnswersTitle, verifyLegend,
   type BuildComment, type BuildsMeta, type BuiltArticle, type BuiltBlock, type Construction, type OnboardingBuild,
 } from '../../lib/build';
 import { expertEntered } from '../../lib/correction';
@@ -314,8 +314,7 @@ export function BuildArticles({
         <p className="obp-muted" role="status">Cette rédaction a été remplacée par une plus récente : elle se consulte, mais ne se commente plus.</p>
       )}
       <p className="obp-muted">
-        <mark className="obp-base-verify">Phrase à vérifier</mark> : vos documents ne la confirment pas mot pour mot,
-        ou elle relie deux passages différents de vos documents.
+        <mark className="obp-base-verify">Phrase à vérifier</mark> : {verifyLegend(construction)}
       </p>
       {construction.chapters.map((chapter, ci) => (
         <details key={chapter.id} className="obp-plan-chapter" open={ci === 0}>
