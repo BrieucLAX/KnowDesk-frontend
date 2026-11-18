@@ -159,6 +159,8 @@ export interface Construction {
   articleCount:    number;
   writtenCount:    number;
   toVerifyCount:   number;
+  /** Les raisons « À vérifier » que la rédaction porte, chacune une fois. */
+  toVerifyReasons: ToVerifyReason[];
   expertCount:     number;
 }
 
@@ -246,6 +248,7 @@ export function readConstruction(raw: unknown): Construction | null {
     articleCount:    all.length,
     writtenCount:    all.filter(a => a.written).length,
     toVerifyCount:   blocks.reduce((n, b) => n + b.toVerify.reduce((k, m) => k + m.passages.length, 0), 0),
+    toVerifyReasons: TO_VERIFY.filter(r => blocks.some(b => b.toVerify.some(m => m.reason === r))),
     expertCount:     blocks.filter(b => b.fromExpert).length,
   };
 }
@@ -261,6 +264,17 @@ export function removedLabelAround(r: Pick<RemovedBlock, 'reason' | 'cardId'>): 
   const at = label.indexOf('{card}');
   if (!r.cardId || at < 0) return null;
   return { before: label.slice(0, at), after: label.slice(at + '{card}'.length) };
+}
+
+/**
+ * La légende « Phrase à vérifier » (retours de l'experte, 2026-11-18) : le pipeline ne marque plus
+ * qu'une phrase qui relie deux passages (`joined_passages`). Une rédaction plus ancienne, qui porte
+ * encore les autres raisons, garde sa légende d'origine.
+ */
+export function verifyLegend(c: Pick<Construction, 'toVerifyReasons'>): string {
+  return c.toVerifyReasons.every(r => r === 'joined_passages')
+    ? 'elle relie deux passages différents de vos documents.'
+    : 'vos documents ne la confirment pas mot pour mot, ou elle relie deux passages différents de vos documents.';
 }
 
 const plural = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : one}`;
