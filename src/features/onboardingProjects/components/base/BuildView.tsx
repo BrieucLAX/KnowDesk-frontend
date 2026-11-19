@@ -210,6 +210,9 @@ function BlockView({ block, ctx }: { block: BuiltBlock; ctx: Ctx }) {
   const passages = block.toVerify.flatMap(m => m.passages);
   return (
     <div className="obp-build-block">
+      {block.audience && (
+        <p className="obp-build-block__audience" aria-label="Public de ce passage"><AudienceTag value={block.audience} /></p>
+      )}
       {block.kind === 'text' && <p className="obp-build-text"><Highlighted text={block.text} passages={passages} /></p>}
       {block.kind === 'list' && (
         <ul className="obp-build-list">

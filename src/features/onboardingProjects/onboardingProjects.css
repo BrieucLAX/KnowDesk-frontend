@@ -853,4 +853,5 @@
 /* Public d'un article (retours de l'experte, 2026-11-18) : étiquette du plan et des articles rédigés. */
 .obp-audience { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--neutral-200); background: var(--neutral-50); color: var(--neutral-900); }
 .obp-audience--particuliers { background: var(--brand-50); border-color: var(--brand-500); color: var(--brand-500); }
+.obp-build-block__audience { margin: 0 0 4px; }
 .obp-audience--professionnels { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }

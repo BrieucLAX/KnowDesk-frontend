@@ -165,6 +165,37 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
     expect(screen.getByRole('heading', { name: 'Tarifs 2025' })).toBeInTheDocument();
   });
 
+  it('construction 0.2.0 (18/11, Q2 a) : un bloc d\'un article commun dit son public, texte inchangé ; une rédaction 0.1.0 n\'en montre aucun', async () => {
+    const build = JSON.parse(JSON.stringify(BUILD)) as typeof BUILD;
+    (build as { schemaVersion: string }).schemaVersion = '0.2.0';
+    const construction = build.construction as {
+      schema_version: string;
+      articles: Array<{ subject_id: string; audience: string | null; blocks: Array<{ kind: string; origin: string; text?: string; audience?: string }> }>;
+    };
+    construction.schema_version = '0.2.0';
+    const horaires = construction.articles.find(a => a.subject_id === 'sub_horaires')!;
+    horaires.audience = 'tous';
+    const block = horaires.blocks.find(b => b.origin === 'document' && b.kind !== 'intertitle')!;
+    block.audience = 'professionnels';
+    mock([buildRow()]);
+    vi.mocked(onboardingApi.getBuildContent).mockResolvedValue(build);
+    show();
+    await openTab('Articles rédigés');
+    const article = (await screen.findByRole('heading', { name: 'Horaires du service client' })).closest('article')!;
+    const mention = within(article).getByLabelText('Public de ce passage');
+    expect(within(mention).getByText('Professionnels')).toHaveClass('obp-audience--professionnels');
+    expect(within(article).getAllByLabelText('Public de ce passage')).toHaveLength(1);
+    if (block.text) expect(article.textContent).toContain(block.text);
+  });
+
+  it('une rédaction 0.1.0 ne montre aucun public de passage', async () => {
+    mock([buildRow()]);
+    show();
+    await openTab('Articles rédigés');
+    await screen.findByRole('heading', { name: 'Horaires du service client' });
+    expect(screen.queryByLabelText('Public de ce passage')).not.toBeInTheDocument();
+  });
+
   it('par catégorie, chaque article : question, public, blocs, sources, sans aucun code', async () => {
     mock([buildRow()]);
     const { container } = show();

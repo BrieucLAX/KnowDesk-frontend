@@ -115,7 +115,7 @@ export const UNCOVERED_KINDS: readonly UncoveredKind[] = [
   'card_without_article', 'missing_information', 'value_without_source', 'article_without_text', 'unresolved_card',
 ];
 
-// ── Construction 0.1.0, lue ───────────────────────────────────
+// ── Construction 0.1.0 et 0.2.0, lue ───────────────────────────────────
 
 export interface ExpertText { cardId: string; text: string; enteredOn: string }
 
@@ -130,6 +130,8 @@ export interface BuiltBlock {
   sources:  SourceRef[];
   expert:   ExpertText | null;
   toVerify: Array<{ reason: ToVerifyReason; passages: string[] }>;
+  /** Construction 0.2.0 : dans un article commun, le public de toutes les sources du bloc ; null sinon (et en 0.1.0). */
+  audience: BlockAudience | null;
 }
 
 export interface RemovedBlock { id: string; text: string; reason: RemovedReason; cardId: string | null; passages: SourceRef[] }
@@ -180,6 +182,10 @@ const REMOVED = Object.keys(REMOVED_LABEL) as RemovedReason[];
 const EMPTY = Object.keys(EMPTY_LABEL) as EmptyReason[];
 const KINDS = ['intertitle', 'text', 'list', 'table'] as const;
 
+/** Le public d'un bloc (construction 0.2.0, retours de l'experte du 2026-11-18, Q2 a). */
+export const BLOCK_AUDIENCES = ['particuliers', 'professionnels'] as const;
+export type BlockAudience = (typeof BLOCK_AUDIENCES)[number];
+
 function expertOf(v: unknown): ExpertText | null {
   if (!isObj(v)) return null;
   const text = strOrNull(v.text);
@@ -204,10 +210,11 @@ function blockOf(b: Obj): BuiltBlock | null {
       const reason = oneOf(TO_VERIFY, m.reason);
       return reason ? [{ reason, passages: strs(m.passages) }] : [];
     }),
+    audience:   b.origin === 'expert' ? null : oneOf(BLOCK_AUDIENCES, b.audience),
   };
 }
 
-/** La rédaction stockée (construction 0.1.0, validée par le back), lue pour l'écran ; null si illisible. */
+/** La rédaction stockée (construction 0.1.0 ou 0.2.0, validée par le back), lue pour l'écran ; null si illisible. */
 export function readConstruction(raw: unknown): Construction | null {
   if (!isObj(raw) || !Array.isArray(raw.articles) || !Array.isArray(raw.chapters)) return null;
   const articles = new Map(objs(raw.articles).map(a => [str(a.subject_id), a]));
