@@ -18,6 +18,8 @@ import {
   isBuildActive, readConstruction, SUPPORTED_BUILD_SCHEMAS, type BuildComment, type BuildContent, type BuildsMeta, type OnboardingBuild,
 } from '../../lib/build';
 import { AuditSource } from '../audit/AuditSource';
+import { AudienceFilter, AudienceTag } from './Audience';
+import { hasAudiences, matchesAudience, type AudienceFilter as Filter } from '../../lib/audience';
 import { BuildArticles, BuildEntry, BuildProgress } from './BuildView';
 
 /** Intervalle de relecture d'un plan en préparation. */
@@ -333,6 +335,8 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
     />
   );
 
+  const [filter, setFilter] = useState<Filter>('all');
+  const audiences = hasAudiences(plan.chapters.flatMap(c => c.subjects.map(s => s.audience)));
   return (
     <div className="obp-plan">
       <p className="obp-plan__summary">{planSummary(plan)}</p>
@@ -421,10 +425,14 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
         )}
       </section>
 
-      {plan.chapters.map((chapter, ci) => (
-        <details key={chapter.id} className="obp-plan-chapter" open={ci === 0}>
+      {audiences && (
+        <AudienceFilter values={plan.chapters.flatMap(c => c.subjects.map(s => s.audience))} value={filter} onChange={setFilter} />
+      )}
+      {plan.chapters.map((chapter, ci) => ({ chapter, ci, shown: chapter.subjects.filter(s => matchesAudience(s.audience, filter)) }))
+        .filter(x => x.shown.length > 0).map(({ chapter, ci, shown }) => (
+        <details key={chapter.id} className="obp-plan-chapter" open={ci === 0 || filter !== 'all'}>
           <summary className="obp-plan-chapter__title">Catégorie {ci + 1} · {chapter.title}</summary>
-          {chapter.subjects.map(subject => (
+          {shown.map(subject => (
             <SubjectBlock key={subject.id} subject={subject} audit={audit} titles={titles} onGoToClarify={onGoToClarify}>
               {box(subject.id, 'Commentaire sur cet article (facultatif)')}
             </SubjectBlock>
@@ -454,7 +462,7 @@ function SubjectBlock({ subject, audit, titles, onGoToClarify, children }: {
       <h4 className="obp-plan-subject__title">{subject.title}</h4>
       <p className="obp-plan-subject__meta">
         <span>Cet article répondra à : {subject.question}</span>
-        {subject.audience && <span>Public : {subject.audience}</span>}
+        <AudienceTag value={subject.audience} />
       </p>
       <details className="obp-plan-subject__sources">
         <summary>Sources ({subject.sources.length})</summary>

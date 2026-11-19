@@ -19,7 +19,13 @@ const SCHEMAS = {
   ...import.meta.glob<unknown>('../../../../../KnowDesk-pipeline/schemas/construction-*.schema.json', { eager: true, import: 'default' }),
   ...import.meta.glob<unknown>('../../../../../KnowDesk/src/modules/onboarding/schemas/construction-*.schema.json', { eager: true, import: 'default' }),
 };
-const SCHEMA = Object.entries(SCHEMAS).find(([path]) => path.includes('/KnowDesk/'))?.[1] ?? Object.values(SCHEMAS)[0];
+/** La copie consignée du back voisin d'une version, ou à défaut le schéma du pipeline voisin. */
+const schemaOf = (version: string) => {
+  const of = Object.entries(SCHEMAS).filter(([path]) => path.endsWith(`construction-${version}.schema.json`));
+  return of.find(([path]) => path.includes('/KnowDesk/'))?.[1] ?? of[0]?.[1];
+};
+const SCHEMA = schemaOf('0.1.0');
+const SCHEMA_02 = schemaOf('0.2.0');
 
 type Schema = {
   $ref?: string; type?: string | string[]; properties?: Record<string, Schema>; required?: string[];
@@ -187,5 +193,36 @@ describe('Avancement et échecs', () => {
     );
     expect(buildFailureMessage('build_invalid')).toMatch(/problème de notre côté.*ne compte pas dans votre quota/);
     expect(buildFailureMessage(null)).toMatch(/^La rédaction a échoué\. Elle ne compte pas/);
+  });
+});
+
+/**
+ * Construction 0.2.0 (retours de l'experte, 2026-11-18, Q2 a) : dans un article commun, un bloc dont
+ * toutes les sources sont propres à un public le dit (`audience`, absent sinon). La rédaction 0.1.0
+ * d'Elyra, rendue en 0.2.0 : « Horaires du service client » commun, son premier bloc « Particuliers ».
+ */
+function elyra02(): Record<string, unknown> {
+  const data = JSON.parse(JSON.stringify(RAW)) as {
+    schema_version: string;
+    articles: Array<{ subject_id: string; audience: string | null; blocks: Array<{ kind: string; origin: string; audience?: string }> }>;
+  };
+  data.schema_version = '0.2.0';
+  const article = data.articles.find(a => a.blocks.some(b => b.origin === 'document' && b.kind !== 'intertitle'))!;
+  article.audience = 'tous';
+  article.blocks.find(b => b.origin === 'document' && b.kind !== 'intertitle')!.audience = 'particuliers';
+  return data;
+}
+
+describe('Construction 0.2.0 : le public d\'un bloc d\'un article commun', () => {
+  it.skipIf(SCHEMA_02 === undefined)('valide contre le schéma publié ; la 0.1.0 ne l\'admet pas', () => {
+    expect(validate(SCHEMA_02 as Schema, SCHEMA_02 as Schema, elyra02())).toEqual([]);
+    expect(validate(SCHEMA as Schema, SCHEMA as Schema, { ...elyra02(), schema_version: '0.1.0' })).not.toEqual([]);
+  });
+
+  it('lu sur le bloc, absent partout ailleurs ; une rédaction 0.1.0 n\'en porte aucun', () => {
+    const blocks = readConstruction(elyra02())!.chapters.flatMap(c => c.articles).flatMap(a => a.blocks);
+    expect(blocks.filter(b => b.audience !== null).map(b => b.audience)).toEqual(['particuliers']);
+    const old = readConstruction(RAW)!.chapters.flatMap(c => c.articles).flatMap(a => a.blocks);
+    expect(old.every(b => b.audience === null)).toBe(true);
   });
 });

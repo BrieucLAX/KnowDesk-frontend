@@ -140,6 +140,62 @@ describe('« Nouvelle base » en mode construire : lancer la rédaction depuis l
 });
 
 describe('« Articles rédigés » : chaque passage avec ses sources', () => {
+  it('public de chaque article (18/11) : étiquette de la liste fermée et filtre ; « tous » sous les deux filtres', async () => {
+    const build = JSON.parse(JSON.stringify(BUILD)) as typeof BUILD;
+    const articles = (build.construction as { articles: Array<{ subject_id: string; audience: string | null }> }).articles;
+    for (const a of articles) {
+      if (a.subject_id === 'sub_parrainage') a.audience = 'professionnels';
+      if (a.subject_id === 'sub_horaires') a.audience = 'tous';
+    }
+    mock([buildRow()]);
+    vi.mocked(onboardingApi.getBuildContent).mockResolvedValue(build);
+    show();
+    await openTab('Articles rédigés');
+    const horaires = (await screen.findByRole('heading', { name: 'Horaires du service client' })).closest('article')!;
+    expect(within(horaires).getByText('Particuliers et professionnels')).toHaveClass('obp-audience--tous');
+    const filters = screen.getByRole('group', { name: 'Filtrer les articles par public' });
+    expect(within(filters).getByRole('button', { name: /^Professionnels/ })).toHaveTextContent('Professionnels2');
+    fireEvent.click(within(filters).getByRole('button', { name: /^Professionnels/ }));
+    expect(screen.getByRole('heading', { name: 'Le parrainage' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Horaires du service client' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Prix d\'Elyra Fixe 2 ans' })).not.toBeInTheDocument();
+    // Un article sans public de la liste fermée (« Tarifs 2025 ») ne s'affiche que sans filtre.
+    expect(screen.queryByRole('heading', { name: 'Tarifs 2025' })).not.toBeInTheDocument();
+    fireEvent.click(within(filters).getByRole('button', { name: /^Tous les publics/ }));
+    expect(screen.getByRole('heading', { name: 'Tarifs 2025' })).toBeInTheDocument();
+  });
+
+  it('construction 0.2.0 (18/11, Q2 a) : un bloc d\'un article commun dit son public, texte inchangé ; une rédaction 0.1.0 n\'en montre aucun', async () => {
+    const build = JSON.parse(JSON.stringify(BUILD)) as typeof BUILD;
+    (build as { schemaVersion: string }).schemaVersion = '0.2.0';
+    const construction = build.construction as {
+      schema_version: string;
+      articles: Array<{ subject_id: string; audience: string | null; blocks: Array<{ kind: string; origin: string; text?: string; audience?: string }> }>;
+    };
+    construction.schema_version = '0.2.0';
+    const horaires = construction.articles.find(a => a.subject_id === 'sub_horaires')!;
+    horaires.audience = 'tous';
+    const block = horaires.blocks.find(b => b.origin === 'document' && b.kind !== 'intertitle')!;
+    block.audience = 'professionnels';
+    mock([buildRow()]);
+    vi.mocked(onboardingApi.getBuildContent).mockResolvedValue(build);
+    show();
+    await openTab('Articles rédigés');
+    const article = (await screen.findByRole('heading', { name: 'Horaires du service client' })).closest('article')!;
+    const mention = within(article).getByLabelText('Public de ce passage');
+    expect(within(mention).getByText('Professionnels')).toHaveClass('obp-audience--professionnels');
+    expect(within(article).getAllByLabelText('Public de ce passage')).toHaveLength(1);
+    if (block.text) expect(article.textContent).toContain(block.text);
+  });
+
+  it('une rédaction 0.1.0 ne montre aucun public de passage', async () => {
+    mock([buildRow()]);
+    show();
+    await openTab('Articles rédigés');
+    await screen.findByRole('heading', { name: 'Horaires du service client' });
+    expect(screen.queryByLabelText('Public de ce passage')).not.toBeInTheDocument();
+  });
+
   it('par catégorie, chaque article : question, public, blocs, sources, sans aucun code', async () => {
     mock([buildRow()]);
     const { container } = show();
@@ -150,7 +206,9 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
 
     const prix = screen.getByRole('heading', { name: 'Prix d\'Elyra Fixe 2 ans' }).closest('article')!;
     expect(within(prix).getByText('Cet article répondra à : Quel est le prix du kWh d\'Elyra Fixe 2 ans ?')).toBeInTheDocument();
-    expect(within(prix).getByText('Public : particuliers')).toBeInTheDocument();
+    expect(within(prix).getByText('Particuliers')).toHaveClass('obp-audience');
+    // Une valeur libre d'une rédaction plus ancienne s'affiche comme avant.
+    expect(screen.getByText('Public : conseillers')).toBeInTheDocument();
     expect(prix.querySelector('.obp-build-table')).toHaveTextContent('Elyra Fixe 2 ans');
     expect(within(prix).getAllByText('Sources (1)')).toHaveLength(2);
     expect(within(prix).getAllByText('Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf').length).toBeGreaterThan(0);

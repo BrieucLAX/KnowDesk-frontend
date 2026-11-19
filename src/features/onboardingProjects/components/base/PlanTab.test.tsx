@@ -171,11 +171,19 @@ describe('« Nouvelle base » en mode construire : le plan en lecture seule', ()
     expect(container.textContent).not.toMatch(/[Cc]hapitre|[Ss]ujet/);
     const subject = screen.getByRole('heading', { name: 'Offre Gaz Indexé' }).closest('article')!;
     expect(within(subject).getByText('Cet article répondra à : Quel est le prix de l\'offre Gaz Indexé ?')).toBeInTheDocument();
-    expect(within(subject).getByText('Public : particuliers')).toBeInTheDocument();
+    // Le public dans la liste fermée (2026-11-18) : une étiquette, plus « Public : … ».
+    expect(within(subject).getByText('Particuliers')).toHaveClass('obp-audience--particuliers');
     expect(within(subject).getByText('Sources (3)')).toBeInTheDocument();
     expect(within(subject).getByText('Fiche_Offre_Gaz_Indexe.docx')).toBeInTheDocument();
     expect(within(subject).getByText(/Cartes liées \(1\)/)).toBeInTheDocument();
     expect(within(subject).getByRole('button', { name: 'Remise sur l\'offre Gaz Indexé' })).toBeInTheDocument();
+    // Filtre par public : un article sans public de la liste fermée ne s'affiche que sans filtre.
+    const filters = screen.getByRole('group', { name: 'Filtrer les articles par public' });
+    fireEvent.click(within(filters).getByRole('button', { name: /^Professionnels/ }));
+    expect(screen.queryByRole('heading', { name: 'Offre Gaz Indexé' })).not.toBeInTheDocument();
+    fireEvent.click(within(filters).getByRole('button', { name: /^Particuliers/ }));
+    expect(screen.getByRole('heading', { name: 'Offre Gaz Indexé' })).toBeInTheDocument();
+    fireEvent.click(within(filters).getByRole('button', { name: /^Tous les publics/ }));
 
     // Lot C : la rédaction se lance sous le plan ; la création dans la base n'existe pas encore.
     expect(await screen.findByRole('button', { name: 'Rédiger les 3 articles' })).toBeEnabled();
