@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, readConstruction, REMOVED_LABEL, removedLabel, removedLabelAround,
+  buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, groupBlocks, readConstruction, REMOVED_LABEL, removedLabel, removedLabelAround,
   SUPPORTED_BUILD_SCHEMAS, TO_VERIFY_LABEL, UNCOVERED_KINDS, unplacedAnswersTitle, verifyLegend,
 } from './build';
 import VERSIONS from './contract-versions.json';
@@ -8,6 +8,7 @@ import type { Decision } from './decisions';
 import type { ReadingCard } from './reading';
 import AUDIT_ELYRA from '../components/clarify/fixtures/audit-0.16.0-elyra-v2-lecture-4.response.json';
 import BUILD_ELYRA from '../components/base/fixtures/construction-0.1.0-elyra.response.json';
+import BUILD_ELYRA_03 from '../components/base/fixtures/construction-0.3.0-elyra-2026-11-22.response.json';
 
 /**
  * Construction 0.1.0 (plan-construire-v1, lot C). La fixture est écrite d'après le schéma publié
@@ -26,6 +27,7 @@ const schemaOf = (version: string) => {
 };
 const SCHEMA = schemaOf('0.1.0');
 const SCHEMA_02 = schemaOf('0.2.0');
+const SCHEMA_03 = schemaOf('0.3.0');
 
 type Schema = {
   $ref?: string; type?: string | string[]; properties?: Record<string, Schema>; required?: string[];
@@ -102,7 +104,8 @@ describe('Construction 0.1.0 : la fixture d\'Elyra suit le contrat', () => {
       ...(n?.enum ?? []), ...(n?.anyOf ?? []).flatMap(values),
     ];
     expect(values(defs.ToVerify.properties!.reason).sort()).toEqual(Object.keys(TO_VERIFY_LABEL).sort());
-    expect(values(defs.RemovedBlock.properties!.reason).sort()).toEqual(Object.keys(REMOVED_LABEL).sort());
+    // La 0.3.0 ajoute la redite (`duplicate`), lue à part : voir plus bas.
+    expect(values(defs.RemovedBlock.properties!.reason).sort()).toEqual(Object.keys(REMOVED_LABEL).filter(r => r !== 'duplicate').sort());
     expect(values(defs.BuiltArticle.properties!.empty_reason).filter(v => v !== null).sort()).toEqual(Object.keys(EMPTY_LABEL).sort());
     expect(values(defs.UncoveredPoint.properties!.kind).sort()).toEqual([...UNCOVERED_KINDS].sort());
   });
@@ -224,5 +227,72 @@ describe('Construction 0.2.0 : le public d\'un bloc d\'un article commun', () =>
     expect(blocks.filter(b => b.audience !== null).map(b => b.audience)).toEqual(['particuliers']);
     const old = readConstruction(RAW)!.chapters.flatMap(c => c.articles).flatMap(a => a.blocks);
     expect(old.every(b => b.audience === null)).toBe(true);
+  });
+});
+
+/**
+ * Construction 0.3.0 (étape 5 des retours de l'experte, 2026-11-22, voie A) : les redites retirées
+ * par le code. La fixture est la rédaction live d'Elyra du 22/11 (plan modifié), passée au retrait
+ * des redites du pipeline, quatre de ses articles.
+ */
+const RAW_03 = BUILD_ELYRA_03.construction as unknown;
+const articleOf = (raw: unknown, title: string) =>
+  readConstruction(raw)!.chapters.flatMap(c => c.articles).find(a => a.title === title)!;
+
+describe('Construction 0.3.0 : les redites retirées', () => {
+  it.skipIf(SCHEMA_03 === undefined)('valide contre le schéma publié ; la raison de la redite est connue de l\'écran', () => {
+    expect(validate(SCHEMA_03 as Schema, SCHEMA_03 as Schema, RAW_03)).toEqual([]);
+    const defs = (SCHEMA_03 as Schema).$defs!;
+    const values = (n: Schema | undefined): unknown[] => [...(n?.enum ?? []), ...(n?.anyOf ?? []).flatMap(values)];
+    expect(values(defs.RemovedBlock03.properties!.reason).sort()).toEqual(Object.keys(REMOVED_LABEL).sort());
+  });
+
+  it('une redite est lue à part, avec ce qui la dit déjà (la ligne du tableau) ; jamais parmi les retraits', () => {
+    const gamme = articleOf(RAW_03, 'Gamme Professionnels 2026');
+    expect(gamme.duplicates.map(d => [d.text, d.keptBy, d.inTable])).toEqual([
+      ['L\'offre Elyra Pro Flex est engagée pour 1 an.', 'Elyra Pro Flex | Électricité | Indexé spot + marge | 1 an', true],
+      ['L\'offre Elyra Pro Gaz Fixe est engagée pour 2 ans.', 'Elyra Pro Gaz Fixe | Gaz | Fixe HT | 2 ans', true],
+    ]);
+    expect(gamme.removed.some(r => r.reason === 'duplicate')).toBe(false);
+    expect(gamme.duplicates.every(d => d.passages.length > 0)).toBe(true);
+    // Une rédaction plus ancienne n'en a aucune.
+    expect(readConstruction(RAW)!.chapters.flatMap(c => c.articles).every(a => a.duplicates.length === 0)).toBe(true);
+  });
+});
+
+describe('Paragraphes : les passages qui se suivent dans une même partie', () => {
+  it('Elyra Fixe 2 ans : un paragraphe par partie ; le tableau et la phrase à vérifier à part ; aucun mot changé', () => {
+    const a = articleOf(RAW_03, 'Elyra Fixe 2 ans');
+    const groups = groupBlocks(a.blocks);
+    expect(groups.map(g => (g.kind === 'paragraph' ? `paragraphe de ${g.blocks.length}` : g.block.kind + (g.block.toVerify.length ? ' à vérifier' : '')))).toEqual([
+      'intertitle', 'paragraphe de 5', 'intertitle', 'table', 'text à vérifier', 'intertitle', 'paragraphe de 2', 'intertitle', 'paragraphe de 4',
+    ]);
+    const words = (t: string) => t.replace(/\s+/g, ' ').trim();
+    const shown = groups.flatMap(g => (g.kind === 'paragraph' ? g.blocks : [g.block])).map(b => b.id);
+    expect(shown).toEqual(a.blocks.map(b => b.id));
+    expect(groups.filter(g => g.kind === 'paragraph').flatMap(g => (g.kind === 'paragraph' ? g.blocks.map(b => words(b.text)) : [])))
+      .toEqual(a.blocks.filter(b => b.kind === 'text' && b.toVerify.length === 0).map(b => words(b.text)));
+  });
+
+  it('une mention de public différente, le texte de l\'expert ou une liste coupent le paragraphe', () => {
+    const base = { kind: 'text' as const, fromExpert: false, items: [], header: [], rows: [], sources: [], expert: null, toVerify: [] };
+    const groups = groupBlocks([
+      { ...base, id: 'a', text: 'Un.', audience: null },
+      { ...base, id: 'b', text: 'Deux.', audience: null },
+      { ...base, id: 'c', text: 'Trois.', audience: 'particuliers' },
+      { ...base, id: 'd', text: 'Quatre.', audience: 'particuliers' },
+      { ...base, id: 'e', text: 'Saisi.', audience: null, fromExpert: true },
+      { ...base, id: 'f', text: 'Cinq.', audience: null },
+      { ...base, id: 'g', kind: 'list', text: '', items: ['x'], audience: null },
+      { ...base, id: 'h', text: 'Six.', audience: null },
+    ]);
+    expect(groups.map(g => (g.kind === 'paragraph' ? g.blocks.map(b => b.id).join('') : `[${g.block.id}]`))).toEqual(['ab', 'cd', '[e]', 'f', '[g]', 'h']);
+  });
+
+  it('une rédaction 0.1.0 se regroupe aussi, sans perte', () => {
+    for (const a of readConstruction(RAW)!.chapters.flatMap(c => c.articles)) {
+      const shown = groupBlocks(a.blocks).flatMap(g => (g.kind === 'paragraph' ? g.blocks : [g.block])).map(b => b.id);
+      expect(shown).toEqual(a.blocks.map(b => b.id));
+    }
   });
 });
