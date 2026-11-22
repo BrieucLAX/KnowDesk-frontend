@@ -1,0 +1,27 @@
+<!-- @dsCard group="Parcours" height=120 subtitle="Note, action secondaire, action principale" -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>ActionBar</title>
+<style>
+html, body { margin: 0; }
+body { background: var(--surface); }
+.stage { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.cap { font-family: var(--font-sans); font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+.cx-actionbar { position: static; }
+</style>
+</head>
+<body>
+<div class="cx-root stage">
+<div class="cx-actionbar">
+<span class="cx-actionbar__note">L'analyse prend jusqu'à une heure. Nous vous prévenons par e-mail.</span>
+<div class="cx-actionbar__actions">
+<button class="cx-btn cx-btn--ghost" type="button">Finir plus tard</button>
+<button class="cx-btn cx-btn--primary" type="button">Valider et lancer l'analyse</button>
+</div>
+</div>
+</div>
+</body>
+</html>

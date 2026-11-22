@@ -1,6 +1,6 @@
 # Icônes
 
-55 pictos issus de **Lucide** (licence ISC, libre d'usage commercial), au trait de 2 px, coins arrondis, grille de 24 px. Les fichiers ci-dessous sont tracés en `ink` (#27211c) pour l'aperçu ; dans le code, utiliser la bibliothèque Lucide (`lucide`, `lucide-react`…) avec les mêmes noms, en `currentColor`.
+62 pictos issus de **Lucide** (licence ISC, libre d'usage commercial), au trait de 2 px, coins arrondis, grille de 24 px. Les fichiers ci-dessous sont tracés en `ink` (#27211c) pour l'aperçu ; dans le code, utiliser la bibliothèque Lucide (`lucide`, `lucide-react`…) avec les mêmes noms, en `currentColor`.
 
 ## Par usage
 
@@ -14,14 +14,17 @@
 | Pilotage | `chart-column`, `trending-up`, `calendar`, `settings`, `bell`, `thumbs-up`, `thumbs-down` |
 | Thèmes clients | `package` (commandes), `undo-2` (retours), `credit-card` (paiement), `refresh-cw` (abonnements), `shield-check` (garanties) |
 | Reprise de l'existant | `file-search` (analyse), `git-compare` (incohérence) |
+| Origine KnowDesk | `sparkles` : tout contenu préparé par KnowDesk, toujours avec la mention écrite |
+| Étapes de l'onboarding | `file-text` (Documents), `building` (Contexte métier), `scale` (Points à trancher), `list` (Plan), `eye` (Relecture et publication) |
+| Rubriques du contexte métier | `building-2` (Votre entreprise), `package` (Vos offres), `users` (Vos publics), `layers` (Vos documents de référence), `calendar-clock` (Changements à venir) |
 
 ## Règles
 
-- Tailles : 16 px dans le texte et les petits boutons, 20 px dans les boutons et encarts, 24 px en illustration de carte.
+- Tailles : 16 px dans le texte et les petits boutons, 20 px dans les boutons, encarts et le stepper, 24 px dans les pastilles d'icône et en illustration de carte.
 - Épaisseur de trait 2, jamais remplie, jamais d'emoji à la place d'un picto.
 - Couleur : `currentColor`, donc celle du texte voisin ; en couleur d'état seulement dans un encart ou un badge d'état.
 - Un picto seul dans un bouton porte un `aria-label` ; un picto à côté d'un texte est décoratif (`aria-hidden="true"`).
-- Un même picto garde le même sens partout : `lock` signifie toujours « interne, réservé aux agents ».
+- Un même picto garde le même sens partout : `lock` signifie toujours « interne, réservé aux agents », `sparkles` toujours « préparé par KnowDesk », `trash-2` toujours « supprimer ».
 - Besoin d'un picto absent de cette liste : le choisir dans Lucide, puis l'ajouter ici.
 
 ## Ajouts KnowDesk
@@ -40,3 +43,5 @@ Pictos Lucide ajoutés pour l'interface de KnowDesk (lot 4), avec leur sens. Ils
 | Rubriques de l'aide | `newspaper` (nouveautés), `rocket` (premiers pas), `headphones` (conseillers), `briefcase` (cas d'usage) |
 
 Deux pictos de la liste d'origine prennent un sens précis dans KnowDesk : `list-ordered` désigne les **processus guidés** (jamais la liste numérotée de l'éditeur, qui garde son libellé « 1. ») et `circle-help` les **FAQ** (l'aide a `life-buoy`).
+
+> Mise à jour du 22/11/2026 : `sparkles` ne signifie plus « fonction d'IA » mais « préparé par KnowDesk », toujours avec la mention écrite ; `scale` et `package` prennent aussi le sens donné plus haut pour l'onboarding. Les usages de l'app sont à aligner (lot 7a).
