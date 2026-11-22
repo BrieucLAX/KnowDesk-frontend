@@ -13,6 +13,9 @@ import { useBaseReview } from '../../hooks/useBaseReview';
 import { normalizeAudit, type Audit } from '../../lib/audit';
 import { hasPlan } from '../../lib/plan';
 import { PlanTab } from './PlanTab';
+import { blockingCardsLeft } from '../../lib/correction';
+import { versionCardsWaiting } from '../../lib/reading';
+import { useStepFact } from '../../lib/steps';
 import type { OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from '../audit/AuditSource';
 import { BaseReviewView } from './BaseReviewView';
@@ -77,6 +80,9 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
   const analysisId = loaded.state === 'loading' ? null : loaded.analysisId;
   const [cards, setCards] = useState<ReadingCard[]>([]);
   const [decisions, setDecisions] = useState<ReadonlyMap<string, Decision>>(new Map());
+  /** Cartes et réponses lues sans erreur : alors seulement elles disent si « À clarifier » est terminée. */
+  const [cardsRead, setCardsRead] = useState(false);
+  const [decisionsRead, setDecisionsRead] = useState(false);
   /**
    * Mode construire sur un audit 0.16.0 (lot B) : l'onglet montre le plan, avec l'inventaire de
    * l'audit pour nommer les documents. null : pas de plan (correction, ou audit plus ancien) ;
@@ -101,19 +107,24 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
     onboardingApi.getAudit(project.id, analysisId)
       .then(res => {
         if (cancelled) return;
-        if (res.reading) { setTitles(cardTitles(res.reading.cards)); setCards(res.reading.cards); }
+        if (res.reading) { setTitles(cardTitles(res.reading.cards)); setCards(res.reading.cards); setCardsRead(true); }
         setPlanAudit(res.reading && hasPlan(res.schemaVersion, res.reading.base) ? normalizeAudit(res.audit) : null);
       })
       .catch(() => { if (!cancelled) setPlanAudit(null); });
     // Les réponses courantes : cartes encore bloquantes (écran vide), réponse d'une carte en attente.
     onboardingApi.listDecisions(project.id, analysisId)
-      .then(res => { if (!cancelled) setDecisions(new Map(res.decisions.map(d => [d.cardId ?? d.questionId, d]))); })
+      .then(res => { if (!cancelled) { setDecisions(new Map(res.decisions.map(d => [d.cardId ?? d.questionId, d]))); setDecisionsRead(true); } })
       .catch(() => {});
     onboardingApi.listAuditImages(project.id, analysisId)
       .then(list => { if (!cancelled) setImageIds(new Set(list.map(i => i.imageId))); })
       .catch(() => {});
     return () => { cancelled = true; };
   }, [project.id, analysisId]);
+
+  // Ce que l'onglet a déjà lu : une analyse réussie ; sur elle, aucune carte bloquante sans vraie réponse.
+  useStepFact('analysis', analysisId !== null ? true : undefined);
+  useStepFact('audit', cardsRead && decisionsRead
+    ? blockingCardsLeft(cards, decisions).left === 0 && versionCardsWaiting(cards, decisions).length === 0 : undefined);
 
   const loadImage = useCallback(
     (imageId: string) => onboardingApi.getAuditImage(project.id, analysisId ?? '', imageId),
@@ -126,8 +137,6 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
     () => new Set(cards.filter(c => codeCheck(c)?.kind === 'outdated_content').map(c => c.id)),
     [cards],
   );
-  /** Le bas de la relecture, où le panneau de validation reprend son bouton (plan v4, point 7). */
-  const [footer, setFooter] = useState<HTMLDivElement | null>(null);
 
   const retry = async () => {
     if (analysisId === null) return;
@@ -226,12 +235,10 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
                 editable={base.reviewable}
                 onOpen={onOpenValidation}
                 onCreateKnowledgeBase={onOpenKnowledgeBase}
-                footer={footer}
               />
             )}
             <BaseReviewView base={base.base} cardTitles={titles} decisions={decisions} onGoToClarify={onGoToClarify} editable={base.reviewable} review={review}
               outdatedCardIds={outdatedCardIds} />
-            <div ref={setFooter} />
           </AuditImagesContext.Provider>
         )
       )}

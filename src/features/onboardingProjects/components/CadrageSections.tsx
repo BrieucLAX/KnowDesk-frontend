@@ -4,7 +4,10 @@ import { Input }  from '../../../shared/components/ui/Input';
 import { CADRAGE_LIMITS, CADRAGE_SECTIONS, type CadrageErrors, type CadrageSectionKey } from '../lib/cadrageForm';
 import { TextArea } from './TextArea';
 import type { CadrageForm, NamedItem, OnboardingDocument } from '../types';
-import { ArrowDown, ArrowUp, Trash2 } from 'lucide-react';
+import { IconTile } from '../../../shared/components/ui/IconTile';
+import {
+  ArrowDown, ArrowUp, CalendarClock, ConciergeBell, EqualNot, Layers, Package, Trash2, Users, type LucideIcon,
+} from 'lucide-react';
 
 /**
  * Les six sections de la fiche de cadrage (celles du cadrage pilote). Toute
@@ -30,19 +33,32 @@ const HINTS: Record<CadrageSectionKey, string> = {
   limitedDocuments: 'Un document valable sur une période (offre temporaire, mesure exceptionnelle) : il remplace ou suspend les autres sources sur son périmètre.',
 };
 
+/** Le sujet de chaque section, en pastille devant son titre (lot 7b ; icons/README.md). */
+const ICONS: Record<CadrageSectionKey, LucideIcon> = {
+  offers:           Package,
+  segments:         Users,
+  services:         ConciergeBell,
+  notions:          EqualNot,
+  sourceHierarchy:  Layers,
+  limitedDocuments: CalendarClock,
+};
+
 function SectionFrame({ sectionKey, errorCount, children }: {
   sectionKey: CadrageSectionKey; errorCount: number; children: React.ReactNode;
 }) {
   const s = CADRAGE_SECTIONS.find(x => x.key === sectionKey)!;
   return (
     <fieldset className="obp-cadrage-section" id={`obp-section-${sectionKey}`}>
+      {/* Statut : la fiche ne sait pas si une section est terminée ; toutes sont facultatives,
+          et une section en erreur est à reprendre (la pastille suit, le texte le dit). */}
       <legend className="obp-cadrage-section__title">
-        {s.number}. {s.title}
-        {errorCount > 0 && (
+        <IconTile icon={ICONS[sectionKey]} variant={errorCount > 0 ? 'current' : 'optional'} />
+        <span>{s.number}. {s.title}</span>
+        {errorCount > 0 ? (
           <span className="obp-cadrage-section__errors">
             {errorCount} erreur{errorCount > 1 ? 's' : ''}
           </span>
-        )}
+        ) : <span className="obp-cadrage-section__optional">Facultative</span>}
       </legend>
       <p className="obp-muted">{HINTS[sectionKey]}</p>
       {children}

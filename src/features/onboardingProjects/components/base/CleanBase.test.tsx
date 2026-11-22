@@ -121,38 +121,32 @@ describe('Relecture : valider la nouvelle base', () => {
     expect(onboardingApi.validateBase).toHaveBeenCalledWith('p1', PILOTE.correctionId);
   });
 
-  it('point 7 : tous les avis donnés, le bouton est repris en bas de la relecture, avec ce qu\'il fait', async () => {
+  it('lot 7b : tous les avis donnés, un seul bouton, dans la barre d\'action, avec ce qu\'il fait', async () => {
     mockBase(PILOTE, applied.map(m => review(m.id)));
     vi.mocked(onboardingApi.validateBase).mockResolvedValue(summary({ id: 'v9' }));
     const open = vi.fn();
     const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
     const phrase = await screen.findByText('Tous les avis sont donnés : validez pour obtenir la version finale.');
-    const bottom = phrase.closest('section')!;
-    // Après toute la relecture : le dernier élément de l'onglet.
-    const all = [...container.querySelectorAll('section.obp-base-validation')];
-    expect(all).toHaveLength(2);
-    expect(all[1]).toBe(bottom);
-    expect(container.querySelector('.obp-base')!.compareDocumentPosition(bottom) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    fireEvent.click(within(bottom as HTMLElement).getByText('Valider la nouvelle base').closest('button')!);
+    const bar = phrase.closest('.actionbar') as HTMLElement;
+    expect(bar).not.toBeNull();
+    // Le bouton repris en bas (plan v4, point 7) est remplacé par la barre, toujours visible.
+    expect(container.querySelectorAll('section.obp-base-validation')).toHaveLength(1);
+    expect(screen.getAllByText('Valider la nouvelle base')).toHaveLength(1);
+    fireEvent.click(within(bar).getByRole('button', { name: 'Valider la nouvelle base' }));
     await waitFor(() => expect(open).toHaveBeenCalledWith('v9'));
   });
 
-  it('point 7 : une validation lancée d\'un bouton désactive les deux, sans second envoi', async () => {
+  it('point 7 : deux clics sur « Valider » ne lancent qu\'une validation', async () => {
     mockBase(PILOTE, applied.map(m => review(m.id)));
     let done!: (v: ValidationSummary) => void;
     vi.mocked(onboardingApi.validateBase).mockReturnValue(new Promise(r => { done = r; }));
     const open = vi.fn();
     render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
     const phrase = await screen.findByText('Tous les avis sont donnés : validez pour obtenir la version finale.');
-    const bottom = within(phrase.closest('section') as HTMLElement).getByText('Valider la nouvelle base').closest('button')!;
-    const top = within(screen.getByRole('region', { name: 'Validation de la nouvelle base' }))
-      .getAllByRole('button').find(b => b !== bottom && b.textContent === 'Valider la nouvelle base')!;
-    // Deux clics dans le même tour, puis l'autre bouton.
-    fireEvent.click(bottom);
-    fireEvent.click(bottom);
-    await waitFor(() => expect(top).toBeDisabled());
-    expect(bottom).toBeDisabled();
-    fireEvent.click(top);
+    const button = within(phrase.closest('.actionbar') as HTMLElement).getByRole('button', { name: 'Valider la nouvelle base' });
+    fireEvent.click(button);
+    fireEvent.click(button);
+    await waitFor(() => expect(button).toBeDisabled());
     expect(onboardingApi.validateBase).toHaveBeenCalledTimes(1);
     done(summary({ id: 'v9' }));
     await waitFor(() => expect(open).toHaveBeenCalledWith('v9'));

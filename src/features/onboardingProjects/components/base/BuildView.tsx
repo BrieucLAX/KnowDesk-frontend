@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import { ConfirmDialog } from '../../../../shared/components/ui/ConfirmDialog';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
+import { ActionBarContent } from '../../../../shared/components/ui/ActionBar';
 import { onboardingApi } from '../../api/onboardingApi';
 import type { Audit } from '../../lib/audit';
 import {
@@ -82,22 +83,21 @@ export function BuildEntry({ articleCount, builds, meta, launching, onLaunch, on
     <section className="obp-plan-entry" aria-label="Rédaction des articles">
       {head}
       {latest?.status === 'failed' && <p className="obp-analysis__error" role="status">{buildFailureMessage(latest.errorCode)}</p>}
-      <div className="obp-arb-entry">
-        {ready && <Button variant="primary" size="md" onClick={onOpenArticles}>Voir les articles rédigés</Button>}
+      <ActionBarContent
+        note={refused ? (
+          <p className="obp-correction-entry__left" role="status">
+            {quotaReached && meta.launch.allowed
+              ? `Votre organisation a atteint son nombre de rédactions (${meta.quota.max}). Contactez-nous pour en obtenir d'autres.`
+              : meta.launch.message ?? 'La rédaction ne peut pas être lancée pour l\'instant.'}
+          </p>
+        ) : !ready && 'Environ 5 à 10 minutes. Vous pourrez fermer cette page.'}
+      >
         <Button
           variant={ready ? 'secondary' : 'primary'} size="md" loading={launching} disabled={refused}
           onClick={() => (ready ? setConfirm(true) : onLaunch())}
         >{label}</Button>
-      </div>
-      {refused ? (
-        <p className="obp-correction-entry__left" role="status">
-          {quotaReached && meta.launch.allowed
-            ? `Votre organisation a atteint son nombre de rédactions (${meta.quota.max}). Contactez-nous pour en obtenir d'autres.`
-            : meta.launch.message ?? 'La rédaction ne peut pas être lancée pour l\'instant.'}
-        </p>
-      ) : !ready && (
-        <p className="obp-muted">Environ 5 à 10 minutes. Vous pourrez fermer cette page.</p>
-      )}
+        {ready && <Button variant="primary" size="md" onClick={onOpenArticles}>Voir les articles rédigés</Button>}
+      </ActionBarContent>
       {next}
       {confirm && (
         <ConfirmDialog

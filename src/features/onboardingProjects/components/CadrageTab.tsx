@@ -3,6 +3,7 @@ import { Button }        from '../../../shared/components/ui/Button';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { FilterTabs }    from '../../../shared/components/ui/FilterTabs';
 import { Skeleton }      from '../../../shared/components/ui/Skeleton';
+import { ActionBarContent } from '../../../shared/components/ui/ActionBar';
 import { ApiError } from '../../../shared/lib/apiClient';
 import { useToast } from '../../../shared/lib/useToast';
 import { formatFull } from '../../../shared/lib/formatDate';
@@ -275,15 +276,23 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
 
   if (!loaded || !documents) return <Skeleton className="obp-skeleton-block" />;
 
-  const saveButton = (
-    <Button type="submit" variant="primary" size="md" loading={saving} disabled={!dirty}>
-      Enregistrer une nouvelle version
-    </Button>
+  // L'action principale, dans la barre d'action de la page (lot 7b) : `form` la relie au formulaire.
+  const saveBar = (
+    <ActionBarContent
+      note={dirty
+        ? 'Modifications non enregistrées : elles deviendront une nouvelle version, les précédentes restent dans l\'historique.'
+        : 'Aucune modification à enregistrer.'}
+    >
+      <Button type="submit" form="obp-cadrage-form" variant="primary" size="md" loading={saving} disabled={!dirty}>
+        Enregistrer une nouvelle version
+      </Button>
+    </ActionBarContent>
   );
 
   return (
     <>
     <form
+      id="obp-cadrage-form"
       className="obp-cadrage"
       onSubmit={e => { e.preventDefault(); void (mode === 'free' ? saveFree() : saveStructured()); }}
       noValidate
@@ -296,7 +305,6 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
           {restoredFrom !== null && dirty && ` Repris de la version ${restoredFrom}.`}
           {dirty && <strong className="obp-dirty"> Modifications non enregistrées.</strong>}
         </p>
-        {saveButton}
       </div>
 
       <FilterTabs options={MODES} value={mode} onChange={changeMode} ariaLabel="Type de fiche" />
@@ -328,7 +336,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
         </>
       )}
 
-      <div className="obp-cadrage__bar obp-cadrage__bar--end">{saveButton}</div>
+      {saveBar}
     </form>
 
     {/* Hors du formulaire : ses boutons (et sa modale) ne doivent pas l'envoyer. */}

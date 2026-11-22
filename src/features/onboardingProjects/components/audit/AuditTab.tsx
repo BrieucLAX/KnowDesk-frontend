@@ -7,7 +7,7 @@ import { formatFull } from '../../../../shared/lib/formatDate';
 import { onboardingApi } from '../../api/onboardingApi';
 import { groupQuestions, isSupportedAudit, normalizeAudit, questionKind, documentsLine, type Audit } from '../../lib/audit';
 import { progress } from '../../lib/decisions';
-import { isReadingAudit, type Reading } from '../../lib/reading';
+import { isReadingAudit, versionCardsWaiting, type Reading } from '../../lib/reading';
 import { useArbitration } from '../../hooks/useArbitration';
 import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from './AuditSource';
@@ -18,6 +18,9 @@ import { ClarifyView } from '../clarify/ClarifyView';
 import { AnalyzedDocuments } from '../clarify/AnalyzedDocuments';
 import { ClarifySession } from '../clarify/ClarifySession';
 import { CorrectionEntry } from '../base/CorrectionEntry';
+import { ActionBarContent } from '../../../../shared/components/ui/ActionBar';
+import { blockingCardsLeft } from '../../lib/correction';
+import { useStepFact } from '../../lib/steps';
 
 interface AuditTabProps {
   project:        OnboardingProject;
@@ -100,6 +103,15 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
     return () => { cancelled = true; };
   }, [project.id, selected, toast]);
 
+  // « Analyse » terminée : au moins une analyse réussie. « À clarifier » terminée : sur la dernière,
+  // aucune carte bloquante sans vraie réponse ; un audit à questions (0.6.0, 0.7.0) reste neutre.
+  useStepFact('analysis', analyses === null ? undefined : analyses.length > 0);
+  const latestReading = loaded.state === 'reading' && selected !== null && selected === analyses?.[0]?.id
+    && arbitration.state.status === 'ready' ? { cards: loaded.reading.cards, current: arbitration.state.current } : null;
+  useStepFact('audit', latestReading === null ? undefined
+    : blockingCardsLeft(latestReading.cards, latestReading.current).left === 0
+      && versionCardsWaiting(latestReading.cards, latestReading.current).length === 0);
+
   const loadImage = useCallback(
     (imageId: string) => onboardingApi.getAuditImage(project.id, selected ?? '', imageId),
     [project.id, selected],
@@ -113,12 +125,15 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
 
   if (analyses.length === 0) {
     return (
+      <>
+      <ActionBarContent hidden />
       <EmptyState
         title="Aucun audit pour l'instant"
         description="L'audit apparaît ici quand une analyse du projet est terminée."
         ctaLabel="Aller à l'analyse"
         onCta={onGoToAnalysis}
       />
+      </>
     );
   }
 
@@ -164,6 +179,9 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
       {loaded.state === 'reading' && (
         <AuditImagesContext.Provider value={images}>
           {clarify !== undefined && arbitration.state.status === 'ready' ? (
+            <>
+            {/* Une session a sa propre navigation, carte par carte : pas de barre d'action. */}
+            <ActionBarContent hidden />
             <ClarifySession
               audit={loaded.audit}
               reading={loaded.reading}
@@ -174,6 +192,7 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
               startCardId={clarify}
               onExit={() => setClarify(undefined)}
             />
+            </>
           ) : (
             <ClarifyView
               audit={loaded.audit}
@@ -198,6 +217,8 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
       {loaded.state === 'ready' && (
         <AuditImagesContext.Provider value={images}>
           {session && arbitration.state.status === 'ready' && arbitration.state.arbitrable ? (
+            <>
+            <ActionBarContent hidden />
             <ArbitrationSession
               audit={loaded.audit}
               projectId={project.id}
@@ -205,6 +226,7 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
               arbitration={arbitration}
               onExit={() => setSession(false)}
             />
+            </>
           ) : (
             <AuditView
               audit={loaded.audit}

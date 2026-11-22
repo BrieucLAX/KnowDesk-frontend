@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { Button } from '../../../../shared/components/ui/Button';
+import { ActionBarContent } from '../../../../shared/components/ui/ActionBar';
 import { useToast } from '../../../../shared/lib/useToast';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { formatFull } from '../../../../shared/lib/formatDate';
@@ -22,25 +22,23 @@ interface ValidationPanelProps {
   onOpen:       (validationId: string) => void;
   /** « Créer la base de connaissance », proposé sur la version validée à jour ; absent : pas de bouton. */
   onCreateKnowledgeBase?: (validationId: string) => void;
-  /** Le bas de la relecture, où le bouton est repris (plan v4, point 7) ; null : pas repris. */
-  footer?:      HTMLElement | null;
 }
 
 /**
- * En tête de la relecture : « Valider la nouvelle base » quand chaque modification et chaque
- * convention a un avis (les commentaires ne comptent pas), sinon le nombre d'avis qui restent.
- * Une fois validée : la version propre ; un avis ou un texte de section changé depuis demande de
- * revalider, en disant ce qui a changé. Les versions validées restent consultables. Quand tous
- * les avis sont donnés, le bouton est repris en bas de la relecture (`footer`), avec ce qu'il
- * fait. L'état reste ici : la relecture n'est pas rendue de nouveau à chaque avis.
+ * « Valider la nouvelle base » quand chaque modification et chaque convention a un avis (les
+ * commentaires ne comptent pas), sinon le nombre d'avis qui restent. Une fois validée : la version
+ * propre ; un avis ou un texte de section changé depuis demande de revalider, en disant ce qui a
+ * changé. Les versions validées restent consultables. Depuis le lot 7b, l'action est dans la barre
+ * d'action de la page, toujours visible au bas de la relecture (elle remplace le bouton repris en
+ * bas, plan v4, point 7) ; l'état reste en tête. La relecture n'est pas rendue de nouveau à chaque avis.
  */
 export function ValidationPanel({
-  projectId, correctionId, reviews, fixes, toReview, editable, onOpen, onCreateKnowledgeBase, footer = null,
+  projectId, correctionId, reviews, fixes, toReview, editable, onOpen, onCreateKnowledgeBase,
 }: ValidationPanelProps) {
   const toast = useToast();
   const [validations, setValidations] = useState<ValidationSummary[] | null>(null);
   const [validating, setValidating] = useState(false);
-  /** Une validation en cours : les deux boutons (haut et bas) n'en lancent pas une seconde. */
+  /** Une validation en cours : deux clics n'en lancent pas une seconde. */
   const sending = useRef(false);
 
   const load = useCallback(async () => {
@@ -73,34 +71,30 @@ export function ValidationPanel({
   const validateButton = (
     <Button variant="primary" size="md" loading={validating} onClick={validate}>Valider la nouvelle base</Button>
   );
-  const leftLine = <span className="obp-muted">Encore {left} avis à donner avant de valider la nouvelle base.</span>;
-  const bottom = editable && left === 0 && !latest?.upToDate && footer !== null && createPortal(
-    <section className="obp-base-validation obp-base-validation--bottom" aria-label="Valider la nouvelle base">
-      <div className="obp-arb-entry">
-        <span>Tous les avis sont donnés : validez pour obtenir la version finale.</span>
-        {validateButton}
-      </div>
-    </section>,
-    footer,
-  );
 
   return (
     <section className="obp-base-validation" aria-label="Validation de la nouvelle base">
       {latest && latest.upToDate ? (
-        <div className="obp-arb-entry">
-          <span>
+        <>
+          <p className="obp-base-validation__state">
             Validée par <AuthorName name={latest.validatedByName} authorId={latest.validatedById} /> le {formatFull(latest.validatedAt)}.
-          </span>
-          <Button variant="primary" size="md" onClick={() => onOpen(latest.id)}>Voir la version validée</Button>
-          {onCreateKnowledgeBase && (
-            <Button variant="secondary" size="md" onClick={() => onCreateKnowledgeBase(latest.id)}>Créer la base de connaissance</Button>
-          )}
-        </div>
+          </p>
+          <ActionBarContent>
+            {onCreateKnowledgeBase && (
+              <Button variant="secondary" size="md" onClick={() => onCreateKnowledgeBase(latest.id)}>Créer la base de connaissance</Button>
+            )}
+            <Button variant="primary" size="md" onClick={() => onOpen(latest.id)}>Voir la version validée</Button>
+          </ActionBarContent>
+        </>
       ) : (
-        <div className="obp-arb-entry">
-          {latest && <span role="status">{revalidationLabel(latest, formatFull(latest.validatedAt))}</span>}
-          {editable && (left === 0 ? validateButton : leftLine)}
-        </div>
+        <>
+          {latest && <p className="obp-base-validation__state" role="status">{revalidationLabel(latest, formatFull(latest.validatedAt))}</p>}
+          {editable && (left === 0 ? (
+            <ActionBarContent note="Tous les avis sont donnés : validez pour obtenir la version finale.">{validateButton}</ActionBarContent>
+          ) : (
+            <ActionBarContent note={`Encore ${left} avis à donner avant de valider la nouvelle base.`} />
+          ))}
+        </>
       )}
       {validations.length > 0 && (
         <details className="obp-base-validation__history">
@@ -116,7 +110,6 @@ export function ValidationPanel({
           </ul>
         </details>
       )}
-      {bottom}
     </section>
   );
 }

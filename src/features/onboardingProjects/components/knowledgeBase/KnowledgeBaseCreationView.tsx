@@ -11,6 +11,7 @@ import {
   rememberCreation, rememberedCreation, type KnowledgeBaseCreation, type KnowledgeBasePreview, type LatestKnowledgeBaseCreation,
 } from '../../lib/knowledgeBase';
 import type { Validation } from '../../lib/correction';
+import { useStepFact } from '../../lib/steps';
 
 /** Intervalle de relecture d'une création en cours (elle dure quelques secondes). */
 export const KNOWLEDGE_BASE_POLL_MS = 2000;
@@ -36,6 +37,8 @@ interface KnowledgeBaseCreationViewProps {
   /** Revenir à la version propre. */
   onBack:           () => void;
   onOpenKnowledge:  () => void;
+  /** Le titre et le retour sont déjà dans le bandeau de la page (lot 7b). */
+  hideBack?:        boolean;
 }
 
 type Screen =
@@ -65,7 +68,7 @@ const asCreation = (c: KnowledgeBaseCreation | KnowledgeBasePreview): KnowledgeB
  * se réutilise sans nouveaux appels au modèle. L'identifiant retenu par navigateur n'est qu'un appoint.
  */
 export function KnowledgeBaseCreationView({
-  projectId, validationId, isAdmin, knowledgeEnabled, onBack, onOpenKnowledge,
+  projectId, validationId, isAdmin, knowledgeEnabled, onBack, onOpenKnowledge, hideBack = false,
 }: KnowledgeBaseCreationViewProps) {
   const [screen, setScreen] = useState<Screen>({ kind: 'loading', preparing: false });
   const [confirming, setConfirming] = useState(false);
@@ -155,6 +158,8 @@ export function KnowledgeBaseCreationView({
   }, [projectId, show]);
 
   const active = screen.kind === 'ready' && isCreationActive(screen.creation);
+  // « Nouvelle base » terminée : la base de connaissance est créée depuis cette version.
+  useStepFact('base', screen.kind === 'ready' && screen.creation.status === 'succeeded' ? true : undefined);
   usePolling(refresh, KNOWLEDGE_BASE_POLL_MS, active);
 
   const create = async () => {
@@ -179,11 +184,13 @@ export function KnowledgeBaseCreationView({
 
   const back = <button type="button" className="obp-link" onClick={onBack}>Revenir à la version propre</button>;
   const frame = (body: React.ReactNode) => (
-    <section className="obp-kb" aria-labelledby="obp-kb-title">
-      <header className="obp-kb__head">
-        <h2 id="obp-kb-title" className="obp-section-title">Créer la base de connaissance</h2>
-        <p className="obp-muted">{back}</p>
-      </header>
+    <section className="obp-kb" {...(hideBack ? { 'aria-label': 'Créer la base de connaissance' } : { 'aria-labelledby': 'obp-kb-title' })}>
+      {!hideBack && (
+        <header className="obp-kb__head">
+          <h2 id="obp-kb-title" className="obp-section-title">Créer la base de connaissance</h2>
+          <p className="obp-muted">{back}</p>
+        </header>
+      )}
       {body}
     </section>
   );
