@@ -764,6 +764,12 @@
   background: var(--neutral-50); border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
   font-size: 14px; color: var(--neutral-700);
 }
+/* Base de connaissance depuis une rédaction (plan-construire-v1, lot D) */
+.obp-kb-build { display: flex; flex-direction: column; gap: 12px; }
+.obp-kb-build__audience { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--neutral-900); cursor: pointer; }
+.obp-kb-build__verify summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--neutral-900); }
+.obp-kb-build__verify[open] summary { margin-bottom: 6px; }
+p.obp-kb__blockers { padding-left: 14px; }
 .obp-kb__blockers {
   display: flex; flex-direction: column; gap: 4px;
   margin: 0; padding: 10px 14px 10px 32px;

@@ -1,0 +1,15 @@
+{
+ "status": 200,
+ "body": {
+  "data": {
+   "buildId": "1f658483-cf34-483d-bb9a-2a156f682153",
+   "schemaVersion": "0.3.0",
+   "audiencesDetected": true,
+   "launch": {
+    "allowed": true
+   },
+   "creation": null
+  },
+  "error": null
+ }
+}

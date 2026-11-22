@@ -30,6 +30,9 @@ interface BaseTabProps {
   onOpenValidation?: (validationId: string) => void;
   /** Ouvre « Créer la base de connaissance » depuis une version validée à jour. */
   onOpenKnowledgeBase?: (validationId: string) => void;
+  /** Mode construire (lot D) : module « knowledge », et l'ouverture de la base une fois créée. */
+  knowledgeEnabled?: boolean;
+  onOpenKnowledge?:  () => void;
 }
 
 type Loaded =
@@ -42,7 +45,7 @@ type Loaded =
  * Onglet « Nouvelle base » : la préparation en cours (étapes, avancement), puis la relecture de la
  * dernière base prête. Les bases précédentes de l'analyse se consultent, en lecture seule.
  */
-export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowledgeBase }: BaseTabProps) {
+export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowledgeBase, knowledgeEnabled, onOpenKnowledge }: BaseTabProps) {
   const toast = useToast();
   const [loaded,   setLoaded]   = useState<Loaded>({ state: 'loading' });
   const [selected, setSelected] = useState<string | null>(null);
@@ -144,7 +147,10 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
   if (analysisId !== null && planAudit === undefined) return <Skeleton className="obp-skeleton-block" />;
   if (analysisId !== null && planAudit) {
     return <AuditImagesContext.Provider value={images}>
-      <PlanTab projectId={project.id} analysisId={analysisId} audit={planAudit} cards={cards} onGoToClarify={onGoToClarify} />
+      <PlanTab
+        projectId={project.id} analysisId={analysisId} audit={planAudit} cards={cards} onGoToClarify={onGoToClarify}
+        knowledgeEnabled={knowledgeEnabled} onOpenKnowledge={onOpenKnowledge}
+      />
     </AuditImagesContext.Provider>;
   }
   if (loaded.state === 'none') {

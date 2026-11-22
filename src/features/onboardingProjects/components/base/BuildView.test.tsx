@@ -260,7 +260,9 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
 
     expect(container.textContent).not.toMatch(/[Cc]hapitre|[Ss]ujet/);
     expect(container.textContent).not.toMatch(TECHNICAL);
-    expect(screen.getByText('La création des articles dans votre base arrive bientôt.')).toBeInTheDocument();
+    // Lot D : la création de la base n'est proposée qu'avec le module « knowledge » (absent ici).
+    expect(screen.queryByText('La création des articles dans votre base arrive bientôt.')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Créer la base de connaissance' })).not.toBeInTheDocument();
   });
 
   it('une phrase qui relie deux passages est surlignée « À vérifier », avec sa raison (cas Pro Sérénité / parrainage)', async () => {

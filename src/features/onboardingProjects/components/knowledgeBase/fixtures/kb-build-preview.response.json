@@ -1,0 +1,137 @@
+{
+ "status": 201,
+ "body": {
+  "data": {
+   "creationId": "602853d2-9d2f-47de-ac69-a23582a848f1",
+   "status": "previewed",
+   "source": "build",
+   "build": {
+    "id": "1f658483-cf34-483d-bb9a-2a156f682153",
+    "createdAt": "2026-11-22T17:20:38.355Z",
+    "planEditCount": 0
+   },
+   "categories": [
+    {
+     "name": "Fonctionnement du secteur de l'énergie",
+     "articles": 3
+    },
+    {
+     "name": "Présentation de l'entreprise",
+     "articles": 1
+    },
+    {
+     "name": "Le marché de l'énergie",
+     "articles": 1
+    },
+    {
+     "name": "Offres et tarifs pour particuliers",
+     "articles": 7
+    },
+    {
+     "name": "Offres et tarifs pour professionnels",
+     "articles": 5
+    },
+    {
+     "name": "Souscription et contrat",
+     "articles": 3
+    },
+    {
+     "name": "Facturation et paiement",
+     "articles": 3
+    },
+    {
+     "name": "Résiliation",
+     "articles": 3
+    },
+    {
+     "name": "Déménagement",
+     "articles": 1
+    },
+    {
+     "name": "Réclamations et médiation",
+     "articles": 1
+    },
+    {
+     "name": "Énergie verte",
+     "articles": 1
+    },
+    {
+     "name": "Parrainage",
+     "articles": 1
+    },
+    {
+     "name": "Horaires du service client",
+     "articles": 1
+    }
+   ],
+   "counts": {
+    "categories": 13,
+    "articles": 31,
+    "faqs": 0,
+    "faqsLinked": 0,
+    "synonyms": 0,
+    "images": 0
+   },
+   "examples": [
+    "Acteurs du marché de l'énergie",
+    "Ouverture des marchés de l'énergie",
+    "Tarif réglementé (TRVE) vs offres de marché",
+    "Elyra Énergie",
+    "Éligibilité au tarif réglementé (TRVE) pour les professionnels"
+   ],
+   "excluded": [],
+   "toVerify": [
+    {
+     "title": "Elyra Fixe 2 ans",
+     "text": "Ces prix sont valables à partir du 1er septembre 2026 et n'incluent pas les évolutions des taxes et du TURPE."
+    },
+    {
+     "title": "Elyra Gaz Fixe 1 an",
+     "text": "Le prix du kWh de l'offre Elyra Gaz Fixe 1 an est applicable à partir du 1er septembre 2026."
+    },
+    {
+     "title": "Mensualisation et prélèvement",
+     "text": "La mensualisation permet de lisser le paiement de la consommation annuelle estimée sur 11 ou 12 mois."
+    },
+    {
+     "title": "Garanties d'origine et électricité verte",
+     "text": "Elyra Énergie certifie son électricité verte par des garanties d'origine (GO). Pour chaque kilowattheure (kWh) consommé par un client, une GO atteste qu'un kWh d'origine renouvelable a été produit en France et injecté sur le réseau européen."
+    }
+   ],
+   "audience": {
+    "detected": true,
+    "applied": true,
+    "articles": {
+     "particuliers": 12,
+     "professionnels": 8,
+     "tous": 11
+    },
+    "blocks": 13
+   },
+   "tags": {
+    "names": [
+     "Particuliers",
+     "Professionnels"
+    ],
+    "reused": [],
+    "toCreate": [
+     "Particuliers",
+     "Professionnels"
+    ],
+    "nearMiss": [],
+    "allowed": true,
+    "limit": 200
+   },
+   "quota": {
+    "limit": null,
+    "current": 0,
+    "toCreate": 31,
+    "after": 31,
+    "allowed": true
+   },
+   "knowledgeBaseEmpty": true,
+   "refusal": null
+  },
+  "error": null
+ }
+}

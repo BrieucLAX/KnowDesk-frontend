@@ -23,7 +23,7 @@ export function endTestDescription(now: Date): string {
     + `Le ${formatDay(scheduledPurgeDate(now.toISOString()))}, 30 jours après, la purge automatique dépend du texte d'information accepté. `
     + 'Si un administrateur a accepté le nouveau texte, seuls les documents importés sont supprimés. '
     + 'Sinon, toutes ses données de test (documents, fiches, analyses, audits, décisions) sont supprimées, comme avant. '
-    + 'Pour tout supprimer tout de suite, base de connaissance comprise, utilisez « Données de test ». '
+    + 'Pour tout supprimer tout de suite, avec ce que l\'onboarding a créé dans la base de connaissance, utilisez « Données de test ». '
     + 'C\'est définitif : l\'organisation ne pourra pas être réactivée.';
 }
 
