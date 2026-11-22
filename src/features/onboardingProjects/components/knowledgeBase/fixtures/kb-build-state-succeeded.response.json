@@ -1,0 +1,32 @@
+{
+ "status": 200,
+ "body": {
+  "data": {
+   "buildId": "1f658483-cf34-483d-bb9a-2a156f682153",
+   "schemaVersion": "0.3.0",
+   "audiencesDetected": true,
+   "launch": {
+    "allowed": false
+   },
+   "creation": {
+    "creationId": "602853d2-9d2f-47de-ac69-a23582a848f1",
+    "status": "succeeded",
+    "source": "build",
+    "buildId": "1f658483-cf34-483d-bb9a-2a156f682153",
+    "progress": {
+     "faqs": 0,
+     "images": 0,
+     "articles": 31,
+     "synonyms": 0,
+     "categories": 13,
+     "synonymsExisting": 0
+    },
+    "errorCode": null,
+    "createdAt": "2026-11-22T17:21:14.704Z",
+    "startedAt": "2026-11-22T17:21:14.758Z",
+    "finishedAt": "2026-11-22T17:21:15.131Z"
+   }
+  },
+  "error": null
+ }
+}

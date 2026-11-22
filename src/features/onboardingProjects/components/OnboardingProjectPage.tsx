@@ -168,6 +168,8 @@ export function OnboardingProjectPage({
             onGoToClarify={cardId => { setClarifyCard(cardId); onTabChange('audit'); }}
             onOpenValidation={onOpenValidation}
             onOpenKnowledgeBase={onOpenKnowledgeBase}
+            knowledgeEnabled={knowledgeEnabled}
+            onOpenKnowledge={onOpenKnowledge}
           />
         )}
       </TabPanel>

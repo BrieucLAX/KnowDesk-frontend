@@ -43,6 +43,9 @@ interface PlanTabProps {
   cards:         ReadingCard[];
   /** Ouvre « À clarifier », sur une carte si elle est donnée. */
   onGoToClarify: (cardId?: string) => void;
+  /** Lot D : module « knowledge » de l'organisation, et l'ouverture de la base une fois créée. */
+  knowledgeEnabled?: boolean;
+  onOpenKnowledge?:  () => void;
 }
 
 /**
@@ -58,7 +61,7 @@ interface PlanTabProps {
  * panneau « Vos modifications », la section « Retirés ou réunis », et un lien vers le plan proposé.
  * Sans la route (back d'avant), le plan se lit comme avant.
  */
-export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: PlanTabProps) {
+export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, knowledgeEnabled, onOpenKnowledge }: PlanTabProps) {
   const toast = useToast();
   const [plans,    setPlans]    = useState<OnboardingPlan[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
@@ -333,6 +336,7 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
                       projectId={projectId} buildId={shownBuildId!} construction={c} comments={buildComments}
                       commentable={buildContent!.commentable}
                       onSaved={onBuildSaved} onCancelled={onBuildCancelled} {...ctx}
+                      knowledgeEnabled={knowledgeEnabled} onOpenKnowledge={onOpenKnowledge}
                     />
                   ))}
                 </>

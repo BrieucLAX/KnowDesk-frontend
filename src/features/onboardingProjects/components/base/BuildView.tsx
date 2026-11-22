@@ -14,6 +14,7 @@ import { AuditSource } from '../audit/AuditSource';
 import { AudienceFilter, AudienceTag } from './Audience';
 import { hasAudiences, matchesAudience, type AudienceFilter as Filter } from '../../lib/audience';
 import { PlanCommentBox } from './PlanTab';
+import { BuildKnowledgeBase } from '../knowledgeBase/BuildKnowledgeBase';
 
 const STEP_STATE_LABEL = { done: 'terminée', current: 'en cours', pending: 'à venir' } as const;
 
@@ -331,6 +332,9 @@ interface BuildArticlesProps extends Ctx {
   commentable:   boolean;
   onSaved:       (saved: BuildComment) => void;
   onCancelled:   (subjectId: string | null, current: BuildComment | null) => void;
+  /** Module « knowledge » : sans lui, la création de la base n'est pas proposée (lot D). */
+  knowledgeEnabled?: boolean;
+  onOpenKnowledge?:  () => void;
 }
 
 /**
@@ -340,7 +344,7 @@ interface BuildArticlesProps extends Ctx {
  * les réponses de l'expert qu'aucun article ne porte (C-Q11) ; aucune suggestion de l'IA.
  */
 export function BuildArticles({
-  projectId, buildId, construction, comments, commentable, onSaved, onCancelled, ...ctx
+  projectId, buildId, construction, comments, commentable, onSaved, onCancelled, knowledgeEnabled = false, onOpenKnowledge, ...ctx
 }: BuildArticlesProps) {
   const commentOf = (subjectId: string | null) => comments.find(c => c.subjectId === subjectId) ?? null;
   const box = (subjectId: string | null, label: string) => (
@@ -379,7 +383,9 @@ export function BuildArticles({
       <section className="obp-plan__whole" aria-label="Commentaire sur la rédaction">
         {box(null, 'Commentaire sur la rédaction (facultatif)')}
       </section>
-      <p className="obp-plan__next">La création des articles dans votre base arrive bientôt.</p>
+      {commentable && (
+        <BuildKnowledgeBase projectId={projectId} buildId={buildId} knowledgeEnabled={knowledgeEnabled} onOpenKnowledge={onOpenKnowledge} />
+      )}
     </div>
   );
 }
