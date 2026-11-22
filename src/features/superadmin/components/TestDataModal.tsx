@@ -74,7 +74,8 @@ export function TestDataModal({ org, listProjects, purge, onClose }: TestDataMod
         description={
           (pending.kind === 'org'
             ? 'Tous les projets, documents, fiches de cadrage, analyses, audits, images, décisions et acceptations du texte d\'information de cette organisation sont supprimés, en base et dans le stockage, '
-              + 'ainsi que toute sa base de connaissance : articles et leurs versions, FAQ, processus guidés, catégories, tags, synonymes, images et imports. '
+              + 'ainsi que ce que l\'onboarding a créé dans sa base de connaissance : articles et leurs versions, FAQ, catégories restées vides, synonymes et étiquettes ajoutés, images. '
+              + 'Ce que l\'organisation a fait elle-même dans sa base reste (articles, processus guidés, imports, étiquettes). '
             : `Ce projet (${plural(pending.project.documents, 'document')}), ses fiches, analyses, audits, images et décisions sont supprimés, en base et dans le stockage. `)
           + 'L\'organisation et ses comptes restent. C\'est définitif.'
         }

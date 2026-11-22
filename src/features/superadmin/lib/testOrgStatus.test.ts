@@ -51,7 +51,7 @@ describe('endTestDescription (« Terminer le test »)', () => {
     expect(text).toContain('Sinon, toutes ses données de test (documents, fiches, analyses, audits, décisions) sont supprimées, comme avant.');
   });
 
-  it('renvoie à « Données de test » pour tout supprimer, base de connaissance comprise', () => {
-    expect(text).toContain('base de connaissance comprise, utilisez « Données de test »');
+  it('renvoie à « Données de test » pour tout supprimer, avec ce que l\'onboarding a créé dans la base', () => {
+    expect(text).toContain('avec ce que l\'onboarding a créé dans la base de connaissance, utilisez « Données de test »');
   });
 });
