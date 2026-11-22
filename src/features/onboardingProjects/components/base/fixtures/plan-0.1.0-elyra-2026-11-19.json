@@ -1,0 +1,3600 @@
+{
+  "schema_version": "0.1.0",
+  "audit_schema_version": "0.16.0",
+  "generated_at": "2026-11-19T03:35:21.202475Z",
+  "decision_ids": [
+    "dec_card_24fcb03db294f6f6",
+    "dec_card_012dcf674c81fd62",
+    "dec_card_4131641bd85af8b2",
+    "dec_card_a0dbb07d226a724f",
+    "dec_card_49acfa339577d3d3",
+    "dec_card_e3975ef276e90c40",
+    "dec_card_2b3ebefacdf49f69",
+    "dec_card_99fcfa15353f74a7",
+    "dec_card_552660f51c6af8c6",
+    "dec_card_1b9961bd7843699b",
+    "dec_card_5c0d236c1475a43f",
+    "dec_card_2a8658c26f64bad1",
+    "dec_card_5c83ac8f41ad291b",
+    "dec_card_613b29db93522a77",
+    "dec_card_2b35fe27346c6527",
+    "dec_card_fb56f8acaf896e2b",
+    "dec_card_dfdd3bdd4c45a994",
+    "dec_card_c6b7f051d611fa57",
+    "dec_card_cb3ece6251e02e32",
+    "dec_card_2012651dc44fa745"
+  ],
+  "chapters": [
+    {
+      "id": "ch_1",
+      "title": "Présentation de l'entreprise",
+      "subject_ids": [
+        "sub_1",
+        "sub_2"
+      ]
+    },
+    {
+      "id": "ch_2",
+      "title": "Marché de l'énergie",
+      "subject_ids": [
+        "sub_3",
+        "sub_4",
+        "sub_5",
+        "sub_6",
+        "sub_7"
+      ]
+    },
+    {
+      "id": "ch_3",
+      "title": "Offres et tarifs pour particuliers",
+      "subject_ids": [
+        "sub_8",
+        "sub_9",
+        "sub_10",
+        "sub_11",
+        "sub_12",
+        "sub_13",
+        "sub_14"
+      ]
+    },
+    {
+      "id": "ch_4",
+      "title": "Offres et tarifs pour professionnels",
+      "subject_ids": [
+        "sub_15",
+        "sub_16",
+        "sub_17",
+        "sub_18",
+        "sub_19"
+      ]
+    },
+    {
+      "id": "ch_5",
+      "title": "Souscription et contrat",
+      "subject_ids": [
+        "sub_20",
+        "sub_21",
+        "sub_22",
+        "sub_23"
+      ]
+    },
+    {
+      "id": "ch_6",
+      "title": "Facturation et paiement",
+      "subject_ids": [
+        "sub_24",
+        "sub_25",
+        "sub_26"
+      ]
+    },
+    {
+      "id": "ch_7",
+      "title": "Résiliation",
+      "subject_ids": [
+        "sub_27",
+        "sub_28",
+        "sub_29"
+      ]
+    },
+    {
+      "id": "ch_8",
+      "title": "Déménagement",
+      "subject_ids": [
+        "sub_30"
+      ]
+    },
+    {
+      "id": "ch_9",
+      "title": "Réclamations et médiation",
+      "subject_ids": [
+        "sub_31"
+      ]
+    },
+    {
+      "id": "ch_10",
+      "title": "Énergie verte",
+      "subject_ids": [
+        "sub_32"
+      ]
+    },
+    {
+      "id": "ch_11",
+      "title": "Parrainage",
+      "subject_ids": [
+        "sub_33"
+      ]
+    },
+    {
+      "id": "ch_12",
+      "title": "Horaires du service client",
+      "subject_ids": [
+        "sub_34"
+      ]
+    }
+  ],
+  "subjects": [
+    {
+      "id": "sub_1",
+      "chapter_id": "ch_1",
+      "title": "Elyra Énergie",
+      "question": "Quelles sont les informations clés sur Elyra Énergie à connaître pour présenter l'entreprise aux clients ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Fournisseur d'électricité et de gaz naturel depuis 1946, issu d'une régie locale",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 3
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Fournisseur historique sur sa zone de desserte (Haute-Savoie et Savoie) : seul habilité à y proposer le tarif réglementé",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 3
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "312 000 clients particuliers · 27 500 clients professionnels",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 3
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Centre de relation client : 180 conseillers à Annecy et Chambéry",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 3
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 3,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_2",
+      "chapter_id": "ch_1",
+      "title": "Décisions du Comité Offres & Prix de septembre 2026",
+      "question": "Quelles sont les décisions récentes du Comité Offres & Prix qui impactent les clients ou les conseillers ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "excerpt": "# Synthèse des décisions",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Synthèse des décisions"
+          ],
+          "block_kind": "table",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Synthèse des décisions"
+          ]
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_complement"
+    },
+    {
+      "id": "sub_3",
+      "chapter_id": "ch_2",
+      "title": "Acteurs du marché de l'énergie",
+      "question": "Quels sont les rôles des différents acteurs du marché de l'énergie ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "| Acteur | Rôle | Exemple |\n|---|---|---|\n| Producteur | Produit l'électricité ou le gaz | Centrales, parcs solaires, barrages |\n| Gestionnaire de réseau de transport | Transporte sur longues distances | RTE (élec), GRTgaz (gaz) |\n| Gestionnaire de réseau de distribution (GRD) | Achemine jusqu'au compteur, relève, dépannage | Enedis, GRDF, entreprises locales |\n| Fournisseur | Vend l'énergie et facture le client | Elyra Énergie |\n| Régulateur | Contrôle le marché, propose les tarifs | CRE |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 4
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Le fournisseur ne gère ni les coupures techniques ni le dépannage : c'est le rôle du GRD.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 4
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 4,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_4",
+      "chapter_id": "ch_2",
+      "title": "Ouverture des marchés de l'énergie",
+      "question": "Quelles sont les dates clés de l'ouverture des marchés de l'énergie en France ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Les grandes étapes de l’ouverture des marchés de l’énergie\n1er juil. 2004\nOuverture du marché aux professionnels\n1er juil. 2007\nOuverture totale aux particuliers\n1er janv. 2016\nFin des tarifs jaunes et verts\n1er janv. 2021\nTRVE réservé aux micro-entreprises\n30 juin 2023\nFin des TRV gaz pour les particuliers",
+          "zone": "image",
+          "table_cell": null,
+          "excerpt_origin": "vision_unverified",
+          "image_id": "img_eaab6be1b13b4a7b",
+          "format": "pptx",
+          "slide": 5
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Insister sur 2021 : depuis la loi Énergie-Climat, le TRVE n'est plus accessible qu'aux particuliers et aux micro-entreprises.",
+          "zone": "notes",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 5
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 5,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_5",
+      "chapter_id": "ch_2",
+      "title": "Tarif réglementé (TRVE) vs offres de marché",
+      "question": "Quelles sont les différences entre le tarif réglementé (TRVE) et les offres de marché ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "|  | Tarif réglementé (TRVE) | Offre de marché |\n|---|---|---|\n| Qui fixe le prix ? | Les pouvoirs publics, sur proposition de la CRE | Le fournisseur |\n| Évolution | En général 1 à 2 fois par an (février, août) | Selon le contrat : fixe ou indexé |\n| Qui peut le vendre ? | Fournisseur historique uniquement | Tous les fournisseurs |\n| Énergie concernée | Électricité uniquement (≤ 36 kVA) | Électricité et gaz |\n| Retour possible ? | Oui, à tout moment, sans frais | Changement libre, sans frais pour un particulier |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 6
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Les TRV gaz ont été supprimés le 30 juin 2023 : il n'existe plus aucun tarif réglementé en gaz.",
+          "zone": "notes",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 6
+        },
+        {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "excerpt": "Supprimés pour les particuliers le 30 juin 2023\n\n• Les clients encore au TRV ont basculé sur une offre de marché de leur fournisseur\n\n• Il n'existe plus aucun tarif réglementé en gaz naturel",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 3
+        },
+        {
+          "document_id": "doc_2026_06_04_re_question_offre_gaz_indexe_eml_a12b132f",
+          "excerpt": "Ton client a raison : les tarifs réglementés du gaz ont été supprimés pour les particuliers le 30 juin 2023. Il n'y a plus de « TRV gaz ».",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "RE: Question offre Gaz Indexé – client qui conteste"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 5
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 6,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "kind": "slide",
+          "number": 3,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_06_04_re_question_offre_gaz_indexe_eml_a12b132f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "RE: Question offre Gaz Indexé – client qui conteste"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_2a8658c26f64bad1",
+        "card_5c83ac8f41ad291b"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_6",
+      "chapter_id": "ch_2",
+      "title": "Éligibilité au tarif réglementé (TRVE) pour les professionnels",
+      "question": "Quels professionnels sont éligibles au tarif réglementé de l'électricité (TRVE) ?",
+      "audience": "professionnels",
+      "sources": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Particuliers : puissance souscrite ≤ 36 kVA\n\n• Professionnels : micro-entreprises uniquement\n\n- – moins de 10 salariés\n\n- – ET chiffre d'affaires, recettes ou total de bilan ≤ 2 M€\n\n- – ET puissance ≤ 36 kVA\n\n• Collectivités : mêmes critères que les micro-entreprises",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 7
+        },
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "excerpt": "Arbre d'éligibilité au tarif réglementé – clients non résidentiels\nPuissance souscrite ≤ 36 kVA ?\nNON → offre de marché\nMoins de 10 salariés ?\nNON → offre de marché\nCA, recettes ou total de bilan ≤ 2 M€ ?\nNON → offre de marché\nOUI : éligible au TRVE",
+          "zone": "image",
+          "table_cell": null,
+          "excerpt_origin": "vision_unverified",
+          "image_id": "img_87476440d8dd7361",
+          "format": "pptx",
+          "slide": 6
+        },
+        {
+          "document_id": "doc_guide_eligibilite_trve_professionnels_pdf_b2cf9460",
+          "excerpt": "Un professionnel n'est éligible au TRVE que s'il emploie moins de 10 personnes ET que son chiffre d'affaires, ses recettes ou son total de bilan n'excèdent pas 2 millions d'euros, pour un site de 36 kVA au plus.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "excerpt": "Un professionnel peut bénéficier du tarif réglementé s'il emploie moins de 50 salariés et réalise un chiffre d'affaires annuel inférieur à 10 M€, pour une puissance de 36 kVA au plus.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Rappel : éligibilité au tarif réglementé"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_guide_eligibilite_trve_professionnels_pdf_b2cf9460",
+          "excerpt": "Depuis le 1er janvier 2021, en application de la loi Énergie-Climat de 2019, les tarifs réglementés de vente d'électricité ne sont plus accessibles qu'aux consommateurs résidentiels et aux consommateurs non résidentiels qui sont des micro-entreprises.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 7,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "kind": "slide",
+          "number": 6,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_guide_eligibilite_trve_professionnels_pdf_b2cf9460",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Rappel : éligibilité au tarif réglementé"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_5c83ac8f41ad291b"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_7",
+      "chapter_id": "ch_2",
+      "title": "Prix repère de la CRE",
+      "question": "Qu'est-ce que le prix repère de la CRE et comment est-il utilisé dans les offres d'Elyra Énergie ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "excerpt": "Le prix repère de la CRE",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 4
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "kind": "slide",
+          "number": 4,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_complement"
+    },
+    {
+      "id": "sub_8",
+      "chapter_id": "ch_3",
+      "title": "Gamme Particuliers 2026",
+      "question": "Quelles sont les offres d'électricité et de gaz proposées par Elyra Énergie pour les particuliers en 2026 ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "| Offre | Énergie | Type de prix | Point fort |\n|---|---|---|---|\n| Tarif réglementé | Électricité | Réglementé | Zone de desserte uniquement |\n| Elyra Fixe 2 ans | Électricité | Fixe HT 24 mois | Budget maîtrisé |\n| Elyra Indexée | Électricité | TRVE HT – 6 % | Toujours moins cher que le TRVE |\n| Elyra Gaz Fixe 1 an | Gaz | Fixe HT 12 mois | Sécurité avant l'hiver |\n| Elyra Gaz Indexé | Gaz | Prix repère CRE – 4 % | Suit le marché |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 8
+        },
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "excerpt": "4 offres de marché + le tarif réglementé sur notre zone\n\n• Électricité verte sur toutes les offres de marché\n\n• Duo = 5 €/mois de remise\n\n• Lancement d'une offre locale prévu à l'automne",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 8
+        },
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "excerpt": "| Élément | Valeur |\n|---|---|\n| Prix du kWh Base 6 kVA | 0,2042 € TTC (fixe 2 ans) |\n| Abonnement | 16,20 € TTC/mois |\n| Supplément « producteur local » | Inclus dans le prix du kWh |\n| Engagement | Aucun |\n| Éligibilité | Particuliers, ≤ 36 kVA, France métropolitaine |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 4
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "excerpt": "| Offre | Option | Abonnement €<br>TTC/mois | kWh € TTC (Base ou<br>HP) | kWh HC € TTC |\n|---|---|---|---|---|\n| Tarif réglementé<br>(TRVE) | Base | 15,96 | 0,2011 | – |\n| Tarif réglementé<br>(TRVE) | HP/HC | 16,32 | 0,2139 | 0,1690 |\n| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |\n| Elyra Fixe 2 ans | HP/HC | 16,58 | 0,2068 | 0,1586 |\n| Elyra Indexée | Base | 15,96 | TRVE HT – 8 % | – |\n| Elyra Vert Local (dès<br>le 01/11/2026) | Base | 16,20 | 0,2042 | – |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "excerpt": "| Offre | Abonnement € TTC/mois | kWh € TTC |\n|---|---|---|\n| Elyra Gaz Fixe 1 an | 22,40 | 0,1124 |\n| Elyra Gaz Indexé | 22,40 | Prix repère CRE – 4 % |\n| Remise Duo (élec + gaz) | – 5,00 | – |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_2026_03_10_lancement_gamme_particuliers_2026_eml_162533a2",
+          "excerpt": "# [Offres] La gamme Particuliers 2026 est en ligne",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "[Offres] La gamme Particuliers 2026 est en ligne"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "excerpt": "Notre promesse 2026",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 2
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "excerpt": "## Puis-je changer d'offre en cours de contrat ?",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Contrat et souscription",
+            "Puis-je changer d'offre en cours de contrat ?"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "excerpt": "# 3. Proposition de l'offre",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "3. Proposition de l'offre"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_tableau_comparatif_gamme_2026_xlsx_258657ff",
+          "excerpt": "# Gamme 2026",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "xlsx",
+          "heading_path": [
+            "Gamme 2026"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 8,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "kind": "slide",
+          "number": 8,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "kind": "slide",
+          "number": 4,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_03_10_lancement_gamme_particuliers_2026_eml_162533a2",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "[Offres] La gamme Particuliers 2026 est en ligne"
+          ]
+        },
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "kind": "slide",
+          "number": 2,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Contrat et souscription",
+            "Puis-je changer d'offre en cours de contrat ?"
+          ]
+        },
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "3. Proposition de l'offre"
+          ]
+        },
+        {
+          "document_id": "doc_tableau_comparatif_gamme_2026_xlsx_258657ff",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Gamme 2026"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_24fcb03db294f6f6",
+        "card_012dcf674c81fd62",
+        "card_4131641bd85af8b2",
+        "card_a0dbb07d226a724f",
+        "card_e3975ef276e90c40",
+        "card_552660f51c6af8c6",
+        "card_2a8658c26f64bad1",
+        "card_cb3ece6251e02e32"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_9",
+      "chapter_id": "ch_3",
+      "title": "Elyra Fixe 2 ans",
+      "question": "Quelles sont les caractéristiques, le prix et les conditions de l'offre Elyra Fixe 2 ans pour les particuliers ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "excerpt": "Prix du kWh HT fixe pendant 24 mois\n\n• Base 6 kVA : 0,2018 € TTC/kWh · abonnement 16,20 € TTC/mois\n\n• Options Base et Heures Pleines / Heures Creuses\n\n• Hors évolution des taxes et du TURPE\n\n• Sans engagement : le client peut partir à tout moment",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 3
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "excerpt": "| Élément | Détail |\n|---|---|\n| Clientèle | Particuliers, résidence principale ou secondaire, ≤ 36 kVA |\n| Prix du kWh Base (6 kVA) | 0,1925 € TTC |\n| Abonnement Base (6 kVA) | 16,20 € TTC/mois |\n| Durée de blocage du prix | 24 mois à compter de la mise en service |\n| Engagement | Aucun |\n| Énergie verte | Oui, garanties d'origine |\n| Grille de référence | Grille tarifaire Particuliers v2 du 01/09/2026 |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Caractéristiques"
+          ],
+          "block_kind": "table",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |\n| Elyra Fixe 2 ans | HP/HC | 16,58 | 0,2068 | 0,1586 |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "excerpt": "Deux mois avant l'échéance, le client reçoit une proposition de renouvellement. Sans réponse, il bascule sur l'offre Elyra Indexée.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Que se passe-t-il au bout de 24 mois ?"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "excerpt": "Comparer les prix du kWh",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 5
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "excerpt": "# Résumé",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Résumé"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "excerpt": "# Arguments de vente",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Arguments de vente"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "excerpt": "## « Et si le tarif réglementé baisse ? »",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Objections fréquentes",
+            "« Et si le tarif réglementé baisse ? »"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "excerpt": "## « Les taxes sont-elles aussi bloquées ? »",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Objections fréquentes",
+            "« Les taxes sont-elles aussi bloquées ? »"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "kind": "slide",
+          "number": 3,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Caractéristiques"
+          ]
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Que se passe-t-il au bout de 24 mois ?"
+          ]
+        },
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "kind": "slide",
+          "number": 5,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Résumé"
+          ]
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Arguments de vente"
+          ]
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Objections fréquentes",
+            "« Et si le tarif réglementé baisse ? »"
+          ]
+        },
+        {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Objections fréquentes",
+            "« Les taxes sont-elles aussi bloquées ? »"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_24fcb03db294f6f6",
+        "card_4131641bd85af8b2",
+        "card_a0dbb07d226a724f",
+        "card_cb3ece6251e02e32",
+        "card_49acfa339577d3d3"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_10",
+      "chapter_id": "ch_3",
+      "title": "Elyra Indexée",
+      "question": "Quelles sont les caractéristiques, le prix et les conditions de l'offre Elyra Indexée pour les particuliers ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "excerpt": "Prix du kWh HT = prix du kWh HT du TRVE – 6 %\n\n• Évolue à chaque mouvement du tarif réglementé\n\n• Idéale pour les clients qui veulent « toujours payer moins que le TRVE »\n\n• Facturation 100 % en ligne obligatoire",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 4
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "excerpt": "| Elyra Indexée | Base | 15,96 | TRVE HT – 8 % | – |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_30ed41cf",
+          "excerpt": "Elyra Indexée : remise portée à 8 % sur le prix HT du TRVE",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "IMPORTANT – Nouvelle grille tarifaire au 1er septembre 2026"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 8
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "kind": "slide",
+          "number": 4,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_30ed41cf",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "IMPORTANT – Nouvelle grille tarifaire au 1er septembre 2026"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_24fcb03db294f6f6",
+        "card_012dcf674c81fd62",
+        "card_a0dbb07d226a724f",
+        "card_552660f51c6af8c6"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_11",
+      "chapter_id": "ch_3",
+      "title": "Elyra Gaz Fixe 1 an",
+      "question": "Quelles sont les caractéristiques, le prix et les conditions de l'offre Elyra Gaz Fixe 1 an pour les particuliers ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "excerpt": "|  | Elyra Gaz Fixe 1 an | Elyra Gaz Indexé |\n|---|---|---|\n| Prix du kWh | Fixe HT 12 mois | Prix repère CRE – 4 % |\n| Abonnement (B1) | 22,40 € TTC/mois | 22,40 € TTC/mois |\n| Évolution | Aucune pendant 12 mois (hors taxes) | Mensuelle |\n| Cible | Familles chauffées au gaz | Clients à l'aise avec la variation |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 6
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "excerpt": "| Elyra Gaz Fixe 1 an | 22,40 | 0,1124 |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_30ed41cf",
+          "excerpt": "Gaz Fixe 1 an : 0,1124 € TTC/kWh",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "IMPORTANT – Nouvelle grille tarifaire au 1er septembre 2026"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 9
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "kind": "slide",
+          "number": 6,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_30ed41cf",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "IMPORTANT – Nouvelle grille tarifaire au 1er septembre 2026"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_24fcb03db294f6f6",
+        "card_a0dbb07d226a724f"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_12",
+      "chapter_id": "ch_3",
+      "title": "Elyra Gaz Indexé",
+      "question": "Quelles sont les caractéristiques, le prix et les conditions de l'offre Elyra Gaz Indexé pour les particuliers ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "excerpt": "|  | Elyra Gaz Fixe 1 an | Elyra Gaz Indexé |\n|---|---|---|\n| Prix du kWh | Fixe HT 12 mois | Prix repère CRE – 4 % |\n| Abonnement (B1) | 22,40 € TTC/mois | 22,40 € TTC/mois |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 6
+        },
+        {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "excerpt": "|  | Gaz Fixe 1 an | Gaz Indexé |\n|---|---|---|\n| Prix du kWh HT | Fixe 12 mois | Prix repère CRE – 4 % |\n| Engagement | Aucun | Aucun |\n| Renouvellement | Proposition 2 mois avant échéance | Sans objet |\n| Frais de résiliation (particulier) | 0 € | 0 € |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 6
+        },
+        {
+          "document_id": "doc_2026_06_04_re_question_offre_gaz_indexe_eml_a12b132f",
+          "excerpt": "Depuis juillet 2023, notre offre Gaz Indexé est calée sur le prix repère publié chaque mois par la CRE, avec une remise de 4 % sur le prix HT (et non 5 %).",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "RE: Question offre Gaz Indexé – client qui conteste"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 6
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "excerpt": "| Elyra Gaz Indexé | 22,40 | Prix repère CRE – 4 % |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "excerpt": "Elyra Gaz Indexé vs prix repère",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 5
+        },
+        {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "excerpt": "Cas pratiques",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 7
+        },
+        {
+          "document_id": "doc_2026_06_04_re_question_offre_gaz_indexe_eml_a12b132f",
+          "excerpt": "## Message d'origine",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "RE: Question offre Gaz Indexé – client qui conteste",
+            "Message d'origine"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+          "excerpt": "# L'offre en bref",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "L'offre en bref"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+          "excerpt": "# Caractéristiques",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Caractéristiques"
+          ],
+          "block_kind": "table",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+          "excerpt": "# Cible",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Cible"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_historique_prix_repere_s1_2026_xlsx_d2581dcd",
+          "excerpt": "# Prix repère",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "xlsx",
+          "heading_path": [
+            "Prix repère"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "kind": "slide",
+          "number": 6,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "kind": "slide",
+          "number": 6,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_06_04_re_question_offre_gaz_indexe_eml_a12b132f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "RE: Question offre Gaz Indexé – client qui conteste"
+          ]
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "kind": "slide",
+          "number": 5,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "kind": "slide",
+          "number": 7,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_06_04_re_question_offre_gaz_indexe_eml_a12b132f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "RE: Question offre Gaz Indexé – client qui conteste",
+            "Message d'origine"
+          ]
+        },
+        {
+          "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "L'offre en bref"
+          ]
+        },
+        {
+          "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Caractéristiques"
+          ]
+        },
+        {
+          "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Cible"
+          ]
+        },
+        {
+          "document_id": "doc_historique_prix_repere_s1_2026_xlsx_d2581dcd",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Prix repère"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_e3975ef276e90c40",
+        "card_613b29db93522a77"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_13",
+      "chapter_id": "ch_3",
+      "title": "Offre Duo électricité + gaz",
+      "question": "Quelles sont les caractéristiques et les conditions de l'offre Duo électricité + gaz pour les particuliers ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "excerpt": "Remise de 5 € TTC par mois sur l'abonnement gaz\n\n• Une seule facture, une seule date de prélèvement\n\n• Cumulable avec toutes les offres de marché\n\n• Non cumulable avec le tarif réglementé",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 7
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "excerpt": "| Remise Duo (élec + gaz) | – 5,00 | – |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "kind": "slide",
+          "number": 7,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_14",
+      "chapter_id": "ch_3",
+      "title": "Elyra Vert Local",
+      "question": "Quelles sont les caractéristiques, le prix et les conditions de l'offre Elyra Vert Local pour les particuliers ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "excerpt": "Électricité verte issue de 42 producteurs indépendants des Savoie et de l'Ain\n\n• Le client choisit « son » producteur dans l'appli\n\n• Traçabilité par garanties d'origine émises en France\n\n• Commercialisation à partir du 15 novembre 2026",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 2
+        },
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "excerpt": "| Élément | Valeur |\n|---|---|\n| Prix du kWh Base 6 kVA | 0,2042 € TTC (fixe 2 ans) |\n| Abonnement | 16,20 € TTC/mois |\n| Supplément « producteur local » | Inclus dans le prix du kWh |\n| Engagement | Aucun |\n| Éligibilité | Particuliers, ≤ 36 kVA, France métropolitaine |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 4
+        },
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "excerpt": "Elyra Vert Local – mix des 42 producteurs partenaires\nSolaire (toitures agricoles)\n55 %\nPetite hydraulique\n30 %\nÉolien\n15 %",
+          "zone": "image",
+          "table_cell": null,
+          "excerpt_origin": "vision_unverified",
+          "image_id": "img_167d2013684b89d0",
+          "format": "pptx",
+          "slide": 3
+        },
+        {
+          "document_id": "doc_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_30ed41cf",
+          "excerpt": "Elyra Vert Local : souscriptible à partir du 1er novembre 2026 à 0,2042 € TTC/kWh",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "IMPORTANT – Nouvelle grille tarifaire au 1er septembre 2026"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 10
+        },
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "excerpt": "Plan de lancement",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 5
+        },
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "excerpt": "Argumentaire en 3 phrases",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 6
+        },
+        {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "excerpt": "## Vert Local",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Détail des échanges",
+            "Vert Local"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "kind": "slide",
+          "number": 2,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "kind": "slide",
+          "number": 4,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "kind": "slide",
+          "number": 3,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_08_31_nouvelle_grille_tarifaire_1er_septembre_eml_30ed41cf",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "IMPORTANT – Nouvelle grille tarifaire au 1er septembre 2026"
+          ]
+        },
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "kind": "slide",
+          "number": 5,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "kind": "slide",
+          "number": 6,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Détail des échanges",
+            "Vert Local"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_1b9961bd7843699b"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_15",
+      "chapter_id": "ch_4",
+      "title": "Gamme Professionnels 2026",
+      "question": "Quelles sont les offres d'électricité et de gaz proposées par Elyra Énergie pour les professionnels en 2026 ?",
+      "audience": "professionnels",
+      "sources": [
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "excerpt": "| Offre | Énergie | Prix | Engagement |\n|---|---|---|---|\n| Tarif réglementé | Électricité ≤ 36 kVA | TRVE | Aucun |\n| Elyra Pro Sérénité | Électricité | Fixe HT | 2 ans |\n| Elyra Pro Flex | Électricité | Indexé spot + marge | 1 an |\n| Elyra Pro Gaz Fixe | Gaz | Fixe HT | 2 ans |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 3
+        },
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "excerpt": "27 500 sites professionnels, dont 71 % de micro-entreprises\n\n• Principaux segments : commerce de proximité, restauration, artisans, professions libérales\n\n• Puissances de 6 à 36 kVA (C5) et de 36 à 250 kVA (C4)\n\n• Interlocuteur dédié au-delà de 3 sites",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 2
+        },
+        {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "excerpt": "# Résumé",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Résumé"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "excerpt": "# Traitement des objections",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Traitement des objections"
+          ],
+          "block_kind": "table",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "kind": "slide",
+          "number": 3,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "kind": "slide",
+          "number": 2,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Résumé"
+          ]
+        },
+        {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Traitement des objections"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_c6b7f051d611fa57"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_16",
+      "chapter_id": "ch_4",
+      "title": "Elyra Pro Sérénité",
+      "question": "Quelles sont les caractéristiques, le prix et les conditions de l'offre Elyra Pro Sérénité pour les professionnels ?",
+      "audience": "professionnels",
+      "sources": [
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "excerpt": "Prix du kWh HT bloqué pendant toute la durée du contrat\n\n• Engagement 2 ans\n\n• Indemnité en cas de résiliation anticipée (voir CGV Pro)\n\n• Bilan énergétique annuel offert\n\n• Cible : commerçants, restaurants, boulangeries",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 4
+        },
+        {
+          "document_id": "doc_brochure_elyra_pro_serenite_pdf_deb72888",
+          "excerpt": "| Poste | Prix HT |\n|---|---|\n| Abonnement | 38,90 €/mois |\n| kWh Heures Pleines | 0,1412 € |\n| kWh Heures Creuses | 0,1098 € |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "kind": "slide",
+          "number": 4,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_brochure_elyra_pro_serenite_pdf_deb72888",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [
+        "card_c6b7f051d611fa57"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_17",
+      "chapter_id": "ch_4",
+      "title": "Elyra Pro Flex",
+      "question": "Quelles sont les caractéristiques, le prix et les conditions de l'offre Elyra Pro Flex pour les professionnels ?",
+      "audience": "professionnels",
+      "sources": [
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "excerpt": "Prix indexé sur la moyenne mensuelle du marché spot + marge fixe de 15 €/MWh\n\n• Pour les clients capables de décaler leurs usages\n\n• Rapport mensuel de consommation détaillé\n\n• Engagement 1 an, renouvelable tacitement",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 5
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "kind": "slide",
+          "number": 5,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_18",
+      "chapter_id": "ch_4",
+      "title": "Elyra Pro Gaz Fixe",
+      "question": "Quelles sont les caractéristiques, le prix et les conditions de l'offre Elyra Pro Gaz Fixe pour les professionnels ?",
+      "audience": "professionnels",
+      "sources": [
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "excerpt": "| Offre | Énergie | Prix | Engagement | [...] | Elyra Pro Gaz Fixe | Gaz | Fixe HT | 2 ans |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 3
+        },
+        {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "excerpt": "Elyra Pro Gaz Fixe : prix fixe, engagement 2 ans",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Rappel de la gamme"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 2
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "kind": "slide",
+          "number": 3,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Rappel de la gamme"
+          ]
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_19",
+      "chapter_id": "ch_4",
+      "title": "Questions pour découvrir les besoins des professionnels",
+      "question": "Quelles questions poser à un professionnel pour identifier ses besoins en énergie ?",
+      "audience": "professionnels",
+      "sources": [
+        {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "excerpt": "# Découverte : les 5 questions",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Découverte : les 5 questions"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Découverte : les 5 questions"
+          ]
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_complement"
+    },
+    {
+      "id": "sub_20",
+      "chapter_id": "ch_5",
+      "title": "Droit de rétractation (particuliers)",
+      "question": "Quel est le délai de rétractation pour un client particulier ou professionnel après une souscription ? (particuliers)",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Rétractation : 14 jours après la souscription à distance ou hors établissement",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 9
+        },
+        {
+          "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+          "excerpt": "le client dispose d'un délai de quatorze (14) jours calendaires à compter de la conclusion du contrat pour exercer son droit de rétractation, sans avoir à justifier de motif ni à payer de pénalité.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "excerpt": "Le client dispose d'un délai de rétractation de 7 jours à compter de la souscription",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "4. Mentions obligatoires"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 1
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 9,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "4. Mentions obligatoires"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_2b35fe27346c6527",
+        "card_2012651dc44fa745"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_21",
+      "chapter_id": "ch_5",
+      "title": "Droit de rétractation (professionnels)",
+      "question": "Quel est le délai de rétractation pour un client particulier ou professionnel après une souscription ? (professionnels)",
+      "audience": "professionnels",
+      "sources": [
+        {
+          "document_id": "doc_cgv_professionnels_2026_pdf_b4e41bca",
+          "excerpt": "Le client professionnel employant cinq salariés au plus, qui conclut le contrat hors établissement et dont l'objet n'entre pas dans le champ de son activité principale, bénéficie du droit de rétractation de 14 jours prévu par le code de la consommation.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_cgv_professionnels_2026_pdf_b4e41bca",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [
+        "card_2012651dc44fa745"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_22",
+      "chapter_id": "ch_5",
+      "title": "Souscription d'un contrat",
+      "question": "Quelles sont les étapes et les informations nécessaires pour souscrire un contrat d'énergie ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "excerpt": "1. Le client emménage-t-il ou change-t-il de fournisseur ?\n\n2. Énergie(s) souhaitée(s) : électricité, gaz ou les deux (proposer l'offre Duo)\n\n3. Récupérer le PDL (14 chiffres) et/ou le PCE sur une ancienne facture\n\n4. Puissance souscrite et option tarifaire (Base ou HP/HC)\n\n5. Consommation annuelle estimée ou nombre d'occupants et mode de chauffage",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "2. Découverte du besoin"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "excerpt": "Prix du kWh et de l'abonnement TTC, durée de validité du prix\n\n- Le client dispose d'un délai de rétractation de 7 jours à compter de la souscription\n\n- Possibilité de résilier à tout moment\n\n- Envoi des conditions générales et de la fiche descriptive par e-mail",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "4. Mentions obligatoires"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+          "excerpt": "Le contrat peut être souscrit en ligne, par téléphone ou en agence.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "excerpt": "Récupérer le PDL / PCE (étiquette compteur, ancien occupant, ou recherche par adresse)\n\n- Vérifier si le logement est dans la zone de desserte (TRVE possible)",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Étape 2 – Nouveau logement"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "excerpt": "## Combien de temps pour une mise en service ?",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Contrat et souscription",
+            "Combien de temps pour une mise en service ?"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "excerpt": "# 5. Récapitulation et clôture",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "5. Récapitulation et clôture"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "2. Découverte du besoin"
+          ]
+        },
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "4. Mentions obligatoires"
+          ]
+        },
+        {
+          "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Étape 2 – Nouveau logement"
+          ]
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Contrat et souscription",
+            "Combien de temps pour une mise en service ?"
+          ]
+        },
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "5. Récapitulation et clôture"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_2b35fe27346c6527",
+        "card_2012651dc44fa745"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_23",
+      "chapter_id": "ch_5",
+      "title": "Points de vigilance qualité en souscription",
+      "question": "Quels sont les points de vigilance à respecter lors de la souscription d'un contrat pour un client ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "excerpt": "# Points de vigilance qualité",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Points de vigilance qualité"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Points de vigilance qualité"
+          ]
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_complement"
+    },
+    {
+      "id": "sub_24",
+      "chapter_id": "ch_6",
+      "title": "Structure d'une facture d'énergie",
+      "question": "Quelles sont les différentes parties d'une facture d'énergie et comment les expliquer ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "excerpt": "① Références : n° client, PDL/PCE, puissance, option\n\n• ② Consommation : index relevés ou estimés\n\n• ③ Abonnement : facturé d'avance\n\n• ④ Consommation × prix du kWh\n\n• ⑤ Taxes et contributions\n\n• ⑥ Total et date de prélèvement",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 2
+        },
+        {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "excerpt": "elyra ÉNERGIE\nFACTURE N° F-2026-0412877\nDate : 12/03/2026\n① Vos références\nRéf. client 40012345 · PDL 14 chiffres · Puissance 6 kVA · Option Base\n② Votre consommation\nIndex relevé 18 452 → 19 102 kWh = 650 kWh (relevé réel)\n③ Abonnement\nPériode du 01/02 au 28/02/2026\n④ Consommation\n650 kWh × prix du kWh de votre offre\n⑤ Taxes et contributions\nAccise sur l’électricité · CTA · TVA 20 %\n⑥ Total TTC à payer\nPrélèvement le 05/04/2026",
+          "zone": "image",
+          "table_cell": null,
+          "excerpt_origin": "vision_unverified",
+          "image_id": "img_f59b82e37b1d01ec",
+          "format": "pptx",
+          "slide": 2
+        },
+        {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "excerpt": "| Taxe | S'applique à | Remarque |\n|---|---|---|\n| Accise sur l'électricité / sur le gaz | Consommation (€/MWh) | Fixée par la loi de finances |\n| CTA | Part fixe de l'acheminement | Finance les retraites des industries électriques et gazières |\n| TVA | Abonnement, consommation et taxes | 20 % |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 4
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Le client paie trois composantes :\n\n- – la fourniture (seule part sur laquelle Elyra agit)\n\n- – l'acheminement (TURPE), reversé au GRD\n\n- – les taxes : accise, CTA, TVA",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 10
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Structure moyenne d'une facture d'électricité TTC\n(client particulier, option Base)\nFourniture\n(énergie + marge)\n41%\nAcheminement\n(TURPE)\n28%\nTaxes\n(accise, CTA, TVA)\n30%",
+          "zone": "image",
+          "table_cell": null,
+          "excerpt_origin": "vision_unverified",
+          "image_id": "img_1bdc911fd6755ebc",
+          "format": "pptx",
+          "slide": 10
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "excerpt": "## Pourquoi ma facture est-elle plus élevée ?",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Facturation et paiement",
+            "Pourquoi ma facture est-elle plus élevée ?"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "kind": "slide",
+          "number": 2,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "kind": "slide",
+          "number": 4,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 10,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Facturation et paiement",
+            "Pourquoi ma facture est-elle plus élevée ?"
+          ]
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_25",
+      "chapter_id": "ch_6",
+      "title": "Mensualisation et prélèvement",
+      "question": "Comment fonctionne la mensualisation et quand le prélèvement a-t-il lieu ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Mensualisation : prélèvement le 5 de chaque mois, facture de régularisation annuelle",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 9
+        },
+        {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "excerpt": "Mensualités calculées sur la consommation annuelle estimée\n\n• Prélèvement le 5 de chaque mois\n\n• Facture de régularisation à la date anniversaire\n\n• Le client peut demander un ajustement de mensualité à tout moment",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 5
+        },
+        {
+          "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+          "excerpt": "En cas de mensualisation, le prélèvement intervient le 5 de chaque mois.\n\n- Une facture de régularisation est émise chaque année à la date anniversaire du contrat.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "excerpt": "Si vous êtes mensualisé, le prélèvement a lieu le 10 de chaque mois.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Facturation et paiement",
+            "Quand suis-je prélevé ?"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_1e3245e3",
+          "excerpt": "la même FAQ indique un prélèvement le 10 du mois alors que nos CGV prévoient le 5.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "RE: Réclamation M. Lambert – frais de résiliation 50 €"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 9
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "excerpt": "## Puis-je payer par chèque ?",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Facturation et paiement",
+            "Puis-je payer par chèque ?"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 9,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "kind": "slide",
+          "number": 5,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Facturation et paiement",
+            "Quand suis-je prélevé ?"
+          ]
+        },
+        {
+          "document_id": "doc_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_1e3245e3",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "RE: Réclamation M. Lambert – frais de résiliation 50 €"
+          ]
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Facturation et paiement",
+            "Puis-je payer par chèque ?"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_2b3ebefacdf49f69"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_26",
+      "chapter_id": "ch_6",
+      "title": "Relevé de compteur et estimation",
+      "question": "Comment sont effectués les relevés de compteur et les estimations de consommation ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "excerpt": "Compteur Linky / Gazpar : index télérelevés, très rarement estimés\n\n• Ancien compteur : relève tous les 6 mois, estimation entre deux\n\n• Le client peut transmettre son auto-relève dans l'appli\n\n• Une estimation trop élevée se corrige à la facture suivante",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 3
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "kind": "slide",
+          "number": 3,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_27",
+      "chapter_id": "ch_7",
+      "title": "Frais de résiliation (particuliers)",
+      "question": "Quels sont les frais de résiliation pour un client particulier ? (particuliers)",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_2026_01_14_bienvenue_promo_janvier_eml_63b748ad",
+          "excerpt": "un client particulier dispose de 14 jours pour se rétracter et ne paie jamais de frais de résiliation.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "Bienvenue chez Elyra ! Votre parcours d'intégration démarre demain"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 11
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Résiliation : aucuns frais pour un client particulier, quelle que soit l'offre",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 9
+        },
+        {
+          "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+          "excerpt": "Aucun frais de résiliation\n\nConformément au code de la consommation, aucun frais ni aucune indemnité ne peut être réclamé au client résidentiel en cas de résiliation, y compris pour les offres à prix fixe.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_1e3245e3",
+          "excerpt": "Position juridique très claire : aucun frais de résiliation ne peut être facturé à un client particulier, quelle que soit l'offre, y compris Elyra Fixe 2 ans. C'est une obligation du code de la consommation, reprise à l'article 11 de nos CGV Particuliers.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "RE: Réclamation M. Lambert – frais de résiliation 50 €"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 5
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "excerpt": "Pour les offres sans engagement, aucun frais. Pour l'offre Elyra Fixe 2 ans, des frais de résiliation anticipée de 50 € TTC s'appliquent si le client part avant 12 mois.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Résiliation",
+            "Y a-t-il des frais si je résilie ?"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_1e3245e3",
+          "excerpt": "## Message d'origine",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "RE: Réclamation M. Lambert – frais de résiliation 50 €",
+            "Message d'origine"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_01_14_bienvenue_promo_janvier_eml_63b748ad",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Bienvenue chez Elyra ! Votre parcours d'intégration démarre demain"
+          ]
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 9,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_1e3245e3",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "RE: Réclamation M. Lambert – frais de résiliation 50 €"
+          ]
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Résiliation",
+            "Y a-t-il des frais si je résilie ?"
+          ]
+        },
+        {
+          "document_id": "doc_2026_10_13_re_reclamation_lambert_frais_resiliation_eml_1e3245e3",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "RE: Réclamation M. Lambert – frais de résiliation 50 €",
+            "Message d'origine"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_49acfa339577d3d3"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_28",
+      "chapter_id": "ch_7",
+      "title": "Frais de résiliation (professionnels)",
+      "question": "Quels sont les frais de résiliation pour un client professionnel ? (professionnels)",
+      "audience": "professionnels",
+      "sources": [
+        {
+          "document_id": "doc_cgv_professionnels_2026_pdf_b4e41bca",
+          "excerpt": "En cas de résiliation avant le terme de l'engagement, une indemnité égale à 25 % du montant estimé des consommations restant à courir jusqu'au terme est due. Cette indemnité n'est pas applicable aux micro-entreprises au sens de l'article L.332-1 du code de l'énergie lorsque l'offre souscrite est sans engagement.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "excerpt": "Indemnité en cas de résiliation anticipée (voir CGV Pro)",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 4
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_cgv_professionnels_2026_pdf_b4e41bca",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "kind": "slide",
+          "number": 4,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_29",
+      "chapter_id": "ch_7",
+      "title": "Changement de fournisseur",
+      "question": "Que se passe-t-il en cas de changement de fournisseur ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Changement de fournisseur : aucune coupure, aucun changement de compteur",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 9
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "excerpt": "Non, le nouveau fournisseur s'en charge ; la résiliation est automatique.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Résiliation",
+            "Dois-je résilier moi-même si je change de fournisseur ?"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 9,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Résiliation",
+            "Dois-je résilier moi-même si je change de fournisseur ?"
+          ]
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_30",
+      "chapter_id": "ch_8",
+      "title": "Procédure de déménagement",
+      "question": "Quelles sont les étapes à suivre pour un client qui déménage ?",
+      "audience": "particuliers",
+      "sources": [
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "excerpt": "1) Relever l'ancienne adresse et les index · 2) Résilier à la date de départ · 3) Mettre en service la nouvelle adresse · 4) Recalculer la mensualité.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Résumé"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 1
+        },
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "excerpt": "Demander la date de départ et les index du jour (ou télérelève Linky / Gazpar)\n\n- La résiliation est sans frais\n\n- La facture de clôture est émise sous 4 semaines",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Étape 1 – Ancien logement"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "excerpt": "Récupérer le PDL / PCE (étiquette compteur, ancien occupant, ou recherche par adresse)\n\n- Vérifier si le logement est dans la zone de desserte (TRVE possible)\n\n- Mise en service : 1 à 5 jours ouvrés ; mise en service express sous 24 h possible, facturée par le GRD\n\n- Si le compteur est coupé depuis plus de 6 mois, prévoir un déplacement technicien",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Étape 2 – Nouveau logement"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "excerpt": "Recalculer l'échéancier avec la surface, le nombre d'occupants et le mode de chauffage du nouveau logement. Informer le client de la nouvelle mensualité et de la date de prélèvement (le 5 du mois).",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Étape 3 – Mensualité"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "excerpt": "| Situation | Action |\n|---|---|\n| Client part à l'étranger | Résiliation simple, demander une adresse pour la facture de clôture |\n| Décès du titulaire | Voir procédure succession (PROC-SUCC-v2) |\n| Colocation | Un seul titulaire ; possibilité d'ajouter un co-titulaire |\n| Logement neuf sans compteur | Raccordement à demander au GRD par le client ou le promoteur |",
+          "zone": "table",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Cas particuliers"
+          ],
+          "block_kind": "table",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Résumé"
+          ]
+        },
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Étape 1 – Ancien logement"
+          ]
+        },
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Étape 2 – Nouveau logement"
+          ]
+        },
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Étape 3 – Mensualité"
+          ]
+        },
+        {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Cas particuliers"
+          ]
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_31",
+      "chapter_id": "ch_9",
+      "title": "Processus de réclamation",
+      "question": "Quelles sont les étapes pour traiter une réclamation d'un client ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "excerpt": "Réclamation reçue (N1)\nRéponse sous 15 jours\nEscalade N2 (service réclamations)\nRéponse écrite finale\nMédiateur (si > 2 mois sans solution)",
+          "zone": "image",
+          "table_cell": null,
+          "excerpt_origin": "vision_unverified",
+          "image_id": "img_16182fb4bb47c491",
+          "format": "docx",
+          "heading_path": [
+            "Le circuit en un coup d'œil"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "excerpt": "Qualifier la réclamation dans le CRM (motif, énergie, montant contesté)\n\n- Répondre sous 15 jours calendaires\n\n- Si non résolue ou client insatisfait : escalader au N2",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Niveau 1 – Conseiller"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "excerpt": "Réponse écrite finale signée par le responsable du service\n\n- Geste commercial autorisé jusqu'à 150 € sans validation\n\n- Mention obligatoire des voies de recours (Médiateur national de l'énergie)",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Niveau 2 – Service réclamations"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "excerpt": "Le client peut saisir gratuitement le Médiateur national de l'énergie si sa réclamation écrite n'a pas trouvé de solution dans un délai de 2 mois. Elyra Énergie applique les recommandations du médiateur dans 95 % des cas.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Médiation"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "excerpt": "Réclamation non résolue en 2 mois → Médiateur national de l'énergie",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 9
+        },
+        {
+          "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+          "excerpt": "Toute réclamation peut être adressée au service client par écrit ou par téléphone. Elyra Énergie s'engage à apporter une réponse dans un délai de 15 jours. Si la réclamation écrite n'a pas trouvé de solution dans un délai de deux mois, le client peut saisir gratuitement le Médiateur national de l'énergie.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "excerpt": "# Objectif",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Objectif"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Le circuit en un coup d'œil"
+          ]
+        },
+        {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Niveau 1 – Conseiller"
+          ]
+        },
+        {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Niveau 2 – Service réclamations"
+          ]
+        },
+        {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Médiation"
+          ]
+        },
+        {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 9,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Objectif"
+          ]
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_32",
+      "chapter_id": "ch_10",
+      "title": "Garanties d'origine et électricité verte",
+      "question": "Comment Elyra Énergie certifie-t-elle son électricité verte et que peut-on dire aux clients ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_07_02_note_garanties_origine_eml_e2105e6b",
+          "excerpt": "Toutes nos offres de marché sont couvertes par des garanties d'origine européennes, achetées principalement en Norvège et en Espagne.\n\n- L'offre Vert Local, lancée cet automne, ira plus loin avec des garanties achetées directement à des producteurs locaux.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "Électricité verte : comment répondre aux clients"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 7
+        },
+        {
+          "document_id": "doc_note_interne_garanties_origine_2026_07_01_pdf_1f4416b8",
+          "excerpt": "Toute l'électricité verte vendue par Elyra est couverte par des garanties d'origine (GO) issues d'installations situées en France. Aucune GO étrangère n'est achetée depuis le 1er janvier 2026.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_note_interne_garanties_origine_2026_07_01_pdf_1f4416b8",
+          "excerpt": "Ce que les conseillers peuvent dire\n\n- « Pour chaque kWh que vous consommez, un kWh renouvelable a été produit en France. »\n\n- Ne pas dire que les électrons consommés proviennent physiquement d'une centrale verte.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pdf",
+          "page": 1
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "excerpt": "Oui : pour chaque kWh consommé, une garantie d'origine certifie qu'un kWh d'origine renouvelable a été injecté sur le réseau européen.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Énergie verte",
+            "Votre électricité est-elle vraiment verte ?"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_07_02_note_garanties_origine_eml_e2105e6b",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Électricité verte : comment répondre aux clients"
+          ]
+        },
+        {
+          "document_id": "doc_note_interne_garanties_origine_2026_07_01_pdf_1f4416b8",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Énergie verte",
+            "Votre électricité est-elle vraiment verte ?"
+          ]
+        }
+      ],
+      "card_ids": [],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_33",
+      "chapter_id": "ch_11",
+      "title": "Programme de parrainage",
+      "question": "Quelles sont les conditions et les modalités du programme de parrainage ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_7200181f",
+          "excerpt": "1. Parrainage : lancement le 1er octobre. Parrain et filleul reçoivent chacun 30 € de remise, dans la limite de 10 parrainages par an.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "Décisions du comité Offres : parrainage et Vert Local"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 6
+        },
+        {
+          "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+          "excerpt": "Le parrain, client Elyra, partage son code depuis l'appli\n\n• Le filleul souscrit une offre de marché électricité ou gaz\n\n• 50 € de remise pour le parrain et 50 € pour le filleul\n\n• Remise déduite de la première facture du filleul et de la prochaine facture du parrain\n\n• Jusqu'à 10 parrainages par an",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 3
+        },
+        {
+          "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+          "excerpt": "Filleul : nouveau client, non client Elyra depuis 12 mois\n\n• Non applicable au tarif réglementé\n\n• Valable à partir du 1er octobre 2026\n\n• Code renseigné au plus tard au moment de la souscription",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 4
+        },
+        {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "excerpt": "Le marketing proposait 50 € par personne. Le contrôle de gestion a jugé le coût d'acquisition trop élevé au regard de la marge sur les offres fixes. Le comité retient 30 €, avec revue au bout de 6 mois.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Détail des échanges",
+            "Parrainage"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+          "excerpt": "Le visuel",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "pptx",
+          "slide": 2
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_7200181f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Décisions du comité Offres : parrainage et Vert Local"
+          ]
+        },
+        {
+          "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+          "kind": "slide",
+          "number": 3,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+          "kind": "slide",
+          "number": 4,
+          "heading_path": null
+        },
+        {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Détail des échanges",
+            "Parrainage"
+          ]
+        },
+        {
+          "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+          "kind": "slide",
+          "number": 2,
+          "heading_path": null
+        }
+      ],
+      "card_ids": [
+        "card_99fcfa15353f74a7"
+      ],
+      "origin": "plan_sujets"
+    },
+    {
+      "id": "sub_34",
+      "chapter_id": "ch_12",
+      "title": "Horaires du service client",
+      "question": "Quels sont les horaires d'ouverture du service client ?",
+      "audience": "tous",
+      "sources": [
+        {
+          "document_id": "doc_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_7200181f",
+          "excerpt": "3. Horaires : passage à 9h–18h du lundi au vendredi à partir du 2 novembre. Sophie vous enverra la communication officielle.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "Décisions du comité Offres : parrainage et Vert Local"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 8
+        },
+        {
+          "document_id": "doc_2026_10_01_changement_horaires_service_client_eml_b47ec27c",
+          "excerpt": "Du lundi au vendredi : 9h – 18h\n\n- Samedi : fermé (le client peut demander un rappel programmé depuis l'appli ou le site)",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "Nouveaux horaires du service client à compter du 2 novembre"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 5
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "excerpt": "Le service client est joignable du lundi au vendredi de 8h à 19h et le samedi de 9h à 12h, au 09 99 99 20 26 (appel non surtaxé).",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Contrat et souscription",
+            "Quels sont vos horaires ?"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_2026_10_01_changement_horaires_service_client_eml_b47ec27c",
+          "excerpt": "Jusqu'au 31 octobre inclus, les horaires actuels restent en vigueur.",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "Nouveaux horaires du service client à compter du 2 novembre"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 7
+        },
+        {
+          "document_id": "doc_2026_10_01_changement_horaires_service_client_eml_b47ec27c",
+          "excerpt": "Merci d'utiliser dès le 2 novembre la nouvelle phrase d'accueil : « Elyra Énergie, bonjour, je suis [prénom]. Notre service client vous répond du lundi au vendredi de 9h à 18h. »",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "eml",
+          "heading_path": [
+            "Nouveaux horaires du service client à compter du 2 novembre"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 8
+        },
+        {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "excerpt": "## Horaires",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "Détail des échanges",
+            "Horaires"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        },
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "excerpt": "# 1. Accueil",
+          "zone": "text",
+          "table_cell": null,
+          "excerpt_origin": "source_text",
+          "image_id": null,
+          "format": "docx",
+          "heading_path": [
+            "1. Accueil"
+          ],
+          "block_kind": "paragraph",
+          "block_index": 0
+        }
+      ],
+      "units": [
+        {
+          "document_id": "doc_2026_09_23_decisions_comite_offres_parrainage_vertlocal_eml_7200181f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Décisions du comité Offres : parrainage et Vert Local"
+          ]
+        },
+        {
+          "document_id": "doc_2026_10_01_changement_horaires_service_client_eml_b47ec27c",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Nouveaux horaires du service client à compter du 2 novembre"
+          ]
+        },
+        {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Contrat et souscription",
+            "Quels sont vos horaires ?"
+          ]
+        },
+        {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Détail des échanges",
+            "Horaires"
+          ]
+        },
+        {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "1. Accueil"
+          ]
+        }
+      ],
+      "card_ids": [
+        "card_5c0d236c1475a43f"
+      ],
+      "origin": "plan_sujets"
+    }
+  ],
+  "coverage": {
+    "units_total": 133,
+    "units_covered": 98
+  },
+  "attention": {
+    "retired_documents_detection": "available",
+    "retired_documents": [
+      {
+        "document_id": "doc_grille_tarifaire_particuliers_v1_2025_08_01_pdf_b281f8c1",
+        "document_path": "Grille_Tarifaire_Particuliers_v1_2025-08-01.pdf",
+        "replaced_by_document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+        "replaced_by_document_path": "Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf",
+        "card_id": "card_24fcb03db294f6f6",
+        "decision_id": "dec_card_24fcb03db294f6f6"
+      }
+    ],
+    "uncovered_units": [
+      {
+        "unit": {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 1,
+          "heading_path": null
+        },
+        "document_path": "2026-01-15_Formation_Onboarding_Conseillers_Energie.pptx",
+        "excerpt": "Onboarding conseillers – Les fondamentaux de l'énergie",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 2,
+          "heading_path": null
+        },
+        "document_path": "2026-01-15_Formation_Onboarding_Conseillers_Energie.pptx",
+        "excerpt": "Objectifs du module",
+        "reason": "internal"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+          "kind": "slide",
+          "number": 11,
+          "heading_path": null
+        },
+        "document_path": "2026-01-15_Formation_Onboarding_Conseillers_Energie.pptx",
+        "excerpt": "Synthèse du module",
+        "reason": "duplicate"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+          "kind": "slide",
+          "number": 1,
+          "heading_path": null
+        },
+        "document_path": "2026-03-10_Presentation_Gamme_Particuliers_2026.pptx",
+        "excerpt": "Gamme Particuliers 2026",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "kind": "slide",
+          "number": 1,
+          "heading_path": null
+        },
+        "document_path": "2026-03-12_Presentation_Gamme_Professionnels_2026.pptx",
+        "excerpt": "Gamme Professionnels 2026",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+          "kind": "slide",
+          "number": 7,
+          "heading_path": null
+        },
+        "document_path": "2026-03-12_Presentation_Gamme_Professionnels_2026.pptx",
+        "excerpt": "Synthèse",
+        "reason": "duplicate"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "kind": "slide",
+          "number": 1,
+          "heading_path": null
+        },
+        "document_path": "2026-04-08_Formation_Lecture_Facture.pptx",
+        "excerpt": "Module 2 – Lire et expliquer une facture",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+          "kind": "slide",
+          "number": 6,
+          "heading_path": null
+        },
+        "document_path": "2026-04-08_Formation_Lecture_Facture.pptx",
+        "excerpt": "Synthèse",
+        "reason": "duplicate"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "kind": "slide",
+          "number": 1,
+          "heading_path": null
+        },
+        "document_path": "2026-06-02_Formation_Gaz_Fin_TRV_Offres_Marche.pptx",
+        "excerpt": "Formation Gaz naturel",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "kind": "slide",
+          "number": 2,
+          "heading_path": null
+        },
+        "document_path": "2026-06-02_Formation_Gaz_Fin_TRV_Offres_Marche.pptx",
+        "excerpt": "Pourquoi cette formation ?",
+        "reason": "internal"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_06_02_formation_gaz_fin_trv_offres_marche_pptx_c8efb073",
+          "kind": "slide",
+          "number": 8,
+          "heading_path": null
+        },
+        "document_path": "2026-06-02_Formation_Gaz_Fin_TRV_Offres_Marche.pptx",
+        "excerpt": "À retenir",
+        "reason": "duplicate"
+      },
+      {
+        "unit": {
+          "document_id": "doc_2026_09_20_lancement_offre_vert_local_pptx_786d10e9",
+          "kind": "slide",
+          "number": 1,
+          "heading_path": null
+        },
+        "document_path": "2026-09-20_Lancement_Offre_Vert_Local.pptx",
+        "excerpt": "Lancement Elyra Vert Local",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+          "kind": "section",
+          "number": null,
+          "heading_path": []
+        },
+        "document_path": "Argumentaire_Commercial_TPE_Artisans.docx",
+        "excerpt": "Argumentaire commercial – TPE et artisans",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "kind": "section",
+          "number": null,
+          "heading_path": []
+        },
+        "document_path": "CR_Comite_Offres_2026-09-22.docx",
+        "excerpt": "Compte rendu – Comité Offres & Prix du 22 septembre 2026",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Participants"
+          ]
+        },
+        "document_path": "CR_Comite_Offres_2026-09-22.docx",
+        "excerpt": "# Participants",
+        "reason": "internal"
+      },
+      {
+        "unit": {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Détail des échanges"
+          ]
+        },
+        "document_path": "CR_Comite_Offres_2026-09-22.docx",
+        "excerpt": "# Détail des échanges",
+        "reason": "internal"
+      },
+      {
+        "unit": {
+          "document_id": "doc_cr_comite_offres_2026_09_22_docx_c63de454",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Prochain comité"
+          ]
+        },
+        "document_path": "CR_Comite_Offres_2026-09-22.docx",
+        "excerpt": "# Prochain comité",
+        "reason": "internal"
+      },
+      {
+        "unit": {
+          "document_id": "doc_courrier_reclamation_lambert_2026_10_06_pdf_c2128cf1",
+          "kind": "page",
+          "number": 1,
+          "heading_path": null
+        },
+        "document_path": "Courrier_reclamation_Lambert_2026-10-06.pdf",
+        "excerpt": "![Image](image:img_3b0dfd44b73a0cd3)",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": []
+        },
+        "document_path": "FAQ_Conseillers_Particuliers_avril2026.docx",
+        "excerpt": "FAQ conseillers – Questions fréquentes des particuliers",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Comment utiliser cette FAQ ?"
+          ]
+        },
+        "document_path": "FAQ_Conseillers_Particuliers_avril2026.docx",
+        "excerpt": "# Comment utiliser cette FAQ ?",
+        "reason": "internal"
+      },
+      {
+        "unit": {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Contrat et souscription"
+          ]
+        },
+        "document_path": "FAQ_Conseillers_Particuliers_avril2026.docx",
+        "excerpt": "# Contrat et souscription",
+        "reason": "duplicate"
+      },
+      {
+        "unit": {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Facturation et paiement"
+          ]
+        },
+        "document_path": "FAQ_Conseillers_Particuliers_avril2026.docx",
+        "excerpt": "# Facturation et paiement",
+        "reason": "duplicate"
+      },
+      {
+        "unit": {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Résiliation"
+          ]
+        },
+        "document_path": "FAQ_Conseillers_Particuliers_avril2026.docx",
+        "excerpt": "# Résiliation",
+        "reason": "duplicate"
+      },
+      {
+        "unit": {
+          "document_id": "doc_faq_conseillers_particuliers_avril2026_docx_2f37ca27",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Énergie verte"
+          ]
+        },
+        "document_path": "FAQ_Conseillers_Particuliers_avril2026.docx",
+        "excerpt": "# Énergie verte",
+        "reason": "duplicate"
+      },
+      {
+        "unit": {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "kind": "section",
+          "number": null,
+          "heading_path": []
+        },
+        "document_path": "Fiche_Offre_Elyra_Fixe_2ans.docx",
+        "excerpt": "Fiche offre – Elyra Fixe 2 ans",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Objections fréquentes"
+          ]
+        },
+        "document_path": "Fiche_Offre_Elyra_Fixe_2ans.docx",
+        "excerpt": "# Objections fréquentes",
+        "reason": "duplicate"
+      },
+      {
+        "unit": {
+          "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+          "kind": "section",
+          "number": null,
+          "heading_path": []
+        },
+        "document_path": "Fiche_Offre_Gaz_Indexe.docx",
+        "excerpt": "Fiche offre – Elyra Gaz Indexé",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_fiche_offre_gaz_indexe_docx_4bb31fb7",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Synthèse"
+          ]
+        },
+        "document_path": "Fiche_Offre_Gaz_Indexe.docx",
+        "excerpt": "# Synthèse",
+        "reason": "duplicate"
+      },
+      {
+        "unit": {
+          "document_id": "doc_flyer_parrainage_octobre2026_pptx_e9ad5175",
+          "kind": "slide",
+          "number": 1,
+          "heading_path": null
+        },
+        "document_path": "Flyer_Parrainage_Octobre2026.pptx",
+        "excerpt": "Programme de parrainage Elyra",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+          "kind": "page",
+          "number": 2,
+          "heading_path": null
+        },
+        "document_path": "Grille_Tarifaire_Particuliers_v2_2026-09-01.pdf",
+        "excerpt": "## Mentions",
+        "reason": "other"
+      },
+      {
+        "unit": {
+          "document_id": "doc_procedure_demenagement_clients_particuliers_docx_66be1f6e",
+          "kind": "section",
+          "number": null,
+          "heading_path": []
+        },
+        "document_path": "Procedure_Demenagement_Clients_Particuliers.docx",
+        "excerpt": "Procédure – Déménagement d'un client particulier",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "kind": "section",
+          "number": null,
+          "heading_path": []
+        },
+        "document_path": "Process_Reclamations_et_Mediation.docx",
+        "excerpt": "Processus de traitement des réclamations",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_process_reclamations_et_mediation_docx_cefaed44",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Indicateurs suivis"
+          ]
+        },
+        "document_path": "Process_Reclamations_et_Mediation.docx",
+        "excerpt": "# Indicateurs suivis",
+        "reason": "internal"
+      },
+      {
+        "unit": {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "kind": "section",
+          "number": null,
+          "heading_path": []
+        },
+        "document_path": "Script_Appel_Souscription_Particuliers_v4.docx",
+        "excerpt": "Script d'appel – Souscription d'un contrat particulier",
+        "reason": "no_content"
+      },
+      {
+        "unit": {
+          "document_id": "doc_script_appel_souscription_particuliers_v4_docx_bab37639",
+          "kind": "section",
+          "number": null,
+          "heading_path": [
+            "Objectif du script"
+          ]
+        },
+        "document_path": "Script_Appel_Souscription_Particuliers_v4.docx",
+        "excerpt": "# Objectif du script",
+        "reason": "internal"
+      }
+    ],
+    "merged_subjects": [],
+    "unattached_cards": [
+      {
+        "card_id": "card_fb56f8acaf896e2b",
+        "reason": "no_subject_passage"
+      },
+      {
+        "card_id": "card_dfdd3bdd4c45a994",
+        "reason": "no_subject_passage"
+      }
+    ],
+    "rejected_subjects": [],
+    "unverified_quotes": 4
+  },
+  "run": {
+    "model": "mistral-large-2512",
+    "prompts": [
+      {
+        "prompt_id": "plan_sujets",
+        "prompt_version": 2
+      },
+      {
+        "prompt_id": "plan_complement",
+        "prompt_version": 2
+      }
+    ],
+    "calls": 2,
+    "cost_usd": 0.040717,
+    "duration_seconds": 160.286,
+    "pipeline_commit": null
+  }
+}

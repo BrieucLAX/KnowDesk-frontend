@@ -257,4 +257,4 @@ export function planFailureMessage(code: string | null): string {
 
 /** Ce que dit le champ de commentaire du plan : une remarque pour l'équipe, jamais dans la base. */
 export const PLAN_COMMENT_HINT = 'Pour l\'équipe Knowdesk seulement : ce commentaire n\'entre jamais dans la base, '
-  + 'et le plan ne change pas.';
+  + 'et ne modifie pas le plan (pour le ranger : « Modifier le plan »).';

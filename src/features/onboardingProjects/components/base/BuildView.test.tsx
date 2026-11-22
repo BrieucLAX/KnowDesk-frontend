@@ -6,7 +6,7 @@ vi.mock('../../api/onboardingApi', () => ({
   onboardingApi: {
     listAnalyses: vi.fn(), getAudit: vi.fn(), listAuditImages: vi.fn(), getAuditImage: vi.fn(), listDecisions: vi.fn(),
     listCorrections: vi.fn(), launchCorrection: vi.fn(), getBase: vi.fn(),
-    listPlans: vi.fn(), launchPlan: vi.fn(), getPlanContent: vi.fn(), listPlanComments: vi.fn(),
+    listPlans: vi.fn(), getPlanEdits: vi.fn(), editPlan: vi.fn(), undoPlanEdit: vi.fn(), resetPlanEdits: vi.fn(), launchPlan: vi.fn(), getPlanContent: vi.fn(), listPlanComments: vi.fn(),
     commentPlan: vi.fn(), cancelPlanComment: vi.fn(),
     listBuilds: vi.fn(), launchBuild: vi.fn(), getBuildContent: vi.fn(), listBuildComments: vi.fn(),
     commentBuild: vi.fn(), cancelBuildComment: vi.fn(),
@@ -74,7 +74,11 @@ function mock(builds: OnboardingBuild[] = [], launch: BuildLaunch = { allowed: t
 const show = () => render(<BaseTab project={project} onGoToClarify={() => {}} />);
 const openTab = async (name: RegExp | string) => fireEvent.click(await screen.findByRole('tab', { name }));
 
-beforeEach(() => { mock(); });
+beforeEach(() => {
+  // Back d'avant l'étape 4 : pas de plan modifié, le plan proposé se lit.
+  vi.mocked(onboardingApi.getPlanEdits).mockRejectedValue(new Error('route absente'));
+  mock();
+});
 afterEach(() => { vi.clearAllMocks(); });
 
 describe('« Nouvelle base » en mode construire : lancer la rédaction depuis le plan', () => {
@@ -194,6 +198,21 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
     await openTab('Articles rédigés');
     await screen.findByRole('heading', { name: 'Horaires du service client' });
     expect(screen.queryByLabelText('Public de ce passage')).not.toBeInTheDocument();
+  });
+
+  it('étape 4 : une rédaction d\'un plan modifié le dit dans l\'en-tête ; sans modification, ou avant la migration du back, rien', async () => {
+    mock([buildRow({ planEditCount: 3 })]);
+    const { unmount } = show();
+    await openTab('Articles rédigés');
+    expect(await screen.findByRole('heading', { name: /^Articles rédigés le .*, à partir du plan du .*, modifié \(3 modifications\)$/ })).toBeInTheDocument();
+    unmount();
+    for (const count of [0, null]) {
+      mock([buildRow({ planEditCount: count })]);
+      const view = show();
+      await openTab('Articles rédigés');
+      expect(await screen.findByRole('heading', { name: /^Articles rédigés le / })).not.toHaveTextContent('modifié');
+      view.unmount();
+    }
   });
 
   it('par catégorie, chaque article : question, public, blocs, sources, sans aucun code', async () => {

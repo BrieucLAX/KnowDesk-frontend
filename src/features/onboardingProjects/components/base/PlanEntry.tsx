@@ -9,6 +9,7 @@ import type { Decision } from '../../lib/decisions';
 import { versionCardsWaiting, versionCardWaitingMessage, type ReadingCard } from '../../lib/reading';
 import { blockingCardsLeft } from '../../lib/correction';
 import { isPlanActive, planFailureMessage, type OnboardingPlan, type PlanQuota } from '../../lib/plan';
+import { editCountLabel } from '../../lib/planEdits';
 
 interface PlanEntryProps {
   projectId:  string;
@@ -41,6 +42,8 @@ export function PlanEntry({ projectId, analysisId, cards, current, onOpenBase }:
   const [quota,     setQuota]     = useState<PlanQuota | null>(null);
   const [launching, setLaunching] = useState(false);
   const [confirm,   setConfirm]   = useState(false);
+  /** Modifications en vigueur du plan actuel (étape 4) : le nouveau plan ne les reprend pas (Q5 a). */
+  const [editCount, setEditCount] = useState(0);
 
   const load = useCallback(async () => {
     const res = await onboardingApi.listPlans(projectId, analysisId);
@@ -52,6 +55,18 @@ export function PlanEntry({ projectId, analysisId, cards, current, onOpenBase }:
     // Échec silencieux (route absente avant le déploiement du back) : aucun plan, le bouton reste.
     load().catch(() => setPlans([]));
   }, [load]);
+
+  // Le plan actuel, le dernier réussi : ses modifications, en silence sans la route (back d'avant).
+  const currentPlanId = plans?.find(p => p.status === 'succeeded')?.id ?? null;
+  useEffect(() => {
+    setEditCount(0);
+    if (currentPlanId === null) return;
+    let cancelled = false;
+    onboardingApi.getPlanEdits(projectId, currentPlanId)
+      .then(e => { if (!cancelled) setEditCount(e.editCount); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [projectId, currentPlanId]);
 
   const launch = async () => {
     setConfirm(false);
@@ -72,7 +87,7 @@ export function PlanEntry({ projectId, analysisId, cards, current, onOpenBase }:
       <h3 className="obp-plan-entry__title">Plan de la nouvelle base</h3>
       <p className="obp-muted">
         Knowdesk propose des catégories et des articles, chacun avec ses sources dans vos documents.
-        Vous pourrez le lire et le commenter.
+        Vous pourrez le lire, le commenter et le ranger à votre façon.
       </p>
     </>
   );
@@ -131,7 +146,9 @@ export function PlanEntry({ projectId, analysisId, cards, current, onOpenBase }:
       {confirm && (
         <ConfirmDialog
           title="Préparer à nouveau le plan ?"
-          description="Un nouveau plan sera préparé avec vos réponses actuelles. Le plan actuel et ses commentaires resteront consultables, mais ne se commenteront plus."
+          description={editCount > 0
+            ? `Vos ${editCountLabel(editCount)} du plan actuel ne seront pas reprises : le nouveau plan repart de la proposition de Knowdesk, avec vos réponses actuelles. Le plan actuel, ses modifications et ses commentaires resteront consultables, mais ne se modifieront ni ne se commenteront plus.`
+            : 'Un nouveau plan sera préparé avec vos réponses actuelles. Le plan actuel et ses commentaires resteront consultables, mais ne se commenteront plus.'}
           confirmLabel="Préparer à nouveau"
           cancelLabel="Annuler"
           variant="primary"

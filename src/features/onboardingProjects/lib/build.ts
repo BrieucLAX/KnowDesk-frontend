@@ -39,6 +39,8 @@ export interface OnboardingBuild {
   createdAt:     string;
   submittedAt:   string | null;
   finishedAt:    string | null;
+  /** Modifications du plan envoyé à cette rédaction (0 : le plan proposé) ; null avant la migration 63 du back. */
+  planEditCount?: number | null;
 }
 
 /** Ce que le back dit du lancement : permis, ou refusé avec son message (C-Q1 : réponses changées). */
