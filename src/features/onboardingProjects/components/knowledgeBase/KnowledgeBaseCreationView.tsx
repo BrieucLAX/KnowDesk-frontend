@@ -349,10 +349,12 @@ export function KnowledgeBaseCreationView({
       </div>
 
       <ul className="obp-kb__facts">
-        <li>
-          Articles de l'organisation : {c.quota.current} aujourd'hui, {c.quota.after} après la création (limite de {c.quota.limit},
-          les articles archivés ne comptent pas).
-        </li>
+        {c.quota.limit !== null && (
+          <li>
+            Articles de l'organisation : {c.quota.current} aujourd'hui, {c.quota.after} après la création (limite de {c.quota.limit},
+            les articles archivés ne comptent pas).
+          </li>
+        )}
         {c.references.unresolved > 0 && (
           <li>
             {plural(c.references.unresolved, 'renvoi « chapitre N » n\'a pas trouvé son article : il reste', 'renvois « chapitre N » n\'ont pas trouvé leur article : ils restent')} en texte.

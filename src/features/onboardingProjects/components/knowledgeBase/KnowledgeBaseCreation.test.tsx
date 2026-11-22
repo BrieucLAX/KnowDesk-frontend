@@ -173,6 +173,23 @@ describe('Créer la base de connaissance (plan-articles-v1, lot 2)', () => {
     expect(screen.getByText(/20 aujourd'hui, 52 après la création/)).toBeInTheDocument();
   });
 
+  it('offre sans limite d\'articles (par défaut, D6) : ni ligne de limite, ni blocage, même au-delà de 50', async () => {
+    const recorded = PREVIEW_NOT_EMPTY as Recorded;
+    const data = recorded.body.data as Record<string, unknown>;
+    vi.mocked(onboardingApi.previewKnowledgeBase).mockResolvedValue(ok({
+      ...recorded, body: { ...recorded.body, data: { ...data, knowledgeBaseEmpty: true, quota: { limit: null, current: 20, toCreate: 32, after: 52, allowed: true } } },
+    }));
+    renderView();
+    expect(await screen.findByRole('button', { name: 'Créer la base de connaissance' })).toBeEnabled();
+    expect(screen.queryByText(/Articles de l'organisation/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Limite de/)).not.toBeInTheDocument();
+  });
+
+  it('refus d\'une offre limitée (message du back) : la limite, puis ce qu\'il faut faire', () => {
+    const err = new ApiError('FORBIDDEN', 'Limite de 50 articles atteinte pour votre offre.', 403);
+    expect(creationErrorMessage(err)).toBe('Limite de 50 articles atteinte pour votre offre. Archivez des articles pour libérer de la place.');
+  });
+
   it('refus du back au clic (base remplie entre l\'aperçu et la création) : message clair, l\'état est relu', async () => {
     vi.mocked(onboardingApi.createKnowledgeBase).mockRejectedValue(refusal(CREATE_NOT_EMPTY));
     vi.mocked(onboardingApi.getKnowledgeBaseCreation).mockResolvedValue({ ...creation(PREVIEW as Recorded), knowledgeBaseEmpty: false });

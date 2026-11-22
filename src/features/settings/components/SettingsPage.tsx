@@ -608,6 +608,14 @@ function SectionNotifications() {
 function SectionBilling() {
   const billing = MOCK_BILLING;
   const isPro   = billing.plan === 'pro';
+  // La limite d'articles de l'offre (back : `article_limit`, null sans limite ; décision D6 du
+  // 2026-11-22) : la ligne ne s'affiche que si l'offre en a une.
+  const [articleLimit, setArticleLimit] = useState<number | null>(null);
+  useEffect(() => {
+    apiClient.get<{ article_limit?: number | null }>('/settings/org')
+      .then(org => setArticleLimit(org.article_limit ?? null))
+      .catch(() => setArticleLimit(null));
+  }, []);
 
   return (
     <section className="settings-section" aria-labelledby="billing-title">
@@ -633,10 +641,12 @@ function SectionBilling() {
             <span>Membres actifs</span>
             <span className="billing-limit-row__val">{billing.seatsUsed} / {billing.seats}</span>
           </div>
-          <div className="billing-limit-row">
-            <span>Articles</span>
-            <span className="billing-limit-row__val">50 max</span>
-          </div>
+          {articleLimit !== null && (
+            <div className="billing-limit-row">
+              <span>Articles</span>
+              <span className="billing-limit-row__val">{articleLimit} max</span>
+            </div>
+          )}
         </div>
       </div>
       {!isPro && (
