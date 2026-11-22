@@ -71,7 +71,7 @@ function mock(edits: PlanEditsState | Error = FRESH, comments: PlanComment[] = [
 }
 
 const show = () => render(<BaseTab project={project} onGoToClarify={() => {}} />);
-const article = (title: string) => screen.getByRole('heading', { name: new RegExp(`^${title.replace(/[()]/g, '\\$&')}( Modifié)?$`) }).closest('article')!;
+const article = (title: string) => screen.getByRole('heading', { name: new RegExp(`^${title.replace(/[()]/g, '\\$&')}( Modifié par vous)?$`) }).closest('article')!;
 const startEditing = async () => fireEvent.click(await screen.findByRole('button', { name: 'Modifier le plan' }));
 
 // Le plan réel (34 articles et leurs sources) est long à rendre quand toute la suite tourne en parallèle.
@@ -108,7 +108,7 @@ describe('Le plan se modifie : « Modifier le plan »', () => {
     expect(screen.getByRole('button', { name: 'Monter la catégorie « Présentation de l\'entreprise »' })).toBeDisabled();
   });
 
-  it('renommer un article : le titre seulement, envoyé avec la tête du journal ; « Modifié » ensuite', async () => {
+  it('renommer un article : le titre seulement, envoyé avec la tête du journal ; « Modifié par vous » ensuite', async () => {
     const after: PlanEditsState = {
       ...FRESH, headId: '00000000-0000-4000-8000-000000000001', editCount: 1, changedSubjectIds: ['sub_1'],
       plan: { ...PROPOSED, subjects: PROPOSED.subjects.map(s => (s.id === 'sub_1' ? { ...s, title: 'Qui est Elyra ?' } : s)) },
@@ -126,7 +126,7 @@ describe('Le plan se modifie : « Modifier le plan »', () => {
     fireEvent.change(within(dialog).getByLabelText('Nouveau nom'), { target: { value: '  Qui est Elyra ?  ' } });
     fireEvent.click(within(dialog).getByRole('button', { name: 'Renommer' }));
     await waitFor(() => expect(onboardingApi.editPlan).toHaveBeenCalledWith('p1', PLAN_ID, null, { kind: 'rename_subject', subjectId: 'sub_1', title: 'Qui est Elyra ?' }));
-    expect(await screen.findByRole('heading', { name: 'Qui est Elyra ? Modifié' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Qui est Elyra ? Modifié par vous' })).toBeInTheDocument();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(screen.getByText('Article « Elyra Énergie » renommé « Qui est Elyra ? »')).toBeInTheDocument();
   });
@@ -213,14 +213,14 @@ describe('Le plan modifié : ce qui a changé, et revenir en arrière', () => {
     author: { id: 'u1', name: 'Experte Elyra' }, createdAt: '2026-11-21T10:00:00Z', cancelledAt: null, cancelledBy: null,
   };
 
-  it('le plan modifié, « Modifié », « Vos modifications », « Retirés ou réunis » avec leurs commentaires, sans aucun code', async () => {
+  it('le plan modifié, « Modifié par vous », « Vos modifications », « Retirés ou réunis » avec leurs commentaires, sans aucun code', async () => {
     mock(MODIFIED, [COMMENT]);
     const { container } = show();
     expect(await screen.findByText('13 catégories · 31 articles · 98 passages couverts sur 133')).toBeInTheDocument();
     expect(screen.getByText(/Plan modifié par vous : 10 modifications\./)).toBeInTheDocument();
     expect(screen.getByText('Catégorie 1 · Fonctionnement du secteur de l\'énergie')).toBeInTheDocument();
     expect(screen.getByText('Catégorie 3 · Le marché de l\'énergie')).toBeInTheDocument();
-    expect(screen.getAllByText('Modifié').length).toBe(9);
+    expect(screen.getAllByText('Modifié par vous').length).toBe(9);
     expect(article('Elyra Gaz Indexé')).toHaveTextContent('Particuliers et professionnels');
 
     const panel = screen.getByRole('region', { name: 'Vos modifications (10)' });
@@ -244,7 +244,7 @@ describe('Le plan modifié : ce qui a changé, et revenir en arrière', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Voir le plan proposé' }));
     expect(screen.getByText('12 catégories · 34 articles · 98 passages couverts sur 133')).toBeInTheDocument();
     expect(screen.getByText(/Vous voyez le plan proposé par Knowdesk, sans vos modifications\./)).toBeInTheDocument();
-    expect(screen.queryByText('Modifié')).not.toBeInTheDocument();
+    expect(screen.queryByText('Modifié par vous')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Modifier le plan' })).not.toBeInTheDocument();
     expect(screen.queryByRole('region', { name: /Vos modifications/ })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Voir le plan modifié' }));

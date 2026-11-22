@@ -4,7 +4,7 @@ import { Input }  from '../../../shared/components/ui/Input';
 import { CADRAGE_LIMITS, CADRAGE_SECTIONS, type CadrageErrors, type CadrageSectionKey } from '../lib/cadrageForm';
 import { TextArea } from './TextArea';
 import type { CadrageForm, NamedItem, OnboardingDocument } from '../types';
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { ArrowDown, ArrowUp, Trash2 } from 'lucide-react';
 
 /**
  * Les six sections de la fiche de cadrage (celles du cadrage pilote). Toute
@@ -59,7 +59,7 @@ function ItemFrame({ title, onRemove, readOnly, children }: {
         <span className="obp-cadrage-item__title">{title}</span>
         {!readOnly && (
           <Button type="button" variant="ghost" size="sm" onClick={onRemove} aria-label={`Retirer : ${title}`}>
-            Retirer
+            <Trash2 size={16} />Retirer
           </Button>
         )}
       </div>
@@ -234,7 +234,7 @@ export function SourceHierarchySection({ form, errors, documents, edit, readOnly
                 <Button type="button" variant="ghost" size="sm" iconOnly disabled={i === levels.length - 1} onClick={() => move(i, 1)}
                   aria-label={`Descendre le niveau ${i + 1}`}><ArrowDown size={16} /></Button>
                 <Button type="button" variant="ghost" size="sm" onClick={() => edit(d => { d.sourceHierarchy.levels.splice(i, 1); })}
-                  aria-label={`Retirer le niveau ${i + 1}`}>Retirer</Button>
+                  aria-label={`Retirer le niveau ${i + 1}`}><Trash2 size={16} />Retirer</Button>
               </span>
             )}
           </div>
@@ -293,7 +293,7 @@ export function SourceHierarchySection({ form, errors, documents, edit, readOnly
               onChange={e => edit(d => { d.sourceHierarchy.specialCases[i] = e.target.value; })} />
             {!readOnly && (
               <Button type="button" variant="ghost" size="sm" onClick={() => edit(d => { d.sourceHierarchy.specialCases.splice(i, 1); })}
-                aria-label={`Retirer le cas particulier ${i + 1}`}>Retirer</Button>
+                aria-label={`Retirer le cas particulier ${i + 1}`}><Trash2 size={16} />Retirer</Button>
             )}
           </div>
         ))}

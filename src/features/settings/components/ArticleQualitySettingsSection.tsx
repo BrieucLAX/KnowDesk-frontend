@@ -8,7 +8,7 @@ import { useAuthStore, selectUserRole } from '../../../store/authStore';
 import { hasModule } from '../../../shared/lib/modules';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import { articleQualityApi, type QualityStats } from '../../articleQuality/api/articleQualityApi';
-import { CircleAlert, CircleCheck, RotateCw, Sparkles, TriangleAlert } from 'lucide-react';
+import { CircleAlert, CircleCheck, FileCheck, RotateCw, TriangleAlert } from 'lucide-react';
 
 /**
  * Section Settings → IA → Auditeur qualité.
@@ -82,7 +82,7 @@ export function ArticleQualitySettingsSection() {
     return (
       <section className="settings-section">
         <div className="settings-section__header">
-          <h2 className="settings-section__title icon-label"><Sparkles size={20} />Auditeur qualité des articles</h2>
+          <h2 className="settings-section__title icon-label"><FileCheck size={20} />Auditeur qualité des articles</h2>
         </div>
         <Skeleton className="sk-p" />
       </section>
@@ -93,7 +93,7 @@ export function ArticleQualitySettingsSection() {
     <section className="settings-section" aria-labelledby="article-quality-title">
       <div className="settings-section__header">
         <h2 id="article-quality-title" className="settings-section__title icon-label">
-          <Sparkles size={20} />Auditeur qualité des articles
+          <FileCheck size={20} />Auditeur qualité des articles
         </h2>
         <p className="settings-section__desc">
           L'IA évalue vos articles publiés sur 6 dimensions

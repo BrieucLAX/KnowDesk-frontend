@@ -21,6 +21,8 @@ export interface Article {
   createdAt:   string;
   faqs:        ArticleFaq[];
   tags?:       string[];     // display_names ; absent si l'API n'a pas hydraté
+  /** 'internal' : réservé à l'équipe (carte « Interne · réservé aux agents ») ; absent d'une réponse ancienne. */
+  visibility?: 'internal' | 'public';
 }
 
 export interface ArticleFaq {

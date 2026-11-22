@@ -10,7 +10,7 @@ import { useAuthStore }        from '../../../store/authStore';
 import { hasModule }           from '../../../shared/lib/modules';
 import { useToast }            from '../../../shared/lib/useToast';
 import type { SearchResult, SearchResultType }   from '../types';
-import { CircleHelp, FileText, ListOrdered, Search, Sparkles, X } from 'lucide-react';
+import { CircleHelp, FileText, ListOrdered, MessageSquareText, Search, X } from 'lucide-react';
 
 interface SearchBarProps {
   /** Called when user selects a result — caller handles navigation */
@@ -201,15 +201,16 @@ export function SearchBar({ onSelect, className }: SearchBarProps) {
           onFocus={handleFocusWrapped}
         />
 
-        {/* Sparkle IA : visible dès que la query déclenche le trigger.
-            Masquée quand la feature est désactivée côté org */}
+        {/* Réponse IA en préparation : visible dès que la query déclenche le trigger.
+            Masquée quand la feature est désactivée côté org. Pas de sparkles ici :
+            elle est réservée à la mention « Rédigé par KnowDesk » (lot 7a). */}
         {aiTriggered && aiState.status !== 'disabled' && (
           <span
             className={`search-bar__ai-sparkle ${aiState.status === 'streaming' ? 'search-bar__ai-sparkle--anim' : ''}`}
             aria-hidden="true"
             title="Réponse IA disponible"
           >
-            <Sparkles size={20} />
+            <MessageSquareText size={20} />
           </span>
         )}
 

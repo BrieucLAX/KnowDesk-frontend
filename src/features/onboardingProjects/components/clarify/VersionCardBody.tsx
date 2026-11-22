@@ -5,6 +5,7 @@ import {
 } from '../../lib/reading';
 import { DocName, DocNames } from '../audit/DocName';
 import { ClarifyQuote } from './ReadingCardView';
+import { KnowDeskBadge } from '../../../../shared/components/ui/Origin';
 
 const dateRead = (d: VersionDocument) => (d.dateRead ? `date lue : ${formatDay(d.dateRead)}` : 'aucune date lue');
 
@@ -46,6 +47,7 @@ function Ranged({ audit, cards }: { audit: Audit; cards: RangedCard[] }) {
           ? `${cards.length} cartes ligne par ligne rangées sous celle-ci, qui ne sont plus posées`
           : '1 carte ligne par ligne rangée sous celle-ci, qui n\'est plus posée'}
       </summary>
+      <KnowDeskBadge>Tranché automatiquement par KnowDesk</KnowDeskBadge>
       <ul>
         {cards.map(c => <li key={c.cardId}>{c.subject} (<DocNames audit={audit} ids={c.documentIds} />)</li>)}
       </ul>

@@ -12,7 +12,7 @@ import { onboardingApi } from '../../api/onboardingApi';
 import type { Audit } from '../../lib/audit';
 import { cardTitle, orderedCards, type ReadingCard } from '../../lib/reading';
 import {
-  isPlanActive, PLAN_COMMENT_HINT, PLAN_STEPS, planFailureMessage, planStepStates, planSummary, readPlan,
+  isPlanActive, PLAN_COMMENT_HINT, PLAN_STEPS, planFailureMessage, planStepStates, planDocumentCount, planSummary, readPlan,
   SUPPORTED_PLAN_SCHEMAS, type OnboardingPlan, type Plan, type PlanComment, type PlanContent, type PlanSubject,
 } from '../../lib/plan';
 import {
@@ -24,6 +24,8 @@ import { hasAudiences, matchesAudience, type AudienceFilter as Filter } from '..
 import { BuildArticles, BuildEntry, BuildProgress } from './BuildView';
 import { editCountLabel, PLAN_EDIT_CONFLICT, type PlanEditOp, type PlanEditsState } from '../../lib/planEdits';
 import { EditsPanel, GoneSection, ModifiedTag, useEditDialogs, type PlanEditor } from './PlanEditing';
+import { KnowDeskMention } from '../../../../shared/components/ui/Origin';
+import { fromDocuments } from '../../lib/format';
 
 /** Intervalle de relecture d'un plan en préparation. */
 export const PLAN_POLL_MS = 5000;
@@ -429,6 +431,7 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
   const { chapterTools, subjectTools, dialogs } = useEditDialogs(plan, editor);
   return (
     <div className="obp-plan">
+      <KnowDeskMention>{`Plan préparé par KnowDesk${fromDocuments(planDocumentCount(plan))}`}</KnowDeskMention>
       <p className="obp-plan__summary">{planSummary(plan)}</p>
       {!commentable && (
         <p className="obp-muted" role="status">Ce plan a été remplacé par un plus récent : il se consulte, mais ne se commente plus.</p>
@@ -476,6 +479,7 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
 
         <div className="obp-plan-attention__group">
           <h4>Articles réunis ({plan.merged.length})</h4>
+          {plan.merged.length > 0 && <KnowDeskMention>Réunis par KnowDesk</KnowDeskMention>}
           {plan.merged.length === 0 ? (
             <p className="obp-muted">Aucun article en double.</p>
           ) : (

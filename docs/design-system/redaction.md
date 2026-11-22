@@ -14,6 +14,7 @@ Résumé des règles de la section « Ton et rédaction » du README et des fich
 - **Champs** : un libellé court qui nomme la donnée (« Adresse e-mail »), une aide qui dit le format ou l'usage, une erreur qui dit comment corriger (« Saisissez une adresse e-mail valide, par exemple nom@entreprise.fr. »).
 - **Encarts** : le texte reste neutre et dit quoi faire ; la couleur et l'icône portent l'état.
 - **Typographie française** : guillemets « », espace insécable avant « : ; ? », « e-mail », nombres et unités séparés (« 30 jours », « 10 Mo »).
+- **Textes communs à tous les clients** (règle du 22/11/2026) : les textes d'interface sont les mêmes pour tous les clients ; ils ne citent jamais le secteur, une marque ni les documents d'un client. Seul le contenu généré (articles rédigés, réponses, suggestions) peut le faire. Les exemples, placeholders et aides prennent des cas valables partout (commande, facture, contrat, remboursement). Avant / après : « Par exemple : Intégration Hubicus » → « Par exemple : Intégration CRM » ; « Thème : *Résiliation forfait mobile*, *Activation eSIM* » → « *Résiliation d'un contrat*, *Suivi d'une commande* » ; « Nom de la marque : Auchan » → « Nom de la marque ».
 - **Libellés voulus par le porteur** : ceux que cite `CLAUDE.md` (par exemple le libellé de `image_note`, les libellés des contrôles d'audit) restent mot pour mot.
 
 ## Glossaire

@@ -82,7 +82,7 @@ export function BrandMonitoringPage() {
           <h2 className="bm-empty__title">Créer un projet Brand monitoring</h2>
           <p className="bm-empty__desc">
             Suivez la visibilité de votre marque dans les réponses des IA (Mistral pour l'instant),
-            face à vos concurrents. Donnez un nom à votre projet (par exemple « Auchan »), puis
+            face à vos concurrents. Donnez un nom à votre projet (par exemple le nom de votre marque), puis
             configurez les marques suivies et les prompts dans l'onglet Paramètres.
           </p>
           <div className="bm-empty__form">
@@ -91,7 +91,7 @@ export function BrandMonitoringPage() {
               label="Nom du projet"
               value={newName}
               onChange={e => setNewName(e.target.value)}
-              placeholder="Auchan"
+              placeholder="Nom de votre marque"
               autoFocus
             />
             <Button variant="primary" size="md" onClick={handleCreate} loading={creating}>

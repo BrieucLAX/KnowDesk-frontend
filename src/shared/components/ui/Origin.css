@@ -1,0 +1,28 @@
+/* ─────────────────────────────────────────────────────────────
+   Qui a fait quoi (lot 7a) : fiches KnowDeskContent (cx-kd, cx-kd-block),
+   Badge (cx-badge--accent, dans StatusBadge.css) et Card (cx-card--internal).
+   Seul endroit de l'app où la prune (--accent, --accent-soft) s'emploie.
+   ───────────────────────────────────────────────────────────── */
+
+.kd-mention {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--accent); font-size: 12px; line-height: 18px; font-weight: 600;
+}
+.kd-mention svg { flex-shrink: 0; }
+
+.kd-block {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 12px var(--space-4); border-radius: var(--radius-md);
+  background: var(--accent-soft); color: var(--ink);
+}
+.kd-block__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); align-self: flex-start; }
+
+.internal-card {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  padding: var(--space-4); border-radius: var(--radius-lg);
+  background: var(--surface); border: 1px dashed var(--line-strong); color: var(--ink);
+}
+.internal-card__title {
+  display: flex; align-items: center; gap: var(--space-2); margin: 0;
+  font-size: 15px; line-height: 22px; font-weight: 600; color: var(--ink);
+}

@@ -15,7 +15,9 @@ import type {
   LearningPathCompletions, LearningCompletionStatus,
 } from '../types';
 import '../learning.css';
-import { ArrowLeft, Check, Circle, CircleCheck, CircleDot, Plus, RotateCw, Sparkles, X } from 'lucide-react';
+import { ArrowLeft, Check, Circle, CircleCheck, CircleDot, Plus, RotateCw, Sparkles } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { KnowDeskMention } from '../../../shared/components/ui/Origin';
 
 interface LearningPathEditorProps {
   pathId: string;
@@ -266,7 +268,7 @@ export function LearningPathEditor({ pathId, onBack }: LearningPathEditorProps) 
                   </div>
                   <div className="learning-module__actions">
                     <Button variant="ghost" size="sm" onClick={() => setEditingModule(m)}>Modifier</Button>
-                    <Button variant="danger" size="sm" onClick={() => setModuleToDelete(m)}>Supprimer</Button>
+                    <Button variant="danger" size="sm" onClick={() => setModuleToDelete(m)}><Trash2 size={16} />Supprimer</Button>
                   </div>
                 </li>
               ))}
@@ -445,7 +447,7 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
                     {r.resource_type === 'article' ? 'Article' : r.resource_type === 'faq' ? 'FAQ' : 'Processus'}
                   </span>
                   <span className="module-editor__title">{resourceTitle(r)}</span>
-                  <Button variant="ghost" size="sm" onClick={() => removeResource(r.id)} aria-label="Retirer la ressource"><X size={16} /></Button>
+                  <Button variant="ghost" size="sm" onClick={() => removeResource(r.id)} aria-label="Retirer la ressource"><Trash2 size={16} /></Button>
                 </li>
               ))}
             </ul>
@@ -467,9 +469,12 @@ function ModuleEditorModal({ module, pathId, onClose, onRename }: {
         {quiz && quiz.questions.length > 0 ? (
           <>
             <p className="module-editor__quiz-meta">
-              {quiz.questions.length} questions · seuil de réussite : {quiz.passing_score}% ·{' '}
-              {quiz.generated_by === 'ai' ? 'Généré par l\'IA' : 'Saisi manuellement'}
+              {quiz.questions.length} questions · seuil de réussite : {quiz.passing_score}%
+              {quiz.generated_by !== 'ai' && ' · Saisi manuellement'}
             </p>
+            {quiz.generated_by === 'ai' && (
+              <KnowDeskMention>Rédigé par KnowDesk à partir des ressources du module</KnowDeskMention>
+            )}
             <ul className="module-editor__quiz-list">
               {quiz.questions.map((q, i) => (
                 <li key={i} className="module-editor__quiz-item">

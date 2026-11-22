@@ -2,6 +2,7 @@ import React from 'react';
 import { optionSources, proposedCondition, type Audit, type Question } from '../../lib/audit';
 import { impactLabel, questionTypeLabel, VISION_NOTE } from '../../lib/auditLabels';
 import { AuditSource } from './AuditSource';
+import { KnowDeskMention } from '../../../../shared/components/ui/Origin';
 
 interface AuditQuestionGroupProps {
   audit:  Audit;
@@ -35,7 +36,12 @@ export function AuditQuestionGroup({ audit, group, title, showProposedCondition 
           {q.question && q.subject && <p className="obp-muted">Sujet : {q.subject}</p>}
           {showProposedCondition && (() => {
             const condition = proposedCondition(audit, q);
-            return condition && <p className="obp-muted">Condition qui séparerait les cas : {condition.text}</p>;
+            return condition && (
+              <p className="obp-muted">
+                Condition qui séparerait les cas : {condition.text}{' '}
+                <KnowDeskMention>Suggéré par KnowDesk</KnowDeskMention>
+              </p>
+            );
           })()}
           <ol className="obp-audit-options">
             {q.options.map((o, i) => {

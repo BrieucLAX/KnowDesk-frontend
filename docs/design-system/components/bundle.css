@@ -6,6 +6,7 @@
 .cx-root *, .cx-root *::before, .cx-root *::after { box-sizing: border-box; }
 .cx-icon { width: 20px; height: 20px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .cx-icon--sm { width: 16px; height: 16px; }
+.cx-icon--lg { width: 24px; height: 24px; }
 
 /* Bouton */
 .cx-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: var(--radius-md); font-family: var(--font-sans); font-size: 15px; line-height: 1; font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap; }
@@ -44,6 +45,7 @@ textarea.cx-input { padding: 12px var(--space-4); line-height: 24px; min-height:
 .cx-badge--neutral { border: 1px solid var(--line-strong); color: var(--ink-muted); }
 .cx-badge--primary { background: var(--primary-soft); color: var(--primary); }
 .cx-badge--accent { background: var(--accent-soft); color: var(--accent); }
+.cx-badge--accent .cx-icon { stroke-width: 2; }
 .cx-badge--success { background: var(--success-soft); color: var(--success); }
 .cx-badge--warning { background: var(--warning-soft); color: var(--warning); }
 .cx-badge--danger { background: var(--danger-soft); color: var(--danger); }
@@ -65,6 +67,8 @@ textarea.cx-input { padding: 12px var(--space-4); line-height: 24px; min-height:
 .cx-card__meta { margin: 0; font-size: 13px; line-height: 20px; color: var(--ink-muted); }
 .cx-card--tinted { background: var(--primary-soft); border-color: transparent; }
 .cx-card--warm { background: var(--accent-soft); border-color: transparent; }
+.cx-card--internal { background: var(--surface); border: 1px dashed var(--line-strong); }
+.cx-card--current { border: 2px solid var(--primary); }
 a.cx-card { text-decoration: none; }
 a.cx-card:hover { border-color: var(--line-strong); }
 
@@ -78,3 +82,43 @@ a.cx-card:hover { border-color: var(--line-strong); }
 .cx-modal { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-6); border-radius: var(--radius-lg); background: var(--surface-raised); box-shadow: var(--shadow-lg); color: var(--ink); }
 .cx-modal__title { margin: 0; font-size: 18px; line-height: 26px; font-weight: 600; }
 .cx-modal__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-2); }
+
+/* En-tête de page */
+.cx-pagehead { background: var(--primary); color: var(--on-primary); padding: 28px 48px 72px; }
+.cx-pagehead__inner { max-width: 880px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
+.cx-pagehead__back { color: var(--primary-soft); font-size: 13px; font-weight: 600; text-decoration: none; }
+.cx-pagehead__back:hover { color: var(--on-primary); text-decoration: underline; }
+.cx-pagehead__eyebrow { color: var(--primary-soft); font-size: 13px; line-height: 18px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
+.cx-pagehead__title { margin: 0; font-size: 36px; line-height: 44px; font-weight: 700; letter-spacing: -0.02em; }
+.cx-pagehead__lead { margin: 0; max-width: 640px; }
+.cx-pagehead + .cx-page { margin-top: -44px; }
+.cx-page { max-width: 880px; margin: 0 auto; padding: 0 48px; display: flex; flex-direction: column; gap: var(--space-6); }
+
+/* Stepper */
+.cx-stepper { list-style: none; margin: 0; padding: 20px var(--space-6); display: grid; grid-template-columns: repeat(var(--cx-steps, 5), minmax(0, 1fr)); gap: var(--space-2); background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+.cx-stepper__step { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--space-2); text-align: center; }
+.cx-stepper__step + .cx-stepper__step::before { content: ""; position: absolute; top: 21px; right: 50%; width: 100%; height: 3px; border-radius: 3px; background: var(--line); }
+.cx-stepper__step--done + .cx-stepper__step::before { background: var(--success); }
+.cx-stepper__dot { position: relative; z-index: 1; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--surface-raised); color: var(--ink-muted); border: 2px solid var(--line); }
+.cx-stepper__label { font-size: 13px; line-height: 18px; font-weight: 600; color: var(--ink-muted); }
+.cx-stepper__step--done .cx-stepper__dot { background: var(--success); color: var(--on-primary); border-color: var(--success); }
+.cx-stepper__step--done .cx-stepper__label { color: var(--ink); }
+.cx-stepper__step--current .cx-stepper__dot { background: var(--primary); color: var(--on-primary); border-color: var(--primary); box-shadow: 0 0 0 6px var(--primary-soft); }
+.cx-stepper__step--current .cx-stepper__label { color: var(--primary); font-weight: 700; }
+
+/* Pastille d'icône */
+.cx-icontile { flex: none; width: 48px; height: 48px; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; background: var(--primary-soft); color: var(--primary); }
+.cx-icontile .cx-icon { width: 24px; height: 24px; }
+.cx-icontile--done { background: var(--success-soft); color: var(--success); }
+.cx-icontile--current { background: var(--primary); color: var(--on-primary); }
+.cx-icontile--optional { background: var(--surface); color: var(--ink-muted); }
+
+/* Barre d'action */
+.cx-actionbar { position: sticky; bottom: var(--space-4); z-index: 4; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-4) 20px; background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+.cx-actionbar__note { font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+.cx-actionbar__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Contenu préparé par KnowDesk */
+.cx-kd { display: inline-flex; align-items: center; gap: 6px; color: var(--accent); font-size: 12px; line-height: 18px; font-weight: 600; }
+.cx-kd .cx-icon { width: 14px; height: 14px; }
+.cx-kd-block { display: flex; flex-direction: column; gap: 6px; padding: 12px var(--space-4); border-radius: var(--radius-md); background: var(--accent-soft); color: var(--ink); }

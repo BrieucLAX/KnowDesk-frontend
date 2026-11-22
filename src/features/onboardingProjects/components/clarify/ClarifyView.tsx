@@ -13,6 +13,8 @@ import { ClarifyQuote, CodeFactsBox, ModelAnalysisBox } from './ReadingCardView'
 import { CurrentAnswer } from './CardAnswers';
 import { StatusIcon } from '../../../../shared/components/ui/StatusIcon';
 import { Alert } from '../../../../shared/components/ui/Alert';
+import { KnowDeskMention } from '../../../../shared/components/ui/Origin';
+import { fromDocuments } from '../../lib/format';
 
 interface ClarifyViewProps {
   audit:       Audit;
@@ -58,6 +60,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
           <h3 id="obp-clarify-base-title" className="obp-section-title icon-label">
             <StatusIcon tone="info" />{base.title}
           </h3>
+          <KnowDeskMention>{`Trouvé par KnowDesk${fromDocuments(reading.base.documentIds.length)}`}</KnowDeskMention>
           <p className="obp-muted">{base.reason}</p>
           {reading.base.documentIds.length > 0 && (
             <p className="obp-clarify-base__docs">Documents retenus : <DocNames audit={audit} ids={reading.base.documentIds} /></p>
@@ -136,7 +139,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
                     <span className="obp-muted"> · rien à trancher</span>
                   </p>
                   {toQuotes(n.quotes).map((q, i) => <ClarifyQuote key={i} audit={audit} quote={q} />)}
-                  <ModelAnalysisBox analysis={n.analysis} />
+                  <ModelAnalysisBox analysis={n.analysis} documents={n.documentIds.length} />
                 </li>
               ))}
             </ul>
@@ -148,6 +151,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
         <summary>Détails de l'analyse</summary>
         <div className="obp-audit-section">
           <h4 className="obp-audit-item__title">Points écartés</h4>
+          {reading.rejectedPoints.length > 0 && <KnowDeskMention>Retirés par KnowDesk, chacun avec sa raison</KnowDeskMention>}
           {reading.rejectedPoints.length === 0 ? (
             <p className="obp-muted">Aucun point écarté.</p>
           ) : (

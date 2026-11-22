@@ -6,6 +6,7 @@ import { ConfirmDialog }  from '../../../shared/components/ui/ConfirmDialog';
 import { SettingsListSection } from '../../../shared/components/ui/SettingsListSection';
 import { useTags }        from '../hooks/useTags';
 import type { OrgTag }    from '../../articles/api/tagsApi';
+import { Trash2 } from 'lucide-react';
 
 export function TagsSettingsSection() {
   const { items, loading, error, rename, remove } = useTags();
@@ -40,7 +41,7 @@ export function TagsSettingsSection() {
               variant="ghost" size="sm"
               onClick={() => setConfirmDelete(tag)}
             >
-              Supprimer
+              <Trash2 size={16} />Supprimer
             </Button>
           </div>
         </li>

@@ -1,5 +1,5 @@
 import type { LearningPathRenewal } from './types';
-import { Scale, ShieldAlert, UserPlus, type LucideIcon } from 'lucide-react';
+import { FileLock, ShieldAlert, UserPlus, type LucideIcon } from 'lucide-react';
 
 /**
  * Templates de parcours pré-remplis. Pure frontend pour la V1 — chaque
@@ -26,7 +26,7 @@ export const LEARNING_TEMPLATES: LearningPathTemplate[] = [
   {
     id:    'rgpd',
     label: 'RGPD & données clients',
-    icon:  Scale,
+    icon:  FileLock,
     hint:  'Conformité — renouvellement 12 mois',
     name:  'RGPD & traitement des données client',
     description:

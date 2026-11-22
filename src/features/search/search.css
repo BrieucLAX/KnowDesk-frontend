@@ -186,27 +186,19 @@
 .ai-answer {
   border-bottom: 1px solid var(--neutral-100);
   padding: 14px 16px 12px;
-  background: var(--primary-soft);
+  background: var(--accent-soft);
   position: relative;
 }
-.ai-answer::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: var(--primary);
-}
+/* Rien de rédigé par KnowDesk : pas d'encart prune (lot 7a). */
+.ai-answer--unsure, .ai-answer--error { background: var(--surface); }
 .ai-answer__header {
   display: flex; align-items: center; gap: 8px;
   margin-bottom: 8px;
 }
-.ai-answer__sparkle {
-  font-size: 16px; line-height: 1;
-  color: var(--primary);
-}
-.ai-answer__sparkle--anim {
-  animation: aiSparklePulse 1.2s ease-in-out infinite;
-}
+.ai-answer__icon { display: inline-flex; color: var(--ink-muted); }
 .ai-answer__title {
   font-size: 12px; font-weight: 600;
-  color: var(--primary);
+  color: var(--ink);
   text-transform: uppercase; letter-spacing: 0.04em;
   font-family: var(--font-ui);
 }

@@ -449,27 +449,19 @@
 .obp-clarify-quote__note { margin: 0; font-size: 12px; color: var(--neutral-500); }
 .obp-clarify-briefing .obp-audit-source__excerpt { border-left-style: dotted; }
 
-/* Texte du modèle : encadré à part, jamais présenté comme une citation. */
-.obp-clarify-ai {
-  display: flex; flex-direction: column; gap: 6px;
-  padding: 12px 14px;
-  background: var(--neutral-0); border: 1px dashed var(--neutral-300); border-radius: var(--radius-md);
-}
+/* Texte du modèle : encart « Rédigé par KnowDesk » (kd-block, lot 7a), jamais présenté comme une citation. */
+.obp-clarify-ai { padding: 12px 14px; }
 .obp-clarify-ai__title { margin: 0; font-size: 13px; font-weight: 600; color: var(--neutral-700); }
-.obp-clarify-ai__note { margin: 0; font-size: 12px; color: var(--neutral-500); }
+.obp-clarify-ai__note { margin: 0; font-size: 12px; color: var(--ink-muted); }
 .obp-clarify-ai__body { display: flex; flex-direction: column; gap: 6px; margin: 0; }
-.obp-clarify-ai__body dt { font-size: 12px; color: var(--neutral-500); }
+.obp-clarify-ai__body dt { font-size: 12px; color: var(--ink-muted); }
 .obp-clarify-ai__body dd { margin: 0; font-size: 13px; line-height: 1.5; color: var(--neutral-700); font-style: italic; overflow-wrap: anywhere; }
 
-/* Carte du code (audit 0.11.0) : ce qu'il a relevé, sans « Analyse proposée par l'IA ». */
-.obp-clarify-check {
-  display: flex; flex-direction: column; gap: 6px;
-  padding: 12px 14px;
-  background: var(--neutral-0); border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
-}
+/* Carte du code (audit 0.11.0) : ce qu'il a relevé, sans « Analyse proposée par l'IA » ; encart « Trouvé par KnowDesk » (lot 7a). */
+.obp-clarify-check { padding: 12px 14px; }
 .obp-clarify-check p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--neutral-900); overflow-wrap: anywhere; }
 .obp-clarify-check .obp-clarify-check__title { font-weight: 600; color: var(--neutral-700); }
-.obp-clarify-check .obp-clarify-check__note { font-size: 12px; color: var(--neutral-500); }
+.obp-clarify-check .obp-clarify-check__note { font-size: 12px; color: var(--ink-muted); }
 /* Une détection de l'audit 0.11.0 qui n'a pas pu être faite : dite, sans alarme. */
 .obp-clarify-unavailable { margin: 0; }
 
@@ -487,7 +479,7 @@
 .obp-clarify-answer__chosen { margin: 0; font-size: 14px; font-weight: 600; color: var(--neutral-900); }
 /* « Je suis la recommandation de l'IA » : en premier, la recommandation lisible, puis ce que fera la réponse. */
 .obp-clarify-reco { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--neutral-200); }
-.obp-clarify-reco__text { margin: 0; padding: 8px 12px; background: var(--brand-50); font-size: 14px; line-height: 1.5; color: var(--neutral-900); white-space: pre-wrap; }
+.obp-clarify-reco__text { margin: 0; padding: 8px 12px; border-radius: var(--radius-md); background: var(--accent-soft); font-size: 14px; line-height: 1.5; color: var(--neutral-900); white-space: pre-wrap; }
 .obp-clarify-reco__outcome { padding: 10px 12px; border-radius: var(--radius-md); background: var(--neutral-50); border: 1px solid var(--neutral-200); font-size: 14px; }
 .obp-clarify-reco__outcome p { margin: 0; }
 .obp-clarify-reco__outcome p + p { margin-top: 4px; }
@@ -860,10 +852,11 @@ p.obp-kb__blockers { padding-left: 14px; }
 .obp-audience { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--neutral-200); background: var(--neutral-50); color: var(--neutral-900); }
 .obp-audience--particuliers { background: var(--brand-50); border-color: var(--brand-500); color: var(--brand-500); }
 .obp-build-block__audience { margin: 0 0 4px; }
-.obp-audience--professionnels { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.obp-audience--professionnels { background: var(--surface-raised); border-color: var(--line-strong); color: var(--ink); }
 
 /* ── Plan modifiable avant la rédaction (étape 4, 2026-11-22) ── */
-.obp-plan-modified { display: inline-block; margin-left: 6px; padding: 0 8px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--brand-50); color: var(--brand-700); border: 1px solid var(--brand-200); vertical-align: middle; }
+/* « Modifié par vous » : badge primary (ByYouBadge, lot 7a). */
+.obp-plan-modified { margin-left: 6px; vertical-align: middle; }
 .obp-plan-modified-note { margin: 8px 0; color: var(--neutral-700); }
 .obp-plan-tools { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 8px; }
 .obp-plan-edits, .obp-plan-gone { margin: 12px 0; padding: 12px 16px; border: 1px solid var(--neutral-200); border-radius: 8px; background: var(--neutral-50); }

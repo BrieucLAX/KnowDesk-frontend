@@ -3,6 +3,7 @@ import { groupQuestions, questionKind, type Audit, type Question } from '../../l
 import { detectionLabel, discardReasonLabel, impactLabel, unpairedReasonLabel } from '../../lib/auditLabels';
 import { AuditQuestionGroup } from './AuditQuestion';
 import { AuditSource } from './AuditSource';
+import { KnowDeskBadge, KnowDeskMention } from '../../../../shared/components/ui/Origin';
 
 const plural = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : one}`;
 
@@ -130,6 +131,7 @@ export function AuditView({ audit, arbitration, questionFooter }: AuditViewProps
             <ul className="obp-audit-list">
               {audit.automaticDecisions.map(d => (
                 <li key={d.id} className="obp-audit-card">
+                  <KnowDeskBadge>Tranché automatiquement par KnowDesk</KnowDeskBadge>
                   {d.rationale && <p className="obp-audit-question__text">{d.rationale}</p>}
                   {d.evidence.map((s, j) => <AuditSource key={j} audit={audit} source={s} />)}
                 </li>
@@ -142,6 +144,7 @@ export function AuditView({ audit, arbitration, questionFooter }: AuditViewProps
       <Section id="obp-audit-discarded" title="Écarts écartés" count={audit.discardedGaps.length}>
         {audit.discardedGaps.length === 0 ? <p className="obp-muted">Aucun.</p> : (
           <Folded summary="Voir les écarts écartés et leur raison">
+            <KnowDeskMention>Retirés par KnowDesk, chacun avec sa raison</KnowDeskMention>
             <ul className="obp-audit-list">
               {audit.discardedGaps.map(g => (
                 <li key={g.id} className="obp-audit-item">

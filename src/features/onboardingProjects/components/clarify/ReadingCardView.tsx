@@ -9,6 +9,8 @@ import { AuditSource } from '../audit/AuditSource';
 import { DocName, DocNames } from '../audit/DocName';
 import { ExcerptText } from '../audit/ExcerptText';
 import { VersionCardBody } from './VersionCardBody';
+import { ByYouBadge, KnowDeskBlock } from '../../../../shared/components/ui/Origin';
+import { fromDocuments } from '../../lib/format';
 
 /**
  * Une citation vérifiée : passage d'un document (nom de fichier, emplacement, extrait verbatim ;
@@ -44,9 +46,9 @@ export function ClarifyQuote({ audit, quote, imageShown = false, bare = false }:
  * « Analyse proposée par l'IA » : le texte du modèle, à part des citations. Il aide à répondre ;
  * ce n'est ni un extrait des documents ni une réponse, et il n'entre jamais dans la base.
  */
-export function ModelAnalysisBox({ analysis }: { analysis: ModelAnalysis }) {
+export function ModelAnalysisBox({ analysis, documents }: { analysis: ModelAnalysis; documents?: number }) {
   return (
-    <aside className="obp-clarify-ai" aria-label="Analyse proposée par l'IA">
+    <KnowDeskBlock as="aside" className="obp-clarify-ai" aria-label="Analyse proposée par l'IA" mention={`Rédigé par KnowDesk${fromDocuments(documents)}`}>
       <p className="obp-clarify-ai__title">Analyse proposée par l'IA</p>
       <p className="obp-clarify-ai__note">
         Rédigée par l'IA pour vous aider à répondre : ce n'est pas un extrait de vos documents, et elle n'entre pas dans la base.
@@ -56,7 +58,7 @@ export function ModelAnalysisBox({ analysis }: { analysis: ModelAnalysis }) {
         {analysis.reason && <div><dt>Pourquoi c'est à clarifier</dt><dd>{analysis.reason}</dd></div>}
         {analysis.proposal && <div><dt>Ce que l'IA propose</dt><dd>{analysis.proposal}</dd></div>}
       </dl>
-    </aside>
+    </KnowDeskBlock>
   );
 }
 
@@ -69,7 +71,7 @@ export function CodeCheckBox({ card }: { card: ReadingCard }) {
   const check = codeCheck(card);
   const facts = check ? checkFacts(check) : [card.analysis.reason].filter(Boolean);
   // Une carte à valeurs (audit 0.16.0) n'a plus de côtés à montrer : sa valeur est le titre de son groupe.
-  return <CodeFactsBox facts={valueGroups(card).length > 0 ? facts.filter(f => !f.startsWith('Côté ')) : facts} />;
+  return <CodeFactsBox documents={card.documentIds.length} facts={valueGroups(card).length > 0 ? facts.filter(f => !f.startsWith('Côté ')) : facts} />;
 }
 
 /**
@@ -97,13 +99,13 @@ function ValueGroups({ audit, card }: { audit: Audit; card: ReadingCard }) {
 }
 
 /** Ce que le code a relevé, en phrases neutres : sur une carte du code, ou un point écarté par lui (audit 0.13.0). */
-export function CodeFactsBox({ facts }: { facts: string[] }) {
+export function CodeFactsBox({ facts, documents }: { facts: string[]; documents?: number }) {
   return (
-    <aside className="obp-clarify-check" aria-label="Relevé en comparant vos documents">
+    <KnowDeskBlock as="aside" className="obp-clarify-check" aria-label="Relevé en comparant vos documents" mention={`Trouvé par KnowDesk${fromDocuments(documents)}`}>
       <p className="obp-clarify-check__title">Relevé en comparant vos documents</p>
       {facts.map(f => <p key={f}>{f}</p>)}
       <p className="obp-clarify-check__note">Relevé automatiquement à partir des passages cités, sans analyse ni recommandation de l'IA.</p>
-    </aside>
+    </KnowDeskBlock>
   );
 }
 
@@ -174,7 +176,7 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
           const label = briefing ? 'Votre fiche de cadrage' : `${sideTitle(card, side.label)}${value ? ` : ${value}` : ''}`;
           return (
             <section key={side.label} className={`obp-clarify-side${briefing ? ' obp-clarify-side--briefing' : ''}`} aria-label={label}>
-              <h5 className="obp-clarify-side__title">{label}</h5>
+              <h5 className="obp-clarify-side__title">{label}{briefing && <> <ByYouBadge /></>}</h5>
               {briefing && <p className="obp-clarify-side__note">Ce que vous avez écrit, pas un document de la base.</p>}
               {quotes.map((q, i) => {
                 // Une même image n'est affichée qu'une fois par côté, à côté de son premier extrait.
@@ -189,7 +191,7 @@ export function ReadingCardView({ audit, card, title, position }: ReadingCardVie
       )}
 
       <AbsentContent audit={audit} card={card} />
-      {isVersionCard(card) ? null : isCodeCard(card) ? <CodeCheckBox card={card} /> : <ModelAnalysisBox analysis={card.analysis} />}
+      {isVersionCard(card) ? null : isCodeCard(card) ? <CodeCheckBox card={card} /> : <ModelAnalysisBox analysis={card.analysis} documents={card.documentIds.length} />}
     </article>
   );
 }

@@ -3,7 +3,8 @@ import { sanitizeArticleHtml } from '../../../shared/lib/sanitize';
 import { useToast }            from '../../../shared/lib/useToast';
 import { trackEvent }          from '../../../shared/lib/trackEvent';
 import type { AiState, AiSource }   from '../hooks/useAiAnswer';
-import { CircleHelp, FileText, ListOrdered, Sparkles, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { CircleAlert, CircleHelp, FileText, ListOrdered, Search, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { KnowDeskMention } from '../../../shared/components/ui/Origin';
 
 const TYPE_ICONS: Record<AiSource['type'], React.ReactNode> = {
   article: <FileText size={16} />,
@@ -22,7 +23,7 @@ interface AiAnswerCardProps {
  * AiAnswerCard — la carte « réponse IA » au-dessus des résultats Meilisearch.
  *
  * États :
- *  - streaming : sparkle anim + texte qui se construit + cursor
+ *  - streaming : mention « Rédigé par KnowDesk » + texte qui se construit + cursor
  *  - unsure    : "Je n'ai pas la réponse précise…" + sources
  *  - done      : réponse finale + bouton Copier
  *  - error     : message d'erreur + sources si dispo
@@ -73,18 +74,19 @@ export function AiAnswerCard({ state, query, onSelectSource }: AiAnswerCardProps
   const isDone      = state.status === 'done';
 
   return (
-    <div className={`ai-answer ai-answer--${state.status}`} role="region" aria-label="Réponse IA">
+    <div className={`ai-answer ai-answer--${state.status}`} role="region" aria-label={isUnsure || isError ? 'Réponse IA' : 'Réponse rédigée par KnowDesk'}>
       <div className="ai-answer__header">
-        <span className={`ai-answer__sparkle ${isStreaming ? 'ai-answer__sparkle--anim' : ''}`} aria-hidden="true">
-          <Sparkles size={20} />
-        </span>
-        <span className="ai-answer__title">
-          {isUnsure
-            ? 'La base ne contient pas de réponse précise à cette question.'
-            : isError
-              ? 'Génération indisponible'
-              : 'Réponse IA'}
-        </span>
+        {/* Ce que KnowDesk a rédigé : la mention en prune, avec sa source (lot 7a). */}
+        {isUnsure || isError ? (
+          <>
+            <span className="ai-answer__icon" aria-hidden="true">{isError ? <CircleAlert size={20} /> : <Search size={20} />}</span>
+            <span className="ai-answer__title">
+              {isUnsure ? 'La base ne contient pas de réponse précise à cette question.' : 'Génération indisponible'}
+            </span>
+          </>
+        ) : (
+          <KnowDeskMention>{answerMention(state.sources.length)}</KnowDeskMention>
+        )}
         {isStreaming && <span className="ai-answer__streaming-dots" aria-hidden="true">…</span>}
       </div>
 
@@ -160,6 +162,12 @@ export function AiAnswerCard({ state, query, onSelectSource }: AiAnswerCardProps
       </div>
     </div>
   );
+}
+
+/** La mention de la réponse : KnowDesk, ce qu'il a fait et sa source quand elle est connue. */
+export function answerMention(sources: number): string {
+  if (sources === 0) return 'Rédigé par KnowDesk à partir de votre base';
+  return `Rédigé par KnowDesk à partir de ${sources} ${sources > 1 ? 'sources' : 'source'}`;
 }
 
 /** Transforme [1], [2]… en `<sup class="ai-answer__cite">[1]</sup>` cliquables. */

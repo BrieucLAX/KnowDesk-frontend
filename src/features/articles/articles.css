@@ -298,13 +298,15 @@
   padding: 14px 16px; font-size: 13px; color: var(--neutral-700); line-height: 1.6;
   border-top: 1px solid var(--neutral-100);
 }
-.faq-item__followups { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--neutral-200); }
+.faq-item__followups { margin-top: 12px; }
+.article-page__internal { margin-top: 12px; }
+.article-page__internal-text { margin: 0; font-size: 14px; color: var(--ink-muted); }
 .faq-item__followups-label {
   font-size: 11px; font-weight: 600; text-transform: uppercase;
   letter-spacing: .05em; color: var(--ink-muted); margin-bottom: 8px;
 }
 .faq-item__followup {
-  font-size: 13px; color: var(--brand-600); padding: 4px 0;
+  font-size: 13px; color: var(--ink); padding: 4px 0;
   list-style: disc; margin-left: 16px;
 }
 

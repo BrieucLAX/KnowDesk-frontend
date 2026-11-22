@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from './Button';
 import './BulkActionBar.css';
+import { Trash2 } from 'lucide-react';
 
 interface BulkActionBarProps {
   /** Nombre d'éléments sélectionnés. La barre est masquée si 0. */
@@ -31,7 +32,7 @@ export function BulkActionBar({ count, label, onDelete, onClear, loading }: Bulk
           Désélectionner
         </Button>
         <Button variant="danger" size="sm" onClick={onDelete} loading={loading}>
-          Supprimer ({count})
+          <Trash2 size={16} />Supprimer ({count})
         </Button>
       </div>
     </div>

@@ -24,7 +24,7 @@ import { apiClient }        from '../../../shared/lib/apiClient';
 import { useAuthStore, selectUserRole } from '../../../store/authStore';
 import type { QuestionTreeSummary }  from '../types';
 import type { Category }             from '../../knowledge/types';
-import { Lock, Plus } from 'lucide-react';
+import { Lock, Plus, Trash2 } from 'lucide-react';
 
 interface TreesPageProps {
   onOpenTree:    (treeId: string) => void;
@@ -369,7 +369,7 @@ export function TreesPage({ onOpenTree, onEditTree, onPreviewTree }: TreesPagePr
                       {tree.status === 'draft' && (
                         <Button variant="ghost" size="sm" onClick={() => publishTree(tree.id)}>Publier</Button>
                       )}
-                      <Button variant="danger" size="sm" onClick={() => handleDeleteRequest(tree.id)}>Supprimer</Button>
+                      <Button variant="danger" size="sm" onClick={() => handleDeleteRequest(tree.id)}><Trash2 size={16} />Supprimer</Button>
                     </>
                   )}
                 />

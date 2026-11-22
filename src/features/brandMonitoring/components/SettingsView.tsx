@@ -6,7 +6,7 @@ import { Input }  from '../../../shared/components/ui/Input';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import type { MonitoredBrand, IndustryMeta, IndustryKey, BrandProject, LlmMode, ProviderMeta, BrandMonitoringProvider, MonitoredBrandKind } from '../types';
-import { Star } from 'lucide-react';
+import { Star, Trash2 } from 'lucide-react';
 
 interface SettingsViewProps {
   projectId:       string;
@@ -286,7 +286,7 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
             rows={2}
             value={attrsDraft}
             onChange={e => setAttrsDraft(e.target.value)}
-            placeholder="prix bas, drive, bio, famille, frais"
+            placeholder="prix, qualité, service client, livraison"
           />
           <div className="bm-form__actions">
             <Button variant="primary" size="sm" onClick={handleSaveAttributes} loading={savingAlign}>
@@ -307,10 +307,9 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
       <section className="bm-card">
         <h3 className="bm-card__title">Ajouter une marque ou un produit</h3>
         <p className="bm-card__sub">
-          <strong>Marque</strong> : enseigne ou acteur du marché (Auchan, Carrefour, Leclerc).
-          <strong> Produit</strong> : référence grand public ou marque de distributeur (Auchan Bio,
-          Carrefour Sélection, Mmm!), utile quand l'IA répond à des questions comme
-          « Quel yaourt bio acheter ? ».
+          <strong>Marque</strong> : enseigne ou acteur du marché, la vôtre et celles de vos concurrents.
+          <strong> Produit</strong> : référence grand public ou marque de distributeur, utile quand
+          l'IA répond à des questions sur un produit précis (« Quel produit choisir pour ce besoin ? »).
           Les <strong>alias</strong> sont les variantes du nom recherchées dans les réponses des IA.
         </p>
         <div className="bm-form">
@@ -333,14 +332,14 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
             label={newKind === 'product' ? 'Nom du produit' : 'Nom de la marque'}
             value={newName}
             onChange={e => setNewName(e.target.value)}
-            placeholder={newKind === 'product' ? 'Auchan Bio Yaourts' : 'Auchan'}
+            placeholder={newKind === 'product' ? 'Nom du produit' : 'Nom de la marque'}
           />
           <Input
             id="bm-new-brand-aliases"
             label="Alias (séparés par des virgules, 20 au maximum)"
             value={newAliases}
             onChange={e => setNewAliases(e.target.value)}
-            placeholder={newKind === 'product' ? 'Auchan Bio, Mmm!, Cuir & Compagnie' : 'Auchan, Auchan Drive, auchan.fr'}
+            placeholder={newKind === 'product' ? 'Autres noms du produit' : 'Autres noms, nom de domaine du site'}
           />
           <label className="bm-checkbox">
             <input type="checkbox" checked={newOwner} onChange={e => setNewOwner(e.target.checked)} />
@@ -385,7 +384,7 @@ export function SettingsView({ projectId, onReloadProject }: SettingsViewProps) 
                     </div>
                     <div className="bm-brand-row__actions">
                       <Button variant="secondary" size="sm" onClick={() => setPendingDelete(b)}>
-                        Supprimer
+                        <Trash2 size={16} />Supprimer
                       </Button>
                     </div>
                   </li>

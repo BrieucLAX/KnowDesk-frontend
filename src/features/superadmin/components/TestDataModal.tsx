@@ -4,6 +4,7 @@ import { Button }        from '../../../shared/components/ui/Button';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { formatFull }    from '../../../shared/lib/formatDate';
 import type { OnboardingProjectRow, PurgeReport } from '../types';
+import { Trash2 } from 'lucide-react';
 
 interface TestDataModalProps {
   org:          { id: string; name: string };
@@ -96,7 +97,7 @@ export function TestDataModal({ org, listProjects, purge, onClose }: TestDataMod
         <>
           <Button variant="ghost" size="md" onClick={onClose}>Fermer</Button>
           <Button variant="danger" size="md" onClick={() => setPending({ kind: 'org' })} disabled={projects === null}>
-            Supprimer toutes les données de test
+            <Trash2 size={20} />Supprimer toutes les données de test
           </Button>
         </>
       }
@@ -119,7 +120,7 @@ export function TestDataModal({ org, listProjects, purge, onClose }: TestDataMod
                   <strong>Projet {i + 1}</strong> · créé le {formatFull(p.createdAt)} · {plural(p.documents, 'document')}
                 </span>
                 <Button variant="ghost" size="sm" onClick={() => setPending({ kind: 'project', project: p, rank: i + 1 })}>
-                  Supprimer
+                  <Trash2 size={16} />Supprimer
                 </Button>
               </li>
             ))}

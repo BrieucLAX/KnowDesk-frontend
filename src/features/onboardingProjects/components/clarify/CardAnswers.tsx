@@ -10,6 +10,8 @@ import {
   sideDocuments, sidesQuestion, sideValue, substantiveAnswers, toQuotes, TYPED_ANSWERS, valueGroups, type CardAction, type PlainAnswerCode, type ReadingCard,
   type TypedAnswer,
 } from '../../lib/reading';
+import { KnowDeskMention } from '../../../../shared/components/ui/Origin';
+import { fromDocuments } from '../../lib/format';
 
 interface CardAnswersProps {
   card:       ReadingCard;
@@ -181,6 +183,7 @@ export function CardAnswers({ card, current, arbitrable, arbitrage = false, busy
       {recommendation && (
         <div className="obp-clarify-reco" role="group" aria-label={isCodeRecommendation(card) ? 'Recommandation' : 'Recommandation de l\'IA'}>
           <p className="obp-clarify-answer__subtitle">{isCodeRecommendation(card) ? 'Recommandation, écrite à partir de vos documents' : 'Recommandation de l\'IA'}</p>
+          <KnowDeskMention>{`Suggéré par KnowDesk${fromDocuments(card.documentIds.length)}`}</KnowDeskMention>
           <blockquote className="obp-clarify-reco__text">{recommendation.text}</blockquote>
           <div className="obp-decision__actions">
             <Button variant="primary" size="sm" disabled={busy || followBlocked(card)} onClick={() => { setText(''); setFollowing(true); }}>

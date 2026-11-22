@@ -108,7 +108,7 @@ export function ApiKeysSection() {
             id="key-name"
             type="text"
             label="Nom de la clé"
-            placeholder="Par exemple : Intégration Hubicus"
+            placeholder="Par exemple : Intégration CRM"
             helperText="Un nom qui permet de reconnaître l'usage de cette clé."
             value={name}
             onChange={e => setName(e.target.value)}

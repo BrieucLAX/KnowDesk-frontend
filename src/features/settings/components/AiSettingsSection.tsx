@@ -9,7 +9,8 @@ import { LastModifiedBadge } from './LastModifiedBadge';
 import type {
   AiOrgSettings, AiTone, AiAddressForm, AiGlossaryEntry,
 } from '../types';
-import { ArrowRight, Plus, Sparkles, X } from 'lucide-react';
+import { ArrowRight, Plus, Search } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 
 const TONE_OPTIONS: Array<{ value: AiTone; label: string; hint: string }> = [
   { value: 'professional', label: 'Professionnelle', hint: 'Neutre, factuelle — défaut institutionnel' },
@@ -102,7 +103,7 @@ export function AiSettingsSection() {
   return (
     <section className="settings-section" aria-labelledby="ai-title">
       <div className="settings-section__header">
-        <h2 id="ai-title" className="settings-section__title icon-label"><Sparkles size={20} />Recherche interne</h2>
+        <h2 id="ai-title" className="settings-section__title icon-label"><Search size={20} />Recherche interne</h2>
         <p className="settings-section__desc">
           Paramètres de la <strong>réponse IA</strong> affichée aux conseillers au-dessus des résultats
           de la recherche interne. Les réponses sont générées par Mistral, uniquement à partir
@@ -148,7 +149,7 @@ export function AiSettingsSection() {
             label="Secteur d'activité"
             value={form.industry ?? ''}
             maxLength={80}
-            placeholder="Par exemple : télécoms, banque, commerce, santé…"
+            placeholder="Votre secteur, en quelques mots"
             onChange={e => setForm(f => ({ ...f, industry: e.target.value }))}
             helperText="Précise le contexte donné à l'IA (« assistant pour un service client dans le secteur X »). Laissez vide pour une formulation générique."
           />
@@ -251,7 +252,7 @@ export function AiSettingsSection() {
                     aria-label="Supprimer cette correspondance"
                     title="Supprimer cette correspondance"
                   >
-                    <X size={16} />
+                    <Trash2 size={16} />
                   </button>
                 </div>
               ))}
