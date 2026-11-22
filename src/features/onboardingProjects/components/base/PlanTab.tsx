@@ -7,6 +7,7 @@ import { useToast } from '../../../../shared/lib/useToast';
 import { usePolling } from '../../../../shared/lib/usePolling';
 import { formatFull } from '../../../../shared/lib/formatDate';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
+import { ApiError } from '../../../../shared/lib/apiClient';
 import { onboardingApi } from '../../api/onboardingApi';
 import type { Audit } from '../../lib/audit';
 import { cardTitle, orderedCards, type ReadingCard } from '../../lib/reading';
@@ -21,6 +22,8 @@ import { AuditSource } from '../audit/AuditSource';
 import { AudienceFilter, AudienceTag } from './Audience';
 import { hasAudiences, matchesAudience, type AudienceFilter as Filter } from '../../lib/audience';
 import { BuildArticles, BuildEntry, BuildProgress } from './BuildView';
+import { editCountLabel, PLAN_EDIT_CONFLICT, type PlanEditOp, type PlanEditsState } from '../../lib/planEdits';
+import { EditsPanel, GoneSection, ModifiedTag, useEditDialogs, type PlanEditor } from './PlanEditing';
 
 /** Intervalle de relecture d'un plan en préparation. */
 export const PLAN_POLL_MS = 5000;
@@ -49,6 +52,11 @@ interface PlanTabProps {
  * plan, B-Q3). Lot C : deux vues, « Plan » et « Articles rédigés » (C-Q11 : plus de « Points non
  * couverts ») ; la rédaction se lance sous le plan, depuis le plan le plus récent (C-Q1 : réponses
  * inchangées).
+ *
+ * Étape 4 (décisions du porteur du 2026-11-22) : le dernier plan réussi se modifie (« Modifier le
+ * plan ») ; l'écran montre alors le plan modifié que le back rend, les mentions « Modifié », le
+ * panneau « Vos modifications », la section « Retirés ou réunis », et un lien vers le plan proposé.
+ * Sans la route (back d'avant), le plan se lit comme avant.
  */
 export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: PlanTabProps) {
   const toast = useToast();
@@ -62,6 +70,10 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
   const [buildContent, setBuildContent] = useState<BuildContent | null>(null);
   const [buildComments, setBuildComments] = useState<BuildComment[]>([]);
   const [launching, setLaunching] = useState(false);
+  const [edits,    setEdits]    = useState<PlanEditsState | null>(null);
+  const [editing,  setEditing]  = useState(false);
+  const [editBusy, setEditBusy] = useState(false);
+  const [showProposed, setShowProposed] = useState(false);
 
   const refresh = useCallback(async () => {
     const res = await onboardingApi.listPlans(projectId, analysisId);
@@ -78,9 +90,14 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
   const shownId = selected !== null && succeeded.some(p => p.id === selected) ? selected : succeeded[0]?.id ?? null;
 
   useEffect(() => {
+    setEdits(null); setEditing(false); setShowProposed(false);
     if (shownId === null) { setContent(null); setComments([]); return; }
     let cancelled = false;
     setContent(null);
+    // Le plan modifié ; en silence sans la route (back d'avant l'étape 4) : le plan proposé se lit.
+    onboardingApi.getPlanEdits(projectId, shownId)
+      .then(e => { if (!cancelled) setEdits(e); })
+      .catch(() => { if (!cancelled) setEdits(null); });
     onboardingApi.getPlanContent(projectId, shownId)
       .then(c => { if (!cancelled) setContent(c); })
       .catch(err => { if (!cancelled) toast.error(getErrorMessage(err)); });
@@ -139,8 +156,40 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
   }
 
   const showProgress = latest !== null && latest.status !== 'succeeded';
-  const plan = content !== null && content.planId === shownId && SUPPORTED_PLAN_SCHEMAS.includes(content.schemaVersion)
-    ? readPlan(content.plan) : null;
+  const supported = content !== null && content.planId === shownId && SUPPORTED_PLAN_SCHEMAS.includes(content.schemaVersion);
+  const shownEdits = edits !== null && edits.planId === shownId ? edits : null;
+  const proposed = supported ? readPlan(content.plan) : null;
+  const modified = supported && shownEdits !== null ? readPlan(shownEdits.plan) : null;
+  const plan = showProposed || modified === null ? proposed : modified;
+  const canEdit = shownEdits !== null && shownEdits.editable && content?.commentable === true && !showProposed;
+
+  const reloadEdits = async () => {
+    if (shownId === null) return;
+    setEdits(await onboardingApi.getPlanEdits(projectId, shownId));
+  };
+  /** Envoie une modification ; vrai si elle est enregistrée. Un conflit recharge le plan modifié. */
+  const runEdit = async (work: (head: string | null) => Promise<PlanEditsState>): Promise<boolean> => {
+    if (shownEdits === null) return false;
+    setEditBusy(true);
+    try {
+      setEdits(await work(shownEdits.headId));
+      return true;
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+      if (err instanceof ApiError && err.code === PLAN_EDIT_CONFLICT) void reloadEdits().catch(() => {});
+      return false;
+    } finally {
+      setEditBusy(false);
+    }
+  };
+  const editor: PlanEditor | undefined = shownEdits === null || showProposed ? undefined : {
+    editing: editing && canEdit,
+    busy:    editBusy,
+    changedChapters: new Set(shownEdits.changedChapterIds),
+    changedSubjects: new Set(shownEdits.changedSubjectIds),
+    apply:   (op: PlanEditOp) => runEdit(head => onboardingApi.editPlan(projectId, shownEdits.planId, head, op)),
+  };
+  const editCount = shownEdits?.editCount ?? 0;
   const onSaved = (saved: PlanComment) =>
     setComments(list => [...list.filter(c => c.subjectId !== saved.subjectId), saved]);
   const onCancelled = (subjectId: string | null, current: PlanComment | null) =>
@@ -185,10 +234,13 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
       onCta={() => setView('plan')}
     />
   );
+  const shownBuild = (builds ?? []).find(b => b.id === shownBuildId) ?? null;
+  const builtEdits = shownBuild?.planEditCount ?? 0;
   const builtHead = shownBuildId !== null && (
     <h2 className="obp-section-title">
-      Articles rédigés le {formatFull((builds ?? []).find(b => b.id === shownBuildId)?.finishedAt ?? null)}, à partir du plan
+      Articles rédigés le {formatFull(shownBuild?.finishedAt ?? null)}, à partir du plan
       du {formatFull(succeeded.find(p => p.id === shownId)?.finishedAt ?? null)}
+      {builtEdits > 0 && `, modifié (${editCountLabel(builtEdits)})`}
     </h2>
   );
   const constructionBody = (body: (c: NonNullable<typeof construction>) => React.ReactNode) => {
@@ -211,6 +263,11 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
       {succeeded.length > 0 && (
         <div className="obp-audit-head">
           <h2 className="obp-section-title">Plan du {formatFull(succeeded.find(p => p.id === shownId)?.finishedAt ?? null)}</h2>
+          {canEdit && view === 'plan' && (
+            <Button variant={editing ? 'primary' : 'secondary'} size="md" onClick={() => setEditing(e => !e)}>
+              {editing ? 'Terminer les modifications' : 'Modifier le plan'}
+            </Button>
+          )}
           {succeeded.length > 1 && (
             <label className="obp-audit-picker">
               <span className="obp-muted">Version</span>
@@ -233,11 +290,32 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify }: 
           <>
             <Tabs id="obp-build-views" items={views} value={view} onChange={v => setView(v)} ariaLabel="Nouvelle base" />
             <TabPanel id="obp-build-views" value={view} className="obp-build-panel">
+              {view === 'plan' && shownEdits !== null && editCount > 0 && (
+                <p className="obp-plan-modified-note" role="status">
+                  {showProposed
+                    ? 'Vous voyez le plan proposé par Knowdesk, sans vos modifications. '
+                    : `Plan modifié par vous : ${editCountLabel(editCount)}. `}
+                  <button type="button" className="obp-link" onClick={() => { setShowProposed(v => !v); setEditing(false); }}>
+                    {showProposed ? 'Voir le plan modifié' : 'Voir le plan proposé'}
+                  </button>
+                </p>
+              )}
+              {view === 'plan' && shownEdits !== null && !showProposed && (editing || editCount > 0) && (
+                <EditsPanel
+                  state={shownEdits} busy={editBusy}
+                  onUndo={() => { void runEdit(head => onboardingApi.undoPlanEdit(projectId, shownEdits.planId, head)); }}
+                  onReset={() => { void runEdit(head => onboardingApi.resetPlanEdits(projectId, shownEdits.planId, head)); }}
+                />
+              )}
               {view === 'plan' && (
                 <PlanView
                   projectId={projectId} planId={content.planId} plan={plan} audit={audit} cards={cards}
                   comments={comments} commentable={content.commentable}
                   onSaved={onSaved} onCancelled={onCancelled} onGoToClarify={onGoToClarify}
+                  editor={editor}
+                  gone={shownEdits !== null && !showProposed
+                    ? <GoneSection gone={shownEdits.gone} titles={new Map((proposed?.chapters ?? []).flatMap(c => c.subjects).map(s => [s.id, s.title] as const))} current={plan} comments={comments} />
+                    : null}
                   footer={
                     <BuildEntry
                       articleCount={plan.subjectCount} builds={builds} meta={buildsMeta} launching={launching}
@@ -321,10 +399,14 @@ interface PlanViewProps {
   onGoToClarify: (cardId?: string) => void;
   /** Le bas du plan : la rédaction des articles (lot C). */
   footer?:       React.ReactNode;
+  /** Le plan modifié (étape 4) : mentions « Modifié », et les outils en mode modification. */
+  editor?:       PlanEditor;
+  /** Les articles retirés ou réunis, avec leurs commentaires (étape 4). */
+  gone?:         React.ReactNode;
 }
 
 /** Le plan prêt, en lecture seule : points d'attention, chapitres, sujets, commentaires. */
-export function PlanView({ projectId, planId, plan, audit, cards, comments, commentable, onSaved, onCancelled, onGoToClarify, footer }: PlanViewProps) {
+export function PlanView({ projectId, planId, plan, audit, cards, comments, commentable, onSaved, onCancelled, onGoToClarify, footer, editor, gone }: PlanViewProps) {
   const titles = new Map(orderedCards(cards).map((c, i) => [c.id, cardTitle(c, i + 1)]));
   const subjectTitles = new Map(plan.chapters.flatMap(c => c.subjects).map(s => [s.id, s.title]));
   const commentOf = (subjectId: string | null) => comments.find(c => c.subjectId === subjectId) ?? null;
@@ -335,8 +417,12 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
     />
   );
 
-  const [filter, setFilter] = useState<Filter>('all');
-  const audiences = hasAudiences(plan.chapters.flatMap(c => c.subjects.map(s => s.audience)));
+  const [filterChoice, setFilter] = useState<Filter>('all');
+  const editing = editor?.editing === true;
+  // En modification, tout le plan se voit : les monter / descendre portent sur l'ordre entier.
+  const filter: Filter = editing ? 'all' : filterChoice;
+  const audiences = !editing && hasAudiences(plan.chapters.flatMap(c => c.subjects.map(s => s.audience)));
+  const { chapterTools, subjectTools, dialogs } = useEditDialogs(plan, editor);
   return (
     <div className="obp-plan">
       <p className="obp-plan__summary">{planSummary(plan)}</p>
@@ -430,19 +516,31 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
       )}
       {plan.chapters.map((chapter, ci) => ({ chapter, ci, shown: chapter.subjects.filter(s => matchesAudience(s.audience, filter)) }))
         .filter(x => x.shown.length > 0).map(({ chapter, ci, shown }) => (
-        <details key={chapter.id} className="obp-plan-chapter" open={ci === 0 || filter !== 'all'}>
-          <summary className="obp-plan-chapter__title">Catégorie {ci + 1} · {chapter.title}</summary>
+        <details key={chapter.id} className="obp-plan-chapter" open={ci === 0 || filter !== 'all' || editing}>
+          <summary className="obp-plan-chapter__title">
+            Catégorie {ci + 1} · {chapter.title}
+            {editor?.changedChapters.has(chapter.id) && <> <ModifiedTag /></>}
+          </summary>
+          {chapterTools(chapter)}
           {shown.map(subject => (
-            <SubjectBlock key={subject.id} subject={subject} audit={audit} titles={titles} onGoToClarify={onGoToClarify}>
-              {box(subject.id, 'Commentaire sur cet article (facultatif)')}
+            <SubjectBlock
+              key={subject.id} subject={subject} audit={audit} titles={titles} onGoToClarify={onGoToClarify}
+              modified={editor?.changedSubjects.has(subject.id) === true} tools={subjectTools(chapter, subject)}
+            >
+              {!editing && box(subject.id, 'Commentaire sur cet article (facultatif)')}
             </SubjectBlock>
           ))}
         </details>
       ))}
+      {dialogs}
 
-      <section className="obp-plan__whole" aria-label="Commentaire sur le plan">
-        {box(null, 'Commentaire sur le plan (facultatif)')}
-      </section>
+      {gone}
+
+      {!editing && (
+        <section className="obp-plan__whole" aria-label="Commentaire sur le plan">
+          {box(null, 'Commentaire sur le plan (facultatif)')}
+        </section>
+      )}
 
       {footer ?? (
         <p className="obp-plan__next">
@@ -453,13 +551,15 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
   );
 }
 
-function SubjectBlock({ subject, audit, titles, onGoToClarify, children }: {
+function SubjectBlock({ subject, audit, titles, onGoToClarify, children, modified = false, tools }: {
   subject: PlanSubject; audit: Audit; titles: ReadonlyMap<string, string>;
   onGoToClarify: (cardId?: string) => void; children: React.ReactNode;
+  modified?: boolean; tools?: React.ReactNode;
 }) {
   return (
     <article className="obp-plan-subject">
-      <h4 className="obp-plan-subject__title">{subject.title}</h4>
+      <h4 className="obp-plan-subject__title">{subject.title}{modified && <> <ModifiedTag /></>}</h4>
+      {tools}
       <p className="obp-plan-subject__meta">
         <span>Cet article répondra à : {subject.question}</span>
         <AudienceTag value={subject.audience} />

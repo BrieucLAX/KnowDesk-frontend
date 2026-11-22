@@ -6,7 +6,7 @@ vi.mock('../../api/onboardingApi', () => ({
   onboardingApi: {
     listAnalyses: vi.fn(), getAudit: vi.fn(), listAuditImages: vi.fn(), getAuditImage: vi.fn(), listDecisions: vi.fn(),
     listCorrections: vi.fn(), launchCorrection: vi.fn(), getBase: vi.fn(),
-    listPlans: vi.fn(), launchPlan: vi.fn(), getPlanContent: vi.fn(), listPlanComments: vi.fn(),
+    listPlans: vi.fn(), getPlanEdits: vi.fn(), editPlan: vi.fn(), undoPlanEdit: vi.fn(), resetPlanEdits: vi.fn(), launchPlan: vi.fn(), getPlanContent: vi.fn(), listPlanComments: vi.fn(),
     commentPlan: vi.fn(), cancelPlanComment: vi.fn(),
     listBuilds: vi.fn(), launchBuild: vi.fn(), getBuildContent: vi.fn(), listBuildComments: vi.fn(),
     commentBuild: vi.fn(), cancelBuildComment: vi.fn(),
@@ -67,6 +67,7 @@ const entry = (current: ReadonlyMap<string, Decision>, schemaVersion = '0.16.0',
   );
 
 beforeEach(() => {
+  vi.mocked(onboardingApi.getPlanEdits).mockRejectedValue(new Error('route absente'));
   vi.mocked(onboardingApi.listPlans).mockResolvedValue({ data: [], meta: { quota: { used: 0, max: 30 } } });
   vi.mocked(onboardingApi.listCorrections).mockResolvedValue({ data: [], meta: { quota: { used: 0, max: 30 } } });
 });

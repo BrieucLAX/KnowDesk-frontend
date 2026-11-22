@@ -12,6 +12,7 @@ import type {
 } from '../lib/correction';
 import type { OnboardingPlan, PlanComment, PlanContent, PlanQuota } from '../lib/plan';
 import type { BuildComment, BuildContent, BuildsMeta, OnboardingBuild } from '../lib/build';
+import type { PlanEditOp, PlanEditsState } from '../lib/planEdits';
 import type { KnowledgeBaseCreation, KnowledgeBasePreview, LatestKnowledgeBaseCreation } from '../lib/knowledgeBase';
 
 const BASE = '/onboarding';
@@ -127,6 +128,20 @@ export const onboardingApi = {
     apiClient.post<PlanComment>(`${BASE}/projects/${projectId}/plans/${planId}/comments`, body),
   cancelPlanComment: (projectId: string, planId: string, commentId: string) =>
     apiClient.post<{ cancelled: PlanComment; current: PlanComment | null }>(`${BASE}/projects/${projectId}/plans/${planId}/comments/${commentId}/cancel`, {}),
+
+  // ── Modification du plan avant la rédaction (plan-construire-v1, étape 4) ──
+  /** Le plan modifié (plan 0.1.0) et ses modifications en vigueur ; 503 PLAN_EDITS_UNAVAILABLE avant la migration 63. */
+  getPlanEdits: (projectId: string, planId: string) =>
+    apiClient.get<PlanEditsState>(`${BASE}/projects/${projectId}/plans/${planId}/edits`),
+  /** 201 ; 409 PLAN_EDIT_CONFLICT (tête changée), PLAN_READ_ONLY (plan remplacé) ; 422 avec le message de ce qui ne s'applique pas. */
+  editPlan: (projectId: string, planId: string, expectedHeadId: string | null, edit: PlanEditOp) =>
+    apiClient.post<PlanEditsState>(`${BASE}/projects/${projectId}/plans/${planId}/edits`, { expectedHeadId, edit }),
+  /** Annule la dernière modification en vigueur. */
+  undoPlanEdit: (projectId: string, planId: string, expectedHeadId: string | null) =>
+    apiClient.post<PlanEditsState>(`${BASE}/projects/${projectId}/plans/${planId}/edits/undo`, { expectedHeadId }),
+  /** Revient au plan proposé. */
+  resetPlanEdits: (projectId: string, planId: string, expectedHeadId: string | null) =>
+    apiClient.post<PlanEditsState>(`${BASE}/projects/${projectId}/plans/${planId}/edits/reset`, { expectedHeadId }),
 
   // ── Rédaction des articles d'une base à construire (plan-construire-v1, lot C) ──
   /**
