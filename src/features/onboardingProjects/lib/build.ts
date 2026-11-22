@@ -79,7 +79,7 @@ export const TO_VERIFY_LABEL: Readonly<Record<ToVerifyReason, string>> = {
 
 export type RemovedReason =
   | 'quote_not_verified' | 'value_without_source' | 'discarded_source' | 'discarded_value'
-  | 'retired_source' | 'ended_measure' | 'introduction_without_content';
+  | 'retired_source' | 'ended_measure' | 'introduction_without_content' | 'duplicate';
 
 /**
  * Pourquoi un texte rédigé a été retiré de l'article. `{card}` est le titre de la carte dont la
@@ -95,6 +95,9 @@ export const REMOVED_LABEL: Readonly<Record<RemovedReason, string>> = {
   retired_source:               'passage d\'une version remplacée (carte « {card} »).',
   ended_measure:                'mesure terminée à la date de la rédaction.',
   introduction_without_content: 'titre ou introduction sans texte gardé après lui.',
+  // Construction 0.3.0 (étape 5, 2026-11-22, voie A) : montrée sous « Redites retirées », jamais parmi
+  // les retraits.
+  duplicate:                    'redite : un autre passage de cet article le dit déjà.',
 };
 
 export type EmptyReason = 'no_source' | 'all_removed' | 'invalid_output';
@@ -138,6 +141,13 @@ export interface BuiltBlock {
 
 export interface RemovedBlock { id: string; text: string; reason: RemovedReason; cardId: string | null; passages: SourceRef[] }
 
+/**
+ * Une redite retirée (construction 0.3.0, étape 5 des retours de l'experte, 2026-11-22, voie A) : ce
+ * qu'elle disait, ses sources, et ce qui le dit déjà dans l'article (un passage, ou une ligne d'un
+ * tableau, ses cases séparées par « | »).
+ */
+export interface Duplicate { id: string; text: string; passages: SourceRef[]; keptBy: string; inTable: boolean }
+
 export interface BuiltArticle {
   subjectId:   string;
   title:       string;
@@ -147,7 +157,10 @@ export interface BuiltArticle {
   written:     boolean;
   emptyReason: EmptyReason | null;
   blocks:      BuiltBlock[];
+  /** Les retraits, redites à part. */
   removed:     RemovedBlock[];
+  /** Construction 0.3.0 : les redites retirées ; aucune avant. */
+  duplicates:  Duplicate[];
 }
 
 export interface BuiltChapter { id: string; title: string; articles: BuiltArticle[] }
@@ -216,7 +229,7 @@ function blockOf(b: Obj): BuiltBlock | null {
   };
 }
 
-/** La rédaction stockée (construction 0.1.0 ou 0.2.0, validée par le back), lue pour l'écran ; null si illisible. */
+/** La rédaction stockée (construction 0.1.0, 0.2.0 ou 0.3.0, validée par le back), lue pour l'écran ; null si illisible. */
 export function readConstruction(raw: unknown): Construction | null {
   if (!isObj(raw) || !Array.isArray(raw.articles) || !Array.isArray(raw.chapters)) return null;
   const articles = new Map(objs(raw.articles).map(a => [str(a.subject_id), a]));
@@ -224,11 +237,24 @@ export function readConstruction(raw: unknown): Construction | null {
     id:       str(c.id),
     title:    str(c.title),
     articles: strs(c.subject_ids).map(id => articles.get(id)).filter(isObj).map(a => {
-      const removed: RemovedBlock[] = objs(a.removed).flatMap(r => {
+      const blocks = objs(a.blocks).map(blockOf).filter((b): b is BuiltBlock => b !== null);
+      const byId = new Map(blocks.map(b => [b.id, b]));
+      const removed: RemovedBlock[] = [];
+      const duplicates: Duplicate[] = [];
+      for (const r of objs(a.removed)) {
         const reason = oneOf(REMOVED, r.reason);
-        if (reason === null) return [];
-        return [{ id: str(r.id), text: str(r.text), reason, cardId: strOrNull(r.card_id), passages: refs(r.passages) }];
-      });
+        if (reason === null) continue;
+        if (reason === 'duplicate') {
+          const kept = byId.get(str(r.kept_block_id));
+          const row = typeof r.kept_row === 'number' ? kept?.rows[r.kept_row] : undefined;
+          duplicates.push({
+            id: str(r.id), text: str(r.text), passages: refs(r.passages),
+            keptBy: row ? row.join(' | ') : kept?.text ?? '', inTable: row !== undefined,
+          });
+          continue;
+        }
+        removed.push({ id: str(r.id), text: str(r.text), reason, cardId: strOrNull(r.card_id), passages: refs(r.passages) });
+      }
       return {
         subjectId:   str(a.subject_id),
         title:       str(a.title),
@@ -237,8 +263,9 @@ export function readConstruction(raw: unknown): Construction | null {
         cardIds:     strs(a.card_ids),
         written:     a.status === 'written',
         emptyReason: oneOf(EMPTY, a.empty_reason),
-        blocks:      objs(a.blocks).map(blockOf).filter((b): b is BuiltBlock => b !== null),
+        blocks,
         removed,
+        duplicates,
       };
     }),
   }));
@@ -360,3 +387,34 @@ export function buildFailureMessage(code: string | null): string {
 
 /** Ce que dit le champ de commentaire de la rédaction : une remarque pour l'équipe, jamais dans la base. */
 export const BUILD_COMMENT_HINT = 'Pour l\'équipe Knowdesk seulement : ce commentaire n\'entre jamais dans la base.';
+
+// ── Paragraphes (étape 5 des retours de l'experte, 2026-11-22, voie A) ─────
+
+/** Ce que l'écran montre d'un article : un paragraphe fait de passages qui se suivent, ou un bloc seul. */
+export type BlockGroup =
+  | { kind: 'paragraph'; blocks: BuiltBlock[] }
+  | { kind: 'block'; block: BuiltBlock };
+
+/** Un passage qui se réunit aux voisins : un texte des documents, sans phrase « À vérifier ». */
+const joinable = (b: BuiltBlock) => b.kind === 'text' && !b.fromExpert && b.toVerify.length === 0 && b.text.trim() !== '';
+
+/**
+ * Les blocs d'un article tels que l'écran les montre : les textes des documents qui se suivent dans
+ * une même partie (même intertitre, même mention de public) forment un seul paragraphe ; un
+ * intertitre, un tableau, une liste, le texte de l'expert et une phrase « À vérifier » restent à part
+ * et coupent le paragraphe. Aucun mot ne change ; vaut pour toute rédaction (0.1.0, 0.2.0, 0.3.0).
+ */
+export function groupBlocks(blocks: readonly BuiltBlock[]): BlockGroup[] {
+  const out: BlockGroup[] = [];
+  for (const b of blocks) {
+    const last = out[out.length - 1];
+    if (joinable(b) && last?.kind === 'paragraph' && last.blocks[0].audience === b.audience) {
+      last.blocks.push(b);
+    } else if (joinable(b)) {
+      out.push({ kind: 'paragraph', blocks: [b] });
+    } else {
+      out.push({ kind: 'block', block: b });
+    }
+  }
+  return out;
+}

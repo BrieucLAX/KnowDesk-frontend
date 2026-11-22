@@ -866,3 +866,8 @@
 .obp-plan-input { display: block; width: 100%; margin: 4px 0 12px; padding: 8px 10px; border: 1px solid var(--neutral-300); border-radius: 6px; font: inherit; background: var(--surface); color: var(--neutral-900); }
 .obp-plan-merge { margin-top: 8px; padding: 8px 12px; border-radius: 6px; background: var(--neutral-50); }
 .obp-plan-merge p { margin: 4px 0; }
+
+/* ── Paragraphes et redites retirées (étape 5, 2026-11-22, voie A) ── */
+.obp-build-origin { margin: 6px 0 10px; }
+.obp-build-origin__said { margin: 0 0 4px; color: var(--neutral-700); font-style: italic; }
+.obp-build-duplicates li { margin: 6px 0; }

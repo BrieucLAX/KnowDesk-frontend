@@ -5,7 +5,7 @@ import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { onboardingApi } from '../../api/onboardingApi';
 import type { Audit } from '../../lib/audit';
 import {
-  BUILD_COMMENT_HINT, BUILD_STEPS, buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, isBuildActive,
+  BUILD_COMMENT_HINT, BUILD_STEPS, buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, groupBlocks, isBuildActive,
   removedLabel, removedLabelAround, TO_VERIFY_LABEL, unplacedAnswersTitle, verifyLegend,
   type BuildComment, type BuildsMeta, type BuiltArticle, type BuiltBlock, type Construction, type OnboardingBuild,
 } from '../../lib/build';
@@ -240,6 +240,32 @@ function BlockView({ block, ctx }: { block: BuiltBlock; ctx: Ctx }) {
   );
 }
 
+/**
+ * Un paragraphe fait de passages qui se suivent (étape 5, 2026-11-22, voie A) : leurs textes à la
+ * suite, mot pour mot ; sous lui, les sources de chaque phrase d'origine (« D'après « … » »).
+ */
+function ParagraphView({ blocks, ctx }: { blocks: BuiltBlock[]; ctx: Ctx }) {
+  if (blocks.length === 1) return <BlockView block={blocks[0]} ctx={ctx} />;
+  const audience = blocks[0].audience;
+  return (
+    <div className="obp-build-block obp-build-paragraph">
+      {audience && (
+        <p className="obp-build-block__audience" aria-label="Public de ce passage"><AudienceTag value={audience} /></p>
+      )}
+      <p className="obp-build-text">{blocks.map(b => b.text).join(' ')}</p>
+      <details className="obp-plan-subject__sources">
+        <summary>Sources ({blocks.reduce((n, b) => n + b.sources.length, 0)})</summary>
+        {blocks.map(b => (
+          <div key={b.id} className="obp-build-origin">
+            <p className="obp-build-origin__said">D'après « {b.text} »</p>
+            {b.sources.map((s, i) => <AuditSource key={i} audit={ctx.audit} source={s} />)}
+          </div>
+        ))}
+      </details>
+    </div>
+  );
+}
+
 function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: Ctx; children: React.ReactNode }) {
   const toVerify = article.blocks.reduce((n, b) => n + b.toVerify.reduce((k, m) => k + m.passages.length, 0), 0);
   return (
@@ -257,7 +283,9 @@ function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: C
           Aucun texte gardé : {article.emptyReason ? EMPTY_LABEL[article.emptyReason] : 'aucun texte n\'a pu être gardé'}.
         </p>
       )}
-      {article.blocks.map(b => <BlockView key={b.id} block={b} ctx={ctx} />)}
+      {groupBlocks(article.blocks).map(g => (g.kind === 'paragraph'
+        ? <ParagraphView key={g.blocks[0].id} blocks={g.blocks} ctx={ctx} />
+        : <BlockView key={g.block.id} block={g.block} ctx={ctx} />))}
       {article.removed.length > 0 && (
         <details className="obp-build-removed">
           <summary>Retiré de cet article ({article.removed.length})</summary>
@@ -266,6 +294,19 @@ function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: C
               <li key={r.id}>
                 « {r.text} » : <RemovedReason removed={r} ctx={ctx} />
                 {r.passages.map((s, i) => <AuditSource key={i} audit={ctx.audit} source={s} />)}
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+      {article.duplicates.length > 0 && (
+        <details className="obp-build-removed obp-build-duplicates">
+          <summary>Redites retirées ({article.duplicates.length})</summary>
+          <ul>
+            {article.duplicates.map(d => (
+              <li key={d.id}>
+                « {d.text} » : {d.inTable ? 'déjà dans le tableau, ligne' : 'déjà dit par'} « {d.keptBy} ».
+                {d.passages.map((s, i) => <AuditSource key={i} audit={ctx.audit} source={s} />)}
               </li>
             ))}
           </ul>

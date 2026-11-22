@@ -25,6 +25,7 @@ import type { OnboardingAnalysis, OnboardingProject } from '../../types';
 import ELYRA from '../clarify/fixtures/audit-0.16.0-elyra-v2-lecture-4.response.json';
 import PLAN_ELYRA from './fixtures/plan-0.1.0-elyra.response.json';
 import BUILD_ELYRA from './fixtures/construction-0.1.0-elyra.response.json';
+import BUILD_ELYRA_03 from './fixtures/construction-0.3.0-elyra-2026-11-22.response.json';
 
 /**
  * Rédaction des articles (plan-construire-v1, lot C ; décisions du porteur C-Q1 à C-Q6). L'audit est
@@ -213,6 +214,31 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
       expect(await screen.findByRole('heading', { name: /^Articles rédigés le / })).not.toHaveTextContent('modifié');
       view.unmount();
     }
+  });
+
+  it('étape 5 (voie A) : les passages qui se suivent forment un paragraphe, sources par phrase d\'origine ; redites retirées repliées', async () => {
+    const BUILD_03 = BUILD_ELYRA_03 as unknown as BuildContent;
+    mock([buildRow({ id: BUILD_03.buildId })]);
+    vi.mocked(onboardingApi.getBuildContent).mockResolvedValue(BUILD_03);
+    const { container } = show();
+    await openTab('Articles rédigés');
+    const fixe = (await screen.findByRole('heading', { name: 'Elyra Fixe 2 ans' })).closest('article')!;
+    // Cinq passages de « Caractéristiques de l'offre », un seul paragraphe, mot pour mot.
+    const paragraph = within(fixe).getByText(/^L'offre Elyra Fixe 2 ans s'adresse aux particuliers .* Il n'y a aucun engagement : le client peut résilier à tout moment\.$/);
+    expect(paragraph.tagName).toBe('P');
+    const sources = paragraph.closest('.obp-build-paragraph')!.querySelector('details')!;
+    expect(within(sources as HTMLElement).getByText(/^Sources \(\d+\)$/)).toBeInTheDocument();
+    expect(within(sources as HTMLElement).getAllByText(/^D'après « /)).toHaveLength(5);
+    // La phrase à vérifier reste à part, surlignée.
+    expect(within(fixe).getByText('Ces prix sont valables à partir du 1er septembre 2026 et n\'incluent pas les évolutions des taxes et du TURPE.').closest('mark')).not.toBeNull();
+
+    const gamme = screen.getByRole('heading', { name: 'Gamme Professionnels 2026' }).closest('article')!;
+    const dups = within(gamme).getByText('Redites retirées (2)').closest('details')!;
+    expect(dups).not.toHaveAttribute('open');
+    expect(within(dups as HTMLElement).getByText(/« L'offre Elyra Pro Flex est engagée pour 1 an\. » : déjà dans le tableau, ligne « Elyra Pro Flex \| Électricité \| Indexé spot \+ marge \| 1 an »\./)).toBeInTheDocument();
+    expect(within(gamme).queryByText(/^Retiré de cet article/)).not.toBeInTheDocument();
+    expect(within(gamme).queryByText('L\'offre Elyra Pro Flex est engagée pour 1 an.', { selector: 'p' })).not.toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/\b(card|sub|ch|doc|blk|pt)_|duplicate|kept_block/);
   });
 
   it('par catégorie, chaque article : question, public, blocs, sources, sans aucun code', async () => {

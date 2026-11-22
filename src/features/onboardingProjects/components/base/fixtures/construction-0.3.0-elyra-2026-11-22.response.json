@@ -1,0 +1,1153 @@
+{
+ "buildId": "build-elyra-2211",
+ "planId": "plan-elyra-1911",
+ "schemaVersion": "0.3.0",
+ "construction": {
+  "schema_version": "0.3.0",
+  "audit_schema_version": "0.16.0",
+  "plan_schema_version": "0.1.0",
+  "plan_generated_at": "2026-11-19T03:35:21.202475Z",
+  "generated_at": "2026-11-22T07:22:58.406782Z",
+  "preparation_date": "2026-10-26",
+  "decision_ids": [
+   "dec_card_24fcb03db294f6f6",
+   "dec_card_012dcf674c81fd62",
+   "dec_card_4131641bd85af8b2",
+   "dec_card_a0dbb07d226a724f",
+   "dec_card_49acfa339577d3d3",
+   "dec_card_e3975ef276e90c40",
+   "dec_card_2b3ebefacdf49f69",
+   "dec_card_99fcfa15353f74a7",
+   "dec_card_552660f51c6af8c6",
+   "dec_card_1b9961bd7843699b",
+   "dec_card_5c0d236c1475a43f",
+   "dec_card_2a8658c26f64bad1",
+   "dec_card_5c83ac8f41ad291b",
+   "dec_card_613b29db93522a77",
+   "dec_card_2b35fe27346c6527",
+   "dec_card_fb56f8acaf896e2b",
+   "dec_card_dfdd3bdd4c45a994",
+   "dec_card_c6b7f051d611fa57",
+   "dec_card_cb3ece6251e02e32",
+   "dec_card_2012651dc44fa745"
+  ],
+  "chapters": [
+   {
+    "id": "ch_3",
+    "title": "Offres et tarifs pour particuliers",
+    "subject_ids": [
+     "sub_9"
+    ]
+   },
+   {
+    "id": "ch_4",
+    "title": "Offres et tarifs pour professionnels",
+    "subject_ids": [
+     "sub_15",
+     "sub_18"
+    ]
+   },
+   {
+    "id": "ch_6",
+    "title": "Facturation et paiement",
+    "subject_ids": [
+     "sub_25"
+    ]
+   }
+  ],
+  "articles": [
+   {
+    "subject_id": "sub_9",
+    "chapter_id": "ch_3",
+    "title": "Elyra Fixe 2 ans",
+    "question": "Quelles sont les caractéristiques, le prix et les conditions de l'offre Elyra Fixe 2 ans pour les particuliers ?",
+    "audience": "particuliers",
+    "card_ids": [
+     "card_24fcb03db294f6f6",
+     "card_4131641bd85af8b2",
+     "card_a0dbb07d226a724f",
+     "card_cb3ece6251e02e32",
+     "card_49acfa339577d3d3"
+    ],
+    "status": "written",
+    "empty_reason": null,
+    "blocks": [
+     {
+      "id": "blk_43",
+      "kind": "intertitle",
+      "origin": "document",
+      "text": "Caractéristiques de l'offre",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_44",
+      "kind": "text",
+      "origin": "document",
+      "text": "L'offre Elyra Fixe 2 ans s'adresse aux particuliers pour leur résidence principale ou secondaire, avec une puissance souscrite inférieure ou égale à 36 kVA.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+        "excerpt": "Clientèle | Particuliers, résidence principale ou secondaire, ≤ 36 kVA",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Caractéristiques"
+        ],
+        "block_kind": "table",
+        "block_index": 0
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_45",
+      "kind": "text",
+      "origin": "document",
+      "text": "Le prix du kWh hors taxes (HT) est fixe pendant 24 mois à compter de la mise en service.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+        "excerpt": "Prix du kWh HT fixe pendant 24 mois",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_46",
+      "kind": "text",
+      "origin": "document",
+      "text": "L'offre propose deux options : Base et Heures Pleines / Heures Creuses.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+        "excerpt": "Options Base et Heures Pleines / Heures Creuses",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_47",
+      "kind": "text",
+      "origin": "document",
+      "text": "L'électricité fournie est verte, avec des garanties d'origine.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+        "excerpt": "Énergie verte | Oui, garanties d'origine",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Caractéristiques"
+        ],
+        "block_kind": "table",
+        "block_index": 0
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_48",
+      "kind": "text",
+      "origin": "document",
+      "text": "Il n'y a aucun engagement : le client peut résilier à tout moment.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+        "excerpt": "Sans engagement : le client peut partir à tout moment",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       },
+       {
+        "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+        "excerpt": "Engagement | Aucun",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Caractéristiques"
+        ],
+        "block_kind": "table",
+        "block_index": 0
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_49",
+      "kind": "intertitle",
+      "origin": "document",
+      "text": "Prix et abonnements",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_50",
+      "kind": "table",
+      "origin": "document",
+      "text": null,
+      "items": null,
+      "header": [
+       "Offre",
+       "Option",
+       "Abonnement € TTC/mois",
+       "kWh € TTC (Base ou HP)",
+       "kWh HC € TTC"
+      ],
+      "rows": [
+       [
+        "Elyra Fixe 2 ans",
+        "Base",
+        "16,20",
+        "0,1952",
+        "–"
+       ],
+       [
+        "Elyra Fixe 2 ans",
+        "HP/HC",
+        "16,58",
+        "0,2068",
+        "0,1586"
+       ]
+      ],
+      "sources": [
+       {
+        "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+        "excerpt": "| Elyra Fixe 2 ans | Base | 16,20 | 0,1952 | – |",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pdf",
+        "page": 1
+       },
+       {
+        "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+        "excerpt": "| Elyra Fixe 2 ans | HP/HC | 16,58 | 0,2068 | 0,1586 |",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pdf",
+        "page": 1
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_51",
+      "kind": "text",
+      "origin": "document",
+      "text": "Ces prix sont valables à partir du 1er septembre 2026 et n'incluent pas les évolutions des taxes et du TURPE.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_03_10_presentation_gamme_particuliers_2026_pptx_5a3582c5",
+        "excerpt": "Hors évolution des taxes et du TURPE",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       },
+       {
+        "document_id": "doc_grille_tarifaire_particuliers_v2_2026_09_01_pdf_6094cafc",
+        "excerpt": "Électricité et gaz naturel – applicable au 1er septembre 2026",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pdf",
+        "page": 1
+       }
+      ],
+      "expert": null,
+      "to_verify": [
+       {
+        "reason": "joined_passages",
+        "passages": [
+         "Ces prix sont valables à partir du 1er septembre 2026 et n'incluent pas les évolutions des taxes et du TURPE."
+        ]
+       }
+      ]
+     },
+     {
+      "id": "blk_52",
+      "kind": "intertitle",
+      "origin": "document",
+      "text": "Fin de la période de blocage",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_53",
+      "kind": "text",
+      "origin": "document",
+      "text": "Deux mois avant la fin des 24 mois, le client reçoit une proposition de renouvellement.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+        "excerpt": "Deux mois avant l'échéance, le client reçoit une proposition de renouvellement.",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Que se passe-t-il au bout de 24 mois ?"
+        ],
+        "block_kind": "paragraph",
+        "block_index": 0
+       },
+       {
+        "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+        "excerpt": "# Que se passe-t-il au bout de 24 mois ?",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Que se passe-t-il au bout de 24 mois ?"
+        ],
+        "block_kind": "paragraph",
+        "block_index": 0
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_54",
+      "kind": "text",
+      "origin": "document",
+      "text": "Sans réponse de sa part, le client bascule automatiquement sur l'offre Elyra Indexée.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+        "excerpt": "Sans réponse, il bascule sur l'offre Elyra Indexée.",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Que se passe-t-il au bout de 24 mois ?"
+        ],
+        "block_kind": "paragraph",
+        "block_index": 0
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_55",
+      "kind": "intertitle",
+      "origin": "document",
+      "text": "Points à souligner",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_56",
+      "kind": "text",
+      "origin": "document",
+      "text": "Le prix fixe du kWh HT protège le client contre les hausses du tarif réglementé pendant 24 mois.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+        "excerpt": "Un prix qui ne bouge pas pendant 2 ans, même si le TRVE augmente",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Arguments de vente"
+        ],
+        "block_kind": "paragraph",
+        "block_index": 0
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_57",
+      "kind": "text",
+      "origin": "document",
+      "text": "En option Base, l'offre Elyra Fixe 2 ans est moins chère que le tarif réglementé depuis septembre 2026.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+        "excerpt": "Moins cher que le tarif réglementé en Base depuis septembre 2026",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Arguments de vente"
+        ],
+        "block_kind": "paragraph",
+        "block_index": 1
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_58",
+      "kind": "text",
+      "origin": "document",
+      "text": "Seul le prix HT de la fourniture est fixe. Les taxes et l'acheminement (TURPE) suivent la réglementation en vigueur.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+        "excerpt": "Non. Seul le prix HT de la fourniture est fixe ; les taxes et l'acheminement suivent la réglementation.",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Objections fréquentes",
+         "« Les taxes sont-elles aussi bloquées ? »"
+        ],
+        "block_kind": "paragraph",
+        "block_index": 0
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_59",
+      "kind": "text",
+      "origin": "document",
+      "text": "Le client peut changer d'offre à tout moment sans frais, même si le tarif réglementé baisse.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_fiche_offre_elyra_fixe_2ans_docx_6bd60e7f",
+        "excerpt": "Le client peut changer d'offre à tout moment sans frais.",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Objections fréquentes",
+         "« Et si le tarif réglementé baisse ? »"
+        ],
+        "block_kind": "paragraph",
+        "block_index": 0
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     }
+    ],
+    "removed": []
+   },
+   {
+    "subject_id": "sub_15",
+    "chapter_id": "ch_4",
+    "title": "Gamme Professionnels 2026",
+    "question": "Quelles sont les offres d'électricité et de gaz proposées par Elyra Énergie pour les professionnels en 2026 ?",
+    "audience": "professionnels",
+    "card_ids": [
+     "card_c6b7f051d611fa57"
+    ],
+    "status": "written",
+    "empty_reason": null,
+    "blocks": [
+     {
+      "id": "blk_111",
+      "kind": "intertitle",
+      "origin": "document",
+      "text": "Offres d'électricité et de gaz pour professionnels",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_112",
+      "kind": "table",
+      "origin": "document",
+      "text": null,
+      "items": null,
+      "header": [
+       "Offre",
+       "Énergie",
+       "Prix",
+       "Engagement"
+      ],
+      "rows": [
+       [
+        "Tarif réglementé",
+        "Électricité ≤ 36 kVA",
+        "TRVE",
+        "Aucun"
+       ],
+       [
+        "Elyra Pro Flex",
+        "Électricité",
+        "Indexé spot + marge",
+        "1 an"
+       ],
+       [
+        "Elyra Pro Gaz Fixe",
+        "Gaz",
+        "Fixe HT",
+        "2 ans"
+       ]
+      ],
+      "sources": [
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "| Tarif réglementé | Électricité ≤ 36 kVA | TRVE | Aucun |",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       },
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "| Elyra Pro Flex | Électricité | Indexé spot + marge | 1 an |",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       },
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "| Elyra Pro Gaz Fixe | Gaz | Fixe HT | 2 ans |",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_115",
+      "kind": "text",
+      "origin": "document",
+      "text": "Le tarif réglementé d'électricité est sans engagement.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "Tarif réglementé | Électricité ≤ 36 kVA | TRVE | Aucun",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_116",
+      "kind": "intertitle",
+      "origin": "document",
+      "text": "Public concerné",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_117",
+      "kind": "text",
+      "origin": "document",
+      "text": "Les offres s'adressent aux professionnels dont les sites ont une puissance comprise entre 6 et 36 kVA (C5) ou entre 36 et 250 kVA (C4).",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "Puissances de 6 à 36 kVA (C5) et de 36 à 250 kVA (C4)",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 2
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_118",
+      "kind": "text",
+      "origin": "document",
+      "text": "Les clients disposant de plus de 3 sites bénéficient d'un interlocuteur dédié.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "Interlocuteur dédié au-delà de 3 sites",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 2
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_119",
+      "kind": "intertitle",
+      "origin": "document",
+      "text": "Réponses aux objections courantes",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_120",
+      "kind": "text",
+      "origin": "document",
+      "text": "Pour les clients déjà au tarif réglementé, il est nécessaire de vérifier leur éligibilité en fonction de leur effectif et de leur chiffre d'affaires.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+        "excerpt": "Vérifions ensemble votre éligibilité : effectif et chiffre d'affaires.",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Traitement des objections"
+        ],
+        "block_kind": "table",
+        "block_index": 0
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_121",
+      "kind": "text",
+      "origin": "document",
+      "text": "L'offre Pro Flex est engagée pour 1 an seulement.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+        "excerpt": "Pro Flex est engagé 1 an seulement",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Traitement des objections"
+        ],
+        "block_kind": "table",
+        "block_index": 0
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     }
+    ],
+    "removed": [
+     {
+      "id": "blk_113",
+      "kind": "text",
+      "text": "L'offre Elyra Pro Flex est engagée pour 1 an.",
+      "reason": "duplicate",
+      "card_id": null,
+      "passages": [
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "Elyra Pro Flex | Électricité | Indexé spot + marge | 1 an",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       }
+      ],
+      "kept_block_id": "blk_112",
+      "kept_row": 1
+     },
+     {
+      "id": "blk_114",
+      "kind": "text",
+      "text": "L'offre Elyra Pro Gaz Fixe est engagée pour 2 ans.",
+      "reason": "duplicate",
+      "card_id": null,
+      "passages": [
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "Elyra Pro Gaz Fixe | Gaz | Fixe HT | 2 ans",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       }
+      ],
+      "kept_block_id": "blk_112",
+      "kept_row": 2
+     }
+    ]
+   },
+   {
+    "subject_id": "sub_18",
+    "chapter_id": "ch_4",
+    "title": "Elyra Pro Gaz Fixe",
+    "question": "Quelles sont les caractéristiques, le prix et les conditions de l'offre Elyra Pro Gaz Fixe pour les professionnels ?",
+    "audience": "professionnels",
+    "card_ids": [],
+    "status": "written",
+    "empty_reason": null,
+    "blocks": [
+     {
+      "id": "blk_139",
+      "kind": "intertitle",
+      "origin": "document",
+      "text": "Caractéristiques de l'offre",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_140",
+      "kind": "text",
+      "origin": "document",
+      "text": "L'offre Elyra Pro Gaz Fixe est une offre de gaz à prix fixe hors taxes (HT).",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "Elyra Pro Gaz Fixe | Gaz | Fixe HT | 2 ans",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_142",
+      "kind": "table",
+      "origin": "document",
+      "text": null,
+      "items": null,
+      "header": [
+       "Offre",
+       "Énergie",
+       "Prix",
+       "Engagement"
+      ],
+      "rows": [
+       [
+        "Elyra Pro Gaz Fixe",
+        "Gaz",
+        "Fixe HT",
+        "2 ans"
+       ]
+      ],
+      "sources": [
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "| Elyra Pro Gaz Fixe | Gaz | Fixe HT | 2 ans |",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     }
+    ],
+    "removed": [
+     {
+      "id": "blk_141",
+      "kind": "text",
+      "text": "Elle nécessite un engagement de 2 ans.",
+      "reason": "duplicate",
+      "card_id": null,
+      "passages": [
+       {
+        "document_id": "doc_2026_03_12_presentation_gamme_professionnels_2026_pptx_1120559c",
+        "excerpt": "Elyra Pro Gaz Fixe | Gaz | Fixe HT | 2 ans",
+        "zone": "table",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 3
+       },
+       {
+        "document_id": "doc_argumentaire_commercial_tpe_artisans_docx_7a98ac63",
+        "excerpt": "Elyra Pro Gaz Fixe : prix fixe, engagement 2 ans",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "docx",
+        "heading_path": [
+         "Rappel de la gamme"
+        ],
+        "block_kind": "paragraph",
+        "block_index": 2
+       }
+      ],
+      "kept_block_id": "blk_142",
+      "kept_row": 0
+     }
+    ]
+   },
+   {
+    "subject_id": "sub_25",
+    "chapter_id": "ch_6",
+    "title": "Mensualisation et prélèvement",
+    "question": "Comment fonctionne la mensualisation et quand le prélèvement a-t-il lieu ?",
+    "audience": "tous",
+    "card_ids": [
+     "card_2b3ebefacdf49f69"
+    ],
+    "status": "written",
+    "empty_reason": null,
+    "blocks": [
+     {
+      "id": "blk_181",
+      "kind": "text",
+      "origin": "document",
+      "text": "La mensualisation permet de lisser le paiement de la consommation annuelle estimée sur 11 ou 12 mois.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+        "excerpt": "Mensualités calculées sur la consommation annuelle estimée",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 5
+       },
+       {
+        "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+        "excerpt": "Facturation bimestrielle sur index ou mensualisation sur 11 ou 12 mois.",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pdf",
+        "page": 1
+       }
+      ],
+      "expert": null,
+      "to_verify": [
+       {
+        "reason": "joined_passages",
+        "passages": [
+         "La mensualisation permet de lisser le paiement de la consommation annuelle estimée sur 11 ou 12 mois."
+        ]
+       }
+      ]
+     },
+     {
+      "id": "blk_182",
+      "kind": "text",
+      "origin": "document",
+      "text": "Le prélèvement a lieu le 5 de chaque mois pour les clients en mensualisation.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+        "excerpt": "Mensualisation : prélèvement le 5 de chaque mois",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 9
+       },
+       {
+        "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+        "excerpt": "Prélèvement le 5 de chaque mois",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 5
+       },
+       {
+        "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+        "excerpt": "En cas de mensualisation, le prélèvement intervient le 5 de chaque mois.",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pdf",
+        "page": 1
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_183",
+      "kind": "text",
+      "origin": "document",
+      "text": "Une facture de régularisation est émise chaque année à la date anniversaire du contrat.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_01_15_formation_onboarding_conseillers_energie_pptx_3faab109",
+        "excerpt": "facture de régularisation annuelle",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 9
+       },
+       {
+        "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+        "excerpt": "Facture de régularisation à la date anniversaire",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 5
+       },
+       {
+        "document_id": "doc_cgv_particuliers_electricite_gaz_2026_pdf_1437ef85",
+        "excerpt": "Une facture de régularisation est émise chaque année à la date anniversaire du contrat.",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pdf",
+        "page": 1
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_184",
+      "kind": "text",
+      "origin": "document",
+      "text": "Le client peut demander un ajustement de sa mensualité à tout moment.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+        "excerpt": "Le client peut demander un ajustement de mensualité à tout moment",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 5
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     },
+     {
+      "id": "blk_185",
+      "kind": "text",
+      "origin": "document",
+      "text": "Un ajustement de mensualité est proposé dès qu'un écart de plus de 15 % est constaté entre la consommation estimée et la consommation réelle.",
+      "items": null,
+      "header": null,
+      "rows": null,
+      "sources": [
+       {
+        "document_id": "doc_2026_04_08_formation_lecture_facture_pptx_c943eb06",
+        "excerpt": "Proposer un ajustement dès qu'un écart de plus de 15 % est constaté.",
+        "zone": "text",
+        "table_cell": null,
+        "excerpt_origin": "source_text",
+        "image_id": null,
+        "format": "pptx",
+        "slide": 5
+       }
+      ],
+      "expert": null,
+      "to_verify": []
+     }
+    ],
+    "removed": []
+   }
+  ],
+  "uncovered": [],
+  "controls": {
+   "articles_written": 4,
+   "articles_empty": 0,
+   "blocks_kept": 26,
+   "blocks_removed": 3,
+   "sentences_to_verify": 2,
+   "expert_texts": 0,
+   "duplicates_removed": 3
+  },
+  "run": {
+   "model": "mistral-large-2512",
+   "prompts": [
+    {
+     "prompt_id": "redaction_sujet",
+     "prompt_version": 1
+    }
+   ],
+   "calls": 34,
+   "retries": 3,
+   "cost_usd": 0.084665,
+   "duration_seconds": 70.4,
+   "pipeline_commit": null
+  }
+ },
+ "createdAt": "2026-11-22T08:30:00.000Z",
+ "commentable": true
+}
