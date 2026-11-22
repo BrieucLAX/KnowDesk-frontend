@@ -43,7 +43,8 @@ export interface PurgeReport {
   objects: number;
   rows:    Record<string, number>;
   /** Suppression d'une organisation entière (KnowDesk#50) : sa base de connaissance, processus guidés compris. */
-  knowledgeBase?: { objects: number; rows: Record<string, number> };
+  /** `kept` : ce que l'organisation a fait elle-même et qui reste (KnowDesk, purge limitée à l'onboarding, 2026-11-22). */
+  knowledgeBase?: { objects: number; rows: Record<string, number>; kept?: Record<string, number> };
 }
 
 /** Réponse de POST /superadmin/test-organizations. */

@@ -54,12 +54,13 @@ describe('TestDataModal', () => {
     expect(screen.getByText(/Aucun projet/)).toBeInTheDocument();
   });
 
-  it('la confirmation de toute l\'organisation nomme la base de connaissance et les processus guidés', async () => {
+  it('la confirmation de toute l\'organisation dit ce qui part de la base de connaissance et ce qui reste (texte du 2026-11-22, Q7 b)', async () => {
     setup();
     await screen.findByText('Projet 1');
     fireEvent.click(screen.getByRole('button', { name: 'Supprimer toutes les données de test' }));
     const dialog = screen.getByRole('dialog');
-    expect(dialog).toHaveTextContent('ainsi que toute sa base de connaissance : articles et leurs versions, FAQ, processus guidés, catégories, tags, synonymes, images et imports.');
+    expect(dialog).toHaveTextContent('ainsi que ce que l\'onboarding a créé dans sa base de connaissance : articles et leurs versions, FAQ, catégories restées vides, synonymes et étiquettes ajoutés, images.');
+    expect(dialog).toHaveTextContent('Ce que l\'organisation a fait elle-même dans sa base reste (articles, processus guidés, imports, étiquettes).');
   });
 
   it('le résumé compte aussi ce que la base de connaissance a perdu', async () => {
