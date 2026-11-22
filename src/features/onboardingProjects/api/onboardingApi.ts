@@ -13,7 +13,8 @@ import type {
 import type { OnboardingPlan, PlanComment, PlanContent, PlanQuota } from '../lib/plan';
 import type { BuildComment, BuildContent, BuildsMeta, OnboardingBuild } from '../lib/build';
 import type { PlanEditOp, PlanEditsState } from '../lib/planEdits';
-import type { KnowledgeBaseCreation, KnowledgeBasePreview, LatestKnowledgeBaseCreation } from '../lib/knowledgeBase';
+import type { KnowledgeBaseCreation, KnowledgeBasePreview, LatestKnowledgeBaseCreation,
+  BuildKnowledgeBaseCreation, BuildKnowledgeBasePreview, BuildKnowledgeBaseState } from '../lib/knowledgeBase';
 
 const BASE = '/onboarding';
 
@@ -238,4 +239,21 @@ export const onboardingApi = {
   /** L'aperçu et l'état de sa création (progression, code d'erreur) ; administrateurs seulement. */
   getKnowledgeBaseCreation: (projectId: string, creationId: string) =>
     apiClient.get<KnowledgeBaseCreation>(`${BASE}/projects/${projectId}/knowledge-base/${creationId}`),
+
+  // ── Base de connaissance depuis une rédaction (plan-construire-v1, lot D) ──
+  /** L'état du bloc d'une rédaction : lancement possible (sinon pourquoi), dernière création. Tout membre. */
+  getBuildKnowledgeBase: (projectId: string, buildId: string) =>
+    apiClient.get<BuildKnowledgeBaseState>(`${BASE}/projects/${projectId}/builds/${buildId}/knowledge-base`),
+  /**
+   * 201 : l'aperçu enregistré, sans appel au modèle ; `applyAudienceTags` (défaut vrai) n'a d'effet
+   * que si la rédaction distingue des publics. 409 avec le code et le message du bouton grisé.
+   */
+  previewBuildKnowledgeBase: (projectId: string, buildId: string, applyAudienceTags: boolean) =>
+    apiClient.post<BuildKnowledgeBasePreview>(`${BASE}/projects/${projectId}/builds/${buildId}/knowledge-base?dryRun=1`, { applyAudienceTags }),
+  /** 202 : la création de cet aperçu part en file (ou reprend après un échec). */
+  createBuildKnowledgeBase: (projectId: string, buildId: string, creationId: string) =>
+    apiClient.post<BuildKnowledgeBaseCreation>(`${BASE}/projects/${projectId}/builds/${buildId}/knowledge-base`, { creationId }),
+  /** L'aperçu d'une création depuis une rédaction et son état (progression, code d'erreur). */
+  getBuildKnowledgeBaseCreation: (projectId: string, creationId: string) =>
+    apiClient.get<BuildKnowledgeBaseCreation>(`${BASE}/projects/${projectId}/knowledge-base/${creationId}`),
 };

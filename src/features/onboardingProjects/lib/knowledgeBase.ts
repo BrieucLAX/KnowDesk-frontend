@@ -159,3 +159,110 @@ export function rememberCreation(validationId: string, creationId: string | null
     else window.localStorage.setItem(storageKey(validationId), creationId);
   } catch { /* stockage indisponible : la page marche sans */ }
 }
+
+// ── Créer la base depuis une rédaction (plan-construire-v1, lot D ; décisions du 2026-11-22) ──
+// Types recopiés du back (`onboarding.knowledgeBase.ts`, `KnowledgeBaseFromBuildPreview` et
+// `knowledgeBaseFromBuildService.state`). Aucun contrat du pipeline ne change.
+
+export interface BuildAudienceSummary {
+  /** La rédaction distingue-t-elle des publics (un article ou un bloc « particuliers » / « professionnels ») ? */
+  detected: boolean;
+  /** La case « Appliquer les étiquettes de public » : vraie par défaut, sans effet sans public détecté. */
+  applied:  boolean;
+  articles: { particuliers: number; professionnels: number; tous: number };
+  /** Blocs préfixés « Particuliers : » / « Professionnels : » (0 quand les publics ne sont pas appliqués). */
+  blocks:   number;
+}
+
+export interface BuildKnowledgeBasePreview {
+  creationId: string;
+  status:     KnowledgeBaseCreationStatus;
+  source:     'build';
+  build:      { id: string; createdAt: string; planEditCount: number | null };
+  categories: Array<{ name: string; articles: number }>;
+  counts:     { categories: number; articles: number; faqs: number; faqsLinked: number; synonyms: number; images: number };
+  examples:   string[];
+  excluded:   Array<{ title: string; reason: 'empty' | 'no_text' | string }>;
+  /** Les phrases « À vérifier » encore dans les articles : publiées sans marque (Q3 a). */
+  toVerify:   Array<{ title: string; text: string }>;
+  audience:   BuildAudienceSummary;
+  tags:       { names: string[]; reused: string[]; toCreate: string[]; nearMiss: string[]; allowed: boolean; limit: number };
+  quota:      { limit: number | null; current: number; toCreate: number; after: number; allowed: boolean };
+  knowledgeBaseEmpty: boolean;
+  /** Ce qui empêcherait le lancement (base non vide, création en cours) ; null sinon. */
+  refusal:    { code: string; message: string } | null;
+}
+
+export interface BuildKnowledgeBaseCreation extends BuildKnowledgeBasePreview {
+  progress:   KnowledgeBaseProgress;
+  errorCode:  string | null;
+  startedAt:  string | null;
+  finishedAt: string | null;
+}
+
+/** L'état du bloc « Base de connaissance » d'une rédaction (`GET …/builds/:buildId/knowledge-base`). */
+export interface BuildKnowledgeBaseState {
+  buildId:           string;
+  schemaVersion:     string;
+  audiencesDetected: boolean;
+  /** Le lancement est-il possible ? Sinon, le code et le message du bouton grisé. */
+  launch:            { allowed: boolean; code?: string; message?: string };
+  creation: {
+    creationId: string; status: KnowledgeBaseCreationStatus; source: 'build'; buildId: string;
+    progress: KnowledgeBaseProgress; errorCode: string | null; createdAt: string; startedAt: string | null; finishedAt: string | null;
+  } | null;
+}
+
+/** Pourquoi « Créer la base » est grisé dans l'aperçu, dans l'ordre où le back refuse. */
+export function buildCreationBlockers(p: BuildKnowledgeBasePreview): string[] {
+  const out: string[] = [];
+  if (p.refusal) out.push(p.refusal.message);
+  else if (!p.knowledgeBaseEmpty) {
+    out.push('La base de connaissance n\'est pas vide : archivez ou supprimez ses articles et ses FAQ avant de la créer.');
+  }
+  if (!p.tags.allowed) {
+    out.push(`Limite de ${p.tags.limit} étiquettes par organisation atteinte : supprimez des étiquettes inutilisées, ou décochez les étiquettes de public.`);
+  }
+  if (p.quota.limit !== null && !p.quota.allowed) {
+    const missing = p.quota.after - p.quota.limit;
+    out.push(`Limite de ${p.quota.limit} articles dépassée : la base en compte déjà ${p.quota.current}, la création en ajoute `
+      + `${p.quota.toCreate}. Il manque ${missing} place${missing > 1 ? 's' : ''}.`);
+  }
+  return out;
+}
+
+/** Un article du plan qui n'entre pas dans la base, en clair. */
+export function buildExcludedLabel(e: { title: string; reason: string }): string {
+  if (e.reason === 'empty') return `${e.title} (aucun texte gardé à la rédaction)`;
+  if (e.reason === 'no_text') return `${e.title} (il ne reste que des intertitres)`;
+  return e.title;
+}
+
+/** Les étapes d'une création depuis une rédaction : catégories, puis articles publiés. */
+export function buildCreationSteps(c: Pick<BuildKnowledgeBaseCreation, 'progress' | 'counts' | 'status'>):
+  Array<{ label: string; done: number; total: number; state: StepState }> {
+  const p = c.progress ?? {};
+  const steps = [
+    { label: 'Catégories', done: p.categories ?? 0, total: c.counts.categories },
+    { label: 'Articles publiés', done: p.articles ?? 0, total: c.counts.articles },
+  ];
+  if (c.status === 'succeeded') return steps.map(s => ({ ...s, state: 'done' as const }));
+  const current = steps.findIndex(s => s.done < s.total);
+  return steps.map((s, i) => ({
+    ...s,
+    state: current === -1 || i < current ? 'done' : i === current && c.status !== 'queued' ? 'current' : 'pending',
+  }));
+}
+
+/** Ce que l'aperçu dit des étiquettes de public appliquées. */
+export function audienceTagsSummary(p: BuildKnowledgeBasePreview): string | null {
+  if (!p.audience.applied) return null;
+  const a = p.audience.articles;
+  const parts = [
+    a.particuliers ? `${a.particuliers} « Particuliers »` : null,
+    a.professionnels ? `${a.professionnels} « Professionnels »` : null,
+    a.tous ? `${a.tous} avec les deux (articles communs)` : null,
+  ].filter(Boolean);
+  const blocks = p.audience.blocks ? ` ; ${p.audience.blocks} passage${p.audience.blocks > 1 ? 's' : ''} d'un article commun préfixé${p.audience.blocks > 1 ? 's' : ''} « Particuliers : » ou « Professionnels : »` : '';
+  return `Étiquettes de public : ${parts.join(', ')}${blocks}.`;
+}
