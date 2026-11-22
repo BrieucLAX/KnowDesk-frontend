@@ -172,6 +172,11 @@
 .article-quality__item-actions {
   margin: 6px 0 0 24px;
 }
+/* Suggestion de KnowDesk (lot 7a) : encart prune, la mention en tête. */
+.article-quality__suggestion { margin: 6px 0 0 24px; }
+.article-quality__suggestion .article-quality__item-message,
+.article-quality__suggestion .article-quality__item-excerpt { margin-left: 0; color: var(--ink); }
+.article-quality__suggestion .article-quality__dismiss-btn { background: var(--surface-raised); }
 .article-quality__dismiss-btn {
   background: transparent;
   border: 1px solid var(--neutral-200);

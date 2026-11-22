@@ -186,7 +186,7 @@ describe('À clarifier (audit 0.8.0)', () => {
     const note = screen.getByRole('note', { name: 'Contenu absent de vos documents' });
     expect(note).toHaveTextContent('renvoie à un contenu qui n\'a pas été importé : « voir grille complète en pièce jointe ».');
     expect(note).toHaveTextContent('suivre la recommandation garde l\'existant, avec son avertissement');
-    const order = [...container.querySelectorAll('.obp-clarify-absent, .obp-clarify-ai')].map(e => e.className);
+    const order = [...container.querySelectorAll('.obp-clarify-absent, .obp-clarify-ai')].map(e => e.classList.contains('obp-clarify-ai') ? 'obp-clarify-ai' : e.className);
     expect(order).toEqual(['obp-clarify-absent', 'obp-clarify-ai']);
 
     render(<ReadingCardView audit={audit} card={card} title="Sans renvoi" position="Carte 2 sur 2" />);

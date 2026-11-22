@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { Trash2 } from 'lucide-react';
 import './ActionMenu.css';
 
 export type ActionMenuItem =
@@ -43,7 +44,7 @@ const VIEWPORT_MARGIN   = 8;
  *
  * - Click outside ferme
  * - Escape ferme + restaure le focus sur le trigger
- * - Items avec `variant: 'danger'` rendus en rouge (suppression typiquement)
+ * - Items avec `variant: 'danger'` : suppressions, rendues en rouge avec l'icône trash-2
  * - Items avec `hidden: true` ne sont pas rendus
  * - Separators acceptés pour grouper visuellement
  */
@@ -170,6 +171,7 @@ export function ActionMenu({ items, ariaLabel = 'Actions', triggerLabel = '··�
                 }}
                 disabled={item.disabled}
               >
+                {variant === 'danger' && <Trash2 size={16} aria-hidden="true" />}
                 {item.label}
               </button>
             );

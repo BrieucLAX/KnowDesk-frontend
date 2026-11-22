@@ -297,7 +297,7 @@
   border-radius: var(--radius-lg);
   padding: 20px 24px; margin-bottom: 24px;
 }
-.faqs-to-create__header { margin-bottom: 12px; }
+.faqs-to-create__header { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
 .faqs-to-create__title {
   font-size: 16px; font-weight: 600; color: var(--ink); margin: 0 0 4px 0;
 }
@@ -312,7 +312,7 @@
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px; padding: 10px 14px;
   background: color-mix(in srgb, var(--surface-raised) 60%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
 .faqs-to-create__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }

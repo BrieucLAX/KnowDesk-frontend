@@ -17,7 +17,8 @@ import type {
   CategoryCoverage, TopTag, UnusedTag,
   ViewedArticle, LowViewedArticle, SearchQueryStat,
 } from '../types';
-import { CircleHelp, Cloud, MessageCircle, Sparkles, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { CircleHelp, Cloud, MessageCircle, MessageSquareText, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { KnowDeskMention } from '../../../shared/components/ui/Origin';
 
 interface AnalyticsPageProps {
   onOpenArticle: (articleId: string) => void;
@@ -426,7 +427,7 @@ function AiAnswerStatsBanner({ onCreateFaq }: { onCreateFaq?: (q: string) => voi
   return (
     <section className="ai-stats" aria-labelledby="ai-stats-title">
       <header className="ai-stats__header">
-        <h2 id="ai-stats-title" className="ai-stats__title icon-label"><Sparkles size={20} />Réponse IA — {stats.windowDays} derniers jours</h2>
+        <h2 id="ai-stats-title" className="ai-stats__title icon-label"><MessageSquareText size={20} />Réponse IA — {stats.windowDays} derniers jours</h2>
       </header>
       <div className="ai-stats__row">
         <div className="ai-stats__metric">
@@ -699,6 +700,7 @@ function FaqsToCreateBanner({ onCreate }: { onCreate: (question: string) => void
         <h2 id="faqs-to-create-title" className="faqs-to-create__title icon-label">
           <CircleHelp size={20} />FAQ à créer
         </h2>
+        <KnowDeskMention>Trouvé par KnowDesk dans les recherches sans résultat</KnowDeskMention>
         <p className="faqs-to-create__desc">
           Vos conseillers ou clients ont cherché ces termes sans résultat dans les 7 derniers jours.
           Créez une FAQ pour combler le manque.

@@ -193,7 +193,8 @@ export function TreeEditor({ treeId, onBack, onPreview }: TreeEditorProps) {
                     className="tree-answer__delete"
                     onClick={() => handleDeleteAnswer(node.id, answer.id)}
                     title="Supprimer cette réponse"
-                  ><X size={16} /></button>
+                    aria-label="Supprimer cette réponse"
+                  ><Trash2 size={16} /></button>
                 </div>
                 {/* Nœuds enfants de cette réponse */}
                 {tree.nodes

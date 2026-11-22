@@ -15,6 +15,8 @@ import { AudienceFilter, AudienceTag } from './Audience';
 import { hasAudiences, matchesAudience, type AudienceFilter as Filter } from '../../lib/audience';
 import { PlanCommentBox } from './PlanTab';
 import { BuildKnowledgeBase } from '../knowledgeBase/BuildKnowledgeBase';
+import { ByYouBadge, KnowDeskMention } from '../../../../shared/components/ui/Origin';
+import { fromDocuments } from '../../lib/format';
 
 const STEP_STATE_LABEL = { done: 'terminée', current: 'en cours', pending: 'à venir' } as const;
 
@@ -198,7 +200,7 @@ function BlockView({ block, ctx }: { block: BuiltBlock; ctx: Ctx }) {
   if (block.fromExpert) {
     return (
       <div className="obp-build-expert">
-        <p className="obp-build-expert__label">Précision de l'expert</p>
+        <p className="obp-build-expert__label">Précision de l'expert <ByYouBadge /></p>
         <p className="obp-base-quote">« {block.text} »</p>
         {block.expert && (
           <p className="obp-muted">
@@ -267,6 +269,11 @@ function ParagraphView({ blocks, ctx }: { blocks: BuiltBlock[]; ctx: Ctx }) {
   );
 }
 
+/** Les documents dont l'article tire ses textes, hors texte de l'expert : la source de « Rédigé par KnowDesk ». */
+function articleDocumentCount(article: BuiltArticle): number {
+  return new Set(article.blocks.filter(b => !b.fromExpert).flatMap(b => b.sources.map(s => s.documentId))).size;
+}
+
 function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: Ctx; children: React.ReactNode }) {
   const toVerify = article.blocks.reduce((n, b) => n + b.toVerify.reduce((k, m) => k + m.passages.length, 0), 0);
   return (
@@ -279,6 +286,7 @@ function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: C
         <span>Cet article répondra à : {article.question}</span>
         <AudienceTag value={article.audience} />
       </p>
+      {article.written && <KnowDeskMention>{`Rédigé par KnowDesk${fromDocuments(articleDocumentCount(article))}`}</KnowDeskMention>}
       {!article.written && (
         <p className="obp-muted">
           Aucun texte gardé : {article.emptyReason ? EMPTY_LABEL[article.emptyReason] : 'aucun texte n\'a pu être gardé'}.
@@ -290,6 +298,7 @@ function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: C
       {article.removed.length > 0 && (
         <details className="obp-build-removed">
           <summary>Retiré de cet article ({article.removed.length})</summary>
+          <KnowDeskMention>Retiré par KnowDesk, avec sa raison</KnowDeskMention>
           <ul>
             {article.removed.map(r => (
               <li key={r.id}>
@@ -303,6 +312,7 @@ function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: C
       {article.duplicates.length > 0 && (
         <details className="obp-build-removed obp-build-duplicates">
           <summary>Redites retirées ({article.duplicates.length})</summary>
+          <KnowDeskMention>Retirées par KnowDesk : le texte gardé dit la même chose</KnowDeskMention>
           <ul>
             {article.duplicates.map(d => (
               <li key={d.id}>
@@ -367,6 +377,7 @@ export function BuildArticles({
       )}
       <p className="obp-muted">
         <mark className="obp-base-verify">Phrase à vérifier</mark> : {verifyLegend(construction)}
+        {' '}<KnowDeskMention>Trouvées par KnowDesk</KnowDeskMention>
       </p>
       {hasAudiences(values) && <AudienceFilter values={values} value={filter} onChange={setFilter} />}
       {construction.chapters.map((chapter, ci) => ({ chapter, ci, shown: chapter.articles.filter(a => matchesAudience(a.audience, filter)) }))

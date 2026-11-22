@@ -7,3 +7,9 @@ export function formatBytes(bytes: number): string {
   const mb = bytes / MB;
   return `${mb < 10 ? mb.toFixed(1).replace('.', ',') : Math.round(mb)} Mo`;
 }
+
+/** La source d'une mention KnowDesk (lot 7a) : « à partir de 3 documents », rien si elle n'est pas connue. */
+export function fromDocuments(n: number | undefined): string {
+  if (!n) return '';
+  return ` à partir de ${n === 1 ? '1 document' : `${n} documents`}`;
+}

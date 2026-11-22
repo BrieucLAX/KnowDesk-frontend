@@ -18,6 +18,7 @@ import type { FixSection } from './ReviewCard';
 import { ReviewCard } from './ReviewCard';
 import { SectionCommentBox } from './SectionCommentBox';
 import { keepsOriginal, SectionFixBox } from './SectionFixBox';
+import { ByYouBadge, KnowDeskMention } from '../../../../shared/components/ui/Origin';
 
 interface BaseReviewViewProps {
   base:       BaseCorrection;
@@ -114,9 +115,10 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
       onSave={d => { void review.saveReview(m.id, d); }}
     >
       <p className="obp-base-card__origin">{originLabel(m, cardTitles)}</p>
+      <KnowDeskMention>Préparé par KnowDesk à partir de votre réponse</KnowDeskMention>
       <p className="obp-base-card__what">{m.instruction}</p>
       {m.expert_text && m.expert_text.trim() && <p className="obp-base-quote">« {m.expert_text.trim()} »</p>}
-      {m.expert_text && m.expert_entered_on && <p className="obp-muted">{expertEntered(m.expert_entered_on)}</p>}
+      {m.expert_text && m.expert_entered_on && <p className="obp-muted">{expertEntered(m.expert_entered_on)} <ByYouBadge /></p>}
       {(m.value_updates ?? []).length > 0 && (
         <ul className="obp-base-updates" aria-label="Valeurs remplacées">
           {(m.value_updates ?? []).map(u => (
@@ -165,6 +167,7 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
       sections={[]}
       onSave={d => { void review.saveReview(c.id, d); }}
     >
+      <KnowDeskMention>Préparé par KnowDesk à partir de vos réponses</KnowDeskMention>
       <p className="obp-base-card__what">{c.rule}</p>
       <p className="obp-muted">
         {c.section_keys.length === 0
@@ -476,10 +479,12 @@ function FixedText({ fix, blocks, refused = false }: { fix: SectionFix; blocks: 
     <div className="obp-base-fixed">
       <p className="obp-base-label">
         {refused ? 'Texte d\'origine conservé' : 'Texte corrigé'} par <AuthorName name={fix.authorName ?? 'un membre de l\'équipe'} authorId={fix.authorId} />, le {formatFull(fix.createdAt)}
+        {!refused && <> <ByYouBadge modified /></>}
       </p>
       <pre className="obp-base-section-fix__text">{fix.correctedText}</pre>
       <details className="obp-base-fixed__proposed">
         <summary>Texte proposé par la préparation</summary>
+        <KnowDeskMention>Rédigé par KnowDesk</KnowDeskMention>
         <BaseLines blocks={blocks} />
       </details>
     </div>

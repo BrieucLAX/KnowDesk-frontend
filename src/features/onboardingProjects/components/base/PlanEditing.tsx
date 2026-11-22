@@ -9,6 +9,7 @@ import {
   describeEdit, editCountLabel, mergedAudience, moveChapterBy, moveSubjectBy, PLAN_TITLE_MAX,
   type GoneSubject, type PlanEditOp, type PlanEditsState,
 } from '../../lib/planEdits';
+import { ByYouBadge } from '../../../../shared/components/ui/Origin';
 
 /**
  * Modification du plan avant la rédaction (plan-construire-v1, étape 4 ; décisions du porteur du
@@ -33,7 +34,7 @@ const publicLabel = (v: string | null) => {
 };
 
 export function ModifiedTag() {
-  return <span className="obp-plan-modified">Modifié</span>;
+  return <ByYouBadge modified className="obp-plan-modified" />;
 }
 
 // ── Outils d'une catégorie et d'un article ──────────────────

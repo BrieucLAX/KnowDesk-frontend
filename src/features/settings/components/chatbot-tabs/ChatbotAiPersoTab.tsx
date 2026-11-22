@@ -4,7 +4,7 @@ import { Input } from '../../../../shared/components/ui/Input';
 import { HelpPopover } from '../../../../shared/components/ui/HelpPopover';
 import type { AiTone, AiAddressForm, AiGlossaryEntry } from '../../types';
 import type { ChatbotTabContext } from './types';
-import { ArrowRight, Plus, X } from 'lucide-react';
+import { ArrowRight, Plus, Trash2, X } from 'lucide-react';
 
 const TONE_OPTIONS: Array<{ value: AiTone; label: string; hint: string }> = [
   { value: 'professional', label: 'Professionnelle', hint: 'Neutre, factuelle' },
@@ -34,7 +34,7 @@ export function ChatbotAiPersoTab({ ctx }: { ctx: ChatbotTabContext }) {
         label="Secteur d'activité"
         value={form.industry ?? ''}
         maxLength={80}
-        placeholder="Par exemple : télécoms, banque, commerce, santé…"
+        placeholder="Votre secteur, en quelques mots"
         onChange={e => setForm(f => ({ ...f, industry: e.target.value }))}
         helperText="Personnalise la présentation du chatbot. Laissez vide pour une formulation générique."
       />
@@ -127,7 +127,7 @@ export function ChatbotAiPersoTab({ ctx }: { ctx: ChatbotTabContext }) {
                 aria-label="Supprimer ce terme"
                 title="Supprimer ce terme"
               >
-                <X size={16} />
+                <Trash2 size={16} />
               </button>
             </div>
           ))}

@@ -6,6 +6,7 @@ import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { TimelineChart } from './TimelineChart';
 import type { ShareOfVoice, TopicSov, AlignmentPayload, MonitoringRecommendation } from '../types';
 import { Check, CircleAlert, Lightbulb, Link, Play, Sparkles, Star, Target, TrendingDown, TriangleAlert } from 'lucide-react';
+import { KnowDeskMention } from '../../../shared/components/ui/Origin';
 
 interface DashboardViewProps {
   projectId:       string;
@@ -123,6 +124,7 @@ export function DashboardView({ projectId, onReloadProject }: DashboardViewProps
       {recos.length > 0 && (
         <section className="bm-card bm-recos">
           <h3 className="bm-card__title">Actions à mener ({recos.length})</h3>
+          <KnowDeskMention>Trouvé par KnowDesk dans vos analyses</KnowDeskMention>
           <p className="bm-card__sub">
             Signaux détectés dans vos données. Cliquez sur « Marquer comme traitée » pour archiver une
             recommandation : elle ne sera plus proposée tant que vous ne la réinitialisez pas.

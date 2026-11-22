@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { Trash2 } from 'lucide-react';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { Button }   from '../../../shared/components/ui/Button';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
@@ -110,7 +111,7 @@ export function DocumentsTab({ project, onChanged }: DocumentsTabProps) {
                   aria-label={`Retirer ${d.filename}`}
                   onClick={() => setRemoving(d)}
                 >
-                  Retirer
+                  <Trash2 size={16} />Retirer
                 </Button>
               </li>
             ))}

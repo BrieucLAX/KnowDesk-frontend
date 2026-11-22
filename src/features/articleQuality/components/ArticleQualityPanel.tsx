@@ -9,7 +9,8 @@ import {
   type QualityDimension, type QualityForArticle,
 } from '../api/articleQualityApi';
 import './ArticleQualityPanel.css';
-import { ChevronRight, CircleCheck, RotateCw, Sparkles, TriangleAlert } from 'lucide-react';
+import { ChevronRight, CircleCheck, FileCheck, RotateCw, TriangleAlert } from 'lucide-react';
+import { KnowDeskBlock } from '../../../shared/components/ui/Origin';
 
 interface ArticleQualityPanelProps {
   articleId: string;
@@ -85,7 +86,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
     return (
       <section className="article-quality">
         <header className="article-quality__header">
-          <h3 className="article-quality__title icon-label"><Sparkles size={16} />Suggestions IA</h3>
+          <h3 className="article-quality__title icon-label"><FileCheck size={16} />Suggestions IA</h3>
         </header>
         <div className="article-quality__empty">
           <p>Cet article n'a pas encore été évalué.</p>
@@ -101,7 +102,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
     return (
       <section className="article-quality article-quality--loading">
         <header className="article-quality__header">
-          <h3 className="article-quality__title icon-label"><Sparkles size={16} />Suggestions IA</h3>
+          <h3 className="article-quality__title icon-label"><FileCheck size={16} />Suggestions IA</h3>
         </header>
         <p className="article-quality__loading">Chargement…</p>
       </section>
@@ -125,7 +126,7 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
         >
           <span className={`article-quality__chevron ${open ? 'is-open' : ''}`} aria-hidden="true"><ChevronRight size={16} /></span>
           <h3 className="article-quality__title icon-label">
-            <Sparkles size={16} />Suggestions IA
+            <FileCheck size={16} />Suggestions IA
             {allOk
               ? <span className="article-quality__badge article-quality__badge--ok">Rien à revoir</span>
               : <span className="article-quality__badge article-quality__badge--flag">{visibleFlagged.length} à revoir</span>}
@@ -165,14 +166,10 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
                     {isDismissed && <span className="article-quality__dismissed">marquée conforme</span>}
                   </div>
                   {status === 'flagged' && !isDismissed && (
-                    <>
-                      <p className="article-quality__item-message">
-                        {issue?.message ?? 'Dimension à revoir.'}
-                      </p>
-                      {issue?.excerpt && (
-                        <blockquote className="article-quality__item-excerpt">« {issue.excerpt} »</blockquote>
-                      )}
-                      <div className="article-quality__item-actions">
+                    <KnowDeskBlock
+                      className="article-quality__suggestion"
+                      mention="Suggéré par KnowDesk à partir du texte de l'article"
+                      actions={
                         <button
                           type="button"
                           className="article-quality__dismiss-btn"
@@ -181,8 +178,15 @@ export function ArticleQualityPanel({ articleId, visible }: ArticleQualityPanelP
                         >
                           Marquer comme conforme
                         </button>
-                      </div>
-                    </>
+                      }
+                    >
+                      <p className="article-quality__item-message">
+                        {issue?.message ?? 'Dimension à revoir.'}
+                      </p>
+                      {issue?.excerpt && (
+                        <blockquote className="article-quality__item-excerpt">« {issue.excerpt} »</blockquote>
+                      )}
+                    </KnowDeskBlock>
                   )}
                   {status === 'ok' && !isDismissed && (
                     <p className="article-quality__item-help">{DIMENSION_HELP[d]}</p>

@@ -184,6 +184,11 @@ export function readPlan(raw: unknown): Plan | null {
 }
 
 /** « 6 catégories · 31 articles · 128 passages couverts sur 133 » (vocabulaire de l'écran, décision du porteur du 2026-11-14). */
+/** Le nombre de documents dont le plan tire ses articles : la source de la mention « Préparé par KnowDesk » (lot 7a). */
+export function planDocumentCount(plan: Plan): number {
+  return new Set(plan.chapters.flatMap(c => c.subjects.flatMap(s => s.sources.map(r => r.documentId)))).size;
+}
+
 export function planSummary(plan: Plan): string {
   const n = (k: number, one: string, many: string) => `${k} ${k > 1 ? many : one}`;
   return [

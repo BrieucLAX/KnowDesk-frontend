@@ -7,6 +7,7 @@ import { Modal }         from '../../../shared/components/ui/Modal';
 import { SettingsListSection } from '../../../shared/components/ui/SettingsListSection';
 import { useSynonyms }   from '../hooks/useSynonyms';
 import type { Synonym }  from '../types';
+import { Trash2 } from 'lucide-react';
 
 export function SearchSettingsSection() {
   const { items, loading, error, create, update, remove } = useSynonyms();
@@ -105,7 +106,7 @@ function SynonymItem({
           </div>
           <div className="synonym-item__actions">
             <Button variant="ghost" size="sm" onClick={startEdit}>Modifier</Button>
-            <Button variant="ghost" size="sm" onClick={onDelete}>Supprimer</Button>
+            <Button variant="ghost" size="sm" onClick={onDelete}><Trash2 size={16} />Supprimer</Button>
           </div>
         </>
       )}

@@ -9,7 +9,8 @@ interface StarRatingProps {
 }
 
 /** Note en étoiles (CSAT) : pictos Lucide au trait, jamais remplis ; les
- *  étoiles obtenues sont en --accent, les autres en --line. */
+ *  étoiles obtenues sont en --ink, les autres en --line (la prune est réservée
+ *  à ce que KnowDesk a préparé). */
 export function StarRating({ value, max = 5 }: StarRatingProps) {
   return (
     <span className="star-rating" role="img" aria-label={`${value} sur ${max}`}>

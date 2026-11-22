@@ -14,6 +14,7 @@ import { useAuthStore, selectUserRole } from '../../../store/authStore';
 import { formatRelative }       from '../../../shared/lib/formatDate';
 import { ArrowLeft, Copy } from 'lucide-react';
 import { Alert } from '../../../shared/components/ui/Alert';
+import { InternalCard } from '../../../shared/components/ui/Origin';
 
 interface ArticlePageProps {
   articleId: string;
@@ -137,6 +138,11 @@ if (state.status === 'error') {
               <span key={tag} className="chip chip--readonly">{tag}</span>
             ))}
           </div>
+        )}
+        {article.visibility === 'internal' && (
+          <InternalCard className="article-page__internal">
+            <p className="article-page__internal-text">Cet article n'est visible que par votre équipe.</p>
+          </InternalCard>
         )}
         {isOlderThan(article.updatedAt, 90) && (
           <Alert tone="warning" role="note" className="article-page__stale-warning">

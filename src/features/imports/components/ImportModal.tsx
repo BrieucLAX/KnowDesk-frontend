@@ -5,6 +5,7 @@ import { useToast } from '../../../shared/lib/useToast';
 import { importsApi, type ImportItem, type ImportSplitMode } from '../api/importsApi';
 import '../imports.css';
 import { CircleCheck, FileText, TriangleAlert, Upload } from 'lucide-react';
+import { KnowDeskMention } from '../../../shared/components/ui/Origin';
 
 interface ImportModalProps {
   onClose: () => void;
@@ -224,6 +225,7 @@ export function ImportModal({ onClose, onCompleted }: ImportModalProps) {
                   Import terminé : <strong>{item.articles_created} article{item.articles_created > 1 ? 's' : ''}</strong> créé{item.articles_created > 1 ? 's' : ''} en brouillon
                   {item.category_name && <> dans <strong>{item.category_name}</strong></>}.
                 </p>
+                <KnowDeskMention>{`Brouillons préparés par KnowDesk à partir de « ${item.filename} »`}</KnowDeskMention>
                 <p className="import-modal__status-hint">
                   Les articles sont en <strong>brouillon</strong>. Relisez-les, ajustez les titres et fusionnez les doublons, puis publiez-les.
                 </p>

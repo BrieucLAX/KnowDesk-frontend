@@ -22,7 +22,7 @@ import { DirtyContext, useTrackDirty } from '../lib/dirtyContext';
 import { useUnsavedChanges }     from '../../../shared/lib/useUnsavedChanges';
 import { LastModifiedBadge }     from './LastModifiedBadge';
 import type { SettingsSection, NotifPreferences } from '../types';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Trash2 } from 'lucide-react';
 import { hasModule, type ModuleName } from '../../../shared/lib/modules';
 import type { Organization } from '../../../shared/types';
 
@@ -713,7 +713,7 @@ function SectionDanger() {
             error={confirm && !canDelete ? 'Le nom ne correspond pas. Saisissez-le exactement comme il est affiché.' : undefined}
           />
           <Button type="submit" variant="danger" size="md" disabled={!canDelete} loading={isDeleting}>
-            Supprimer définitivement l'organisation
+            <Trash2 size={20} />Supprimer définitivement l'organisation
           </Button>
         </form>
       </div>

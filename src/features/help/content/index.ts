@@ -273,7 +273,7 @@ Voyez vos catégories comme des classeurs. Quelques exemples :
 - par thème : *Facturation*, *Livraison*, *Retours* ;
 - par type de demande : *Questions courantes*, *Procédures*, *Scripts* ;
 - par produit : *Produit A*, *Produit B* ;
-- sur 2 niveaux : *Mobile > Activation*, *Mobile > Réseau*.
+- sur 2 niveaux : *Commandes > Livraison*, *Commandes > Retours*.
 
 > 💡 **Astuce** : Un article n'a qu'une catégorie. Pour un classement transversal (saison, état éditorial…), utilisez plutôt les **tags**.
         `.trim(),
@@ -691,7 +691,7 @@ La Réponse IA se déclenche automatiquement si votre recherche :
 
 Une icône apparaît alors dans la barre pour indiquer que l'IA est active. Elle s'anime pendant la rédaction de la réponse.
 
-> 💡 **Recherche par mot-clé** : pour une recherche courte (par exemple *RIO*, *iPhone*), l'IA ne se déclenche pas. Vous obtenez directement les résultats habituels.
+> 💡 **Recherche par mot-clé** : pour une recherche courte (par exemple *RIB*, *facture*), l'IA ne se déclenche pas. Vous obtenez directement les résultats habituels.
 
 **Lire la carte**
 - Le texte s'affiche **au fur et à mesure** : vous pouvez commencer à lire avant la fin.
@@ -725,7 +725,7 @@ L'interrupteur principal est en haut de la section. Quand la Réponse IA est dé
 > Quand l'interrupteur est désactivé, les autres champs sont grisés.
 
 **2. Secteur d'activité**
-Champ libre (80 caractères au plus). L'IA adapte sa présentation, par exemple *« assistant pour les conseillers d'un service client dans le secteur Telecom »*. Exemples : \`Telecom\`, \`Banque\`, \`Retail\`, \`Santé\`, \`Énergie\`. Laissez vide pour une formulation générale.
+Champ libre (80 caractères au plus). L'IA adapte sa présentation, par exemple *« assistant pour les conseillers d'un service client dans votre secteur »*. Saisissez votre secteur en quelques mots. Laissez vide pour une formulation générale.
 
 **3. Tonalité**
 5 styles au choix :
@@ -747,7 +747,7 @@ Liste de paires *« terme courant, terme préféré »* (30 paires au plus, 50 c
 
 Exemples :
 - \`client\` remplacé par \`abonné\`
-- \`offre\` remplacé par \`forfait\`
+- \`achat\` remplacé par \`commande\`
 - \`annulation\` remplacé par \`résiliation\`
 - \`dépanneur\` remplacé par \`conseiller technique\`
 
@@ -823,7 +823,7 @@ Vous pouvez la **réécrire entièrement**. La personnalisation est alors ignor�
 
 Le chatbot suit le fil de la conversation, enregistrée en entier sur le serveur. Si un visiteur demande *« comment résilier ? »* puis *« et combien ça coûte ? »*, le chatbot comprend que la deuxième question porte sur la résiliation.
 
-**Question de clarification automatique** : quand une question est trop vague (*« mon forfait ne marche pas »*, *« panne »*), le chatbot pose **une** question pour préciser avant de répondre. Au message suivant, il combine la question de départ et la précision pour chercher dans la base de façon ciblée. Une seule clarification par conversation, pour éviter de tourner en rond.
+**Question de clarification automatique** : quand une question est trop vague (*« ça ne marche pas »*, *« panne »*), le chatbot pose **une** question pour préciser avant de répondre. Au message suivant, il combine la question de départ et la précision pour chercher dans la base de façon ciblée. Une seule clarification par conversation, pour éviter de tourner en rond.
 
 **Réponses rapides** : sous chaque réponse, le chatbot propose 2 boutons vers les sources les plus pertinentes ; le visiteur peut approfondir un sujet en un clic.
 
@@ -1482,7 +1482,7 @@ Toutes les listes sont **cliquables** : un clic ouvre l'article concerné, et le
 
 **Bloc Réponse IA (sous les cartes)**
 - **Réponses générées, réponses précises, sans réponse, satisfaction** pour les Réponses IA de la barre de recherche.
-- **Top questions** et **Questions sans réponse** : les variantes intermédiaires d'une même recherche saisie par un membre (« comment résilier », « comment résilier mon », « comment résilier mon forfait ») sont regroupées sur une seule ligne. Seule la recherche finale compte.
+- **Top questions** et **Questions sans réponse** : les variantes intermédiaires d'une même recherche saisie par un membre (« comment résilier », « comment résilier mon », « comment résilier mon contrat ») sont regroupées sur une seule ligne. Seule la recherche finale compte.
 - Un bouton **Créer une FAQ** sur chaque question sans réponse ouvre l'éditeur avec la question déjà remplie.
 
 [[if chatbot]]**Bloc Chatbot (s'il est activé)**
@@ -1490,7 +1490,7 @@ Toutes les listes sont **cliquables** : un clic ouvre l'article concerné, et le
 [[/if]][[if chatbot]]- **Taux de résolution** : conversations résolues sur le total des conversations closes.
 [[/if]][[if chatbot]]- **Taux d'escalade** : conversations escaladées sur le total des conversations closes.
 [[/if]][[if chatbot]]- **Satisfaction moyenne** des conversations notées.
-[[/if]][[if chatbot]]- **Thèmes des conversations** : chaque conversation est résumée par un thème court à sa clôture (par exemple *« Résiliation forfait mobile »*, *« Activation eSIM »*). Les questions sur un même sujet sont regroupées sur la même ligne : une meilleure image des besoins des visiteurs que les messages bruts.
+[[/if]][[if chatbot]]- **Thèmes des conversations** : chaque conversation est résumée par un thème court à sa clôture (par exemple *« Résiliation d'un contrat »*, *« Suivi d'une commande »*). Les questions sur un même sujet sont regroupées sur la même ligne : une meilleure image des besoins des visiteurs que les messages bruts.
 [[/if]][[if chatbot,chats]]- Pour examiner une conversation précise, ouvrez la page **Conversations**.
 [[/if]]
 **Période couverte**
@@ -1525,7 +1525,7 @@ Dans le menu de gauche, cliquez sur **Conversations**. La page a sa propre adres
 **La liste**
 
 Une ligne par conversation, de la plus récente à la plus ancienne, 20 par page. Chaque ligne indique :
-- **Thème** : 3 à 6 mots qui résument la demande, générés automatiquement à la clôture (par exemple *« Résiliation forfait mobile »*, *« Activation eSIM »*). Pour une conversation en cours ou trop récente, la première question du visiteur s'affiche à la place, en italique.
+- **Thème** : 3 à 6 mots qui résument la demande, générés automatiquement à la clôture (par exemple *« Résiliation d'un contrat »*, *« Suivi d'une commande »*). Pour une conversation en cours ou trop récente, la première question du visiteur s'affiche à la place, en italique.
 - **Statut** : *En cours*, *Résolue*, *Escaladée* ou *Abandonnée*. Une conversation devient :
   - *Résolue* quand le visiteur donne un avis positif sur une réponse, ou répond *Oui, parfait* dans le formulaire d'avis de l'en-tête ;
   - *Escaladée* quand le visiteur donne un avis négatif ou demande explicitement à parler à une personne ;
@@ -1537,7 +1537,7 @@ Une ligne par conversation, de la plus récente à la plus ancienne, 20 par page
 
 **Recherche dans les conversations**
 
-Le champ de recherche, en haut, porte sur le texte **complet** des conversations (messages du visiteur **et** du chatbot). Saisissez un mot-clé (par exemple *« remboursement »*, *« eSIM »*, *« facture »*) et cliquez sur **Rechercher** : la liste n'affiche plus que les conversations dont au moins un message contient ce mot. Les majuscules sont ignorées, et le mot peut faire partie d'un mot plus long.
+Le champ de recherche, en haut, porte sur le texte **complet** des conversations (messages du visiteur **et** du chatbot). Saisissez un mot-clé (par exemple *« remboursement »*, *« livraison »*, *« facture »*) et cliquez sur **Rechercher** : la liste n'affiche plus que les conversations dont au moins un message contient ce mot. Les majuscules sont ignorées, et le mot peut faire partie d'un mot plus long.
 
 **Filtre par statut**
 
@@ -1660,7 +1660,7 @@ Ouvrez **Paramètres > API**.
 
 **Créer une clé**
 1. Cliquez sur **Créer une clé**.
-2. Donnez-lui un nom parlant (par exemple *Intégration Hubicus*, *Site web*).
+2. Donnez-lui un nom parlant (par exemple *Intégration CRM*, *Site web*).
 3. Cliquez sur **Créer**.
 4. Copiez tout de suite la clé affichée : elle ne sera plus visible après la fermeture de la fenêtre.
 

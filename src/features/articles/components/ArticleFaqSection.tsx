@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { ArticleFaq } from '../types';
+import { InternalCard } from '../../../shared/components/ui/Origin';
 
 interface ArticleFaqSectionProps {
   faqs: ArticleFaq[];
@@ -44,14 +45,14 @@ export function ArticleFaqSection({ faqs }: ArticleFaqSectionProps) {
                 <p>{faq.answer}</p>
 
                 {faq.followUpQuestions && faq.followUpQuestions.length > 0 && (
-                  <div className="faq-item__followups">
+                  <InternalCard className="faq-item__followups">
                     <p className="faq-item__followups-label">Questions à poser au client :</p>
                     <ul>
                       {faq.followUpQuestions.map((q, i) => (
                         <li key={i} className="faq-item__followup">{q}</li>
                       ))}
                     </ul>
-                  </div>
+                  </InternalCard>
                 )}
               </dd>
             </div>

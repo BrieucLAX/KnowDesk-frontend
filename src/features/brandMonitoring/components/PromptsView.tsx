@@ -8,6 +8,8 @@ import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { Modal } from '../../../shared/components/ui/Modal';
 import type { MonitoringPrompt, SuggestPromptsPayload } from '../types';
 import { Sparkles, Upload } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { KnowDeskMention } from '../../../shared/components/ui/Origin';
 
 interface PromptsViewProps {
   projectId:       string;
@@ -166,8 +168,8 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
         <h3 className="bm-card__title">Ajouter un prompt</h3>
         <p className="bm-card__sub">
           Une question qu'un particulier pourrait poser, envoyée à Mistral. Préférez une formulation
-          naturelle (« Quel hypermarché choisir pour les courses ? ») à une requête de recherche
-          (« meilleur hypermarché »).
+          naturelle (« Quelle marque choisir pour ce besoin ? ») à une requête de recherche
+          (« meilleure marque »).
         </p>
         <div className="bm-form">
           <Input
@@ -175,14 +177,14 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
             label="Prompt"
             value={newText}
             onChange={e => setNewText(e.target.value)}
-            placeholder="Quel hypermarché choisir pour les courses ?"
+            placeholder="Quelle marque choisir pour ce besoin ?"
           />
           <Input
             id="bm-new-prompt-topic"
             label="Thème (facultatif, l'IA le recalculera)"
             value={newTopic}
             onChange={e => setNewTopic(e.target.value)}
-            placeholder="courses-quotidien"
+            placeholder="choix-d-une-marque"
           />
           <div className="bm-form__actions">
             <Button variant="primary" size="md" onClick={handleCreate} loading={saving} disabled={newText.trim().length < 5}>
@@ -203,7 +205,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
               className="bm-bulk__textarea"
               value={bulkText}
               onChange={e => setBulkText(e.target.value)}
-              placeholder={'Quel hypermarché choisir pour les courses ?\nQuelle enseigne propose le plus grand choix de produits bio ?\n…'}
+              placeholder={'Quelle marque choisir pour ce besoin ?\nQuelle marque a le meilleur service client ?\n…'}
               rows={8}
             />
             <Button variant="primary" size="sm" onClick={handleBulk} loading={bulkSaving}>
@@ -244,7 +246,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
                     onClick={() => setPendingDelete(p)}
                     aria-label="Supprimer le prompt"
                   >
-                    Supprimer
+                    <Trash2 size={16} />Supprimer
                   </Button>
                 </div>
               </li>
@@ -273,6 +275,7 @@ export function PromptsView({ projectId, onReloadProject }: PromptsViewProps) {
           {suggestLoading && <Skeleton className="bm-skeleton-card" />}
           {!suggestLoading && suggestData && (
             <div className="bm-suggest">
+              <KnowDeskMention>Suggéré par KnowDesk à partir de votre secteur</KnowDeskMention>
               <p className="bm-suggest__intro">
                 Sélectionnez les prompts à ajouter à votre projet ({selectedSugs.size}/{suggestData.prompts.length} cochés).
                 Tout est coché par défaut : décochez celles qui ne vous conviennent pas. Vous pourrez

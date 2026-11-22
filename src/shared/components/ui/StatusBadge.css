@@ -18,7 +18,7 @@
 .badge--warning   { background: var(--warning-soft); color: var(--warning); }
 .badge--danger    { background: var(--danger-soft);  color: var(--danger); }
 .badge--info      { background: var(--info-soft);    color: var(--info); }
-/* Type ou catégorie. */
+/* Type, catégorie, « Nouveau », « Ajouté par vous ». */
 .badge--primary   { background: var(--primary-soft); color: var(--primary); }
-/* « Nouveau » : seule mise en avant chaleureuse. */
+/* Préparé par KnowDesk (prune), toujours avec sparkles et une mention : passer par KnowDeskBadge (Origin.tsx). */
 .badge--accent    { background: var(--accent-soft);  color: var(--accent); }
