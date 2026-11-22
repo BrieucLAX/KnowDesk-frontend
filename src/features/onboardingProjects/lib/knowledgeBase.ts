@@ -21,7 +21,8 @@ export interface KnowledgeBasePreview {
   titles:     { author: number; model: number; fallback: number; calls: number; costUsd: number };
   references: { resolved: number; unresolved: number };
   excluded:   Array<{ title: string; reason: 'table_of_contents' | 'faq' | string }>;
-  quota:      { limit: number; current: number; toCreate: number; after: number; allowed: boolean };
+  /** `limit` null : l'offre de l'organisation n'a pas de limite d'articles (décision D6, 2026-11-22). */
+  quota:      { limit: number | null; current: number; toCreate: number; after: number; allowed: boolean };
   /** Aucun article ni FAQ non archivés hors de ce plan (décision 11). */
   knowledgeBaseEmpty: boolean;
   /** Faux : les synonymes sont enregistrés sans être appliqués à la recherche (back sans Meilisearch). */
@@ -74,7 +75,7 @@ export function creationBlockers(p: KnowledgeBasePreview): string[] {
     out.push('La base de connaissance n\'est pas vide. La création depuis l\'onboarding ne se fait que dans une base vide : '
       + 'archivez ou supprimez d\'abord les articles et les FAQ existants.');
   }
-  if (!p.quota.allowed) {
+  if (p.quota.limit !== null && !p.quota.allowed) {
     const missing = p.quota.after - p.quota.limit;
     out.push(`Limite de ${p.quota.limit} articles dépassée : la base en compte déjà ${p.quota.current}, la création en ajoute `
       + `${p.quota.toCreate}. Il manque ${missing} place${missing > 1 ? 's' : ''}.`);
