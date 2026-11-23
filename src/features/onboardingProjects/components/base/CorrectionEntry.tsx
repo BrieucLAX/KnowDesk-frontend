@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import { ConfirmDialog } from '../../../../shared/components/ui/ConfirmDialog';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
+import { ActionBarContent } from '../../../../shared/components/ui/ActionBar';
 import { useToast } from '../../../../shared/lib/useToast';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { onboardingApi } from '../../api/onboardingApi';
@@ -103,13 +104,16 @@ export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, c
         <p className="obp-analysis__error" role="status">{correctionFailureMessage(latest.errorCode)}</p>
       )}
       {waiting.length > 0 ? (
-        <div className="obp-arb-entry obp-correction-entry__waiting">
+        <ActionBarContent
+          note={(
+            <div role="status">
+              {waiting.map(c => <p key={c.id} className="obp-correction-entry__left">{versionCardWaitingMessage(c)}</p>)}
+              {left.left > waiting.length && <p className="obp-correction-entry__left">{blockingLeftLabel(left)}</p>}
+            </div>
+          )}
+        >
           <Button variant="primary" size="md" disabled>Préparer la nouvelle base</Button>
-          <div role="status">
-            {waiting.map(c => <p key={c.id} className="obp-correction-entry__left">{versionCardWaitingMessage(c)}</p>)}
-            {left.left > waiting.length && <p className="obp-correction-entry__left">{blockingLeftLabel(left)}</p>}
-          </div>
-        </div>
+        </ActionBarContent>
       ) : left.left > 0 ? (
         <p className="obp-correction-entry__left" role="status">{blockingLeftLabel(left)}</p>
       ) : quotaReached ? (
@@ -117,17 +121,16 @@ export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, c
           Votre organisation a atteint son nombre de préparations ({quota!.max}). Contactez-nous pour en obtenir d'autres.
         </p>
       ) : (
-        <div className="obp-arb-entry">
+        <ActionBarContent note="Vos fiches sont reprises telles quelles ; seules vos réponses les modifient.">
           {ready ? (
             <>
-              <Button variant="primary" size="md" onClick={onOpenBase}>Relire la nouvelle base</Button>
               <Button variant="secondary" size="md" loading={launching} onClick={() => setConfirm(true)}>Préparer à nouveau</Button>
+              <Button variant="primary" size="md" onClick={onOpenBase}>Relire la nouvelle base</Button>
             </>
           ) : (
             <Button variant="primary" size="md" loading={launching} onClick={launch}>Préparer la nouvelle base</Button>
           )}
-          <span className="obp-muted">Vos fiches sont reprises telles quelles ; seules vos réponses les modifient.</span>
-        </div>
+        </ActionBarContent>
       )}
       {left.left > 0 && ready && (
         <p className="obp-muted">

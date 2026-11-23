@@ -43,7 +43,9 @@ describe('App — aiguillage', () => {
 
   it('la page d\'un projet d\'onboarding s\'affiche seule, sans page 404 en dessous', async () => {
     render(<MemoryRouter initialEntries={['/onboarding/projects/p1']}><App /></MemoryRouter>);
-    expect(await screen.findByRole('heading', { name: 'Base SAV' })).toBeInTheDocument();
+    // Bandeau du parcours (lot 7b) : le nom du projet en eyebrow, l'étape en titre.
+    expect(await screen.findByText('Base SAV')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Documents' })).toBeInTheDocument();
     expect(screen.queryByText(/introuvable/i)).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /tableau de bord/i })).not.toBeInTheDocument();
   });

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Button }   from '../../../shared/components/ui/Button';
 import { Skeleton } from '../../../shared/components/ui/Skeleton';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
+import { ActionBarContent } from '../../../shared/components/ui/ActionBar';
 import { useToast } from '../../../shared/lib/useToast';
 import { ApiError } from '../../../shared/lib/apiClient';
 import { usePolling } from '../../../shared/lib/usePolling';
@@ -10,6 +11,7 @@ import { onboardingApi } from '../api/onboardingApi';
 import { ANALYSIS_POLL_MS, analysisFailureMessage, isAnalysisActive } from '../lib/analysisStatus';
 import { isCorpusTooLarge } from '../lib/volume';
 import { AnalysisProgress } from './AnalysisProgress';
+import { useStepFact } from '../lib/steps';
 import type { AnalysisQuota, OnboardingAnalysis, OnboardingProject } from '../types';
 
 interface AnalysisTabProps {
@@ -66,6 +68,8 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
 
   const latest = analyses?.[0] ?? null;
   const active = latest !== null && isAnalysisActive(latest);
+  // « Analyse » terminée : une analyse réussie, parmi celles déjà lues.
+  useStepFact('analysis', analyses === null ? undefined : analyses.some(a => a.status === 'succeeded'));
 
   // Appel de fond : une relecture en échec est simplement retentée au tick suivant.
   usePolling(async () => {
@@ -131,6 +135,8 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
   return (
     <>
       {latest && <AnalysisProgress analysis={latest} onOpenAudit={onOpenAudit} />}
+      {/* Analyse en cours : rien à lancer, l'avancement suffit. */}
+      {active && <ActionBarContent hidden />}
 
       {!active && (
         <section className="obp-launch" aria-labelledby="obp-launch-title">
@@ -146,12 +152,13 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
             <li>Fiche de cadrage : {project.cadrageVersion === null ? 'non enregistrée' : `version ${project.cadrageVersion}`}</li>
             {quota && remaining !== null && <li>Analyses restantes : {remaining} sur {quota.max}</li>}
           </ul>
-          <div className="obp-launch__actions">
+          <ActionBarContent
+            note={blocker ?? 'Les documents et la fiche de cadrage seront figés. L\'analyse peut durer jusqu\'à une heure.'}
+          >
             <Button variant="primary" size="md" disabled={blocker !== null} loading={checking} onClick={() => void askLaunch()}>
               Lancer l'analyse
             </Button>
-            {blocker && <span className="obp-muted">{blocker}</span>}
-          </div>
+          </ActionBarContent>
           {launchError && <p className="obp-alert" role="alert">{launchError}</p>}
         </section>
       )}

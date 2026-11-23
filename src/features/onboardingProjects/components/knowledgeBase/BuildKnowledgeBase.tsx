@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
+import { ActionBarContent } from '../../../../shared/components/ui/ActionBar';
+import { useStepFact } from '../../lib/steps';
 import { ConfirmDialog } from '../../../../shared/components/ui/ConfirmDialog';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { ApiError } from '../../../../shared/lib/apiClient';
@@ -62,6 +64,8 @@ export function BuildKnowledgeBase({ projectId, buildId, knowledgeEnabled, onOpe
   }, [load, knowledgeEnabled]);
 
   const active = creation !== null && isCreationActive(creation);
+  // « Nouvelle base » terminée : la base de connaissance est créée depuis cette rédaction.
+  useStepFact('base', !knowledgeEnabled || state === null ? undefined : creation?.status === 'succeeded');
   usePolling(async () => {
     if (!creation) return;
     setCreation(await onboardingApi.getBuildKnowledgeBaseCreation(projectId, creation.creationId));
@@ -118,7 +122,11 @@ export function BuildKnowledgeBase({ projectId, buildId, knowledgeEnabled, onOpe
           {plural(c.counts.categories, 'catégorie', 'catégories')}.
         </p>
         <p className="obp-muted">Les articles sont internes : votre équipe les voit, le chatbot public ne les voit pas.</p>
-        {onOpenKnowledge && <div><Button variant="primary" size="md" onClick={onOpenKnowledge}>Ouvrir la base de connaissance</Button></div>}
+        {onOpenKnowledge && (
+          <ActionBarContent note="La base de connaissance est créée.">
+            <Button variant="primary" size="md" onClick={onOpenKnowledge}>Ouvrir la base de connaissance</Button>
+          </ActionBarContent>
+        )}
       </div>,
     );
   }
@@ -148,7 +156,9 @@ export function BuildKnowledgeBase({ projectId, buildId, knowledgeEnabled, onOpe
             <p className="obp-analysis__error" role="alert">{creationFailureMessage((creation as BuildKnowledgeBaseCreation).errorCode)}</p>
             {error && <p className="obp-analysis__error" role="alert">{error}</p>}
             {state.launch.code !== 'ADMIN_ONLY' && (
-              <div><Button variant="primary" size="md" loading={busy} onClick={create}>Reprendre la création</Button></div>
+              <ActionBarContent note="Création interrompue.">
+                <Button variant="primary" size="md" loading={busy} onClick={create}>Reprendre la création</Button>
+              </ActionBarContent>
             )}
           </>
         )}
@@ -165,13 +175,16 @@ export function BuildKnowledgeBase({ projectId, buildId, knowledgeEnabled, onOpe
           Chaque article rédigé devient un article de votre base, dans sa catégorie, publié en interne. Les sources, les
           phrases retirées et vos commentaires n'y entrent pas.
         </p>
-        {!allowed && state.launch.message && <p className="obp-kb__blockers" role="status">{state.launch.message}</p>}
         {error && <p className="obp-analysis__error" role="alert">{error}</p>}
-        <div>
+        <ActionBarContent
+          note={!allowed && state.launch.message
+            ? <p className="obp-kb__blockers" role="status">{state.launch.message}</p>
+            : 'Un aperçu s\'affiche avant toute création.'}
+        >
           <Button variant="primary" size="md" disabled={!allowed} loading={busy} onClick={() => preview(true)}>
             Créer la base de connaissance
           </Button>
-        </div>
+        </ActionBarContent>
       </>,
     );
   }
@@ -254,17 +267,18 @@ export function BuildKnowledgeBase({ projectId, buildId, knowledgeEnabled, onOpe
         </ul>
       )}
 
-      {blockers.length > 0 && (
-        <ul className="obp-kb__blockers" role="status">
-          {blockers.map(b => <li key={b}>{b}</li>)}
-        </ul>
-      )}
       {error && <p className="obp-analysis__error" role="alert">{error}</p>}
-      <div>
+      <ActionBarContent
+        note={blockers.length > 0 ? (
+          <ul className="obp-kb__blockers" role="status">
+            {blockers.map(b => <li key={b}>{b}</li>)}
+          </ul>
+        ) : 'Une confirmation vous sera demandée avant la création.'}
+      >
         <Button variant="primary" size="md" disabled={blockers.length > 0 || busy} loading={busy} onClick={() => setConfirming(true)}>
           Créer la base
         </Button>
-      </div>
+      </ActionBarContent>
 
       {confirming && (
         <ConfirmDialog

@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { PageHeader } from '../../../shared/components/layout/PageHeader';
+import { ParcoursHeader } from '../../../shared/components/layout/ParcoursHeader';
 import { Button }     from '../../../shared/components/ui/Button';
-import { Tabs, TabPanel } from '../../../shared/components/ui/Tabs';
+import { Stepper }    from '../../../shared/components/ui/Stepper';
+import { ActionBarHost } from '../../../shared/components/ui/ActionBar';
 import { Skeleton }   from '../../../shared/components/ui/Skeleton';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { useToast }   from '../../../shared/lib/useToast';
@@ -19,18 +20,10 @@ import '../onboardingProjects.css';
 import { useAuthStore, selectOrganization, selectUserRole } from '../../../store/authStore';
 import { hasModule } from '../../../shared/lib/modules';
 import { CurrentUserContext } from './base/AuthorName';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowRight, Pencil } from 'lucide-react';
+import { doneSteps, nextStep, stepOf, STEPS, StepFactsContext, type ProjectStep, type StepFacts } from '../lib/steps';
 
-export type ProjectTab = 'documents' | 'cadrage' | 'analysis' | 'audit' | 'base';
-
-const TABS = [
-  { id: 'documents', label: 'Documents' },
-  { id: 'cadrage',   label: 'Fiche de cadrage' },
-  { id: 'analysis',  label: 'Analyse' },
-  // L'URL reste `audit` ; l'onglet montre l'audit de chaque analyse réussie, quelle que soit sa version.
-  { id: 'audit',     label: 'À clarifier' },
-  { id: 'base',      label: 'Nouvelle base' },
-] as const;
+export type ProjectTab = ProjectStep;
 
 interface OnboardingProjectPageProps {
   projectId:   string;
@@ -63,6 +56,12 @@ export function OnboardingProjectPage({
   const isAdmin = useAuthStore(selectUserRole) === 'admin';
   const knowledgeEnabled = hasModule(useAuthStore(selectOrganization), 'knowledge');
   useEffect(() => { if (tab !== 'audit') setClarifyCard(undefined); }, [tab]);
+  /** Ce que les écrans ont déjà lu des étapes (analyse réussie, cartes bloquantes, base créée). */
+  const [facts, setFacts] = useState<StepFacts>({});
+  useEffect(() => { setFacts({}); }, [projectId]);
+  const reportFact = useCallback((step: keyof StepFacts, done: boolean) => {
+    setFacts(f => (f[step] === done ? f : { ...f, [step]: done }));
+  }, []);
 
   const leave = (action: () => void) => {
     if (cadrageDirty) setPendingLeave(() => action);
@@ -91,19 +90,17 @@ export function OnboardingProjectPage({
     setRenaming(false);
   }, [projectId]);
 
-  const back = (
-    <button type="button" className="obp-back icon-label" onClick={() => leave(onBack)}><ArrowLeft size={16} />Tous les projets</button>
-  );
+  const back = { label: 'Tous les projets', onClick: () => leave(onBack) };
+  const step = stepOf(tab);
 
   if (missing) {
-    return <div className="obp-page">{back}</div>;
+    return <div className="obp-page"><ParcoursHeader back={back} title="Projet introuvable" /></div>;
   }
 
   if (!project) {
     return (
       <div className="obp-page" aria-busy="true">
-        {back}
-        <Skeleton className="obp-skeleton-title" />
+        <ParcoursHeader back={back} title={step.label} lead={step.lead} />
         <Skeleton className="obp-skeleton-block" />
       </div>
     );
@@ -113,6 +110,13 @@ export function OnboardingProjectPage({
   if (validationId && knowledgeBase) {
     return (
       <div className="obp-page">
+        <ParcoursHeader
+          back={{ label: 'Revenir à la version propre', onClick: () => onOpenValidation?.(validationId) }}
+          eyebrow={project.name}
+          title="Créer la base de connaissance"
+          lead="Les fiches de la version validée deviennent des articles de votre base de connaissance."
+        />
+        <StepFactsContext.Provider value={reportFact}>
         <KnowledgeBaseCreationView
           projectId={projectId}
           validationId={validationId}
@@ -120,7 +124,9 @@ export function OnboardingProjectPage({
           knowledgeEnabled={knowledgeEnabled}
           onBack={() => onOpenValidation?.(validationId)}
           onOpenKnowledge={() => onOpenKnowledge?.()}
+          hideBack
         />
+        </StepFactsContext.Provider>
       </div>
     );
   }
@@ -129,31 +135,61 @@ export function OnboardingProjectPage({
   if (validationId) {
     return (
       <div className="obp-page">
+        <ParcoursHeader
+          className="obp-clean-noprint"
+          back={{ label: 'Revenir à la relecture', onClick: () => onTabChange('base') }}
+          eyebrow={project.name}
+          title="Version propre"
+          lead="La nouvelle base validée, telle qu'elle sera reprise : à lire, imprimer ou exporter en PDF."
+        />
         <CleanBaseView projectId={projectId} validationId={validationId} onBack={() => onTabChange('base')}
-          onCreateKnowledgeBase={onOpenKnowledgeBase} />
+          onCreateKnowledgeBase={onOpenKnowledgeBase} hideBack />
       </div>
     );
   }
 
+  const done = doneSteps(project, facts);
+  const next = nextStep(tab);
+  const goTo = (id: ProjectTab) => { if (id !== tab) leave(() => onTabChange(id)); };
+  // Une étape sans action principale à ce moment-là propose l'étape suivante.
+  const fallback = next && {
+    children: (
+      <Button variant="primary" size="md" onClick={() => goTo(next.id)}>
+        Continuer : {next.label}<ArrowRight size={16} aria-hidden="true" />
+      </Button>
+    ),
+  };
+
   return (
     <div className="obp-page">
-      {back}
-      <PageHeader
-        title={project.name}
-        actions={<Button variant="ghost" size="sm" onClick={() => setRenaming(true)}>Renommer</Button>}
-      />
-      <Tabs
-        id="obp-sections"
-        items={TABS}
-        value={tab}
-        onChange={id => { if (id !== tab) leave(() => onTabChange(id)); }}
-        ariaLabel="Sections du projet"
-      />
+      <div className="obp-parcours-top">
+        <ParcoursHeader back={back} eyebrow={project.name} title={step.label} lead={step.lead} overlap />
+        <Stepper
+          items={STEPS.map(s => ({ id: s.id, label: s.label, icon: s.icon, done: done[s.id] }))}
+          value={tab}
+          onSelect={goTo}
+          ariaLabel="Étapes du projet"
+        />
+        <div className="obp-parcours-tools">
+          <Button variant="ghost" size="sm" onClick={() => setRenaming(true)}>
+            <Pencil size={16} aria-hidden="true" />Renommer le projet
+          </Button>
+        </div>
+      </div>
       <CurrentUserContext.Provider value={currentUserId}>
-      <TabPanel id="obp-sections" value={tab} className="obp-tab">
+      <StepFactsContext.Provider value={reportFact}>
+      <ActionBarHost fallback={fallback || null}>
+      <div className="obp-tab" id="obp-step-panel" aria-label={step.label} role="region">
         {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
         {tab === 'cadrage' && <CadrageTab project={project} onSaved={reload} onDirtyChange={setCadrageDirty} />}
-        {tab === 'analysis' && <AnalysisTab project={project} onChanged={reload} onOpenAudit={() => onTabChange('audit')} />}
+        {tab === 'analysis' && (
+          <AnalysisTab
+            project={project}
+            // Une nouvelle analyse : ce qu'on savait de « À clarifier » et de la base ne vaut plus.
+            onChanged={() => { setFacts(f => ({ analysis: f.analysis })); void reload(); }}
+            onOpenAudit={() => onTabChange('audit')}
+          />
+        )}
         {tab === 'audit' && (
           <AuditTab
             project={project}
@@ -172,7 +208,9 @@ export function OnboardingProjectPage({
             onOpenKnowledge={onOpenKnowledge}
           />
         )}
-      </TabPanel>
+      </div>
+      </ActionBarHost>
+      </StepFactsContext.Provider>
       </CurrentUserContext.Provider>
 
       {pendingLeave && (

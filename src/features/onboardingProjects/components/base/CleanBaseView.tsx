@@ -18,6 +18,8 @@ interface CleanBaseViewProps {
   onBack:       () => void;
   /** « Créer la base de connaissance », proposé si cette version est la version validée à jour. */
   onCreateKnowledgeBase?: (validationId: string) => void;
+  /** Le retour est déjà dans le bandeau de la page (lot 7b). */
+  hideBack?: boolean;
 }
 
 const anchor = (i: number) => `obp-clean-fiche-${i + 1}`;
@@ -28,7 +30,7 @@ const anchor = (i: number) => `obp-clean-fiche-${i + 1}`;
  * le … » et le retour à la relecture ; puis un sommaire cliquable. Aucun badge, raison, numéro de
  * modification ni code. « Imprimer / PDF » s'appuie sur la feuille d'impression du module.
  */
-export function CleanBaseView({ projectId, validationId, onBack, onCreateKnowledgeBase }: CleanBaseViewProps) {
+export function CleanBaseView({ projectId, validationId, onBack, onCreateKnowledgeBase, hideBack = false }: CleanBaseViewProps) {
   const toast = useToast();
   const [validation, setValidation] = useState<Validation | null>(null);
   const [failed, setFailed] = useState(false);
@@ -77,7 +79,7 @@ export function CleanBaseView({ projectId, validationId, onBack, onCreateKnowled
   );
 
   const back = <button type="button" className="obp-link" onClick={onBack}>Revenir à la relecture</button>;
-  if (failed) return <div className="obp-clean">{back}</div>;
+  if (failed) return hideBack ? null : <div className="obp-clean">{back}</div>;
   if (!validation) return <Skeleton className="obp-skeleton-block" />;
 
   const goTo = (i: number) => (e: React.MouseEvent) => {
@@ -91,7 +93,7 @@ export function CleanBaseView({ projectId, validationId, onBack, onCreateKnowled
         <header className="obp-clean-head">
           <p>
             Validée par {validation.validatedByName} le {formatFull(validation.validatedAt)}
-            <span className="obp-clean-noprint"> · {back}</span>
+            {!hideBack && <span className="obp-clean-noprint"> · {back}</span>}
           </p>
           <span className="obp-clean-actions obp-clean-noprint">
             {onCreateKnowledgeBase && upToDate && (

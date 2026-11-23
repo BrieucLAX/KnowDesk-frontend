@@ -176,6 +176,9 @@
   bottom: 0;
   background: var(--surface);
   padding: 12px 0;
+  /* Au-dessus de la barre d'accueil du téléphone (viewport-fit=cover) : sans elle, « Enregistrer »
+     passait dessous pendant le défilement. */
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
   margin-top: 16px;
   border-top: 1px solid var(--neutral-100);
 }

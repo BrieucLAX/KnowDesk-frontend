@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import { ConfirmDialog } from '../../../../shared/components/ui/ConfirmDialog';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
+import { ActionBarContent } from '../../../../shared/components/ui/ActionBar';
 import { useToast } from '../../../../shared/lib/useToast';
 import { getErrorMessage } from '../../../../shared/lib/apiErrors';
 import { onboardingApi } from '../../api/onboardingApi';
@@ -119,28 +120,33 @@ export function PlanEntry({ projectId, analysisId, cards, current, onOpenBase }:
         <p className="obp-analysis__error" role="status">{planFailureMessage(latest.errorCode)}</p>
       )}
       {left.left > 0 ? (
-        <div className="obp-arb-entry obp-correction-entry__waiting">
+        <ActionBarContent
+          note={(
+            <div role="status">
+              {waiting.map(c => <p key={c.id} className="obp-correction-entry__left">{versionCardWaitingMessage(c)}</p>)}
+              {left.left > waiting.length && <p className="obp-correction-entry__left">{planBlockingLeftLabel(left)}</p>}
+            </div>
+          )}
+        >
           <Button variant="primary" size="md" disabled>Préparer le plan</Button>
-          <div role="status">
-            {waiting.map(c => <p key={c.id} className="obp-correction-entry__left">{versionCardWaitingMessage(c)}</p>)}
-            {left.left > waiting.length && <p className="obp-correction-entry__left">{planBlockingLeftLabel(left)}</p>}
-          </div>
-        </div>
+        </ActionBarContent>
       ) : quotaReached ? (
         <p className="obp-muted" role="status">
           Votre organisation a atteint son nombre de plans ({quota!.max}). Contactez-nous pour en obtenir d'autres.
         </p>
       ) : (
-        <div className="obp-arb-entry">
+        <ActionBarContent
+          note={ready ? 'Le plan se lit et se modifie dans « Nouvelle base ».' : 'Le plan se prépare avec vos réponses actuelles ; vous le suivrez dans « Nouvelle base ».'}
+        >
           {ready ? (
             <>
-              <Button variant="primary" size="md" onClick={onOpenBase}>Voir le plan</Button>
               <Button variant="secondary" size="md" loading={launching} onClick={() => setConfirm(true)}>Préparer à nouveau le plan</Button>
+              <Button variant="primary" size="md" onClick={onOpenBase}>Voir le plan</Button>
             </>
           ) : (
             <Button variant="primary" size="md" loading={launching} onClick={launch}>Préparer le plan</Button>
           )}
-        </div>
+        </ActionBarContent>
       )}
 
       {confirm && (
