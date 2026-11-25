@@ -103,7 +103,8 @@ describe('Construction 0.1.0 : la fixture d\'Elyra suit le contrat', () => {
     const values = (n: Schema | undefined): unknown[] => [
       ...(n?.enum ?? []), ...(n?.anyOf ?? []).flatMap(values),
     ];
-    expect(values(defs.ToVerify.properties!.reason).sort()).toEqual(Object.keys(TO_VERIFY_LABEL).sort());
+    // La 0.3.0 élargie (2026-11-25) ajoute la ligne reprise des sources : voir plus bas.
+    expect(values(defs.ToVerify.properties!.reason).sort()).toEqual(Object.keys(TO_VERIFY_LABEL).filter(r => r !== 'restored_from_sources').sort());
     // La 0.3.0 ajoute la redite (`duplicate`), lue à part : voir plus bas.
     expect(values(defs.RemovedBlock.properties!.reason).sort()).toEqual(Object.keys(REMOVED_LABEL).filter(r => r !== 'duplicate').sort());
     expect(values(defs.BuiltArticle.properties!.empty_reason).filter(v => v !== null).sort()).toEqual(Object.keys(EMPTY_LABEL).sort());
@@ -240,6 +241,12 @@ const articleOf = (raw: unknown, title: string) =>
   readConstruction(raw)!.chapters.flatMap(c => c.articles).find(a => a.title === title)!;
 
 describe('Construction 0.3.0 : les redites retirées', () => {
+  it.skipIf(SCHEMA_03 === undefined)('0.3.0 élargie : chaque raison « À vérifier » a son libellé, ligne reprise comprise', () => {
+    const defs = (SCHEMA_03 as Schema).$defs!;
+    const values = (n: Schema | undefined): unknown[] => [...(n?.enum ?? []), ...(n?.anyOf ?? []).flatMap(values)];
+    expect(values(defs.ToVerify03.properties!.reason).sort()).toEqual(Object.keys(TO_VERIFY_LABEL).sort());
+  });
+
   it.skipIf(SCHEMA_03 === undefined)('valide contre le schéma publié ; la raison de la redite est connue de l\'écran', () => {
     expect(validate(SCHEMA_03 as Schema, SCHEMA_03 as Schema, RAW_03)).toEqual([]);
     const defs = (SCHEMA_03 as Schema).$defs!;

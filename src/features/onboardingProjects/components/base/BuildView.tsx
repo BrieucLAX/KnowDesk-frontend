@@ -7,7 +7,7 @@ import { onboardingApi } from '../../api/onboardingApi';
 import type { Audit } from '../../lib/audit';
 import {
   BUILD_COMMENT_HINT, BUILD_STEPS, buildFailureMessage, buildStepStates, buildSummary, EMPTY_LABEL, groupBlocks, isBuildActive,
-  removedLabel, removedLabelAround, TO_VERIFY_LABEL, unplacedAnswersTitle, verifyLegend,
+  missingValuesTitle, removedLabel, removedLabelAround, TO_VERIFY_LABEL, unplacedAnswersTitle, verifyLegend,
   type BuildComment, type BuildsMeta, type BuiltArticle, type BuiltBlock, type Construction, type OnboardingBuild,
 } from '../../lib/build';
 import { expertEntered } from '../../lib/correction';
@@ -372,6 +372,7 @@ export function BuildArticles({
     <div className="obp-plan">
       <p className="obp-plan__summary">{buildSummary(construction)}</p>
       <UnplacedAnswers construction={construction} ctx={ctx} />
+      <MissingValues construction={construction} ctx={ctx} />
       {!commentable && (
         <p className="obp-muted" role="status">Cette rédaction a été remplacée par une plus récente : elle se consulte, mais ne se commente plus.</p>
       )}
@@ -417,6 +418,36 @@ export function UnplacedAnswers({ construction, ctx }: { construction: Construct
       <p className="obp-muted">Aucun article du plan ne cite les passages de ces cartes : votre réponse n'est écrite nulle part.</p>
       <ul className="obp-build-unplaced__list">
         {answers.map(a => <li key={a.cardId}><CardLink id={a.cardId} ctx={ctx} /></li>)}
+      </ul>
+    </section>
+  );
+}
+
+// ── Valeurs de vos documents qu'aucun article n'écrit (2026-11-25, Q3) ──
+
+/**
+ * Les lignes de vos documents dont une valeur (montant, pourcentage, durée, seuil) n'est écrite par
+ * aucun article : relevées par le code dans les sources de l'article, jamais ajoutées à la base
+ * (réglage « signal ») ; chacune avec son article, la valeur et la ligne, mot pour mot.
+ */
+export function MissingValues({ construction, ctx }: { construction: Construction; ctx: Ctx }) {
+  const values = construction.missingValues;
+  if (values.length === 0) return null;
+  const titles = new Map(construction.chapters.flatMap(c => c.articles.map(a => [a.subjectId, a.title] as const)));
+  return (
+    <section className="obp-build-unplaced" aria-labelledby="obp-build-missing-title">
+      <h3 id="obp-build-missing-title" className="obp-build-unplaced__title">{missingValuesTitle(values.length)}</h3>
+      <p className="obp-muted">
+        Ces lignes sont dans les sources des articles, mais leur valeur n'apparaît dans aucun article. Vérifiez qu'il ne manque rien d'important.
+      </p>
+      <ul className="obp-build-unplaced__list">
+        {values.map((v, i) => (
+          <li key={i}>
+            <strong>{titles.get(v.subjectId) ?? 'Un article'}</strong>
+            <p className="obp-muted">{v.note}</p>
+            {v.passages.map((s, j) => <AuditSource key={j} audit={ctx.audit} source={s} />)}
+          </li>
+        ))}
       </ul>
     </section>
   );

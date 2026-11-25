@@ -75,15 +75,25 @@ export const isPlanActive = (p: Pick<OnboardingPlan, 'status'>) => p.status === 
 
 // ── Plan 0.1.0, lu ────────────────────────────────────────────
 
-export type UncoveredReason = 'internal' | 'out_of_scope' | 'duplicate' | 'no_content' | 'other';
+export type UncoveredReason =
+  | 'internal' | 'out_of_scope' | 'duplicate' | 'no_content' | 'other'
+  | 'omitted' | 'unknown_article' | 'untitled_article' | 'no_text';
 
-/** Pourquoi un passage n'a pas de sujet (liste fermée du contrat), en clair. */
+/**
+ * Pourquoi un passage n'a pas de sujet (liste fermée du contrat), en clair. Plan 0.2.0 (articles
+ * vides de Test Elyra, 2026-11-25, Q1 b) : `other` ne dit plus que « l'IA l'a écarté pour une autre
+ * raison » ; ce qui s'est vraiment passé a sa propre raison.
+ */
 export const UNCOVERED_REASON_LABEL: Readonly<Record<UncoveredReason, string>> = {
-  internal:     'note de travail interne',
-  out_of_scope: 'hors du service client',
-  duplicate:    'déjà dit ailleurs',
-  no_content:   'rien à reprendre (page de garde, sommaire, titre seul)',
-  other:        'autre raison',
+  internal:         'note de travail interne',
+  out_of_scope:     'hors du service client',
+  duplicate:        'déjà dit ailleurs',
+  no_content:       'rien à reprendre (page de garde, sommaire, titre seul)',
+  other:            'autre raison',
+  omitted:          'l\'IA ne l\'a placé dans aucun article',
+  unknown_article:  'l\'IA l\'a placé dans un article qui n\'existe pas',
+  untitled_article: 'l\'IA a proposé un nouvel article sans lui donner de titre',
+  no_text:          'aucun texte lisible (image non lue, document scanné)',
 };
 
 export interface PlanSubject {
