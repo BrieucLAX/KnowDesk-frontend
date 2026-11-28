@@ -26,13 +26,15 @@ interface StepDef {
 }
 
 /*
- * Titres des maquettes à l'identique. Les phrases reprennent celles des maquettes sans ce qui
- * n'existe pas encore (types et usages proposés, brouillon pré-rempli, ajout d'articles,
+ * Titres des maquettes à l'identique. Les phrases reprennent celles des maquettes (Documents :
+ * mot pour mot depuis le lot 2a) sans ce qui n'existe pas encore (brouillon pré-rempli, ajout d'articles,
  * publication à tout moment : lots 2 à 5), ni les nombres qui viendront avec ces lots.
  */
 export const STEPS: readonly StepDef[] = [
   { id: 'documents', label: 'Documents', icon: FileText, title: 'Importez vos documents',
-    lead: 'Apportez tout ce qui sert à répondre aux clients.', towards: 'les documents' },
+    lead: 'Apportez tout ce qui sert à répondre aux clients. Nous proposons pour chaque document un type, un usage et '
+      + 'une date : vérifiez-les, ils serviront à décider quel document fait foi et ce qui peut être montré aux clients.',
+    towards: 'les documents' },
   { id: 'cadrage', label: 'Contexte métier', icon: Building, title: 'Votre contexte métier',
     lead: 'Vérifiez votre fiche de cadrage et complétez ce qui manque, puis lancez l\'analyse de vos documents.',
     towards: 'le contexte métier' },

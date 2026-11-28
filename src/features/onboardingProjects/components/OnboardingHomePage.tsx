@@ -6,7 +6,6 @@ import { Skeleton }   from '../../../shared/components/ui/Skeleton';
 import { useToast }   from '../../../shared/lib/useToast';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import { onboardingApi }  from '../api/onboardingApi';
-import { formatBytes }    from '../lib/format';
 import { ProjectNameModal } from './ProjectNameModal';
 import type { OnboardingProjectSummary } from '../types';
 import '../onboardingProjects.css';
@@ -70,9 +69,8 @@ export function OnboardingHomePage({ onOpenProject }: OnboardingHomePageProps) {
               <button type="button" className="obp-project-card" onClick={() => onOpenProject(p.id)}>
                 <span className="obp-project-card__name">{p.name}</span>
                 <span className="obp-project-card__meta">
-                  {p.documentsCount} document{p.documentsCount > 1 ? 's' : ''}
-                  {p.documentsCount > 0 && ` · ${formatBytes(p.totalBytes)}`}
-                  {' · modifié '}{formatRelative(p.updatedAt)}
+                  {/* Lot 2a : ni nombre ni taille des documents (règle transverse 4). */}
+                  Modifié {formatRelative(p.updatedAt)}
                 </span>
               </button>
             </li>

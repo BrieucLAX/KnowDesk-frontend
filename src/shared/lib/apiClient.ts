@@ -163,4 +163,7 @@ export const apiClient = {
   delete: <T>(path: string)                => request<T>(path, { method: 'DELETE' }),
   /** POST multipart (fichiers), avec le même rafraîchissement de session et les mêmes erreurs. */
   postForm: <T>(path: string, form: FormData) => request<T>(path, { method: 'POST', body: form }),
+  /** POST multipart qui garde la `meta` de la réponse (synthèse d'un import). */
+  postFormWithMeta: <T, M>(path: string, form: FormData) =>
+    request<WithMeta<T, M>>(path, { method: 'POST', body: form }, res => parseResponse(res, true)),
 };

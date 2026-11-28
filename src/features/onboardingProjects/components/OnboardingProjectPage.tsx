@@ -205,7 +205,7 @@ export function OnboardingProjectPage({
       <ProjectRefreshContext.Provider value={reload}>
       <ActionBarHost fallback={fallback || null}>
       <div className="obp-tab" id="obp-step-panel" aria-label={step.label} role="region">
-        {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
+        {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} onContinue={() => goTo('cadrage')} />}
         {tab === 'cadrage' && (
           <CadrageTab
             project={project} onSaved={reload} onDirtyChange={setCadrageDirty}
