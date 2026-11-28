@@ -169,7 +169,8 @@ export function DocumentsTab({ project, onChanged, onContinue }: DocumentsTabPro
         <div className="obp-doclist__head">
           <div className="obp-doclist__heading">
             <h2 id="obp-docs-title" className="obp-doclist__title">
-              {classifying ? documentsCount(total) : `${total} ${total > 1 ? 'documents classés' : 'document classé'}`}
+              {total === 0 ? 'Vos documents'
+                : classifying ? documentsCount(total) : `${total} ${total > 1 ? 'documents classés' : 'document classé'}`}
             </h2>
             {total > 0 && <KnowDeskMention>{LIST_MENTION}</KnowDeskMention>}
           </div>

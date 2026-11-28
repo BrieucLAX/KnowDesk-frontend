@@ -107,6 +107,7 @@ describe('DocumentsTab (étape 1, lot 2a)', () => {
     const onChanged = vi.fn();
     const { container } = render(<DocumentsTab project={project} onChanged={onChanged} />);
     await screen.findByText('Aucun document pour l\'instant.');
+    expect(screen.getByRole('heading', { name: 'Vos documents' })).toBeInTheDocument();
     pickFiles(container, ['corpus.zip']);
 
     expect(await screen.findByRole('heading', { name: '32 documents classés' })).toBeInTheDocument();
