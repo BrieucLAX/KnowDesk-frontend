@@ -7,6 +7,7 @@ import type { AuthSession } from './features/auth/types';
 const MB = 1024 * 1024;
 const project = {
   id: 'p1', name: 'Base SAV', createdAt: '', updatedAt: '', documentsCount: 0, totalBytes: 0, cadrageVersion: null,
+  status: 'documents', currentStep: 1, completedSteps: 0, publishedAt: null,
   limits: { maxFileBytes: 50 * MB, maxDocumentsPerProject: 50, maxProjectBytes: 300 * MB, maxFilesPerUpload: 10 },
 };
 const session: AuthSession = {
@@ -41,21 +42,28 @@ describe('App — aiguillage', () => {
     useAuthStore.setState({ session, isLoaded: true, onboardingDone: true, sessionEndedReason: null, impersonating: null });
   });
 
-  it('la page d\'un projet d\'onboarding s\'affiche seule, sans page 404 en dessous', async () => {
+  it('la page d\'un projet d\'onboarding s\'affiche seule, sans page 404 en dessous, sur l\'étape en cours', async () => {
     render(<MemoryRouter initialEntries={['/onboarding/projects/p1']}><App /></MemoryRouter>);
-    // Bandeau du parcours (lot 7b) : le nom du projet en eyebrow, l'étape en titre.
-    expect(await screen.findByText('Base SAV')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 1, name: 'Documents' })).toBeInTheDocument();
+    // Bandeau du parcours (lot 1 « Socle ») : l'organisation en eyebrow, le titre de l'étape en cours.
+    expect(await screen.findByText('Test · Base de connaissance')).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: 'Importez vos documents' })).toBeInTheDocument();
     expect(screen.queryByText(/introuvable/i)).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /tableau de bord/i })).not.toBeInTheDocument();
   });
 
-  it('/onboarding/projects/:id/analyse ouvre l\'onglet Analyse', async () => {
-    render(<MemoryRouter initialEntries={['/onboarding/projects/p1/analyse']}><App /></MemoryRouter>);
-    expect(await screen.findByRole('heading', { name: 'Lancer l\'analyse' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Lancer l\'analyse' })).toBeDisabled();
+  it('/onboarding/projects/:id/cadrage ouvre l\'étape 2, où l\'analyse se lance', async () => {
+    render(<MemoryRouter initialEntries={['/onboarding/projects/p1/cadrage']}><App /></MemoryRouter>);
+    await screen.findByText('Test · Base de connaissance');
+    expect(screen.getByRole('heading', { level: 1, name: 'Votre contexte métier' })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /Valider et lancer l'analyse/ })).toBeDisabled();
     expect(screen.getByText(/Importez au moins un document/)).toBeInTheDocument();
     expect(screen.queryByText(/introuvable/i)).not.toBeInTheDocument();
+  });
+
+  it('ancienne adresse /analyse : l\'étape 3 « Questions »', async () => {
+    render(<MemoryRouter initialEntries={['/onboarding/projects/p1/analyse']}><App /></MemoryRouter>);
+    await screen.findByText('Test · Base de connaissance');
+    expect(screen.getByRole('heading', { level: 1, name: 'Questions' })).toBeInTheDocument();
   });
 
   it('/onboarding/projects/:id/base/validee/:v/base-de-connaissance ouvre « Créer la base de connaissance » ; sans le module, le message et aucun appel', async () => {

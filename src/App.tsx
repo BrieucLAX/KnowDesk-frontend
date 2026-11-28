@@ -90,11 +90,12 @@ type View =
   | { screen: 'learning-edit'; pathId: string }
   | { screen: 'learning-play'; moduleId: string }
   | { screen: 'onboarding' }
-  | { screen: 'onboarding-project'; projectId: string; tab: ProjectTab; validationId?: string; knowledgeBase?: boolean };
+  /** `tab` null : l'étape en cours du projet (statut du parcours), choisie par la page. */
+  | { screen: 'onboarding-project'; projectId: string; tab: ProjectTab | null; validationId?: string; knowledgeBase?: boolean };
 
-/** Suffixe d'URL de chaque onglet d'un projet d'onboarding. */
+/** Suffixe d'URL de chaque étape d'un projet d'onboarding (parcours cible, lot 1 « Socle »). */
 const ONBOARDING_TAB_PATHS: Record<ProjectTab, string> = {
-  documents: '', cadrage: '/cadrage', analysis: '/analyse', audit: '/audit', base: '/base',
+  documents: '/documents', cadrage: '/cadrage', audit: '/audit', plan: '/plan', relecture: '/relecture',
 };
 
 /** Maps URL pathname to a View. Returns null for unmapped paths. */
@@ -123,17 +124,18 @@ function pathToView(pathname: string, fallbackFrom: Screen): View | null {
   // Version propre d'une base validée : un écran à part, sous l'onglet « Nouvelle base ».
   const knowledgeBaseMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)\/base\/validee\/([^/]+)\/base-de-connaissance$/);
   if (knowledgeBaseMatch) {
-    return { screen: 'onboarding-project', projectId: knowledgeBaseMatch[1], tab: 'base', validationId: knowledgeBaseMatch[2], knowledgeBase: true };
+    return { screen: 'onboarding-project', projectId: knowledgeBaseMatch[1], tab: 'relecture', validationId: knowledgeBaseMatch[2], knowledgeBase: true };
   }
   const validatedMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)\/base\/validee\/([^/]+)$/);
-  if (validatedMatch) return { screen: 'onboarding-project', projectId: validatedMatch[1], tab: 'base', validationId: validatedMatch[2] };
-  const onboardingMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)(?:\/(cadrage|analyse|audit|base))?$/);
+  if (validatedMatch) return { screen: 'onboarding-project', projectId: validatedMatch[1], tab: 'relecture', validationId: validatedMatch[2] };
+  // Sans suffixe : l'étape en cours. Anciennes adresses : `analyse` ouvre l'étape 3 (l'attente de
+  // l'analyse), `base` l'étape en cours (le plan ou la relecture).
+  const onboardingMatch = pathname.match(/^\/onboarding\/projects\/([^/]+)(?:\/(documents|cadrage|analyse|audit|base|plan|relecture))?$/);
   if (onboardingMatch) {
-    const tab: ProjectTab = onboardingMatch[2] === 'cadrage' ? 'cadrage'
-      : onboardingMatch[2] === 'analyse' ? 'analysis'
-      : onboardingMatch[2] === 'audit' ? 'audit'
-      : onboardingMatch[2] === 'base' ? 'base'
-      : 'documents';
+    const suffix = onboardingMatch[2];
+    const tab: ProjectTab | null = suffix === 'analyse' ? 'audit'
+      : suffix === undefined || suffix === 'base' ? null
+      : suffix as ProjectTab;
     return { screen: 'onboarding-project', projectId: onboardingMatch[1], tab };
   }
 
@@ -199,7 +201,7 @@ function viewToPath(view: View): string | null {
     case 'onboarding-project':
       return view.validationId
         ? `/onboarding/projects/${view.projectId}/base/validee/${view.validationId}${view.knowledgeBase ? '/base-de-connaissance' : ''}`
-        : `/onboarding/projects/${view.projectId}${ONBOARDING_TAB_PATHS[view.tab]}`;
+        : `/onboarding/projects/${view.projectId}${view.tab === null ? '' : ONBOARDING_TAB_PATHS[view.tab]}`;
     default:            return null;
   }
 }
@@ -558,7 +560,7 @@ if (!isLoggedIn) {
 {shown.screen === 'account' && <AccountPage />}
 {shown.screen === 'onboarding' && (
   <OnboardingHomePage
-    onOpenProject={projectId => go({ screen: 'onboarding-project', projectId, tab: 'documents' })}
+    onOpenProject={projectId => go({ screen: 'onboarding-project', projectId, tab: null })}
   />
 )}
 {shown.screen === 'onboarding-project' && (
@@ -568,8 +570,8 @@ if (!isLoggedIn) {
     validationId={shown.validationId ?? null}
     knowledgeBase={shown.knowledgeBase ?? false}
     onTabChange={tab => go({ screen: 'onboarding-project', projectId: shown.projectId, tab })}
-    onOpenValidation={validationId => go({ screen: 'onboarding-project', projectId: shown.projectId, tab: 'base', validationId })}
-    onOpenKnowledgeBase={validationId => go({ screen: 'onboarding-project', projectId: shown.projectId, tab: 'base', validationId, knowledgeBase: true })}
+    onOpenValidation={validationId => go({ screen: 'onboarding-project', projectId: shown.projectId, tab: 'relecture', validationId })}
+    onOpenKnowledgeBase={validationId => go({ screen: 'onboarding-project', projectId: shown.projectId, tab: 'relecture', validationId, knowledgeBase: true })}
     onOpenKnowledge={() => go({ screen: 'knowledge' })}
     onBack={() => go({ screen: 'onboarding' })}
   />

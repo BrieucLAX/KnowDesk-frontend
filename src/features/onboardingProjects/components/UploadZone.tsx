@@ -5,7 +5,7 @@ import { useToast } from '../../../shared/lib/useToast';
 import { onboardingApi } from '../api/onboardingApi';
 import { ACCEPT_ATTRIBUTE, ACCEPTED_FORMATS_TEXT, checkSelection } from '../lib/checkSelection';
 import { formatBytes } from '../lib/format';
-import { corpusVolume } from '../lib/volume';
+import { isCorpusTooLarge } from '../lib/volume';
 import type { OnboardingDocument, OnboardingProject } from '../types';
 
 interface UploadZoneProps {
@@ -52,7 +52,6 @@ export function UploadZone({ project, onUploaded, onNoticeRequired }: UploadZone
   };
 
   const { limits } = project;
-  const volume = corpusVolume(project);
 
   return (
     <section aria-labelledby="obp-upload-title" className="obp-upload">
@@ -88,27 +87,15 @@ export function UploadZone({ project, onUploaded, onNoticeRequired }: UploadZone
           </>
         )}
       </div>
+      {/* Lot 1 « Socle », règle transverse 4 : ni compteurs du projet ni jauge de volume ; la règle
+          d'envoi reste dite, et le dépassement du volume qu'une analyse peut lire reste signalé. */}
       <p id="obp-upload-limits" className="obp-muted">
         {limits.maxFilesPerUpload} fichiers au plus par envoi, {formatBytes(limits.maxFileBytes)} par fichier.
-        {' '}Projet : {project.documentsCount} / {limits.maxDocumentsPerProject} documents,
-        {' '}{formatBytes(project.totalBytes)} / {formatBytes(limits.maxProjectBytes)}.
       </p>
-      {volume && (
-        <div className={cn('obp-volume', `obp-volume--${volume.tone}`)}>
-          <div
-            className="obp-volume__bar"
-            role="meter"
-            aria-label="Volume de texte du projet"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.min(volume.share, 100)}
-            aria-valuetext={`${volume.share} %`}
-          >
-            <span className="obp-volume__fill" style={{ width: `${Math.min(volume.share, 100)}%` }} />
-          </div>
-          <p className="obp-volume__label">{volume.label}</p>
-          {volume.note && <p className="obp-muted">{volume.note}</p>}
-        </div>
+      {isCorpusTooLarge(project) && (
+        <p className="obp-alert" role="alert">
+          Vos documents dépassent ce qu'une analyse peut lire : retirez-en avant de lancer l'analyse.
+        </p>
       )}
       {error && <p className="obp-alert" role="alert">{error}</p>}
     </section>

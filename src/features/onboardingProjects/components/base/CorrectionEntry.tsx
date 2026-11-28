@@ -23,6 +23,8 @@ interface CorrectionEntryProps {
   cards:         ReadingCard[];
   current:       ReadonlyMap<string, Decision>;
   onOpenBase:    () => void;
+  /** Lot 1 « Socle » : ouvre la relecture de la base prête (étape 5) ; sans elle, `onOpenBase`. */
+  onOpenReview?: () => void;
   /** Audit 0.12.0 : la base existante repérée ; sans base (`build`), la préparation est refusée. */
   base?:         ExistingBase | null;
 }
@@ -33,7 +35,7 @@ interface CorrectionEntryProps {
  * sinon le nombre de cartes qui restent. Une carte de versions sans vraie réponse (audit 0.16.0)
  * laisse le bouton grisé, avec un message qui la nomme. Une préparation en cours, ou une base prête, y renvoie.
  */
-export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, current, onOpenBase, base = null }: CorrectionEntryProps) {
+export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, current, onOpenBase, onOpenReview = onOpenBase, base = null }: CorrectionEntryProps) {
   const toast = useToast();
   const [corrections, setCorrections] = useState<OnboardingCorrection[] | null>(null);
   const [quota,     setQuota]     = useState<CorrectionQuota | null>(null);
@@ -125,7 +127,7 @@ export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, c
           {ready ? (
             <>
               <Button variant="secondary" size="md" loading={launching} onClick={() => setConfirm(true)}>Préparer à nouveau</Button>
-              <Button variant="primary" size="md" onClick={onOpenBase}>Relire la nouvelle base</Button>
+              <Button variant="primary" size="md" onClick={onOpenReview}>Relire la nouvelle base</Button>
             </>
           ) : (
             <Button variant="primary" size="md" loading={launching} onClick={launch}>Préparer la nouvelle base</Button>
@@ -134,7 +136,7 @@ export function CorrectionEntry({ projectId, analysisId, schemaVersion, cards, c
       )}
       {left.left > 0 && ready && (
         <p className="obp-muted">
-          <button type="button" className="obp-link icon-label" onClick={onOpenBase}>Relire la nouvelle base déjà prête<ArrowRight size={16} /></button>
+          <button type="button" className="obp-link icon-label" onClick={onOpenReview}>Relire la nouvelle base déjà prête<ArrowRight size={16} /></button>
         </p>
       )}
 

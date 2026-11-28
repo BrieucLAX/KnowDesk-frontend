@@ -18,7 +18,7 @@ vi.mock('../../api/onboardingApi', () => ({
 // complète, sous charge, 5 s ne suffisent pas toujours (déjà instable sur main, 2026-10-09).
 vi.setConfig({ testTimeout: 15_000 });
 import { onboardingApi } from '../../api/onboardingApi';
-import { BaseTab } from './BaseTab';
+import { BaseTabSteps } from './BaseTabSteps.testUtils';
 import { CleanBaseView } from './CleanBaseView';
 import { CurrentUserContext } from './AuthorName';
 import type { BaseVersion, OnboardingCorrection, Review, Validation, ValidationSummary } from '../../lib/correction';
@@ -69,7 +69,7 @@ describe('Relecture : « Corriger » par section, convention sans « Corriger »
 
   it('« Corriger » ouvre un champ par section touchée, pré-rempli de ses lignes, et enregistre un texte par section', async () => {
     vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict, correctedTexts: body.correctedTexts }));
-    render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
     const m1 = await screen.findByRole('article', { name: /^Modification 1/ });
     fireEvent.click(within(m1).getByRole('button', { name: 'Corriger l\'ajout' }));
     const keys = PILOTE.base.modifications.find(m => m.id === 'M1')!.section_keys;
@@ -91,7 +91,7 @@ describe('Relecture : « Corriger » par section, convention sans « Corriger »
       base: { ...PILOTE.base, conventions: [{ id: 'C1', rule: 'Listes datées : la plus récente en premier.', section_keys: [PILOTE.base.sheets[0].sections[0].key] }] },
     };
     mockBase(withConvention, [review('C1', { verdict: 'fix', correctedText: 'Autre règle' })]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
     const c1 = await screen.findByRole('article', { name: 'Convention 1' });
     expect(within(c1).getAllByRole('button').map(b => b.textContent)).toEqual(['Accepter', 'Refuser']);
     expect(within(c1).getByRole('button', { name: 'Refuser' })).toHaveAttribute('aria-pressed', 'true');
@@ -104,7 +104,7 @@ describe('Relecture : valider la nouvelle base', () => {
 
   it('tant qu\'un avis manque : le nombre qui reste, pas de bouton', async () => {
     mockBase(PILOTE, [review('M1')]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
     expect(await screen.findByText(`Encore ${applied.length - 1} avis à donner avant de valider la nouvelle base.`)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Valider la nouvelle base' })).not.toBeInTheDocument();
   });
@@ -113,7 +113,7 @@ describe('Relecture : valider la nouvelle base', () => {
     mockBase(PILOTE, applied.map(m => review(m.id)));
     vi.mocked(onboardingApi.validateBase).mockResolvedValue(summary({ id: 'v9' }));
     const open = vi.fn();
-    render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
     // Par son texte : une requête par rôle parcourt toute la base du pilote, une section après l'autre.
     const [top] = await screen.findAllByText('Valider la nouvelle base');
     fireEvent.click(top.closest('button')!);
@@ -125,7 +125,7 @@ describe('Relecture : valider la nouvelle base', () => {
     mockBase(PILOTE, applied.map(m => review(m.id)));
     vi.mocked(onboardingApi.validateBase).mockResolvedValue(summary({ id: 'v9' }));
     const open = vi.fn();
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
     const phrase = await screen.findByText('Tous les avis sont donnés : validez pour obtenir la version finale.');
     const bar = phrase.closest('.actionbar') as HTMLElement;
     expect(bar).not.toBeNull();
@@ -141,7 +141,7 @@ describe('Relecture : valider la nouvelle base', () => {
     let done!: (v: ValidationSummary) => void;
     vi.mocked(onboardingApi.validateBase).mockReturnValue(new Promise(r => { done = r; }));
     const open = vi.fn();
-    render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
     const phrase = await screen.findByText('Tous les avis sont donnés : validez pour obtenir la version finale.');
     const button = within(phrase.closest('.actionbar') as HTMLElement).getByRole('button', { name: 'Valider la nouvelle base' });
     fireEvent.click(button);
@@ -155,7 +155,7 @@ describe('Relecture : valider la nouvelle base', () => {
 
   it('point 7 : un avis qui manque, ou une version à jour : rien en bas', async () => {
     mockBase(PILOTE, [review('M1')]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
     await screen.findByText(/^Encore \d+ avis à donner/);
     expect(screen.queryByText('Tous les avis sont donnés : validez pour obtenir la version finale.')).not.toBeInTheDocument();
   });
@@ -163,7 +163,7 @@ describe('Relecture : valider la nouvelle base', () => {
   it('validée et à jour : « Voir la version validée » ; un avis changé depuis : revalider ; l\'historique reste', async () => {
     mockBase(PILOTE, applied.map(m => review(m.id)), [summary()]);
     const open = vi.fn();
-    const { unmount } = render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
+    const { unmount } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
     expect(await screen.findByText(/^Validée par Camille Martin le /)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Voir la version validée' }));
     expect(open).toHaveBeenCalledWith('v1');
@@ -172,7 +172,7 @@ describe('Relecture : valider la nouvelle base', () => {
     unmount();
 
     mockBase(PILOTE, applied.map(m => review(m.id)), [summary({ id: 'v2', version: 2, upToDate: false }), summary({ upToDate: null })]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={open} />);
     expect(await screen.findByText(/^Vos avis ont changé depuis la version validée du /)).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: 'Valider la nouvelle base' }).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByText('Versions validées (2)'));
@@ -237,7 +237,7 @@ describe('Version propre', () => {
     [undefined, 'Vos avis ont changé depuis la version validée du '],
   ])('point 10 : la revalidation dit ce qui a changé (%o) ; sans cause, le libellé d\'avant', async (changed, start) => {
     mockBase(PILOTE, applied.map(m => review(m.id)), [summary({ upToDate: false, ...(changed === undefined ? {} : { changed }) })]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} />);
     expect(await screen.findByText(text => text.startsWith(start) && text.endsWith(' : revalidez pour mettre à jour la version propre.')))
       .toBeInTheDocument();
   });
@@ -246,7 +246,7 @@ describe('Version propre', () => {
     const unnamed = { validatedByName: 'un membre de l\'équipe', validatedById: 'u-moi' };
     mockBase(PILOTE, applied.map(m => review(m.id)), [summary(unnamed)]);
     const { unmount } = render(
-      <CurrentUserContext.Provider value="u-moi"><BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} /></CurrentUserContext.Provider>,
+      <CurrentUserContext.Provider value="u-moi"><BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} /></CurrentUserContext.Provider>,
     );
     expect(await screen.findByText(/^Validée par un membre de l'équipe/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Ajoutez votre nom à votre profil' })).toHaveAttribute('href', '/account');
@@ -256,7 +256,7 @@ describe('Version propre', () => {
     for (const [me, v] of [['u-autre', unnamed], ['u-moi', { validatedByName: 'Camille Martin', validatedById: 'u-moi' }]] as const) {
       mockBase(PILOTE, applied.map(m => review(m.id)), [summary(v)]);
       const view = render(
-        <CurrentUserContext.Provider value={me}><BaseTab project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} /></CurrentUserContext.Provider>,
+        <CurrentUserContext.Provider value={me}><BaseTabSteps project={project} onGoToClarify={() => {}} onOpenValidation={() => {}} /></CurrentUserContext.Provider>,
       );
       await screen.findByText(/^Validée par /);
       expect(screen.queryByRole('link', { name: 'Ajoutez votre nom à votre profil' })).not.toBeInTheDocument();

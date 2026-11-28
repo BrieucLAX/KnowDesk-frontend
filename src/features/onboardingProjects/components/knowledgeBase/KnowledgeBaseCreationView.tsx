@@ -11,7 +11,7 @@ import {
   rememberCreation, rememberedCreation, type KnowledgeBaseCreation, type KnowledgeBasePreview, type LatestKnowledgeBaseCreation,
 } from '../../lib/knowledgeBase';
 import type { Validation } from '../../lib/correction';
-import { useStepFact } from '../../lib/steps';
+import { useStatusSignal } from '../../lib/steps';
 
 /** Intervalle de relecture d'une création en cours (elle dure quelques secondes). */
 export const KNOWLEDGE_BASE_POLL_MS = 2000;
@@ -158,8 +158,8 @@ export function KnowledgeBaseCreationView({
   }, [projectId, show]);
 
   const active = screen.kind === 'ready' && isCreationActive(screen.creation);
-  // « Nouvelle base » terminée : la base de connaissance est créée depuis cette version.
-  useStepFact('base', screen.kind === 'ready' && screen.creation.status === 'succeeded' ? true : undefined);
+  // Base créée depuis cette version : le projet est publié, la page relit son statut.
+  useStatusSignal(screen.kind === 'ready' ? screen.creation.status : undefined);
   usePolling(refresh, KNOWLEDGE_BASE_POLL_MS, active);
 
   const create = async () => {

@@ -13,7 +13,7 @@ import {
   type CadrageErrors,
 } from '../lib/cadrageForm';
 import { CadrageSections } from './CadrageSections';
-import { CadrageHistory } from './CadrageHistory';
+import { AnalysisLaunch } from './AnalysisLaunch';
 import { FreeCadrageEditor, FREE_CADRAGE_MAX_CHARS } from './FreeCadrageEditor';
 import type { Cadrage, CadrageForm, CadrageKind, CadrageVersionSummary, OnboardingDocument, OnboardingProject } from '../types';
 
@@ -23,6 +23,8 @@ interface CadrageTabProps {
   onSaved:       () => void;
   /** Modifications non enregistrées : la page demande confirmation avant de quitter l'onglet. */
   onDirtyChange: (dirty: boolean) => void;
+  /** Lot 1 « Socle » : l'analyse est lancée depuis cette étape ; la page ouvre l'étape 3. */
+  onAnalysisLaunched?: () => void;
 }
 
 const MODES = [
@@ -30,7 +32,6 @@ const MODES = [
   { id: 'structured', label: 'Formulaire structuré (facultatif)' },
 ] as const;
 
-const KIND_LABEL: Record<CadrageKind, string> = { free: 'libre', structured: 'structurée' };
 
 interface PendingConfirm {
   title:        string;
@@ -40,12 +41,17 @@ interface PendingConfirm {
 }
 
 /**
+ * Étape 2 « Contexte métier » (lot 1 « Socle ») : l'action principale est « Valider et lancer
+ * l'analyse » (`AnalysisLaunch`) ; tant que la fiche a des modifications non enregistrées, c'est
+ * leur enregistrement. Ni « Version N » ni historique des versions (règle transverse 4) : les
+ * versions restent enregistrées par le back.
+ *
  * Fiche de cadrage. Une version est soit libre (texte collé ou importé, envoyé
  * tel quel à l'analyse), soit structurée (formulaire en six sections,
  * facultatif). Chaque enregistrement crée une version immuable ; l'historique
  * les montre toutes.
  */
-export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps) {
+export function CadrageTab({ project, onSaved, onDirtyChange, onAnalysisLaunched = () => {} }: CadrageTabProps) {
   const toast = useToast();
   const [documents, setDocuments] = useState<OnboardingDocument[] | null>(null);
   const [versions,  setVersions]  = useState<CadrageVersionSummary[] | null>(null);
@@ -194,22 +200,6 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
     }
   };
 
-  const restore = useCallback((cadrage: Cadrage) => {
-    if (cadrage.kind === 'free') {
-      setFreeText(cadrage.markdown);
-      setFreeSource(cadrage.sourceFilename);
-    } else {
-      setForm(normalizeCadrageForm(cadrage.form));
-    }
-    setMode(cadrage.kind);
-    setErrors({});
-    setFreeError('');
-    setFormError('');
-    setRestoredFrom(cadrage.version);
-    markDirty(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [markDirty]);
-
   const projectFilenames = useMemo(() => new Set((documents ?? []).map(d => d.filename)), [documents]);
   const absent = useMemo(
     () => (mode === 'structured' ? missingDocuments(form, projectFilenames) : []),
@@ -219,7 +209,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
   const afterSave = (saved: Cadrage & { missingDocuments: string[] }) => {
     applySaved(saved);
     markDirty(false);
-    toast.success(`Version ${saved.version} enregistrée.`);
+    toast.success('Fiche enregistrée.');
     if (saved.missingDocuments.length > 0) {
       toast.warning(`Documents cités mais absents du projet : ${saved.missingDocuments.join(', ')}.`);
     }
@@ -277,14 +267,11 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
   if (!loaded || !documents) return <Skeleton className="obp-skeleton-block" />;
 
   // L'action principale, dans la barre d'action de la page (lot 7b) : `form` la relie au formulaire.
-  const saveBar = (
-    <ActionBarContent
-      note={dirty
-        ? 'Modifications non enregistrées : elles deviendront une nouvelle version, les précédentes restent dans l\'historique.'
-        : 'Aucune modification à enregistrer.'}
-    >
-      <Button type="submit" form="obp-cadrage-form" variant="primary" size="md" loading={saving} disabled={!dirty}>
-        Enregistrer une nouvelle version
+  // Une seule action principale : enregistrer ce qui a changé, sinon lancer l'analyse.
+  const saveBar = dirty && (
+    <ActionBarContent note="Modifications non enregistrées : enregistrez la fiche avant de lancer l'analyse.">
+      <Button type="submit" form="obp-cadrage-form" variant="primary" size="md" loading={saving}>
+        Enregistrer la fiche
       </Button>
     </ActionBarContent>
   );
@@ -299,10 +286,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
     >
       <div className="obp-cadrage__bar">
         <p className="obp-muted" aria-live="polite">
-          {current
-            ? `Version ${current.version} (${KIND_LABEL[current.kind]}), enregistrée le ${formatFull(current.createdAt)}.`
-            : 'Aucune version enregistrée.'}
-          {restoredFrom !== null && dirty && ` Repris de la version ${restoredFrom}.`}
+          {current ? `Fiche enregistrée le ${formatFull(current.createdAt)}.` : 'Aucune fiche enregistrée.'}
           {dirty && <strong className="obp-dirty"> Modifications non enregistrées.</strong>}
         </p>
       </div>
@@ -339,14 +323,7 @@ export function CadrageTab({ project, onSaved, onDirtyChange }: CadrageTabProps)
       {saveBar}
     </form>
 
-    {/* Hors du formulaire : ses boutons (et sa modale) ne doivent pas l'envoyer. */}
-    <CadrageHistory
-      projectId={project.id}
-      versions={versions}
-      latest={current?.version ?? null}
-      dirty={dirty}
-      onRestore={restore}
-    />
+    <AnalysisLaunch project={project} disabled={dirty} onLaunched={onAnalysisLaunched} />
 
     {pending && (
       <ConfirmDialog

@@ -20,6 +20,7 @@ vi.setConfig({ testTimeout: 15_000 });
 import { onboardingApi } from '../../api/onboardingApi';
 import { ApiError } from '../../../../shared/lib/apiClient';
 import { BaseTab } from './BaseTab';
+import { BaseTabSteps } from './BaseTabSteps.testUtils';
 import { CorrectionEntry } from './CorrectionEntry';
 import { CurrentUserContext } from './AuthorName';
 import type { BaseVersion, OnboardingCorrection, Review } from '../../lib/correction';
@@ -93,7 +94,7 @@ describe('Nouvelle base : relecture', () => {
   afterEach(() => { vi.restoreAllMocks(); });
 
   it('montre chaque modification à sa place, dans l\'ordre du document, sans aucun code', async () => {
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText('0 sur 6 relues')).toBeInTheDocument();
 
     // Les cartes suivent l'ordre des fiches, pas la numérotation des modifications.
@@ -126,7 +127,7 @@ describe('Nouvelle base : relecture', () => {
       { card_id: first.id, card_rank: first.rank, reason: 'unanswered' },
       { card_id: second.id, card_rank: second.rank, reason: 'no_section' },
     ] } });
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText(/^Non répondues, sans modification de la base : /)).toBeInTheDocument();
     expect(screen.getByText(/^Répondues, mais aucune section de la base ne les porte : /)).toBeInTheDocument();
     expect(screen.getByText(/^Pour les ajouter, nommez la section dans une précision de votre réponse/)).toBeInTheDocument();
@@ -136,7 +137,7 @@ describe('Nouvelle base : relecture', () => {
   it('base 0.2.0 réelle (correction du pilote rejouée par le pipeline 30ce86e) : affichée, pas « format inconnu »', async () => {
     const base = BASE_PILOTE_02 as unknown as BaseVersion;
     mockBase(base, [correction({ id: base.correctionId })]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText('0 sur 6 relues')).toBeInTheDocument();
     expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 4 }).length).toBe(base.base.modifications.length + base.base.conventions.length);
@@ -149,7 +150,7 @@ describe('Nouvelle base : relecture', () => {
       ...c, mergedRanks: [], documentIds: [], sides: [], answers: [], unverifiedQuotes: [],
     }));
     vi.mocked(onboardingApi.getAudit).mockResolvedValue({ schemaVersion: '0.8.0', reading: { cards } } as unknown as AuditResponse);
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByText('0 sur 6 relues');
     expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
 
@@ -195,7 +196,7 @@ describe('Nouvelle base : relecture', () => {
     });
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
-    render(<CurrentUserContext.Provider value="u-moi"><BaseTab project={project} onGoToClarify={() => {}} /></CurrentUserContext.Provider>);
+    render(<CurrentUserContext.Provider value="u-moi"><BaseTabSteps project={project} onGoToClarify={() => {}} /></CurrentUserContext.Provider>);
     const m4 = await screen.findByRole('article', { name: 'Modification 4' });
     await waitFor(() => expect(m4).toHaveTextContent('Réponse enregistrée par un membre de l\'équipe'));
     expect(m4).toHaveTextContent(/le \d{1,2} octobre 2026/);
@@ -210,7 +211,7 @@ describe('Nouvelle base : relecture', () => {
   it('base 0.4.0 (banc v5, G1, validée par le back) : phrases à vérifier comptées et surlignées, chapitre créé comme une modification ordinaire', async () => {
     const base = BASE_BANC_04 as unknown as BaseVersion;
     mockBase(base, [correction({ id: base.correctionId })]);
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByText('0 sur 6 relues');
     expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
 
@@ -253,7 +254,7 @@ describe('Nouvelle base : relecture', () => {
   });
 
   it('point 9 : « Corriger cette section » est un bouton secondaire, sur chaque section, modifiée ou non', async () => {
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByText('0 sur 6 relues');
     const sections = container.querySelectorAll('.obp-base-section');
     const buttons = [...container.querySelectorAll('.obp-base-section-fix button')].filter(b => b.textContent === 'Corriger cette section');
@@ -268,7 +269,7 @@ describe('Nouvelle base : relecture', () => {
 
   it('base d\'une version inconnue : le dit, sans rien afficher d\'autre', async () => {
     mockBase({ ...PILOTE, schemaVersion: '0.99.0' });
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText(/Cette base est dans un format que cette version de l'application ne sait pas afficher/)).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 4 })).not.toBeInTheDocument();
   });
@@ -283,7 +284,7 @@ describe('Nouvelle base : relecture', () => {
     mockBase({ ...PILOTE, schemaVersion: '0.5.0', base: { ...PILOTE.base, modifications: [update, entered, ...rest], retired_sources: [
       { document_id: 'doc_v1', document_path: 'jeu.zip/Grille_v1.pdf', card_id: 'card_v', decision_id: 'd1' },
     ] } });
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText('Grille_v1.pdf : ancienne version, elle n\'est plus une source de cette base.')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Anciennes versions retirées des sources' })).toBeInTheDocument();
     expect(screen.getByRole('list', { name: 'Valeurs remplacées' })).toHaveTextContent('Elyra Fixe 2 ans, Base : 0,2018 € → 0,1952 €');
@@ -300,7 +301,7 @@ describe('Nouvelle base : relecture', () => {
     }));
     vi.mocked(onboardingApi.getAudit).mockResolvedValue({ schemaVersion: '0.8.0', reading: { cards } } as unknown as AuditResponse);
     const onGoToClarify = vi.fn();
-    const { container } = render(<BaseTab project={project} onGoToClarify={onGoToClarify} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={onGoToClarify} />);
     const list = (await screen.findByRole('heading', { level: 2, name: '4 de vos réponses ne figurent pas dans la base' })).closest('section')!;
     expect(within(list).getAllByRole('listitem')).toHaveLength(4);
     expect(list).toHaveTextContent('Répondue, mais elle demande un chapitre qu\'aucun document importé ne porte : il n\'a pas été créé.');
@@ -321,13 +322,13 @@ describe('Nouvelle base : relecture', () => {
         ...se, changes: (se.changes ?? []).filter(c => c.kept || c.undo_reason !== 'value_without_source'),
       })) })),
     } });
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByText(/sur \d+ relues?/);
     expect(screen.queryByRole('heading', { name: /de vos réponses ne figur/ })).not.toBeInTheDocument();
   });
 
   it('titre chaque fiche par son premier titre, et chaque section une seule fois (Essai 5)', async () => {
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByText('0 sur 6 relues');
     // Les fiches seulement : l'encart des réponses non appliquées (C-Q11) n'est pas une fiche.
     const chapters = [...container.querySelectorAll('.obp-base-chapter:not(.obp-base-uncovered) > .obp-base-chapter__title')].map(h => h.textContent);
@@ -354,7 +355,7 @@ describe('Nouvelle base : relecture', () => {
       },
     };
     mockBase(edited);
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByText('0 sur 6 relues');
     const removed = container.querySelector('.obp-base-change--delete');
     const added = container.querySelector('.obp-base-change--insert');
@@ -381,7 +382,7 @@ describe('Nouvelle base : relecture', () => {
       },
     };
     mockBase(partial);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const card = await screen.findByRole('article', { name: /^Modification 1/ });
     expect(card).toHaveTextContent('Appliquée en partie : la nouvelle grille 2027 n\'est pas dans vos documents.');
     const outcome = card.querySelector('.obp-base-card__outcome')!;
@@ -412,7 +413,7 @@ describe('Nouvelle base : relecture', () => {
       },
     };
     mockBase(shared);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const expired = await screen.findByRole('article', { name: /^Modification 3/ });
     expect(expired).toHaveTextContent('Non appliquée');
     expect(expired).toHaveTextContent('Elle n\'écrit rien dans la base. Les changements de « ');
@@ -425,7 +426,7 @@ describe('Nouvelle base : relecture', () => {
     vi.mocked(onboardingApi.review)
       .mockResolvedValueOnce(review('M1'))
       .mockResolvedValueOnce(review('M1', { id: '00000000-0000-4000-8000-000000000011', comment: 'À confirmer.', supersedesId: '00000000-0000-4000-8000-000000000001' }));
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const m1 = await screen.findByRole('article', { name: /^Modification 1/ });
 
     fireEvent.click(within(m1).getByRole('button', { name: 'Accepter' }));
@@ -447,7 +448,7 @@ describe('Nouvelle base : relecture', () => {
   it('« Corriger » part du texte proposé et l\'enregistre corrigé', async () => {
     vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict, correctedTexts: body.correctedTexts }));
     const m3Key = PILOTE.base.modifications.find(m => m.id === 'M3')!.section_keys[0];
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const m3 = await screen.findByRole('article', { name: /^Modification 3/ });
     fireEvent.click(within(m3).getByRole('button', { name: 'Corriger l\'ajout' }));
     const field = within(m3).getByLabelText('Le texte tel que vous l\'écririez') as HTMLTextAreaElement;
@@ -462,7 +463,7 @@ describe('Nouvelle base : relecture', () => {
   it('« Corriger » déplace un ajout : la phrase le dit, une section vidée garde son texte d\'origine et n\'est pas envoyée', async () => {
     vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict, correctedTexts: body.correctedTexts }));
     const [first, second] = PILOTE.base.modifications.find(m => m.id === 'M1')!.section_keys;
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const m1 = await screen.findByRole('article', { name: /^Modification 1/ });
     fireEvent.click(within(m1).getByRole('button', { name: 'Corriger l\'ajout' }));
     expect(within(m1).getByText(/Une section laissée vide garde son texte d'origine/)).toBeInTheDocument();
@@ -482,7 +483,7 @@ describe('Nouvelle base : relecture', () => {
     const saved = { id: '00000000-0000-4000-8000-0000000000f1', sectionKey: target.key, correctedText: 'Mon texte de la section.', supersedesId: null, authorName: 'Camille Martin', createdAt: '2026-10-09T10:00:00Z', cancellation: null };
     vi.mocked(onboardingApi.fixSection).mockResolvedValue(saved);
     vi.mocked(onboardingApi.cancelSectionFix).mockResolvedValue({ cancelled: saved, current: null });
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByText('0 sur 6 relues');
     const folded = [...container.querySelectorAll('details.obp-base-section--unchanged')]
       .find(d => d.querySelector('textarea, button') && within(d as HTMLElement).queryByRole('button', { name: 'Corriger cette section' })) as HTMLElement;
@@ -509,7 +510,7 @@ describe('Nouvelle base : relecture', () => {
 
   it('un back sans « Corriger cette section » (avant la migration 57) : la relecture se charge quand même', async () => {
     vi.mocked(onboardingApi.listSectionFixes).mockRejectedValue(new ApiError('NOT_FOUND', 'Introuvable.', 404));
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText('0 sur 6 relues')).toBeInTheDocument();
   });
 
@@ -517,7 +518,7 @@ describe('Nouvelle base : relecture', () => {
     vi.mocked(onboardingApi.commentSection).mockImplementation(async (_p, _c, body) => ({
       id: 'c1', sectionKey: body.sectionKey, comment: body.comment, supersedesId: null, authorName: 'Camille Martin', createdAt: '', cancellation: null,
     }));
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByText('0 sur 6 relues');
     const folded = container.querySelector('details.obp-base-section--unchanged') as HTMLDetailsElement;
     const field = within(folded).getByLabelText(/^Un commentaire sur la section/);
@@ -532,7 +533,7 @@ describe('Nouvelle base : relecture', () => {
 
   it('un avis changé ailleurs : le dit, et relit tout', async () => {
     vi.mocked(onboardingApi.review).mockRejectedValue(new ApiError('REVIEW_CONFLICT', 'conflit', 409));
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const m2 = await screen.findByRole('article', { name: /^Modification 2/ });
     fireEvent.click(within(m2).getByRole('button', { name: 'Refuser' }));
     await waitFor(() => expect(toastAdd).toHaveBeenCalledWith('Cet avis a été modifié entre-temps : la relecture a été rechargée.', 'error', 6000));
@@ -542,7 +543,7 @@ describe('Nouvelle base : relecture', () => {
   it('une base précédente se consulte sans se relire', async () => {
     mockBase({ ...PILOTE, reviewable: false });
     vi.mocked(onboardingApi.listReviews).mockResolvedValue({ reviews: [review('M2', { verdict: 'refuse', comment: 'Non.' })], counts: { reviewed: 1, toReview: 6 } });
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText(/ses avis restent consultables/)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Accepter' })).not.toBeInTheDocument();
     expect(within(cardOf(/^Modification 2/)).getByText('Avis : Refusée')).toBeInTheDocument();
@@ -555,11 +556,45 @@ describe('Nouvelle base : relecture', () => {
     };
     mockBase(withConvention);
     vi.mocked(onboardingApi.review).mockResolvedValue(review('C1'));
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const c1 = await screen.findByRole('article', { name: 'Convention 1' });
     expect(c1).toHaveTextContent('Listes datées : la plus récente en premier.');
     fireEvent.click(within(c1).getByRole('button', { name: 'Accepter' }));
     await waitFor(() => expect(onboardingApi.review).toHaveBeenCalledWith('p1', PILOTE.correctionId, expect.objectContaining({ itemId: 'C1', verdict: 'accept' })));
+  });
+});
+
+describe('Lot 1 « Socle » : un projet en mode correction, rangé aux étapes 4 et 5', () => {
+  it('étape 4 : la préparation de la correction ; prête, elle renvoie à l\'étape suivante, sans montrer la relecture', async () => {
+    mockBase(PILOTE, [correction({ status: 'running', stage: 'correction', done: 4, total: 11, finishedAt: null })]);
+    const { unmount } = render(<BaseTab project={project} onGoToClarify={() => {}} view="plan" onOpenView={() => {}} />);
+    expect(await screen.findByText('4 / 11')).toBeInTheDocument();
+    unmount();
+    mockBase(PILOTE, [correction()]);
+    render(<BaseTab project={project} onGoToClarify={() => {}} view="plan" onOpenView={() => {}} />);
+    expect(await screen.findByText('La base corrigée est prête : relisez-la à l\'étape suivante.')).toBeInTheDocument();
+    expect(onboardingApi.getBase).toHaveBeenCalled();   // lue pour l'étape 5, sans s'afficher ici
+    expect(screen.queryByText(/^Nouvelle base du/)).toBeNull();
+  });
+
+  it('étape 5 : la relecture de la base corrigée ; pas encore prête, un renvoi vers sa préparation', async () => {
+    mockBase(PILOTE, [correction()]);
+    const { unmount } = render(<BaseTab project={project} onGoToClarify={() => {}} view="articles" onOpenView={() => {}} />);
+    expect(await screen.findByText(/^Nouvelle base du/)).toBeInTheDocument();
+    unmount();
+    mockBase(PILOTE, [correction({ status: 'running', stage: 'correction', done: 1, total: 11, finishedAt: null })]);
+    const onOpenView = vi.fn();
+    render(<BaseTab project={project} onGoToClarify={() => {}} view="articles" onOpenView={onOpenView} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Voir la préparation' }));
+    expect(onOpenView).toHaveBeenCalledWith('plan');
+  });
+
+  it('sans aucune préparation : l\'étape 5 renvoie au plan', async () => {
+    mockBase(PILOTE, []);
+    const onOpenView = vi.fn();
+    render(<BaseTab project={project} onGoToClarify={() => {}} view="articles" onOpenView={onOpenView} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Aller au plan' }));
+    expect(onOpenView).toHaveBeenCalledWith('plan');
   });
 });
 
@@ -568,7 +603,7 @@ describe('Nouvelle base : préparation', () => {
 
   it('suit l\'étape en cours et son avancement', async () => {
     mockBase(PILOTE, [correction({ status: 'running', stage: 'correction', done: 4, total: 11, finishedAt: null })]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByRole('heading', { name: 'Nouvelle base en préparation' })).toBeInTheDocument();
     expect(screen.getByText('Correction des fiches').closest('li')).toHaveAttribute('aria-current', 'step');
     expect(screen.getByText('4 / 11')).toBeInTheDocument();
@@ -578,7 +613,7 @@ describe('Nouvelle base : préparation', () => {
   it('dit un échec en clair et propose de relancer', async () => {
     mockBase(PILOTE, [correction({ status: 'failed', stage: 'correction', errorCode: 'rate_limited', finishedAt: null })]);
     vi.mocked(onboardingApi.launchCorrection).mockResolvedValue(correction({ status: 'queued', stage: null }));
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByRole('alert')).toHaveTextContent('Le service d\'IA est saturé pour le moment.');
     expect(screen.getByRole('alert')).not.toHaveTextContent('rate_limited');
     fireEvent.click(screen.getByRole('button', { name: 'Relancer la préparation' }));
@@ -588,7 +623,7 @@ describe('Nouvelle base : préparation', () => {
   it('sans préparation : renvoie vers « À clarifier »', async () => {
     mockBase(PILOTE, []);
     const go = vi.fn();
-    render(<BaseTab project={project} onGoToClarify={go} />);
+    render(<BaseTabSteps initial="plan" project={project} onGoToClarify={go} />);
     fireEvent.click(await screen.findByRole('button', { name: 'Aller à « Questions »' }));
     expect(go).toHaveBeenCalled();
   });
@@ -605,7 +640,7 @@ describe('Nouvelle base : préparation', () => {
       counts: { decided: 1, later: 1, skipped: 0 }, arbitrable: true,
     });
     const go = vi.fn();
-    render(<BaseTab project={project} onGoToClarify={go} />);
+    render(<BaseTabSteps initial="plan" project={project} onGoToClarify={go} />);
     const list = await screen.findByRole('region', { name: 'Cartes qui bloquent la préparation' });
     await waitFor(() => expect(within(list).getAllByRole('button')).toHaveLength(open.length + 1));
     expect(list).toHaveTextContent(`${open.length + 1} cartes bloquent encore la préparation :`);
@@ -701,6 +736,17 @@ describe('« À clarifier » : Préparer la nouvelle base', () => {
     expect(onboardingApi.launchCorrection).not.toHaveBeenCalled();
   });
 
+  it('lot 1 « Socle » : « Relire la nouvelle base » ouvre l\'étape 5, « Voir l\'avancement » l\'étape 4', async () => {
+    vi.mocked(onboardingApi.listCorrections).mockResolvedValue({ data: [correction()], meta: { quota: { used: 1, max: 30 } } });
+    const onOpenBase = vi.fn();
+    const onOpenReview = vi.fn();
+    render(<CorrectionEntry projectId="p1" analysisId="a1" schemaVersion="0.9.0" cards={CARDS} current={decided('accept_side')}
+      onOpenBase={onOpenBase} onOpenReview={onOpenReview} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Relire la nouvelle base' }));
+    expect(onOpenReview).toHaveBeenCalled();
+    expect(onOpenBase).not.toHaveBeenCalled();
+  });
+
   it('quota atteint, ou audit antérieur à 0.9.0 : le dit au lieu du bouton', async () => {
     vi.mocked(onboardingApi.listCorrections).mockResolvedValue({ data: [], meta: { quota: { used: 30, max: 30 } } });
     const { unmount } = entry(decided('accept_side'));
@@ -732,7 +778,7 @@ describe('Nouvelle base : retirés comme obsolètes (audit 0.11.0)', () => {
 
   it('retrait accepté d\'un contenu périmé : le texte retiré, sa section, sa modification et sa carte', async () => {
     mockWelcome([review('M1')]);
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const view = await screen.findByRole('region', { name: 'Retirés comme obsolètes' });
     const items = within(view).getAllByRole('listitem');
     expect(items).toHaveLength(1);
@@ -749,7 +795,7 @@ describe('Nouvelle base : retirés comme obsolètes (audit 0.11.0)', () => {
     ['avis annulé', [review('M1', { cancellation: { cancelledAt: '2026-10-07T11:00:00Z', cancelledByName: 'Camille Martin' } })]],
   ])('retrait %s : le passage reste dans la base, la vue n\'apparaît pas', async (_, reviews) => {
     mockWelcome(reviews);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByRole('article', { name: /^Modification 1/ });
     expect(screen.queryByRole('region', { name: 'Retirés comme obsolètes' })).not.toBeInTheDocument();
   });
@@ -757,7 +803,7 @@ describe('Nouvelle base : retirés comme obsolètes (audit 0.11.0)', () => {
   it('« Accepter » le retrait fait apparaître le passage dans la vue', async () => {
     mockWelcome([]);
     vi.mocked(onboardingApi.review).mockImplementation(async (_p, _c, body) => review(body.itemId, { verdict: body.verdict }));
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const m1 = await screen.findByRole('article', { name: /^Modification 1/ });
     expect(screen.queryByRole('region', { name: 'Retirés comme obsolètes' })).not.toBeInTheDocument();
     fireEvent.click(within(m1).getByRole('button', { name: 'Accepter' }));
@@ -768,7 +814,7 @@ describe('Nouvelle base : retirés comme obsolètes (audit 0.11.0)', () => {
     const reading = AUDIT.reading!;
     const modelCard = { ...reading.cards[0], origin: 'model' as const, check: null };
     mockWelcome([review('M1')], { ...AUDIT, schemaVersion: '0.10.0', reading: { ...reading, cards: [modelCard] } });
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const m1 = await screen.findByRole('article', { name: /^Modification 1/ });
     // L'audit est lu : la modification nomme sa carte.
     expect(await within(m1).findByText(/carte « Contenu périmé »/)).toBeInTheDocument();
@@ -803,7 +849,7 @@ describe('Nouvelle base : accepter, corriger ou refuser chaque section touchée 
     const base = BANC_AVANT[n - 1];
     mockBase(base, [correction({ id: base.correctionId })]);
     const s13 = sectionOf(base, S13), glossaire = sectionOf(base, GLOSSAIRE);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const m10 = await screen.findByRole('article', { name: /^Modification 10 / });
     fireEvent.click(within(m10).getByRole('button', { name: 'Accepter' }));
     await waitFor(() => expect(onboardingApi.review).toHaveBeenCalledWith('p1', base.correctionId, expect.objectContaining({ itemId: 'M10', verdict: 'accept' })));
@@ -834,7 +880,7 @@ describe('Nouvelle base : accepter, corriger ou refuser chaque section touchée 
     expect(zone1.corrected_markdown).not.toBe(zone1.original_markdown);
     const saved = fixOf(zone1.key, zone1.original_markdown);
     vi.mocked(onboardingApi.cancelSectionFix).mockResolvedValue({ cancelled: saved, current: null });
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByRole('article', { name: /^Modification 1 / });
     const title = '3.2 Grille tarifaire indicative (base 06/2024 — non fiable, voir avertissement ci-dessus) › Zone 1 (Île-de-France et grandes métropoles)';
     fireEvent.click(within(choiceOf(title)).getByRole('button', { name: 'Refuser' }));
@@ -856,7 +902,7 @@ describe('Nouvelle base : accepter, corriger ou refuser chaque section touchée 
     const base = BANC_AVANT[0];
     mockBase(base, [correction({ id: base.correctionId })]);
     const s13 = sectionOf(base, S13);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByRole('article', { name: /^Modification 10 / });
     fireEvent.click(within(choiceOf('1.3 L\'offre collective entreprise')).getByRole('button', { name: 'Corriger cette section' }));
     const section = screen.getByRole('region', { name: '1.3 L\'offre collective entreprise' });
@@ -874,7 +920,7 @@ describe('Nouvelle base : accepter, corriger ou refuser chaque section touchée 
   it.each([1, 2, 3])('G%i : CONFORT et la 2.3, sans ligne gardée, restent repliées « inchangée » ; M5 et M6 restent visibles avec leur raison', async n => {
     const base = BANC_AVANT[n - 1];
     mockBase(base, [correction({ id: base.correctionId })]);
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByRole('article', { name: /^Modification 5 / });
     const folded = (title: string) => [...container.querySelectorAll('details.obp-base-section--unchanged')]
       .find(d => d.querySelector('summary')!.textContent === `${title} · inchangée`);
@@ -891,7 +937,7 @@ describe('Nouvelle base : accepter, corriger ou refuser chaque section touchée 
   it('Q6a : une section vide à l\'origine (chapitre créé, banc v5 G1 en 0.4.0) ne se refuse pas : « refusez la modification »', async () => {
     const base = BASE_BANC_04 as unknown as BaseVersion;
     mockBase(base, [correction({ id: base.correctionId })]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     await screen.findByRole('article', { name: /^Modification 4 / });
     const choice = choiceOf('Chapitre 16 — Téléconsultation médicale');
     expect(within(choice).getByRole('button', { name: 'Refuser' })).toBeDisabled();
@@ -914,7 +960,7 @@ describe('Nouvelle base : « Corriger l\'ajout » et le texte autour (plan v6, D
     mockBase(base, [correction({ id: base.correctionId })]);
     const intro = sectionOf(base, 'c162a4e7:0');
     const chapter = 'Chapitre 3 — Cotisations et tarification';
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const m1 = await screen.findByRole('article', { name: /^Modification 1 / });
     expect(within(m1).queryByRole('button', { name: 'Corriger' })).not.toBeInTheDocument();
     fireEvent.click(within(m1).getByRole('button', { name: 'Corriger l\'ajout' }));
@@ -943,7 +989,7 @@ describe('Nouvelle base : « Corriger l\'ajout » et le texte autour (plan v6, D
   it('M8 (G1) : le texte autour d\'une section repliée « inchangée » la déplie, l\'éditeur ouvert', async () => {
     const base = BANC_AVANT[0];
     mockBase(base, [correction({ id: base.correctionId })]);
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const m8 = await screen.findByRole('article', { name: /^Modification 8 / });
     const title = '4.5 Devis et accord préalable';
     const folded = [...container.querySelectorAll('details.obp-base-section--unchanged')]
@@ -960,7 +1006,7 @@ describe('Nouvelle base : « Corriger l\'ajout » et le texte autour (plan v6, D
   it('une seule section touchée : le lien dit seulement « Modifier aussi le texte autour »', async () => {
     const base = BANC_AVANT[0];
     mockBase(base, [correction({ id: base.correctionId })]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps project={project} onGoToClarify={() => {}} />);
     const m7 = await screen.findByRole('article', { name: /^Modification 7 / });
     fireEvent.click(within(m7).getByRole('button', { name: 'Corriger l\'ajout' }));
     fireEvent.click(within(m7).getByRole('button', { name: 'Modifier aussi le texte autour' }));

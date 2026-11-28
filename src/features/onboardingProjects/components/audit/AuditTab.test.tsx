@@ -105,12 +105,12 @@ describe('AuditTab', () => {
   });
   afterEach(() => { vi.restoreAllMocks(); });
 
-  it('sans analyse réussie : état vide, et un lien vers l\'onglet Analyse', async () => {
+  it('sans analyse réussie : état vide, et un lien vers le contexte métier, d\'où l\'analyse se lance', async () => {
     vi.mocked(onboardingApi.listAnalyses).mockResolvedValue(listed([analysis('a1', { status: 'failed' }), analysis('a2', { status: 'running' })]));
     const onGoToAnalysis = vi.fn();
     render(<AuditTab project={project} onGoToAnalysis={onGoToAnalysis} />);
-    expect(await screen.findByText('Aucun audit pour l\'instant')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Aller à l\'analyse' }));
+    expect(await screen.findByText('Aucune question pour l\'instant')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Aller au contexte métier' }));
     expect(onGoToAnalysis).toHaveBeenCalled();
     expect(onboardingApi.getAudit).not.toHaveBeenCalled();
   });

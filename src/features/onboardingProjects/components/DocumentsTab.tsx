@@ -6,7 +6,6 @@ import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { useToast } from '../../../shared/lib/useToast';
 import { formatRelative } from '../../../shared/lib/formatDate';
 import { onboardingApi } from '../api/onboardingApi';
-import { formatBytes } from '../lib/format';
 import { NoticeGate, NoticeReminder } from './NoticeGate';
 import { UploadZone } from './UploadZone';
 import type { OnboardingDocument, OnboardingNotice, OnboardingProject } from '../types';
@@ -16,10 +15,6 @@ interface DocumentsTabProps {
   /** Les documents ont changé : le projet relit ses compteurs. */
   onChanged: () => void;
 }
-
-const FORMAT_LABEL: Record<OnboardingDocument['format'], string> = {
-  pdf: 'PDF', docx: 'Word', pptx: 'PowerPoint', md: 'Markdown', zip: 'Archive (.zip)',
-};
 
 /** Documents du projet : texte d'information, import, liste, retrait. */
 export function DocumentsTab({ project, onChanged }: DocumentsTabProps) {
@@ -100,7 +95,7 @@ export function DocumentsTab({ project, onChanged }: DocumentsTabProps) {
               <li key={d.id} className="obp-doc">
                 <span className="obp-doc__name">{d.filename}</span>
                 <span className="obp-doc__meta">
-                  {FORMAT_LABEL[d.format]} · {formatBytes(d.sizeBytes)} · importé {formatRelative(d.createdAt)}
+                  Importé {formatRelative(d.createdAt)}
                   {d.locked && ' · utilisé par une analyse'}
                 </span>
                 <Button

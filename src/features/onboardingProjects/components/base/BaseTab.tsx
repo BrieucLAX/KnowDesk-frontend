@@ -13,10 +13,8 @@ import { cardTitle, codeCheck, NATURES, orderedCards, type ReadingCard } from '.
 import { useBaseReview } from '../../hooks/useBaseReview';
 import { normalizeAudit, type Audit } from '../../lib/audit';
 import { hasPlan } from '../../lib/plan';
-import { PlanTab } from './PlanTab';
-import { blockingCardsLeft } from '../../lib/correction';
-import { versionCardsWaiting } from '../../lib/reading';
-import { useStepFact } from '../../lib/steps';
+import { PlanTab, type BaseView } from './PlanTab';
+import { useStatusSignal } from '../../lib/steps';
 import type { OnboardingProject } from '../../types';
 import { AuditImagesContext, type AuditImages } from '../audit/AuditSource';
 import { BaseReviewView } from './BaseReviewView';
@@ -37,6 +35,12 @@ interface BaseTabProps {
   /** Mode construire (lot D) : module « knowledge », et l'ouverture de la base une fois créée. */
   knowledgeEnabled?: boolean;
   onOpenKnowledge?:  () => void;
+  /**
+   * Parcours (lot 1 « Socle ») : `plan`, l'étape 4 (le plan, ou la préparation de la correction) ;
+   * `articles`, l'étape 5 (les articles rédigés, ou la relecture de la base corrigée).
+   */
+  view:       BaseView;
+  onOpenView: (view: BaseView) => void;
 }
 
 type Loaded =
@@ -46,10 +50,14 @@ type Loaded =
   | { state: 'ready'; analysisId: string; corrections: OnboardingCorrection[] };
 
 /**
+ * Étapes 4 et 5 du parcours (lot 1 « Socle »), qui reprennent l'ancien onglet « Nouvelle base ».
+ * Mode construire : `PlanTab`. Mode correction : la préparation à l'étape 4, la relecture de la
+ * base corrigée à l'étape 5 ; ses écrans sont inchangés.
+ *
  * Onglet « Nouvelle base » : la préparation en cours (étapes, avancement), puis la relecture de la
  * dernière base prête. Les bases précédentes de l'analyse se consultent, en lecture seule.
  */
-export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowledgeBase, knowledgeEnabled, onOpenKnowledge }: BaseTabProps) {
+export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowledgeBase, knowledgeEnabled, onOpenKnowledge, view, onOpenView }: BaseTabProps) {
   const toast = useToast();
   const [loaded,   setLoaded]   = useState<Loaded>({ state: 'loading' });
   const [selected, setSelected] = useState<string | null>(null);
@@ -81,9 +89,6 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
   const analysisId = loaded.state === 'loading' ? null : loaded.analysisId;
   const [cards, setCards] = useState<ReadingCard[]>([]);
   const [decisions, setDecisions] = useState<ReadonlyMap<string, Decision>>(new Map());
-  /** Cartes et réponses lues sans erreur : alors seulement elles disent si « À clarifier » est terminée. */
-  const [cardsRead, setCardsRead] = useState(false);
-  const [decisionsRead, setDecisionsRead] = useState(false);
   /**
    * Mode construire sur un audit 0.16.0 (lot B) : l'onglet montre le plan, avec l'inventaire de
    * l'audit pour nommer les documents. null : pas de plan (correction, ou audit plus ancien) ;
@@ -108,13 +113,13 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
     onboardingApi.getAudit(project.id, analysisId)
       .then(res => {
         if (cancelled) return;
-        if (res.reading) { setTitles(cardTitles(res.reading.cards)); setCards(res.reading.cards); setCardsRead(true); }
+        if (res.reading) { setTitles(cardTitles(res.reading.cards)); setCards(res.reading.cards); }
         setPlanAudit(res.reading && hasPlan(res.schemaVersion, res.reading.base) ? normalizeAudit(res.audit) : null);
       })
       .catch(() => { if (!cancelled) setPlanAudit(null); });
     // Les réponses courantes : cartes encore bloquantes (écran vide), réponse d'une carte en attente.
     onboardingApi.listDecisions(project.id, analysisId)
-      .then(res => { if (!cancelled) { setDecisions(new Map(res.decisions.map(d => [d.cardId ?? d.questionId, d]))); setDecisionsRead(true); } })
+      .then(res => { if (!cancelled) setDecisions(new Map(res.decisions.map(d => [d.cardId ?? d.questionId, d]))); })
       .catch(() => {});
     onboardingApi.listAuditImages(project.id, analysisId)
       .then(list => { if (!cancelled) setImageIds(new Set(list.map(i => i.imageId))); })
@@ -122,10 +127,8 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
     return () => { cancelled = true; };
   }, [project.id, analysisId]);
 
-  // Ce que l'onglet a déjà lu : une analyse réussie ; sur elle, aucune carte bloquante sans vraie réponse.
-  useStepFact('analysis', analysisId !== null ? true : undefined);
-  useStepFact('audit', cardsRead && decisionsRead
-    ? blockingCardsLeft(cards, decisions).left === 0 && versionCardsWaiting(cards, decisions).length === 0 : undefined);
+  // Préparation de la correction terminée (base corrigée prête, ou échec) : la page relit le statut.
+  useStatusSignal(loaded.state === 'loading' ? undefined : latest?.status ?? null);
 
   const loadImage = useCallback(
     (imageId: string) => onboardingApi.getAuditImage(project.id, analysisId ?? '', imageId),
@@ -159,9 +162,19 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
     return <AuditImagesContext.Provider value={images}>
       <PlanTab
         projectId={project.id} analysisId={analysisId} audit={planAudit} cards={cards} onGoToClarify={onGoToClarify}
-        knowledgeEnabled={knowledgeEnabled} onOpenKnowledge={onOpenKnowledge}
+        knowledgeEnabled={knowledgeEnabled} onOpenKnowledge={onOpenKnowledge} view={view} onOpenView={onOpenView}
       />
     </AuditImagesContext.Provider>;
+  }
+  if (loaded.state === 'none' && view === 'articles') {
+    return (
+      <EmptyState
+        title="Aucun article à relire pour l'instant"
+        description="Les articles apparaissent ici une fois le plan préparé et les articles rédigés."
+        ctaLabel="Aller au plan"
+        onCta={() => onOpenView('plan')}
+      />
+    );
   }
   if (loaded.state === 'none') {
     // Les cartes qui bloquent encore la préparation, nommées, chacune ouvrable (plan v4, point 12).
@@ -174,8 +187,8 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
     return (
       <>
         <EmptyState
-          title="Aucune nouvelle base pour l'instant"
-          description="Elle se prépare depuis « Questions », une fois que toutes les questions bloquantes ont une réponse."
+          title="Rien de préparé pour l'instant"
+          description="Le plan se prépare depuis « Questions », une fois que toutes les questions bloquantes ont une réponse."
           ctaLabel="Aller à « Questions »"
           onCta={() => onGoToClarify()}
         />
@@ -199,9 +212,24 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
   }
 
   const showProgress = latest !== null && latest.status !== 'succeeded';
+  // Étape 4, mode correction : la préparation de la base corrigée ; prête, la suite est à l'étape 5.
+  if (view === 'plan') {
+    return showProgress
+      ? <CorrectionProgress correction={latest} onRetry={latest.status === 'failed' ? retry : undefined} retrying={retrying} />
+      : <p className="obp-muted" role="status">La base corrigée est prête : relisez-la à l'étape suivante.</p>;
+  }
+  if (succeeded.length === 0) {
+    return (
+      <EmptyState
+        title="La base corrigée n'est pas encore prête"
+        description="Elle apparaît ici une fois sa préparation terminée."
+        ctaLabel="Voir la préparation"
+        onCta={() => onOpenView('plan')}
+      />
+    );
+  }
   return (
     <>
-      {showProgress && <CorrectionProgress correction={latest} onRetry={latest.status === 'failed' ? retry : undefined} retrying={retrying} />}
 
       {succeeded.length > 0 && (
         <div className="obp-audit-head">

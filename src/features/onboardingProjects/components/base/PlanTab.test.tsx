@@ -15,7 +15,7 @@ vi.mock('../../api/onboardingApi', () => ({
 }));
 
 import { onboardingApi } from '../../api/onboardingApi';
-import { BaseTab } from './BaseTab';
+import { BaseTabSteps } from './BaseTabSteps.testUtils';
 import { CorrectionEntry } from './CorrectionEntry';
 import type { AuditResponse } from '../../lib/audit';
 import type { Decision } from '../../lib/decisions';
@@ -152,7 +152,7 @@ describe('« Nouvelle base » en mode construire : le plan en lecture seule', ()
 
   it('le plan, ses points d\'attention, ses chapitres et les sources de chaque sujet, sans aucun code', async () => {
     mockPlan();
-    const { container } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { container } = render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText('3 catégories · 3 articles · 10 passages couverts sur 12')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /^Plan du / })).toBeInTheDocument();
 
@@ -195,7 +195,7 @@ describe('« Nouvelle base » en mode construire : le plan en lecture seule', ()
   it('lecture v1 : « Non disponible » pour les documents remplacés, jamais « 0 »', async () => {
     const raw = PLAN.plan as { attention: Record<string, unknown> };
     mockPlan([planRow()], { ...PLAN, plan: { ...raw, attention: { ...raw.attention, retired_documents_detection: 'unavailable', retired_documents: [] } } });
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
     const attention = await screen.findByRole('region', { name: 'Points d\'attention' });
     expect(within(attention).getByText('Documents écartés comme obsolètes')).toBeInTheDocument();
     expect(within(attention).getByText(/^Non disponible/)).toBeInTheDocument();
@@ -208,7 +208,7 @@ describe('« Nouvelle base » en mode construire : le plan en lecture seule', ()
       id: `c-${body.subjectId ?? 'plan'}`, subjectId: body.subjectId, comment: body.comment, supersedesId: null,
       author: { id: 'u1', name: 'Camille Martin' }, createdAt: '2026-11-14T11:00:00Z', cancelledAt: null, cancelledBy: null,
     }));
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
     await screen.findByText('3 catégories · 3 articles · 10 passages couverts sur 12');
 
     const subject = screen.getByRole('heading', { name: 'Offre Gaz Indexé' }).closest('article')!;
@@ -231,7 +231,7 @@ describe('« Nouvelle base » en mode construire : le plan en lecture seule', ()
       id: 'c1', subjectId: null, comment: 'Ancienne remarque.', supersedesId: null, author: { id: 'u1', name: 'Camille Martin' },
       createdAt: '2026-11-14T11:00:00Z', cancelledAt: null, cancelledBy: null,
     }]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText(/il se consulte, mais ne se commente plus/)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Enregistrer le commentaire' })).not.toBeInTheDocument();
     expect(screen.getByText(/Commentaire : Ancienne remarque\./)).toBeInTheDocument();
@@ -239,20 +239,20 @@ describe('« Nouvelle base » en mode construire : le plan en lecture seule', ()
 
   it('en préparation : les étapes du plan ; en échec : le message en clair', async () => {
     mockPlan([planRow({ status: 'running', stage: 'complement', finishedAt: null })]);
-    const { unmount } = render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    const { unmount } = render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByRole('heading', { name: 'Plan en préparation' })).toBeInTheDocument();
     expect(screen.getByText('Rattachement des passages restants').closest('li')).toHaveClass('obp-step--current');
     unmount();
 
     mockPlan([planRow({ status: 'failed', stage: null, errorCode: 'plan_not_supported', finishedAt: null })]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByRole('heading', { name: 'Préparation du plan interrompue' })).toBeInTheDocument();
     expect(screen.getByRole('alert')).toHaveTextContent(/ne sait pas encore préparer un plan/);
   });
 
   it('sans plan : renvoie à « À clarifier »', async () => {
     mockPlan([]);
-    render(<BaseTab project={project} onGoToClarify={() => {}} />);
+    render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
     expect(await screen.findByText('Aucun plan pour l\'instant')).toBeInTheDocument();
   });
 });

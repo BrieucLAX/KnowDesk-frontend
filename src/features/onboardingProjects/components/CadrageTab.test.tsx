@@ -5,6 +5,7 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
 vi.mock('../api/onboardingApi', () => ({
   onboardingApi: {
     getCadrage: vi.fn(), listDocuments: vi.fn(), saveCadrage: vi.fn(), saveFreeCadrage: vi.fn(), listCadrages: vi.fn(),
+    listAnalyses: vi.fn(async () => ({ data: [], meta: { quota: { used: 0, max: 5 } } })), listDecisions: vi.fn(), launchAnalysis: vi.fn(),
   },
 }));
 
@@ -35,7 +36,7 @@ const summary = (c: Cadrage) => ({ version: c.version, kind: c.kind, sourceFilen
 function renderTab(extra: Partial<React.ComponentProps<typeof CadrageTab>> = {}) {
   return render(<CadrageTab project={project} onSaved={() => {}} onDirtyChange={() => {}} {...extra} />);
 }
-const saveButton = () => screen.getAllByRole('button', { name: 'Enregistrer une nouvelle version' })[0];
+const saveButton = () => screen.getAllByRole('button', { name: 'Enregistrer la fiche' })[0];
 const toStructured = async () => fireEvent.click(await screen.findByRole('button', { name: /Formulaire structuré/ }));
 
 describe('CadrageTab', () => {
@@ -52,7 +53,7 @@ describe('CadrageTab', () => {
 
   it('sans version : s\'ouvre sur le texte libre ; le formulaire reste disponible', async () => {
     renderTab();
-    expect(await screen.findByText('Aucune version enregistrée.')).toBeInTheDocument();
+    expect(await screen.findByText('Aucune fiche enregistrée.')).toBeInTheDocument();
     expect(screen.getByLabelText(/Texte de la fiche/)).toHaveValue('');
     expect(screen.queryByText('1. Les offres')).not.toBeInTheDocument();
     await toStructured();
@@ -71,7 +72,7 @@ describe('CadrageTab', () => {
     fireEvent.click(saveButton());
     await waitFor(() => expect(onSaved).toHaveBeenCalled());
     expect(onboardingApi.saveFreeCadrage).toHaveBeenCalledWith('p1', text, null);
-    expect(await screen.findByText(/Version 1 \(libre\), enregistrée le/)).toBeInTheDocument();
+    expect(await screen.findByText(/Fiche enregistrée le/)).toBeInTheDocument();
   });
 
   it('refuse un texte vide sans appeler le back', async () => {
@@ -146,7 +147,7 @@ describe('CadrageTab', () => {
     fireEvent.click(saveButton());
     await waitFor(() => expect(onSaved).toHaveBeenCalled());
     expect(vi.mocked(onboardingApi.saveCadrage).mock.calls[0][1].offers).toEqual([{ name: 'Box fibre', description: '' }]);
-    expect(await screen.findByText(/Version 1 \(structurée\), enregistrée le/)).toBeInTheDocument();
+    expect(await screen.findByText(/Fiche enregistrée le/)).toBeInTheDocument();
     expect(onDirtyChange).toHaveBeenLastCalledWith(false);
   });
 
@@ -199,27 +200,28 @@ describe('CadrageTab', () => {
     expect(within(group).queryByText('absent du projet')).not.toBeInTheDocument();
   });
 
-  // ── Historique ────────────────────────────────────────────────
+  // ── Lot 1 « Socle » : ni « Version N » ni historique (règle transverse 4) ──
 
-  it('historique : montre les deux types ; repartir d\'une version structurée recharge le formulaire', async () => {
-    const v1 = structured(1, { offers: [{ name: 'Ancienne offre', description: '' }] }, '# Cadrage métier — Base SAV\n\n## 1. Les offres');
+  it('ni « Version N » ni historique des versions, même avec plusieurs versions enregistrées', async () => {
+    const v1 = structured(1, { offers: [{ name: 'Ancienne offre', description: '' }] });
     const v2 = free(2, 'Texte libre actuel', 'cadrage.md');
     vi.mocked(onboardingApi.getCadrage).mockImplementation(async (_p, version) => (version === 1 ? v1 : v2));
     vi.mocked(onboardingApi.listCadrages).mockResolvedValue([summary(v2), summary(v1)]);
-    const onDirtyChange = vi.fn();
-    renderTab({ onDirtyChange });
+    renderTab();
+    expect(await screen.findByText(/Fiche enregistrée le/)).toBeInTheDocument();
+    expect(screen.queryByText(/[Vv]ersion \d/)).toBeNull();
+    expect(screen.queryByRole('button', { name: /Consulter la version/ })).toBeNull();
+    expect(screen.queryByText(/Historique/)).toBeNull();
+  });
 
-    expect(await screen.findByText('Libre')).toBeInTheDocument();
-    expect(screen.getByText('Structurée')).toBeInTheDocument();
-    expect(screen.getByText(/importée de cadrage\.md/)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Consulter la version 1' }));
-    expect(await screen.findByRole('heading', { name: 'Cadrage métier — Base SAV' })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Repartir de cette version' }));
-
-    expect(await screen.findByDisplayValue('Ancienne offre')).toBeInTheDocument();
-    expect(screen.getByText(/Repris de la version 1/)).toBeInTheDocument();
-    expect(onDirtyChange).toHaveBeenLastCalledWith(true);
-    expect(onboardingApi.saveCadrage).not.toHaveBeenCalled();
+  it('sans modification, l\'action principale est « Valider et lancer l\'analyse » ; modifiée, « Enregistrer la fiche »', async () => {
+    vi.mocked(onboardingApi.getCadrage).mockResolvedValue(free(1, 'Notre métier'));
+    vi.mocked(onboardingApi.listCadrages).mockResolvedValue([summary(free(1, 'Notre métier'))]);
+    renderTab();
+    expect(await screen.findByRole('button', { name: /Valider et lancer l'analyse/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Enregistrer la fiche' })).toBeNull();
+    fireEvent.change(screen.getByLabelText(/Texte de la fiche/), { target: { value: 'Notre métier, complété' } });
+    expect(screen.getByRole('button', { name: 'Enregistrer la fiche' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Valider et lancer l'analyse/ })).toBeNull();
   });
 });

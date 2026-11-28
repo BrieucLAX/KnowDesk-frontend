@@ -12,6 +12,10 @@ export interface OnboardingLimits {
   maxTextChars?:          number;
 }
 
+/** Statut du parcours (back, migration 65, `onboarding.projectStatus`). */
+export type ProjectStatus =
+  | 'documents' | 'contexte' | 'analyse_en_cours' | 'questions' | 'plan' | 'redaction_en_cours' | 'relecture' | 'publie';
+
 export interface OnboardingProjectSummary {
   id:             string;
   name:           string;
@@ -19,6 +23,13 @@ export interface OnboardingProjectSummary {
   updatedAt:      string;
   documentsCount: number;
   totalBytes:     number;
+  /** Statut du parcours ; null avant la migration 65 du back (ou absent d'un back plus ancien). */
+  status?:         ProjectStatus | null;
+  /** Étape en cours, 1 à 5 (l'analyse attend à l'étape 3). */
+  currentStep?:    1 | 2 | 3 | 4 | 5 | null;
+  /** Étapes terminées, 0 à 5 (5 une fois la base publiée). */
+  completedSteps?: number | null;
+  publishedAt?:    string | null;
 }
 
 export interface OnboardingProject extends OnboardingProjectSummary {

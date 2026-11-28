@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import { Select } from '../../../../shared/components/ui/Select';
 import { EmptyState } from '../../../../shared/components/ui/EmptyState';
-import { Tabs, TabPanel } from '../../../../shared/components/ui/Tabs';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { useToast } from '../../../../shared/lib/useToast';
 import { usePolling } from '../../../../shared/lib/usePolling';
@@ -27,6 +26,7 @@ import { editCountLabel, PLAN_EDIT_CONFLICT, type PlanEditOp, type PlanEditsStat
 import { EditsPanel, GoneSection, ModifiedTag, useEditDialogs, type PlanEditor } from './PlanEditing';
 import { KnowDeskMention } from '../../../../shared/components/ui/Origin';
 import { fromDocuments } from '../../lib/format';
+import { useStatusSignal } from '../../lib/steps';
 
 /** Intervalle de relecture d'un plan en préparation. */
 export const PLAN_POLL_MS = 5000;
@@ -34,7 +34,8 @@ export const PLAN_POLL_MS = 5000;
 /** Intervalle de relecture d'une rédaction en cours (lot C). */
 export const BUILD_POLL_MS = 5000;
 
-type BaseView = 'plan' | 'articles';
+/** Étape 4 (le plan) ou étape 5 (les articles rédigés) du parcours. */
+export type BaseView = 'plan' | 'articles';
 
 const STEP_STATE_LABEL = { done: 'terminée', current: 'en cours', pending: 'à venir' } as const;
 
@@ -49,9 +50,17 @@ interface PlanTabProps {
   /** Lot D : module « knowledge » de l'organisation, et l'ouverture de la base une fois créée. */
   knowledgeEnabled?: boolean;
   onOpenKnowledge?:  () => void;
+  /** Parcours (lot 1 « Socle ») : la partie montrée, et l'ouverture de l'autre étape. */
+  view:       BaseView;
+  onOpenView: (view: BaseView) => void;
 }
 
 /**
+ * Parcours (lot 1 « Socle ») : l'ancien onglet « Nouvelle base » est partagé entre l'étape 4
+ * (`view: 'plan'` : le plan, sa modification et le lancement de la rédaction) et l'étape 5
+ * (`view: 'articles'` : la rédaction, les articles rédigés et la création de la base) ; les deux
+ * vues ne sont plus des onglets internes.
+ *
  * Onglet « Nouvelle base » en mode construire (plan-construire-v1, lot B) : le plan en préparation
  * (étapes), puis le plan prêt, en lecture seule (D7) : ses points d'attention, ses chapitres et
  * sujets avec leurs sources, les cartes rattachées, et les commentaires (un par sujet, un pour le
@@ -64,13 +73,12 @@ interface PlanTabProps {
  * panneau « Vos modifications », la section « Retirés ou réunis », et un lien vers le plan proposé.
  * Sans la route (back d'avant), le plan se lit comme avant.
  */
-export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, knowledgeEnabled, onOpenKnowledge }: PlanTabProps) {
+export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, knowledgeEnabled, onOpenKnowledge, view, onOpenView }: PlanTabProps) {
   const toast = useToast();
   const [plans,    setPlans]    = useState<OnboardingPlan[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [content,  setContent]  = useState<PlanContent | null>(null);
   const [comments, setComments] = useState<PlanComment[]>([]);
-  const [view,     setView]     = useState<BaseView>('plan');
   const [builds,   setBuilds]   = useState<OnboardingBuild[] | null>(null);
   const [buildsMeta, setBuildsMeta] = useState<BuildsMeta | null>(null);
   const [buildContent, setBuildContent] = useState<BuildContent | null>(null);
@@ -128,6 +136,8 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, kn
   }, [refreshBuilds, shownId]);
 
   const latestBuild = builds?.[0] ?? null;
+  // Rédaction lancée, terminée ou en échec : la page relit le statut du projet.
+  useStatusSignal(builds === null ? undefined : latestBuild?.status ?? null);
   usePolling(refreshBuilds, BUILD_POLL_MS, latestBuild !== null && isBuildActive(latestBuild));
   const shownBuildId = (builds ?? []).find(b => b.status === 'succeeded')?.id ?? null;
 
@@ -211,7 +221,7 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, kn
     try {
       await onboardingApi.launchBuild(projectId, shownId);
       await refreshBuilds();
-      setView('articles');
+      onOpenView('articles');
     } catch (err) {
       toast.error(getErrorMessage(err));
       void refreshBuilds().catch(() => {});
@@ -226,18 +236,14 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, kn
     cardTitle: (id: string) => titles.get(id) ?? 'une carte',
     onGoToClarify,
   };
-  const views = [
-    { id: 'plan' as const, label: 'Plan' },
-    { id: 'articles' as const, label: 'Articles rédigés' },
-  ];
   const buildProgress = latestBuild !== null && latestBuild.status !== 'succeeded'
-    ? <BuildProgress build={latestBuild} onBackToPlan={() => setView('plan')} /> : null;
+    ? <BuildProgress build={latestBuild} onBackToPlan={() => onOpenView('plan')} /> : null;
   const noArticles = (
     <EmptyState
       title="Aucun article rédigé pour l'instant"
       description="La rédaction se lance sous le plan, une fois le plan prêt."
       ctaLabel="Revenir au plan"
-      onCta={() => setView('plan')}
+      onCta={() => onOpenView('plan')}
     />
   );
   const shownBuild = (builds ?? []).find(b => b.id === shownBuildId) ?? null;
@@ -264,9 +270,10 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, kn
 
   return (
     <>
-      {showProgress && <PlanProgress plan={latest} onGoToClarify={onGoToClarify} />}
+      {view === 'plan' && showProgress && <PlanProgress plan={latest} onGoToClarify={onGoToClarify} />}
+      {view === 'articles' && succeeded.length === 0 && noArticles}
 
-      {succeeded.length > 0 && (
+      {view === 'plan' && succeeded.length > 0 && (
         <div className="obp-audit-head">
           <h2 className="obp-section-title">Plan du {formatFull(succeeded.find(p => p.id === shownId)?.finishedAt ?? null)}</h2>
           {canEdit && view === 'plan' && (
@@ -294,8 +301,7 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, kn
           </p>
         ) : (
           <>
-            <Tabs id="obp-build-views" items={views} value={view} onChange={v => setView(v)} ariaLabel="Nouvelle base" />
-            <TabPanel id="obp-build-views" value={view} className="obp-build-panel">
+            <div className="obp-build-panel">
               {view === 'plan' && shownEdits !== null && editCount > 0 && (
                 <p className="obp-plan-modified-note" role="status">
                   {showProposed
@@ -325,7 +331,7 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, kn
                   footer={
                     <BuildEntry
                       articleCount={plan.subjectCount} builds={builds} meta={buildsMeta} launching={launching}
-                      onLaunch={() => { void launchBuild(); }} onOpenArticles={() => setView('articles')}
+                      onLaunch={() => { void launchBuild(); }} onOpenArticles={() => onOpenView('articles')}
                     />
                   }
                 />
@@ -344,7 +350,7 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, kn
                   ))}
                 </>
               )}
-            </TabPanel>
+            </div>
           </>
         )
       )}

@@ -44,10 +44,12 @@ describe('DocumentsTab', () => {
     expect(onChanged).toHaveBeenCalled();
   });
 
-  it('une archive .zip se présente comme une archive, quel que soit son contenu', async () => {
+  it('lot 1 « Socle » (règle transverse 4) : ni format ni taille sur la ligne d\'un document ; une archive ne se dit pas « Export Notion »', async () => {
     vi.mocked(onboardingApi.listDocuments).mockResolvedValue([doc('d3', 'pilote-corpus.zip', false, 'zip')]);
     render(<DocumentsTab project={project} onChanged={() => {}} />);
-    expect(await screen.findByText(/^Archive \(\.zip\) · /)).toBeInTheDocument();
+    const line = (await screen.findByText('pilote-corpus.zip')).closest('li')!;
+    expect(line).toHaveTextContent(/Importé /);
+    expect(line).not.toHaveTextContent(/Archive|Mo\b|Ko\b|octets/);
     expect(screen.queryByText(/Export Notion/)).not.toBeInTheDocument();
   });
 

@@ -17,7 +17,7 @@ vi.mock('../../api/onboardingApi', () => ({
 
 import { onboardingApi } from '../../api/onboardingApi';
 import { ApiError } from '../../../../shared/lib/apiClient';
-import { BaseTab } from './BaseTab';
+import { BaseTabSteps } from './BaseTabSteps.testUtils';
 import { CorrectionEntry } from './CorrectionEntry';
 import type { AuditResponse } from '../../lib/audit';
 import type { Decision } from '../../lib/decisions';
@@ -70,7 +70,7 @@ function mock(edits: PlanEditsState | Error = FRESH, comments: PlanComment[] = [
   else vi.mocked(onboardingApi.getPlanEdits).mockResolvedValue(edits);
 }
 
-const show = () => render(<BaseTab project={project} onGoToClarify={() => {}} />);
+const show = () => render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
 const article = (title: string) => screen.getByRole('heading', { name: new RegExp(`^${title.replace(/[()]/g, '\\$&')}( Modifié par vous)?$`) }).closest('article')!;
 const startEditing = async () => fireEvent.click(await screen.findByRole('button', { name: 'Modifier le plan' }));
 
