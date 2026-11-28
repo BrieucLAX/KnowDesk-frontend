@@ -59,18 +59,20 @@ describe('UploadZone', () => {
     await waitFor(() => expect(onNoticeRequired).toHaveBeenCalled());
   });
 
-  it('jauge du volume de texte : part du maximum, documents non mesurés signalés', () => {
+  it('lot 1 « Socle » (règle transverse 4) : ni jauge de volume ni compteurs du projet ; la règle d\'envoi reste dite', () => {
     const measured = { ...project, limits: { ...project.limits, maxTextChars: 450_000 }, textChars: 380_000, unmeasuredDocuments: 1 };
     render(<UploadZone project={measured} onUploaded={() => {}} onNoticeRequired={() => {}} />);
-    const meter = screen.getByRole('meter', { name: 'Volume de texte du projet' });
-    expect(meter).toHaveAttribute('aria-valuenow', '84');
-    expect(screen.getByText('Volume de texte : 84 % de ce qu\'une analyse peut lire.')).toBeInTheDocument();
-    expect(screen.getByText('Un document importé avant cette mesure n\'est pas compté.')).toBeInTheDocument();
+    expect(screen.queryByRole('meter')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Volume de texte|Projet :/)).not.toBeInTheDocument();
+    expect(screen.getByText(/fichiers au plus par envoi/)).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
-  it('sans volume exposé par le back : pas de jauge', () => {
-    render(<UploadZone project={project} onUploaded={() => {}} onNoticeRequired={() => {}} />);
-    expect(screen.queryByRole('meter')).not.toBeInTheDocument();
+  it('au-delà de ce qu\'une analyse peut lire : le dépassement reste signalé, sans pourcentage', () => {
+    const over = { ...project, limits: { ...project.limits, maxTextChars: 450_000 }, textChars: 470_000, unmeasuredDocuments: 0 };
+    render(<UploadZone project={over} onUploaded={() => {}} onNoticeRequired={() => {}} />);
+    expect(screen.getByRole('alert')).toHaveTextContent('Vos documents dépassent ce qu\'une analyse peut lire');
+    expect(screen.queryByText(/%/)).not.toBeInTheDocument();
   });
 
   it('corpus trop grand à l\'import : le message du back, qui dit de combien et quoi faire', async () => {

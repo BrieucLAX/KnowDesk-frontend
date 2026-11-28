@@ -136,7 +136,7 @@ export function PlanEntry({ projectId, analysisId, cards, current, onOpenBase }:
         </p>
       ) : (
         <ActionBarContent
-          note={ready ? 'Le plan se lit et se modifie dans « Nouvelle base ».' : 'Le plan se prépare avec vos réponses actuelles ; vous le suivrez dans « Nouvelle base ».'}
+          note={ready ? 'Le plan se lit et se modifie à l\'étape « Plan ».' : 'Le plan se prépare avec vos réponses actuelles ; vous le suivrez dans « Nouvelle base ».'}
         >
           {ready ? (
             <>

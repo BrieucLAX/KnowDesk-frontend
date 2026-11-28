@@ -21,13 +21,14 @@ import { ClarifySession } from '../clarify/ClarifySession';
 import { CorrectionEntry } from '../base/CorrectionEntry';
 import { ActionBarContent } from '../../../../shared/components/ui/ActionBar';
 import { blockingCardsLeft } from '../../lib/correction';
-import { useStepFact } from '../../lib/steps';
 
 interface AuditTabProps {
   project:        OnboardingProject;
   onGoToAnalysis: () => void;
-  /** Ouvre l'onglet « Nouvelle base ». */
+  /** Ouvre l'étape 4 (le plan, ou la préparation de la correction). */
   onOpenBase?:    () => void;
+  /** Ouvre l'étape 5 (la relecture de la base corrigée). */
+  onOpenReview?:  () => void;
   /** Ouvre « À clarifier » directement sur cette carte de la dernière analyse (depuis « Nouvelle base »). */
   openCardId?:    string;
 }
@@ -47,7 +48,7 @@ type Loaded =
  * 0.8.0 (lecture globale) montre ses cartes ; un audit 0.6.0 ou 0.7.0, ses
  * questions, comme avant.
  */
-export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: AuditTabProps) {
+export function AuditTab({ project, onGoToAnalysis, onOpenBase, onOpenReview, openCardId }: AuditTabProps) {
   const toast = useToast();
   const [analyses, setAnalyses] = useState<OnboardingAnalysis[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
@@ -104,14 +105,6 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
     return () => { cancelled = true; };
   }, [project.id, selected, toast]);
 
-  // « Analyse » terminée : au moins une analyse réussie. « À clarifier » terminée : sur la dernière,
-  // aucune carte bloquante sans vraie réponse ; un audit à questions (0.6.0, 0.7.0) reste neutre.
-  useStepFact('analysis', analyses === null ? undefined : analyses.length > 0);
-  const latestReading = loaded.state === 'reading' && selected !== null && selected === analyses?.[0]?.id
-    && arbitration.state.status === 'ready' ? { cards: loaded.reading.cards, current: arbitration.state.current } : null;
-  useStepFact('audit', latestReading === null ? undefined
-    : blockingCardsLeft(latestReading.cards, latestReading.current).left === 0
-      && versionCardsWaiting(latestReading.cards, latestReading.current).length === 0);
 
   const loadImage = useCallback(
     (imageId: string) => onboardingApi.getAuditImage(project.id, selected ?? '', imageId),
@@ -129,9 +122,9 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
       <>
       <ActionBarContent hidden />
       <EmptyState
-        title="Aucun audit pour l'instant"
-        description="L'audit apparaît ici quand une analyse du projet est terminée."
-        ctaLabel="Aller à l'analyse"
+        title="Aucune question pour l'instant"
+        description="Les questions apparaissent ici quand l'analyse, lancée depuis le contexte métier, est terminée."
+        ctaLabel="Aller au contexte métier"
         onCta={onGoToAnalysis}
       />
       </>
@@ -208,6 +201,7 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
                   cards={loaded.reading.cards}
                   current={arbitration.state.current}
                   onOpenBase={onOpenBase}
+                  onOpenReview={onOpenReview}
                   base={loaded.reading.base ?? null}
                 />
               )}

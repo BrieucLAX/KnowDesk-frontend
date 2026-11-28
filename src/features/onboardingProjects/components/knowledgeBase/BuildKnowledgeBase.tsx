@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
 import { ActionBarContent } from '../../../../shared/components/ui/ActionBar';
-import { useStepFact } from '../../lib/steps';
+import { useStatusSignal } from '../../lib/steps';
 import { ConfirmDialog } from '../../../../shared/components/ui/ConfirmDialog';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { ApiError } from '../../../../shared/lib/apiClient';
@@ -64,8 +64,8 @@ export function BuildKnowledgeBase({ projectId, buildId, knowledgeEnabled, onOpe
   }, [load, knowledgeEnabled]);
 
   const active = creation !== null && isCreationActive(creation);
-  // « Nouvelle base » terminée : la base de connaissance est créée depuis cette rédaction.
-  useStepFact('base', !knowledgeEnabled || state === null ? undefined : creation?.status === 'succeeded');
+  // Base créée depuis cette rédaction : le projet est publié, la page relit son statut.
+  useStatusSignal(!knowledgeEnabled || state === null ? undefined : creation?.status ?? null);
   usePolling(async () => {
     if (!creation) return;
     setCreation(await onboardingApi.getBuildKnowledgeBaseCreation(projectId, creation.creationId));

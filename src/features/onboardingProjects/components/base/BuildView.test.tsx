@@ -15,6 +15,7 @@ vi.mock('../../api/onboardingApi', () => ({
 }));
 
 import { onboardingApi } from '../../api/onboardingApi';
+import { BaseTabSteps } from './BaseTabSteps.testUtils';
 import { BaseTab } from './BaseTab';
 import type { AuditResponse } from '../../lib/audit';
 import type { BuildContent, BuildLaunch, OnboardingBuild } from '../../lib/build';
@@ -72,7 +73,7 @@ function mock(builds: OnboardingBuild[] = [], launch: BuildLaunch = { allowed: t
   vi.mocked(onboardingApi.listBuildComments).mockResolvedValue([]);
 }
 
-const show = () => render(<BaseTab project={project} onGoToClarify={() => {}} />);
+const show = () => render(<BaseTabSteps initial="plan" project={project} onGoToClarify={() => {}} />);
 const openTab = async (name: RegExp | string) => fireEvent.click(await screen.findByRole('tab', { name }));
 
 beforeEach(() => {
@@ -83,11 +84,15 @@ beforeEach(() => {
 afterEach(() => { vi.clearAllMocks(); });
 
 describe('« Nouvelle base » en mode construire : lancer la rédaction depuis le plan', () => {
-  it('deux vues : Plan, Articles rédigés (C-Q11 : plus de « Points non couverts ») ; le plan d\'abord', async () => {
-    show();
-    const tabs = await screen.findAllByRole('tab');
-    expect(tabs.map(t => t.textContent)).toEqual(['Plan', 'Articles rédigés']);
-    expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
+  it('lot 1 « Socle » : plus d\'onglets internes ; le plan à l\'étape 4, les articles rédigés à l\'étape 5', async () => {
+    const { unmount } = render(<BaseTab project={project} onGoToClarify={() => {}} view="plan" onOpenView={() => {}} />);
+    expect(await screen.findByText(/^Plan du/)).toBeInTheDocument();
+    expect(screen.queryAllByRole('tab')).toEqual([]);
+    unmount();
+    render(<BaseTab project={project} onGoToClarify={() => {}} view="articles" onOpenView={() => {}} />);
+    expect(await screen.findByText(/^Aucun article rédigé pour l'instant/)).toBeInTheDocument();
+    expect(screen.queryByText(/^Plan du/)).toBeNull();
+    expect(screen.queryAllByRole('tab')).toEqual([]);
   });
 
   it('sous le plan, « Rédiger les 3 articles » lance la rédaction et montre l\'avancement', async () => {
@@ -317,7 +322,7 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
   it('décision A (16/11) : « valeur non retenue », avec un lien vers la carte', async () => {
     mock([buildRow()]);
     const onGoToClarify = vi.fn();
-    render(<BaseTab project={project} onGoToClarify={onGoToClarify} />);
+    render(<BaseTabSteps initial="plan" project={project} onGoToClarify={onGoToClarify} />);
     await openTab('Articles rédigés');
     const prix = (await screen.findByRole('heading', { name: 'Prix d\'Elyra Fixe 2 ans' })).closest('article')!;
     const removed = within(prix).getByText(/^Retiré de cet article/).closest('details')!;
@@ -359,7 +364,7 @@ describe('C-Q11 : les réponses de l\'expert qui ne figurent dans aucun article,
   it('un encart en tête de « Articles rédigés » : le titre de chaque carte, avec un lien vers elle', async () => {
     mock([buildRow()]);
     const onGoToClarify = vi.fn();
-    const { container } = render(<BaseTab project={project} onGoToClarify={onGoToClarify} />);
+    const { container } = render(<BaseTabSteps initial="plan" project={project} onGoToClarify={onGoToClarify} />);
     await openTab('Articles rédigés');
     const box = await screen.findByRole('region', { name: '1 de vos réponses ne figure dans aucun article' });
     expect(box.compareDocumentPosition(screen.getByText('Catégorie 1 · Offres et prix')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -399,7 +404,8 @@ describe('Ailleurs, rien ne change', () => {
     mock([], { allowed: true }, correct);
     show();
     await waitFor(() => expect(onboardingApi.listCorrections).toHaveBeenCalled());
-    expect(screen.queryByRole('tab', { name: 'Articles rédigés' })).not.toBeInTheDocument();
+    // L'étape 4 d'un projet en mode correction : sa préparation, rien de la rédaction.
+    expect(await screen.findByText('Rien de préparé pour l\'instant')).toBeInTheDocument();
     expect(onboardingApi.listBuilds).not.toHaveBeenCalled();
     expect(onboardingApi.listPlans).not.toHaveBeenCalled();
   });

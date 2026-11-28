@@ -1,7 +1,8 @@
 /* ─────────────────────────────────────────────────────────────
    Stepper — étapes d'un parcours (fiche Stepper du design system CX).
    Rond de 44 px, trait --line entre deux étapes, --success après une
-   étape terminée ; étape affichée en --primary avec un halo --primary-soft.
+   étape terminée ; étape en cours en --primary avec un halo --primary-soft ;
+   étape à venir en gris ; nom de l'étape affichée souligné.
    ───────────────────────────────────────────────────────────── */
 
 .parcours-stepper {
@@ -52,6 +53,10 @@
   box-shadow: 0 0 0 6px var(--primary-soft);
 }
 .parcours-stepper__step--current .parcours-stepper__label { color: var(--primary); font-weight: 700; }
+
+.parcours-stepper__step--shown .parcours-stepper__label {
+  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px;
+}
 
 /* De 768 à 1024 px, la barre latérale laisse peu de place : la carte et les colonnes s'élargissent. */
 @media (max-width: 1023.98px) {

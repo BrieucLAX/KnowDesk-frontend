@@ -1,68 +1,86 @@
 import { createContext, useContext, useEffect } from 'react';
-import { Building, FileSearch, FileText, List, Scale, type LucideIcon } from 'lucide-react';
-import type { OnboardingProject } from '../types';
+import { Building, FileText, List, PenLine, Scale, type LucideIcon } from 'lucide-react';
+import type { StepState } from '../../../shared/components/ui/Stepper';
+import type { OnboardingProject, ProjectStatus } from '../types';
 
-export type ProjectStep = 'documents' | 'cadrage' | 'analysis' | 'audit' | 'base';
+/**
+ * Les cinq étapes du parcours (US.md, règle transverse 1 ; lot 1 « Socle »). L'analyse n'est pas
+ * une étape : elle se lance à l'étape 2 et l'étape 3 attend pendant qu'elle tourne.
+ * Correspondance avec les anciens onglets : Documents → 1 ; Fiche de cadrage → 2 ; « À clarifier »
+ * → 3 ; « Nouvelle base » partagé entre 4 (le plan, ou la préparation de la correction) et 5 (la
+ * rédaction, la relecture et la création de la base).
+ */
+export type ProjectStep = 'documents' | 'cadrage' | 'audit' | 'plan' | 'relecture';
 
 interface StepDef {
   id:    ProjectStep;
+  /** Nom court, dans le stepper. */
   label: string;
   icon:  LucideIcon;
+  /** Titre de l'écran (maquettes du parcours cible). */
+  title: string;
   /** La phrase d'introduction du bandeau. */
   lead:  string;
+  /** La fin de « Continuer vers … », depuis l'étape précédente. */
+  towards: string;
 }
 
-/** Les cinq étapes du projet : noms, ordre et URL inchangés (lot 7b, habillage seul). */
+/*
+ * Titres des maquettes à l'identique. Les phrases reprennent celles des maquettes sans ce qui
+ * n'existe pas encore (types et usages proposés, brouillon pré-rempli, ajout d'articles,
+ * publication à tout moment : lots 2 à 5), ni les nombres qui viendront avec ces lots.
+ */
 export const STEPS: readonly StepDef[] = [
-  { id: 'documents', label: 'Documents',        icon: FileText,
-    lead: 'Importez les documents de votre base actuelle : ce sont eux que l\'analyse va lire.' },
-  { id: 'cadrage',   label: 'Fiche de cadrage', icon: Building,
-    lead: 'Décrivez votre métier, pour que l\'analyse lise vos documents dans leur contexte.' },
-  { id: 'analysis',  label: 'Analyse',          icon: FileSearch,
-    lead: 'Lancez l\'analyse de vos documents avec votre fiche de cadrage, puis suivez son avancement.' },
+  { id: 'documents', label: 'Documents', icon: FileText, title: 'Importez vos documents',
+    lead: 'Apportez tout ce qui sert à répondre aux clients.', towards: 'les documents' },
+  { id: 'cadrage', label: 'Contexte métier', icon: Building, title: 'Votre contexte métier',
+    lead: 'Vérifiez votre fiche de cadrage et complétez ce qui manque, puis lancez l\'analyse de vos documents.',
+    towards: 'le contexte métier' },
   // L'URL reste `audit`. « Questions » (US 3.1, lot étape A) : le mot « trancher » n'est plus employé.
-  { id: 'audit',     label: 'Questions',        icon: Scale,
-    lead: 'Répondez aux questions que l\'analyse a relevées dans vos documents.' },
-  { id: 'base',      label: 'Nouvelle base',    icon: List,
-    lead: 'Relisez la nouvelle base préparée à partir de vos documents et de vos réponses.' },
+  { id: 'audit', label: 'Questions', icon: Scale, title: 'Questions',
+    lead: 'Répondez aux questions que l\'analyse a relevées dans vos documents.', towards: 'les questions' },
+  { id: 'plan', label: 'Plan', icon: List, title: 'Le plan de votre base',
+    lead: 'Renommez, déplacez ou réunissez des articles jusqu\'à ce que le plan vous convienne : nous rédigeons ensuite les articles.',
+    towards: 'le plan' },
+  { id: 'relecture', label: 'Relecture et publication', icon: PenLine, title: 'Relisez vos articles',
+    lead: 'Vérifiez les phrases surlignées, puis créez votre base de connaissance.', towards: 'la relecture' },
 ];
 
 export const stepOf = (id: ProjectStep): StepDef => STEPS.find(s => s.id === id)!;
 export const nextStep = (id: ProjectStep): StepDef | null => STEPS[STEPS.findIndex(s => s.id === id) + 1] ?? null;
 
-/**
- * Ce que les écrans ont déjà chargé disent des étapes : vrai, terminée ; faux, pas terminée ;
- * absent, on ne sait pas (étape neutre). Aucun appel au back pour ça.
- */
-export type StepFacts = Partial<Record<'analysis' | 'audit' | 'base', boolean>>;
-
-/**
- * Les étapes terminées, sans ambiguïté :
- * - Documents : au moins un document dans le projet ;
- * - Fiche de cadrage : une version enregistrée ;
- * - Analyse : une analyse réussie (lue par « Analyse », « À clarifier » ou « Nouvelle base ») ;
- * - À clarifier : sur la dernière analyse réussie, aucune carte bloquante sans vraie réponse
- *   (« Plus tard » ne tranche pas), lu par « À clarifier » ou « Nouvelle base » ; un audit à
- *   questions (0.6.0, 0.7.0) reste neutre ;
- * - Nouvelle base : la base de connaissance créée depuis la dernière rédaction ou la version validée.
- */
-export function doneSteps(project: OnboardingProject, facts: StepFacts): Record<ProjectStep, boolean> {
-  return {
-    documents: project.documentsCount > 0,
-    cadrage:   project.cadrageVersion !== null,
-    analysis:  facts.analysis === true,
-    audit:     facts.audit === true,
-    base:      facts.base === true,
-  };
+/** Étape en cours lue dans le statut du projet ; sans statut (back d'avant la migration 65), l'étape 1. */
+export function currentStepOf(project: Pick<OnboardingProject, 'currentStep'>): ProjectStep {
+  return STEPS[(project.currentStep ?? 1) - 1]?.id ?? 'documents';
 }
 
-/** Les écrans disent à la page ce qu'ils savent d'une étape ; hors de la page, rien. */
-export const StepFactsContext = createContext<((step: keyof StepFacts, done: boolean) => void) | null>(null);
+/**
+ * Statut de chaque étape, lu dans le statut du projet renvoyé par le back (`completedSteps`,
+ * `currentStep`), jamais déduit par le front : terminée, en cours, à venir.
+ */
+export function stepStates(project: Pick<OnboardingProject, 'currentStep' | 'completedSteps'>): Record<ProjectStep, StepState> {
+  const current = project.currentStep ?? 1;
+  const completed = project.completedSteps ?? 0;
+  return Object.fromEntries(STEPS.map((s, i) => {
+    const n = i + 1;
+    return [s.id, n <= completed ? 'done' : n === current ? 'current' : 'upcoming'];
+  })) as Record<ProjectStep, StepState>;
+}
 
-/** Signale l'état d'une étape quand il est connu (`undefined` : rien à dire). */
-export function useStepFact(step: keyof StepFacts, done: boolean | undefined): void {
-  const report = useContext(StepFactsContext);
+/** Les statuts où un travail tourne (analyse, rédaction) : la page relit le projet en attendant. */
+export const RUNNING_STATUSES: ReadonlySet<ProjectStatus> = new Set(['analyse_en_cours', 'redaction_en_cours']);
+
+/** La page relit le projet (et son statut) ; hors de la page, rien. */
+export const ProjectRefreshContext = createContext<(() => void) | null>(null);
+
+/**
+ * Un écran a vu changer ce qui fait avancer le statut du projet (analyse réussie, réponses,
+ * préparation terminée, base créée) : la page relit le projet pour mettre le stepper à jour.
+ * `undefined` : rien à dire encore.
+ */
+export function useStatusSignal(value: string | boolean | null | undefined): void {
+  const refresh = useContext(ProjectRefreshContext);
   useEffect(() => {
-    if (report && done !== undefined) report(step, done);
-  }, [report, step, done]);
+    if (refresh && value !== undefined) refresh();
+  }, [refresh, value]);
 }

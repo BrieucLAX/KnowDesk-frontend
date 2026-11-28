@@ -6,11 +6,12 @@ import { ActionBarHost } from '../../../shared/components/ui/ActionBar';
 import { Skeleton }   from '../../../shared/components/ui/Skeleton';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { useToast }   from '../../../shared/lib/useToast';
+import { usePolling } from '../../../shared/lib/usePolling';
 import { onboardingApi } from '../api/onboardingApi';
 import { ProjectNameModal } from './ProjectNameModal';
 import { DocumentsTab } from './DocumentsTab';
 import { CadrageTab }   from './CadrageTab';
-import { AnalysisTab }  from './AnalysisTab';
+import { AnalysisWaiting } from './AnalysisWaiting';
 import { AuditTab }     from './audit/AuditTab';
 import { BaseTab }      from './base/BaseTab';
 import { CleanBaseView } from './base/CleanBaseView';
@@ -21,14 +22,18 @@ import { useAuthStore, selectOrganization, selectUserRole } from '../../../store
 import { hasModule } from '../../../shared/lib/modules';
 import { CurrentUserContext } from './base/AuthorName';
 import { ArrowRight, Pencil } from 'lucide-react';
-import { doneSteps, nextStep, stepOf, STEPS, StepFactsContext, type ProjectStep, type StepFacts } from '../lib/steps';
+import { ANALYSIS_POLL_MS } from '../lib/analysisStatus';
+import {
+  currentStepOf, nextStep, ProjectRefreshContext, RUNNING_STATUSES, stepOf, stepStates, STEPS, type ProjectStep,
+} from '../lib/steps';
 
 export type ProjectTab = ProjectStep;
 
 interface OnboardingProjectPageProps {
   projectId:   string;
-  tab:         ProjectTab;
-  /** Une version validée à afficher (version propre), à la place des onglets. */
+  /** L'étape affichée ; null : l'étape en cours du projet (statut renvoyé par le back). */
+  tab:         ProjectTab | null;
+  /** Une version validée à afficher (version propre), à la place des étapes. */
   validationId?: string | null;
   /** Avec `validationId` : l'écran « Créer la base de connaissance » de cette version. */
   knowledgeBase?: boolean;
@@ -39,36 +44,37 @@ interface OnboardingProjectPageProps {
   onBack:      () => void;
 }
 
-/** Un projet d'onboarding : ses documents, sa fiche de cadrage, ses analyses et leur audit. */
+/**
+ * Un projet d'onboarding, en cinq étapes (parcours cible, lot 1 « Socle » ; US.md, règles
+ * transverses 1 et 2) : en-tête « ORGANISATION · BASE DE CONNAISSANCE », titre et phrase de
+ * l'étape, retour « Mes projets » ; stepper dont le statut de chaque étape est lu dans le statut
+ * du projet renvoyé par le back ; une seule action principale par écran, dans la barre d'action,
+ * qui mène à l'étape suivante. Le même parcours vaut quel que soit le mode de l'audit.
+ */
 export function OnboardingProjectPage({
-  projectId, tab, validationId = null, knowledgeBase = false, onTabChange, onOpenValidation, onOpenKnowledgeBase, onOpenKnowledge, onBack,
+  projectId, tab: requested, validationId = null, knowledgeBase = false, onTabChange, onOpenValidation, onOpenKnowledgeBase, onOpenKnowledge, onBack,
 }: OnboardingProjectPageProps) {
   const toast = useToast();
   const [project,  setProject]  = useState<OnboardingProject | null>(null);
   const [missing,  setMissing]  = useState(false);
   const [renaming, setRenaming] = useState(false);
-  // Fiche de cadrage modifiée et non enregistrée : on confirme avant de quitter l'onglet.
+  // Fiche de cadrage modifiée et non enregistrée : on confirme avant de quitter l'étape.
   const [cadrageDirty, setCadrageDirty] = useState(false);
   const [pendingLeave, setPendingLeave] = useState<(() => void) | null>(null);
-  /** La carte à ouvrir dans « À clarifier », demandée depuis « Nouvelle base » ; oubliée hors de l'onglet. */
+  /** La carte à ouvrir dans « Questions », demandée depuis le plan ou la relecture ; oubliée hors de l'étape. */
   const [clarifyCard, setClarifyCard] = useState<string | undefined>(undefined);
   const currentUserId = useAuthStore(s => s.session?.user.id ?? null);
   const isAdmin = useAuthStore(selectUserRole) === 'admin';
-  const knowledgeEnabled = hasModule(useAuthStore(selectOrganization), 'knowledge');
-  useEffect(() => { if (tab !== 'audit') setClarifyCard(undefined); }, [tab]);
-  /** Ce que les écrans ont déjà lu des étapes (analyse réussie, cartes bloquantes, base créée). */
-  const [facts, setFacts] = useState<StepFacts>({});
-  useEffect(() => { setFacts({}); }, [projectId]);
-  const reportFact = useCallback((step: keyof StepFacts, done: boolean) => {
-    setFacts(f => (f[step] === done ? f : { ...f, [step]: done }));
-  }, []);
+  const organization = useAuthStore(selectOrganization);
+  const knowledgeEnabled = hasModule(organization, 'knowledge');
+  useEffect(() => { if (requested !== 'audit') setClarifyCard(undefined); }, [requested]);
 
   const leave = (action: () => void) => {
     if (cadrageDirty) setPendingLeave(() => action);
     else action();
   };
 
-  /** Relit le projet (compteurs, plafonds, version du cadrage) après un changement. */
+  /** Relit le projet (compteurs, plafonds, fiche, statut du parcours) après un changement. */
   const reload = useCallback(async () => {
     try {
       setProject(await onboardingApi.getProject(projectId));
@@ -84,13 +90,26 @@ export function OnboardingProjectPage({
     void reload();
   }, [reload]);
 
+  // Changer d'étape relit le statut ; une analyse ou une rédaction en cours aussi, en attendant.
+  const [shownOnce, setShownOnce] = useState<ProjectTab | null>(null);
+  useEffect(() => {
+    if (requested !== null && shownOnce !== null && requested !== shownOnce) void reload();
+    if (requested !== null) setShownOnce(requested);
+  }, [requested, shownOnce, reload]);
+  const running = project?.status != null && RUNNING_STATUSES.has(project.status);
+  usePolling(reload, ANALYSIS_POLL_MS, running);
+
   const rename = useCallback(async (name: string) => {
     const updated = await onboardingApi.renameProject(projectId, name);
     setProject(p => p ? { ...p, name: updated.name, updatedAt: updated.updatedAt } : p);
     setRenaming(false);
   }, [projectId]);
 
-  const back = { label: 'Tous les projets', onClick: () => leave(onBack) };
+  const back = { label: 'Mes projets', onClick: () => leave(onBack) };
+  const eyebrow = `${organization?.name ?? project?.name ?? ''} · Base de connaissance`;
+  // Sans étape demandée, l'étape en cours du projet ; l'URL suit.
+  const tab: ProjectTab = requested ?? (project ? currentStepOf(project) : 'documents');
+  useEffect(() => { if (requested === null && project) onTabChange(currentStepOf(project)); }, [requested, project, onTabChange]);
   const step = stepOf(tab);
 
   if (missing) {
@@ -100,23 +119,23 @@ export function OnboardingProjectPage({
   if (!project) {
     return (
       <div className="obp-page" aria-busy="true">
-        <ParcoursHeader back={back} title={step.label} lead={step.lead} />
+        <ParcoursHeader back={back} title={requested ? step.title : ''} lead={requested ? step.lead : undefined} />
         <Skeleton className="obp-skeleton-block" />
       </div>
     );
   }
 
-  // « Créer la base de connaissance » depuis une version propre (plan-articles-v1, lot 2).
+  // « Créer la base de connaissance » depuis une version propre (mode correction), à l'étape 5.
   if (validationId && knowledgeBase) {
     return (
       <div className="obp-page">
         <ParcoursHeader
           back={{ label: 'Revenir à la version propre', onClick: () => onOpenValidation?.(validationId) }}
-          eyebrow={project.name}
+          eyebrow={eyebrow}
           title="Créer la base de connaissance"
           lead="Les fiches de la version validée deviennent des articles de votre base de connaissance."
         />
-        <StepFactsContext.Provider value={reportFact}>
+        <ProjectRefreshContext.Provider value={reload}>
         <KnowledgeBaseCreationView
           projectId={projectId}
           validationId={validationId}
@@ -126,46 +145,52 @@ export function OnboardingProjectPage({
           onOpenKnowledge={() => onOpenKnowledge?.()}
           hideBack
         />
-        </StepFactsContext.Provider>
+        </ProjectRefreshContext.Provider>
       </div>
     );
   }
 
-  // La version propre : un écran à part, une seule ligne en tête.
+  // La version propre (mode correction) : un écran à part, une seule ligne en tête.
   if (validationId) {
     return (
       <div className="obp-page">
         <ParcoursHeader
           className="obp-clean-noprint"
-          back={{ label: 'Revenir à la relecture', onClick: () => onTabChange('base') }}
-          eyebrow={project.name}
+          back={{ label: 'Revenir à la relecture', onClick: () => onTabChange('relecture') }}
+          eyebrow={eyebrow}
           title="Version propre"
           lead="La nouvelle base validée, telle qu'elle sera reprise : à lire, imprimer ou exporter en PDF."
         />
-        <CleanBaseView projectId={projectId} validationId={validationId} onBack={() => onTabChange('base')}
+        <CleanBaseView projectId={projectId} validationId={validationId} onBack={() => onTabChange('relecture')}
           onCreateKnowledgeBase={onOpenKnowledgeBase} hideBack />
       </div>
     );
   }
 
-  const done = doneSteps(project, facts);
+  const states = stepStates(project);
   const next = nextStep(tab);
   const goTo = (id: ProjectTab) => { if (id !== tab) leave(() => onTabChange(id)); };
-  // Une étape sans action principale à ce moment-là propose l'étape suivante.
+  // Une étape sans action principale à ce moment-là mène à l'étape suivante.
   const fallback = next && {
     children: (
       <Button variant="primary" size="md" onClick={() => goTo(next.id)}>
-        Continuer : {next.label}<ArrowRight size={16} aria-hidden="true" />
+        Continuer vers {next.towards}<ArrowRight size={16} aria-hidden="true" />
       </Button>
     ),
+  };
+  const baseProps = {
+    project,
+    onGoToClarify: (cardId?: string) => { setClarifyCard(cardId); onTabChange('audit'); },
+    onOpenValidation, onOpenKnowledgeBase, knowledgeEnabled, onOpenKnowledge,
+    onOpenView: (view: 'plan' | 'articles') => onTabChange(view === 'plan' ? 'plan' : 'relecture'),
   };
 
   return (
     <div className="obp-page">
       <div className="obp-parcours-top">
-        <ParcoursHeader back={back} eyebrow={project.name} title={step.label} lead={step.lead} overlap />
+        <ParcoursHeader back={back} eyebrow={eyebrow} title={step.title} lead={step.lead} overlap />
         <Stepper
-          items={STEPS.map(s => ({ id: s.id, label: s.label, icon: s.icon, done: done[s.id] }))}
+          items={STEPS.map(s => ({ id: s.id, label: s.label, icon: s.icon, state: states[s.id] }))}
           value={tab}
           onSelect={goTo}
           ariaLabel="Étapes du projet"
@@ -177,40 +202,30 @@ export function OnboardingProjectPage({
         </div>
       </div>
       <CurrentUserContext.Provider value={currentUserId}>
-      <StepFactsContext.Provider value={reportFact}>
+      <ProjectRefreshContext.Provider value={reload}>
       <ActionBarHost fallback={fallback || null}>
       <div className="obp-tab" id="obp-step-panel" aria-label={step.label} role="region">
         {tab === 'documents' && <DocumentsTab project={project} onChanged={reload} />}
-        {tab === 'cadrage' && <CadrageTab project={project} onSaved={reload} onDirtyChange={setCadrageDirty} />}
-        {tab === 'analysis' && (
-          <AnalysisTab
-            project={project}
-            // Une nouvelle analyse : ce qu'on savait de « À clarifier » et de la base ne vaut plus.
-            onChanged={() => { setFacts(f => ({ analysis: f.analysis })); void reload(); }}
-            onOpenAudit={() => onTabChange('audit')}
+        {tab === 'cadrage' && (
+          <CadrageTab
+            project={project} onSaved={reload} onDirtyChange={setCadrageDirty}
+            onAnalysisLaunched={() => { void reload(); onTabChange('audit'); }}
           />
         )}
-        {tab === 'audit' && (
+        {tab === 'audit' && (project.status === 'analyse_en_cours' ? <AnalysisWaiting /> : (
           <AuditTab
             project={project}
-            onGoToAnalysis={() => onTabChange('analysis')}
-            onOpenBase={() => onTabChange('base')}
+            onGoToAnalysis={() => onTabChange('cadrage')}
+            onOpenBase={() => onTabChange('plan')}
+            onOpenReview={() => onTabChange('relecture')}
             openCardId={clarifyCard}
           />
-        )}
-        {tab === 'base' && (
-          <BaseTab
-            project={project}
-            onGoToClarify={cardId => { setClarifyCard(cardId); onTabChange('audit'); }}
-            onOpenValidation={onOpenValidation}
-            onOpenKnowledgeBase={onOpenKnowledgeBase}
-            knowledgeEnabled={knowledgeEnabled}
-            onOpenKnowledge={onOpenKnowledge}
-          />
-        )}
+        ))}
+        {tab === 'plan' && <BaseTab {...baseProps} view="plan" />}
+        {tab === 'relecture' && <BaseTab {...baseProps} view="articles" />}
       </div>
       </ActionBarHost>
-      </StepFactsContext.Provider>
+      </ProjectRefreshContext.Provider>
       </CurrentUserContext.Provider>
 
       {pendingLeave && (

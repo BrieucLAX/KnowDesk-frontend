@@ -171,17 +171,6 @@
 .obp-doc-pick { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--neutral-700); cursor: pointer; }
 .obp-doc-pick.is-taken { color: var(--ink-muted); cursor: default; }
 
-/* ── Historique des versions ─────────────────────────────────── */
-.obp-history { display: flex; flex-direction: column; gap: 4px; }
-.obp-history__note { margin-bottom: 12px; }
-.obp-history__render {
-  max-height: 60vh; overflow: auto;
-  padding: 12px 20px;
-  background: var(--neutral-50);
-  border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
-  font-size: 14px; line-height: 1.6;
-}
-
 /* ── Documents cités mais absents du projet (signalés, non bloquants) ── */
 .obp-warning {
   margin: 0; padding: 12px 14px;
@@ -222,8 +211,7 @@
 .obp-kind--structured { background: var(--neutral-100); color: var(--neutral-700); }
 
 /* ── Analyse ─────────────────────────────────────────────────── */
-.obp-analysis,
-.obp-launch {
+.obp-analysis {
   display: flex; flex-direction: column; gap: 16px;
   padding: 20px 24px;
   background: var(--neutral-0);
@@ -261,15 +249,22 @@
   font-size: 13px; color: var(--color-danger);
 }
 
-.obp-launch__summary { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: 14px; color: var(--neutral-700); }
-.obp-launch__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-
-.obp-history { margin: 0; padding: 0; list-style: none; }
-.obp-history__item { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 10px 0; font-size: 13px; color: var(--neutral-700); }
-.obp-history__item + .obp-history__item { border-top: 1px solid var(--neutral-100); }
-.obp-history__status { font-weight: 600; }
-.obp-history__status--failed { color: var(--color-danger); }
-.obp-history__status--succeeded { color: var(--color-success); }
+/* ── Étape 3 pendant l'analyse (lot 1 « Socle ») : attente simple ── */
+.obp-waiting {
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-4);
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+  background: var(--surface-raised);
+  border: 1px solid var(--line); border-radius: var(--radius-lg);
+}
+.obp-waiting .obp-section-title { margin: 0; }
+.obp-waiting .obp-muted { margin: 0; max-width: 52ch; }
+.obp-waiting__icon {
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--primary-soft); color: var(--primary);
+}
 
 /* ── Audit (F3) ──────────────────────────────────────────────── */
 .obp-audit-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
@@ -519,17 +514,6 @@
 .obp-clarify-summary p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--neutral-900); }
 .obp-clarify-summary p.obp-muted { color: var(--neutral-500); font-size: 13px; }
 .obp-clarify-nav__title { min-width: 0; overflow-wrap: anywhere; text-align: left; }
-
-/* ── Volume de texte du projet (plafond d'entrée) ─────────────── */
-.obp-volume { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
-.obp-volume__bar {
-  height: 6px; border-radius: var(--radius-full); overflow: hidden; background: var(--neutral-100);
-}
-.obp-volume__fill { display: block; height: 100%; background: var(--brand-500); }
-.obp-volume--warning .obp-volume__fill { background: var(--neutral-700); }
-.obp-volume--over .obp-volume__fill { background: var(--color-danger); }
-.obp-volume__label { margin: 0; font-size: 13px; color: var(--neutral-700); }
-.obp-volume--over .obp-volume__label { color: var(--color-danger); }
 
 /* ── Nouvelle base : préparation et relecture (plan-correction-produit.md, lot 3) ── */
 

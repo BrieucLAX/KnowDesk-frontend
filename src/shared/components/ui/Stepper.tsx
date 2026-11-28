@@ -9,9 +9,16 @@ export interface StepperItem<T extends string> {
   /** Nom court de l'étape, trois mots au plus. */
   label: string;
   icon:  LucideIcon;
-  /** Terminée : la coche remplace l'icône. Absent ou faux : étape neutre. */
-  done?: boolean;
+  /**
+   * Statut de l'étape dans le parcours (règle transverse 1) : terminée (vert, la coche remplace
+   * l'icône), en cours (pétrole), à venir (gris, la valeur par défaut).
+   */
+  state?: StepState;
 }
+
+export type StepState = 'done' | 'current' | 'upcoming';
+
+const STATE_SUFFIX: Record<StepState, string> = { done: ' (terminée)', current: ' (en cours)', upcoming: '' };
 
 interface StepperProps<T extends string> {
   items:     ReadonlyArray<StepperItem<T>>;
@@ -23,9 +30,10 @@ interface StepperProps<T extends string> {
 
 /**
  * Étapes d'un parcours (design system CX, fiche Stepper) : une carte qui chevauche le bandeau,
- * une icône par étape, coche sur une étape terminée, étape affichée en --primary. Chaque étape
- * est un bouton : on les ouvre dans n'importe quel ordre. Sous 768 px, seuls les ronds restent
- * et le nom de l'étape affichée passe dessous.
+ * une icône par étape ; terminée en --success avec la coche, en cours en --primary, à venir en
+ * gris. L'étape affichée (`value`) a son nom souligné et `aria-current`. Chaque étape est un
+ * bouton : on les ouvre dans n'importe quel ordre. Sous 768 px, seuls les ronds restent et le
+ * nom de l'étape affichée passe dessous.
  */
 export function Stepper<T extends string>({ items, value, onSelect, ariaLabel }: StepperProps<T>) {
   const compact = useIsMobile();
@@ -34,15 +42,18 @@ export function Stepper<T extends string>({ items, value, onSelect, ariaLabel }:
     <nav className={cn('parcours-stepper', compact && 'parcours-stepper--compact')} aria-label={ariaLabel}>
       <ol className="parcours-stepper__list" style={{ '--steps': items.length } as React.CSSProperties}>
         {items.map(item => {
-          const isCurrent = item.id === value;
-          const Icon = item.done ? Check : item.icon;
+          const shown = item.id === value;
+          const state = item.state ?? 'upcoming';
+          const Icon = state === 'done' ? Check : item.icon;
           return (
-            <li key={item.id} className={cn('parcours-stepper__step', item.done && 'parcours-stepper__step--done', isCurrent && 'parcours-stepper__step--current')}>
+            <li key={item.id} className={cn(
+              'parcours-stepper__step', `parcours-stepper__step--${state}`, shown && 'parcours-stepper__step--shown',
+            )}>
               <button
                 type="button"
                 className="parcours-stepper__button"
-                aria-current={isCurrent ? 'step' : undefined}
-                aria-label={item.done ? `${item.label} (terminée)` : undefined}
+                aria-current={shown ? 'step' : undefined}
+                aria-label={state === 'upcoming' ? undefined : `${item.label}${STATE_SUFFIX[state]}`}
                 onClick={() => onSelect(item.id)}
               >
                 <span className="parcours-stepper__dot" aria-hidden="true"><Icon size={20} /></span>
