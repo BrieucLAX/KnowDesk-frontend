@@ -28,8 +28,9 @@
 }
 .info-tooltip__trigger:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .info-tooltip__bubble {
-  position: absolute;
-  left: 50%; transform: translateX(-50%);
+  /* Rendue dans <body> (portail) : left et top viennent du déclencheur (Tooltip.tsx). */
+  position: fixed;
+  transform: translateX(-50%);
   width: max-content;
   max-width: 320px;
   padding: 10px 12px;
@@ -39,12 +40,10 @@
   box-shadow: var(--shadow-sm);
   font-size: 12.5px; line-height: 1.5;
   text-align: left;
-  z-index: var(--z-floating);
+  z-index: var(--z-modal);
   cursor: default;
   pointer-events: auto;
 }
-.info-tooltip__bubble--top    { bottom: calc(100% + 8px); }
-.info-tooltip__bubble--bottom { top:    calc(100% + 8px); }
 .info-tooltip__title {
   font-weight: 600;
   margin-bottom: 6px;

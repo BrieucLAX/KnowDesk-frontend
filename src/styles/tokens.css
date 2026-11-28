@@ -42,13 +42,14 @@
   /* ── Superposition (fiche Modal du design system CX, 28/11) ──
      Le fond d'une modale passe au-dessus de tout (50) ; aucune couche ne dépasse
      cette valeur. Une couche qui doit rester visible au-dessus d'une modale ouverte
-     (notification, menu rendu dans <body>) prend aussi --z-modal : à valeur égale,
-     elle vient après la modale dans le document et passe devant. */
+     (notification, menu, infobulle ou aide rendus dans <body> par un portail) prend
+     aussi --z-modal : à valeur égale, elle vient après la modale dans le document et
+     passe devant ; en portail, elle n'est pas non plus rognée par la carte de la modale. */
   --z-raised: 1;     /* élément levé dans son bloc (pastille du stepper, poignée) */
   --z-sticky: 10;    /* en-tête et barre d'action collants */
   --z-dropdown: 20;  /* liste de suggestions, menu posé dans la page */
-  --z-floating: 40;  /* panneau latéral, infobulle, bandeau fixe, navigation mobile */
-  --z-modal: 50;     /* fond de modale, palette de commandes, notifications, menus en portail */
+  --z-floating: 40;  /* panneau latéral, bandeau fixe, barre d'actions groupées, navigation mobile */
+  --z-modal: 50;     /* fond de modale, palette de commandes, notifications, menus, infobulles et aides en portail */
 
   /* ── Anciennes variables, remappées sur le design system ─── */
 

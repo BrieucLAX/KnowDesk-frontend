@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ByYouBadge, InternalCard, KnowDeskBadge, KnowDeskBlock, KnowDeskMention } from './Origin';
 import { answerMention } from '../../../features/search/components/AiAnswerCard';
+import { isAppCode, isStylesheet, readSources } from '../../../test/readSources';
 
 describe('Qui a fait quoi (lot 7a)', () => {
   it('la mention KnowDesk porte l’icône sparkles et son texte', () => {
@@ -17,8 +18,8 @@ describe('Qui a fait quoi (lot 7a)', () => {
   });
 
   it('le badge KnowDesk est en accent, « Ajouté par vous » en primary', () => {
-    render(<><KnowDeskBadge>Tranché automatiquement par KnowDesk</KnowDeskBadge><ByYouBadge /><ByYouBadge modified /></>);
-    expect(screen.getByText('Tranché automatiquement par KnowDesk')).toHaveClass('badge--accent');
+    render(<><KnowDeskBadge>Réglé automatiquement par KnowDesk</KnowDeskBadge><ByYouBadge /><ByYouBadge modified /></>);
+    expect(screen.getByText('Réglé automatiquement par KnowDesk')).toHaveClass('badge--accent');
     expect(screen.getByText('Ajouté par vous')).toHaveClass('badge--primary');
     expect(screen.getByText('Modifié par vous')).toHaveClass('badge--primary');
   });
@@ -37,32 +38,86 @@ describe('Qui a fait quoi (lot 7a)', () => {
 });
 
 /**
- * La prune ne sert qu'à « ce que KnowDesk a préparé » : ses seuls usages sont les composants
- * d'origine (Origin.css, badge accent) et deux encarts qui contiennent une mention KnowDesk
- * (réponse IA de la recherche, recommandation d'une carte). Un nouvel usage doit passer par Origin.
+ * La prune ne sert qu'à « ce que KnowDesk a préparé » (règle 7 des US) : ses seuls usages sont les
+ * composants d'origine (Origin.css : mention, encart, cercle coché « Réglée par KnowDesk » ; badge
+ * accent) et deux encarts qui portent une mention KnowDesk (réponse rédigée de la recherche,
+ * recommandation d'une carte). Un nouvel usage doit passer par Origin.
+ * Les feuilles se lisent sur le disque : avec `css: false`, un import `?raw` les rend vides.
  */
-describe('Prune réservée à KnowDesk', () => {
-  const ALLOWED: Record<string, RegExp> = {
-    '/src/styles/tokens.css':                                  /--accent(-soft)?:/,
-    '/src/shared/components/ui/Origin.css':                    /./,
-    '/src/shared/components/ui/StatusBadge.css':               /\.badge--accent/,
-    '/src/features/search/search.css':                         /\.ai-answer \{/,
-    '/src/features/onboardingProjects/onboardingProjects.css': /\.obp-clarify-reco__text/,
-  };
-  const files = import.meta.glob('/src/**/*.css', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const ACCENT = /var\(--accent(-soft)?\)/;
+const PRUNE_HEX = /#(9b3b8c|f6e6f3)\b/i;
 
-  it('aucune feuille n’emploie --accent hors de son rôle', () => {
-    expect(Object.keys(files)).toContain('/src/features/faqs/faqs.css');
-    const offenders: string[] = [];
-    for (const [path, css] of Object.entries(files)) {
-      css.split('\n').forEach((line, i) => {
-        if (!/var\(--accent(-soft)?\)|--accent(-soft)?:/.test(line)) return;
-        const rule = ALLOWED[path];
-        // La règle autorisée doit être sur la ligne même ou sur la ligne d'ouverture du bloc.
-        const opening = css.split('\n').slice(0, i + 1).reverse().find(l => l.includes('{')) ?? '';
-        if (!rule || !(rule.test(line) || rule.test(opening))) offenders.push(`${path}:${i + 1}`);
-      });
+/** Sélecteurs autorisés à employer la prune, par feuille. */
+const ALLOWED: Record<string, RegExp> = {
+  '/src/shared/components/ui/Origin.css':                    /^\.kd-(mention|check|block)\b/,
+  '/src/shared/components/ui/StatusBadge.css':               /^\.badge--accent$/,
+  '/src/features/search/search.css':                         /^\.ai-answer$/,
+  '/src/features/onboardingProjects/onboardingProjects.css': /^\.obp-clarify-reco__text$/,
+};
+
+/** Les règles d'une feuille (sélecteur, déclarations), au niveau le plus intérieur, commentaires retirés. */
+function cssRules(css: string): Array<{ selector: string; body: string }> {
+  const clean = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  return [...clean.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(m => ({ selector: m[1].trim(), body: m[2] }));
+}
+
+/** Les emplois de la prune hors de leur rôle : `fichier : sélecteur`. */
+function accentOffenders(files: Record<string, string>): string[] {
+  const offenders: string[] = [];
+  for (const [path, css] of Object.entries(files)) {
+    if (path === '/src/styles/tokens.css') {
+      // Seule la définition des deux tokens ; aucun alias qui les reprendrait.
+      css.split('\n').forEach((line, i) => { if (ACCENT.test(line)) offenders.push(`${path}:${i + 1}`); });
+      continue;
     }
+    if (PRUNE_HEX.test(css)) offenders.push(`${path} : prune écrite en dur`);
+    for (const { selector, body } of cssRules(css)) {
+      if (!ACCENT.test(body)) continue;
+      const rule = ALLOWED[path];
+      const ok = rule !== undefined && selector.split(',').every(part => rule.test(part.trim()));
+      if (!ok) offenders.push(`${path} : ${selector}`);
+    }
+  }
+  return offenders;
+}
+
+describe('Prune réservée à KnowDesk', () => {
+  const sheets = readSources(isStylesheet);
+  const code = readSources(isAppCode);
+
+  it('les feuilles sont réellement lues (jamais vides)', () => {
+    expect(Object.keys(sheets)).toContain('/src/features/faqs/faqs.css');
+    expect(sheets['/src/shared/components/ui/Origin.css']).toMatch(/\.kd-mention/);
+    // Chaque usage autorisé existe : la liste ne garde rien de périmé.
+    for (const [path, rule] of Object.entries(ALLOWED)) {
+      expect(cssRules(sheets[path]).some(r => ACCENT.test(r.body) && rule.test(r.selector)), path).toBe(true);
+    }
+  });
+
+  it('aucune feuille n’emploie la prune hors de son rôle, ni ne l’écrit en dur', () => {
+    expect(accentOffenders(sheets)).toEqual([]);
+  });
+
+  it('aucun style posé en code n’emploie la prune', () => {
+    const offenders = Object.entries(code)
+      .filter(([, text]) => ACCENT.test(text) || PRUNE_HEX.test(text))
+      .map(([path]) => path);
     expect(offenders).toEqual([]);
+  });
+
+  it('le contrôle échoue sur un usage hors rôle (cas volontairement faux, en mémoire)', () => {
+    expect(accentOffenders({
+      '/src/features/faqs/faqs.css': '.faq-title { color: var(--accent); }',
+      '/src/shared/components/ui/Origin.css': '.kd-mention { color: var(--accent); }\n.autre { background: var(--accent-soft); }',
+      '/src/features/search/search.css': '.ai-answer, .ai-answer__erreur { background: var(--accent-soft); }',
+      '/src/shared/components/ui/Button.css': '.btn-ia { color: #9B3B8C; }',
+      '/src/styles/tokens.css': '--accent: #9b3b8c;\n--color-ia: var(--accent);',
+    })).toEqual([
+      '/src/features/faqs/faqs.css : .faq-title',
+      '/src/shared/components/ui/Origin.css : .autre',
+      '/src/features/search/search.css : .ai-answer, .ai-answer__erreur',
+      '/src/shared/components/ui/Button.css : prune écrite en dur',
+      '/src/styles/tokens.css:2',
+    ]);
   });
 });

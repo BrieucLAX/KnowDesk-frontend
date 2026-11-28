@@ -1,4 +1,5 @@
-import React, { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import './Tooltip.css';
 import { Info } from 'lucide-react';
 
@@ -22,9 +23,9 @@ import { Info } from 'lucide-react';
  *  - Tap mobile (click) toggle (le hover ne marche pas sur tactile)
  *  - Click outside ferme aussi
  *
- * Style : la bulle s'affiche au-dessus de l'icône par défaut. Si la rangée
- * est en haut de page, la bulle peut sortir du viewport — on n'a pas
- * implémenté le smart-placement pour cette V1, à voir au cas par cas.
+ * Style : la bulle s'affiche au-dessus de l'icône, ou dessous s'il manque la place.
+ * Elle est rendue dans <body> (portail), en position fixe à --z-modal : ouverte depuis
+ * une modale, elle passe au-dessus du fond et n'est pas rognée par la carte (lot étape A).
  */
 export interface InfoTooltipRow {
   label: string;
@@ -54,6 +55,8 @@ export function InfoTooltip({ title, rows, children, ariaLabel }: InfoTooltipPro
    * useLayoutEffect synchrone avant paint = pas de flash visible.
    */
   const [placement, setPlacement] = useState<'top' | 'bottom' | null>(null);
+  /** Position fixe de la bulle (portail) : centre horizontal du déclencheur, haut de la bulle. */
+  const [coords, setCoords] = useState<{ left: number; top: number } | null>(null);
   const wrapRef    = useRef<HTMLSpanElement>(null);
   const bubbleRef  = useRef<HTMLDivElement>(null);
   const tooltipId  = useId();
@@ -76,14 +79,32 @@ export function InfoTooltip({ title, rows, children, ariaLabel }: InfoTooltipPro
    * tooltip (3 rangées, 4 rangées, contenu libre), pour toutes les
    * positions verticales (haut de page, milieu, bas) sans réglage.
    */
-  useLayoutEffect(() => {
-    if (!open || !wrapRef.current || !bubbleRef.current) return;
+  const place = useCallback(() => {
+    if (!wrapRef.current || !bubbleRef.current) return;
     const triggerRect = wrapRef.current.getBoundingClientRect();
     const bubbleHeight = bubbleRef.current.offsetHeight;
+    const GAP = 8;                 // écart entre la bulle et le déclencheur
     const GAP_AND_MARGIN = 16;     // 8px gap entre bulle et trigger + 8px marge sécurité viewport
     const spaceAbove = triggerRect.top - GAP_AND_MARGIN;
-    setPlacement(spaceAbove >= bubbleHeight ? 'top' : 'bottom');
-  }, [open]);
+    const next = spaceAbove >= bubbleHeight ? 'top' : 'bottom';
+    setPlacement(next);
+    setCoords({
+      left: triggerRect.left + triggerRect.width / 2,
+      top:  next === 'top' ? triggerRect.top - GAP - bubbleHeight : triggerRect.bottom + GAP,
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    place();
+    // Position fixe : elle suit le déclencheur quand la page ou la modale défile.
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+    return () => {
+      window.removeEventListener('scroll', place, true);
+      window.removeEventListener('resize', place);
+    };
+  }, [open, place]);
 
   const openTooltip   = () => { setPlacement(null); setOpen(true); };
   const toggleTooltip = () => { if (open) setOpen(false); else openTooltip(); };
@@ -92,7 +113,8 @@ export function InfoTooltip({ title, rows, children, ariaLabel }: InfoTooltipPro
   useEffect(() => {
     if (!open) return;
     const onClick = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (wrapRef.current && !wrapRef.current.contains(target) && !bubbleRef.current?.contains(target)) {
         setOpen(false);
       }
     };
@@ -123,13 +145,15 @@ export function InfoTooltip({ title, rows, children, ariaLabel }: InfoTooltipPro
       >
         <Info size={16} />
       </button>
-      {open && (
+      {open && createPortal(
         <div
           ref={bubbleRef}
           id={tooltipId}
           role="tooltip"
           className={`info-tooltip__bubble info-tooltip__bubble--${placement ?? 'top'}`}
-          style={{ visibility: placement ? 'visible' : 'hidden' }}
+          style={{ visibility: placement && coords ? 'visible' : 'hidden', left: coords?.left ?? 0, top: coords?.top ?? 0 }}
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
         >
           <div className="info-tooltip__title">{title}</div>
           {rows && rows.length > 0 && (
@@ -144,7 +168,8 @@ export function InfoTooltip({ title, rows, children, ariaLabel }: InfoTooltipPro
           )}
           {children}
           <span className={`info-tooltip__arrow info-tooltip__arrow--${placement ?? 'top'}`} aria-hidden="true" />
-        </div>
+        </div>,
+        document.body,
       )}
     </span>
   );
