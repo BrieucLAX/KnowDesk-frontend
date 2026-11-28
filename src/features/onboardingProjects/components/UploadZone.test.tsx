@@ -72,6 +72,14 @@ describe('UploadZone', () => {
     await waitFor(() => expect(onUploaded).toHaveBeenCalledWith([expect.objectContaining({ filename: 'gamme.xlsx' })], null));
   });
 
+  it('archive sans aucun document d\'un format accepté : 422 INVALID_ARCHIVE, message du back affiché', async () => {
+    const message = '« vide.zip » : l\'archive ne contient aucun document PDF, Word, PowerPoint, Excel ou Markdown.';
+    vi.mocked(onboardingApi.uploadDocuments).mockRejectedValue(new ApiError('INVALID_ARCHIVE', message, 422));
+    const { container } = render(<UploadZone project={project} onUploaded={() => {}} onNoticeRequired={() => {}} />);
+    pick(container, ['vide.zip']);
+    expect(await screen.findByRole('alert')).toHaveTextContent(`Aucun fichier n'a été importé : ${message}`);
+  });
+
   it('NOTICE_NOT_ACCEPTED : redemande le texte d\'information', async () => {
     vi.mocked(onboardingApi.uploadDocuments).mockRejectedValue(new ApiError('NOTICE_NOT_ACCEPTED', 'Acceptez le texte.', 403));
     const onNoticeRequired = vi.fn();

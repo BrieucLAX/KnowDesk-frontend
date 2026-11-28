@@ -12,6 +12,7 @@ vi.mock('../api/onboardingApi', () => ({
 import { onboardingApi } from '../api/onboardingApi';
 import { ApiError } from '../../../shared/lib/apiClient';
 import { DocumentsTab } from './DocumentsTab';
+import { ToastContainer } from '../../../shared/components/ui/ToastContainer';
 import { makeDocument } from './documentsTestUtils';
 import { CLASSIFICATION_POLL_MS, DEFAULT_DOCUMENT_TYPES, USAGE_HELP } from '../lib/documents';
 import type { DocumentPatch, ImportSummary, OnboardingDocument, OnboardingProject } from '../types';
@@ -386,6 +387,32 @@ describe('DocumentsTab (étape 1, lot 2a)', () => {
     await waitFor(() => expect(onboardingApi.updateDocument).toHaveBeenCalled());
     await waitFor(() => expect(usage).toBeEnabled());
     expect(usage).toHaveValue('client');
+  });
+
+  it('back sans migration 66 : 503 DOCUMENT_FIELDS_UNAVAILABLE dit en clair, la valeur reste', async () => {
+    vi.mocked(onboardingApi.listDocuments).mockResolvedValue([makeDocument({ id: 'd1', filename: 'a.pdf', usage: 'client' })]);
+    vi.mocked(onboardingApi.updateDocument).mockRejectedValue(
+      new ApiError('DOCUMENT_FIELDS_UNAVAILABLE', 'Le classement des documents n\'est pas encore disponible.', 503));
+    vi.mocked(onboardingApi.listDocumentTypes).mockRejectedValue(new ApiError('DOCUMENT_FIELDS_UNAVAILABLE', 'x', 503));
+    render(<><ToastContainer /><DocumentsTab project={project} onChanged={() => {}} /></>);
+    const usage = within(await screen.findByRole('listitem', { name: 'a.pdf' })).getByRole('combobox', { name: 'Usage' });
+    fireEvent.change(usage, { target: { value: 'interne' } });
+    expect(await screen.findByText('Le type, l\'usage et la date des documents ne se modifient pas encore. Réessayez dans quelques minutes.'))
+      .toBeInTheDocument();
+    expect(usage).toHaveValue('client');
+  });
+
+  it('un document que le classement trouve illisible passe dans « Documents illisibles », sans « À vérifier »', async () => {
+    vi.mocked(onboardingApi.listDocuments).mockResolvedValue([
+      makeDocument({ id: 'i1', filename: 'scan.pdf', state: 'illisible', toVerify: false, documentType: null, usage: null, dateOrigin: null }),
+      makeDocument({ id: 'ok', filename: 'ok.pdf' }),
+    ]);
+    render(<DocumentsTab project={project} onChanged={() => {}} />);
+    const section = await screen.findByRole('region', { name: 'Documents illisibles' });
+    expect(within(section).getByRole('listitem', { name: 'scan.pdf' })).toBeInTheDocument();
+    expect(within(section).queryByText('À vérifier')).not.toBeInTheDocument();
+    expect(screen.getAllByText('1 document classé')).toHaveLength(2);
+    expect(screen.queryByRole('note')).toHaveTextContent('1 document n\'a pas de date.');
   });
 
   // ── Retrait ─────────────────────────────────────────────────────

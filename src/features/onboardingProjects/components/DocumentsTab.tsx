@@ -7,6 +7,7 @@ import { ActionBarContent } from '../../../shared/components/ui/ActionBar';
 import { ConfirmDialog } from '../../../shared/components/ui/ConfirmDialog';
 import { KnowDeskMention } from '../../../shared/components/ui/Origin';
 import { useToast } from '../../../shared/lib/useToast';
+import { getErrorMessage } from '../../../shared/lib/apiErrors';
 import { usePolling } from '../../../shared/lib/usePolling';
 import { onboardingApi } from '../api/onboardingApi';
 import {
@@ -95,7 +96,7 @@ export function DocumentsTab({ project, onChanged, onContinue }: DocumentsTabPro
       const saved = await onboardingApi.updateDocument(project.id, doc.id, patch);
       setDocuments(prev => (prev ?? []).map(d => d.id === saved.id ? saved : d));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'La modification n\'a pas été enregistrée. Réessayez.');
+      toast.error(err instanceof Error ? getErrorMessage(err) : 'La modification n\'a pas été enregistrée. Réessayez.');
       throw err;
     }
   }, [project.id, toast]);

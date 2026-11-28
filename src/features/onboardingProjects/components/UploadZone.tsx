@@ -31,7 +31,7 @@ export function UploadZone({ project, onUploaded, onNoticeRequired }: UploadZone
 
   const send = async (files: File[]) => {
     if (files.length === 0 || uploading) return;
-    const problem = checkSelection(files, project.limits, project);
+    const problem = checkSelection(files, project.limits);
     if (problem) { setError(problem); return; }
 
     setError('');
