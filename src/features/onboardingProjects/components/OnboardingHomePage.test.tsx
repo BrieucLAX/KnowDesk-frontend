@@ -32,7 +32,9 @@ describe('OnboardingHomePage', () => {
     const onOpen = vi.fn();
     render(<OnboardingHomePage onOpenProject={onOpen} />);
     fireEvent.click(await screen.findByRole('button', { name: /Base SAV/ }));
-    expect(screen.getByText(/3 documents · 5,0 Mo/)).toBeInTheDocument();
+    // Lot 2a (règle transverse 4) : ni nombre ni taille des documents sur la carte du projet.
+    expect(screen.getByText(/^Modifié /)).toBeInTheDocument();
+    expect(screen.queryByText(/documents? ·|Mo\b/)).not.toBeInTheDocument();
     expect(onOpen).toHaveBeenCalledWith('p1');
   });
 

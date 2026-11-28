@@ -35,6 +35,6 @@ describe('Parcours d\'onboarding : aucun <select> nu', () => {
     const bare = Object.entries(files).filter(([, code]) => /<select[\s>]/.test(code)).map(([path]) => path);
     expect(bare).toEqual([]);
     const used = Object.entries(files).filter(([, code]) => /<Select[\s>]/.test(code)).map(([path]) => path.split('/').pop());
-    expect(used.sort()).toEqual(['AuditTab.tsx', 'BaseTab.tsx', 'CadrageSections.tsx', 'PlanEditing.tsx', 'PlanTab.tsx']);
+    expect(used.sort()).toEqual(['AuditTab.tsx', 'BaseTab.tsx', 'CadrageSections.tsx', 'DocumentItem.tsx', 'PlanEditing.tsx', 'PlanTab.tsx']);
   });
 });

@@ -231,7 +231,8 @@ export function unreadImagesText(u: UnreadImages): string {
     : `1 image n'a pas pu être lue : ${lost}.`;
 }
 
-export type BaseReason = 'briefing' | 'numbered_files' | 'notion_export' | 'faq_documents' | 'none';
+/** `document_type` (audit 0.16.0 élargi, lot 2a) : les documents rangés dans le type « Base ou FAQ existante ». */
+export type BaseReason = 'briefing' | 'numbered_files' | 'notion_export' | 'faq_documents' | 'document_type' | 'none';
 
 export interface ExistingBase {
   mode:            'correct' | 'build';
@@ -245,6 +246,7 @@ const BASE_REASONS: Readonly<Record<BaseReason, string>> = {
   numbered_files: 'Ses fichiers sont numérotés « NN- »',
   notion_export:  'C\'est un export Notion',
   faq_documents:  'Plusieurs documents sont nommés FAQ, base ou KB, ou écrits en questions et réponses',
+  document_type:  'C\'est le type choisi pour vos documents : « Base ou FAQ existante »',
   none:           'Aucun document n\'est désigné comme base dans votre fiche de cadrage, aucun fichier n\'est '
     + 'numéroté « NN- », il n\'y a pas d\'export Notion ni plusieurs documents de FAQ',
 };

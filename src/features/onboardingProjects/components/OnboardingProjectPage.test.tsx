@@ -5,7 +5,7 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
 vi.mock('../api/onboardingApi', () => ({
   onboardingApi: {
     getProject: vi.fn(), renameProject: vi.fn(),
-    getNotice: vi.fn(), listDocuments: vi.fn(), deleteDocument: vi.fn(), uploadDocuments: vi.fn(),
+    getNotice: vi.fn(), listDocuments: vi.fn(), deleteDocument: vi.fn(), uploadDocuments: vi.fn(), listDocumentTypes: vi.fn(), updateDocument: vi.fn(),
     getCadrage: vi.fn(), listCadrages: vi.fn(), saveCadrage: vi.fn(), saveFreeCadrage: vi.fn(),
     listAnalyses: vi.fn(), getAnalysis: vi.fn(), launchAnalysis: vi.fn(),
     getAudit: vi.fn(), getAuditImage: vi.fn(), listAuditImages: vi.fn(), listDecisions: vi.fn(), listCorrections: vi.fn(),
@@ -76,6 +76,7 @@ beforeEach(() => {
   vi.mocked(onboardingApi.getProject).mockReset().mockResolvedValue(project());
   vi.mocked(onboardingApi.getNotice).mockResolvedValue({ version: 'v', text: 'Texte', sha256: 'h', acceptedAt: '2026-09-27T08:00:00Z' });
   vi.mocked(onboardingApi.listDocuments).mockResolvedValue([]);
+  vi.mocked(onboardingApi.listDocumentTypes).mockResolvedValue([]);
   vi.mocked(onboardingApi.getCadrage).mockRejectedValue(new ApiError('NOT_FOUND', 'Aucun cadrage.', 404));
   vi.mocked(onboardingApi.listCadrages).mockResolvedValue([]);
   vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [], meta: { quota: { used: 0, max: 5 } } });

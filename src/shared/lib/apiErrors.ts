@@ -28,6 +28,9 @@ const ERROR_MESSAGES: Record<string, string> = {
   CORRECTION_IN_PROGRESS: 'Une nouvelle base est déjà en préparation pour ce projet. Attendez la fin de sa préparation.',
   ANALYSIS_NOT_LATEST:    'La nouvelle base se prépare sur la dernière analyse du projet.',
   AUDIT_NOT_CORRECTABLE:  'Cet audit vient d\'une version précédente de l\'analyse : relancez une analyse pour préparer la nouvelle base.',
+  // Documents (lot 2a) : back déployé, migration 66 pas encore appliquée. DOCUMENT_UNREADABLE,
+  // INVALID_ARCHIVE et UNSUPPORTED_FORMAT gardent le message du back, qui nomme le fichier.
+  DOCUMENT_FIELDS_UNAVAILABLE: 'Le type, l\'usage et la date des documents ne se modifient pas encore. Réessayez dans quelques minutes.',
 };
 
 export function getErrorMessage(err: unknown): string {

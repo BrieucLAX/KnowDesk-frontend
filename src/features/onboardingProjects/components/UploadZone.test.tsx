@@ -9,6 +9,7 @@ vi.mock('../api/onboardingApi', () => ({
 import { onboardingApi } from '../api/onboardingApi';
 import { ApiError } from '../../../shared/lib/apiClient';
 import { UploadZone } from './UploadZone';
+import { makeDocument } from './documentsTestUtils';
 import type { OnboardingProject } from '../types';
 
 const MB = 1024 * 1024;
@@ -33,22 +34,50 @@ describe('UploadZone', () => {
   });
 
   it('envoie la sélection et remonte les documents créés', async () => {
-    const created = [{ id: 'd1', filename: 'a.pdf', format: 'pdf' as const, sizeBytes: 4, sha256: 'h', locked: false, createdAt: '' }];
-    vi.mocked(onboardingApi.uploadDocuments).mockResolvedValue(created);
+    const created = [makeDocument({ id: 'd1', filename: 'a.pdf' })];
+    const summary = { received: 1, created: 1, duplicates: [], unreadable: [], unsupported: [] };
+    vi.mocked(onboardingApi.uploadDocuments).mockResolvedValue({ data: created, meta: { summary } });
     const onUploaded = vi.fn();
     const { container } = render(<UploadZone project={project} onUploaded={onUploaded} onNoticeRequired={() => {}} />);
     pick(container, ['a.pdf']);
-    await waitFor(() => expect(onUploaded).toHaveBeenCalledWith(created));
+    await waitFor(() => expect(onUploaded).toHaveBeenCalledWith(created, summary));
     expect(vi.mocked(onboardingApi.uploadDocuments).mock.calls[0][1].map(f => f.name)).toEqual(['a.pdf']);
   });
 
-  it('affiche l\'erreur du back : rien n\'a été importé', async () => {
-    vi.mocked(onboardingApi.uploadDocuments).mockRejectedValue(
-      new ApiError('DUPLICATE_CONTENT', '« b.pdf » a le même contenu que « a.pdf », déjà importé.', 409));
+  it('affiche l\'erreur du back (415 UNSUPPORTED_FORMAT) : rien n\'a été importé', async () => {
+    const message = 'Format non pris en charge : « a.pdf ». Formats acceptés : PDF, Word, PowerPoint, Excel, Markdown ou archive .zip.';
+    vi.mocked(onboardingApi.uploadDocuments).mockRejectedValue(new ApiError('UNSUPPORTED_FORMAT', message, 415));
     const { container } = render(<UploadZone project={project} onUploaded={() => {}} onNoticeRequired={() => {}} />);
-    pick(container, ['b.pdf']);
-    expect(await screen.findByRole('alert'))
-      .toHaveTextContent('Aucun fichier n\'a été importé : « b.pdf » a le même contenu que « a.pdf », déjà importé.');
+    pick(container, ['a.pdf']);
+    expect(await screen.findByRole('alert')).toHaveTextContent(`Aucun fichier n'a été importé : ${message}`);
+  });
+
+  it('US 1.1 : un .exe est refusé avant l\'envoi, avec la liste des formats acceptés', () => {
+    const { container } = render(<UploadZone project={project} onUploaded={() => {}} onNoticeRequired={() => {}} />);
+    pick(container, ['setup.exe']);
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Format non pris en charge : « setup.exe ». Formats acceptés : PDF, Word, PowerPoint, Excel, Markdown ou archive .zip.');
+    expect(onboardingApi.uploadDocuments).not.toHaveBeenCalled();
+  });
+
+  it('US 1.1 : un fichier Excel part au back ; la zone annonce les formats de la maquette, sans « export Notion »', async () => {
+    vi.mocked(onboardingApi.uploadDocuments).mockResolvedValue({ data: [makeDocument({ id: 'x', filename: 'gamme.xlsx', format: 'xlsx' })], meta: {} });
+    const onUploaded = vi.fn();
+    const { container } = render(<UploadZone project={project} onUploaded={onUploaded} onNoticeRequired={() => {}} />);
+    expect(screen.getByText('Déposez vos fichiers ici ou cliquez pour les choisir')).toBeInTheDocument();
+    expect(screen.getByText('PDF, Word, PowerPoint, Excel, Markdown ou archive .zip')).toBeInTheDocument();
+    expect(screen.queryByText(/Notion/)).not.toBeInTheDocument();
+    expect(container.querySelector('input[type="file"]')).toHaveAttribute('accept', expect.stringContaining('.xlsx'));
+    pick(container, ['gamme.xlsx']);
+    await waitFor(() => expect(onUploaded).toHaveBeenCalledWith([expect.objectContaining({ filename: 'gamme.xlsx' })], null));
+  });
+
+  it('archive sans aucun document d\'un format accepté : 422 INVALID_ARCHIVE, message du back affiché', async () => {
+    const message = '« vide.zip » : l\'archive ne contient aucun document PDF, Word, PowerPoint, Excel ou Markdown.';
+    vi.mocked(onboardingApi.uploadDocuments).mockRejectedValue(new ApiError('INVALID_ARCHIVE', message, 422));
+    const { container } = render(<UploadZone project={project} onUploaded={() => {}} onNoticeRequired={() => {}} />);
+    pick(container, ['vide.zip']);
+    expect(await screen.findByRole('alert')).toHaveTextContent(`Aucun fichier n'a été importé : ${message}`);
   });
 
   it('NOTICE_NOT_ACCEPTED : redemande le texte d\'information', async () => {

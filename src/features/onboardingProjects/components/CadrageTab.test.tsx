@@ -13,6 +13,7 @@ import { onboardingApi } from '../api/onboardingApi';
 import { ApiError } from '../../../shared/lib/apiClient';
 import { emptyCadrageForm } from '../lib/cadrageForm';
 import { CadrageTab } from './CadrageTab';
+import { makeDocument } from './documentsTestUtils';
 import type { Cadrage, CadrageForm, OnboardingProject } from '../types';
 
 const MB = 1024 * 1024;
@@ -21,8 +22,8 @@ const project: OnboardingProject = {
   limits: { maxFileBytes: 50 * MB, maxDocumentsPerProject: 50, maxProjectBytes: 300 * MB, maxFilesPerUpload: 10 },
 };
 const docs = [
-  { id: 'd1', filename: 'cgv.pdf', format: 'pdf' as const, sizeBytes: MB, sha256: 'a', locked: false, createdAt: '' },
-  { id: 'd2', filename: 'faq.docx', format: 'docx' as const, sizeBytes: MB, sha256: 'b', locked: false, createdAt: '' },
+  makeDocument({ id: 'd1', filename: 'cgv.pdf', sizeBytes: MB, sha256: 'a', createdAt: '' }),
+  makeDocument({ id: 'd2', filename: 'faq.docx', format: 'docx', sizeBytes: MB, sha256: 'b', createdAt: '' }),
 ];
 
 function structured(version: number, form: Partial<CadrageForm> = {}, markdown = ''): Cadrage {

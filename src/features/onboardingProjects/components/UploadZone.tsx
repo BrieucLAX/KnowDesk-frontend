@@ -6,19 +6,21 @@ import { onboardingApi } from '../api/onboardingApi';
 import { ACCEPT_ATTRIBUTE, ACCEPTED_FORMATS_TEXT, checkSelection } from '../lib/checkSelection';
 import { formatBytes } from '../lib/format';
 import { isCorpusTooLarge } from '../lib/volume';
-import type { OnboardingDocument, OnboardingProject } from '../types';
+import { Upload } from 'lucide-react';
+import type { ImportSummary, OnboardingDocument, OnboardingProject } from '../types';
 
 interface UploadZoneProps {
   project:          OnboardingProject;
-  onUploaded:       (documents: OnboardingDocument[]) => void;
+  /** Documents créés (illisibles compris) et synthèse de l'import ; null : back sans synthèse. */
+  onUploaded:       (documents: OnboardingDocument[], summary: ImportSummary | null) => void;
   /** Le back exige le texte d'information (NOTICE_NOT_ACCEPTED) : il faut le réafficher. */
   onNoticeRequired: () => void;
 }
 
 /**
- * Import de plusieurs fichiers (glisser-déposer ou sélection). Tout ou rien,
- * comme le back : un fichier refusé et rien n'est importé ; le message du
- * back, qui nomme le fichier en cause, reste affiché jusqu'au prochain envoi.
+ * Import de plusieurs fichiers (glisser-déposer ou sélection ; US 1.1). Les doublons sont écartés
+ * et les illisibles créés par le back, qui en rend la synthèse ; un format non accepté ou un
+ * plafond dépassé fait refuser l'envoi : le message du back reste affiché jusqu'au prochain envoi.
  */
 export function UploadZone({ project, onUploaded, onNoticeRequired }: UploadZoneProps) {
   const toast    = useToast();
@@ -29,15 +31,16 @@ export function UploadZone({ project, onUploaded, onNoticeRequired }: UploadZone
 
   const send = async (files: File[]) => {
     if (files.length === 0 || uploading) return;
-    const problem = checkSelection(files, project.limits, project);
+    const problem = checkSelection(files, project.limits);
     if (problem) { setError(problem); return; }
 
     setError('');
     setUploading(true);
     try {
-      const created = await onboardingApi.uploadDocuments(project.id, files);
-      toast.success(created.length > 1 ? `${created.length} documents importés.` : 'Document importé.');
-      onUploaded(created);
+      const { data: created, meta } = await onboardingApi.uploadDocuments(project.id, files);
+      if (created.length > 0) toast.success(created.length > 1 ? `${created.length} documents importés.` : 'Document importé.');
+      else toast.info('Aucun nouveau document importé.');
+      onUploaded(created, meta?.summary ?? null);
     } catch (err) {
       if (err instanceof ApiError && err.code === 'NOTICE_NOT_ACCEPTED') {
         toast.error(err.message);
@@ -54,8 +57,7 @@ export function UploadZone({ project, onUploaded, onNoticeRequired }: UploadZone
   const { limits } = project;
 
   return (
-    <section aria-labelledby="obp-upload-title" className="obp-upload">
-      <h2 id="obp-upload-title" className="obp-section-title">Importer des documents</h2>
+    <section aria-label="Importer des documents" className="obp-upload">
       <div
         className={cn('obp-dropzone', dragOver && 'is-drag-over', uploading && 'is-busy')}
         onDragOver={e => { e.preventDefault(); if (!uploading) setDragOver(true); }}
@@ -82,7 +84,8 @@ export function UploadZone({ project, onUploaded, onNoticeRequired }: UploadZone
           <span className="obp-dropzone__main" aria-live="polite">Envoi en cours…</span>
         ) : (
           <>
-            <span className="obp-dropzone__main">Déposez vos fichiers ici, ou cliquez pour les choisir</span>
+            <Upload size={24} className="obp-dropzone__icon" aria-hidden="true" />
+            <span className="obp-dropzone__main">Déposez vos fichiers ici ou cliquez pour les choisir</span>
             <span className="obp-dropzone__hint">{ACCEPTED_FORMATS_TEXT}</span>
           </>
         )}

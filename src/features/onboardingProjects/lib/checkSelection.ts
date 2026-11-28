@@ -1,17 +1,12 @@
 import type { OnboardingLimits } from '../types';
 import { formatBytes } from './format';
 
-/** Formats lus par le pipeline, comme ONBOARDING_FORMATS côté back ; `zip` : une archive (un export Notion, par exemple). */
-export const ACCEPTED_EXTENSIONS = ['pdf', 'docx', 'pptx', 'md', 'zip'] as const;
+/** Formats lus par le pipeline, comme ONBOARDING_FORMATS côté back (lot 2a : Excel) ; `zip` : une archive, développée en documents par le back. */
+export const ACCEPTED_EXTENSIONS = ['pdf', 'docx', 'pptx', 'xlsx', 'md', 'zip'] as const;
 
-/** Les formats acceptés, en clair (message d'erreur et aide de la zone d'import). */
-export const ACCEPTED_FORMATS_TEXT = 'PDF, Word (.docx), PowerPoint (.pptx), Markdown (.md) ou archive .zip (un export Notion, par exemple)';
+/** Les formats acceptés, en clair (message d'erreur et aide de la zone d'import ; maquette Documents, contrat lot 2a). */
+export const ACCEPTED_FORMATS_TEXT = 'PDF, Word, PowerPoint, Excel, Markdown ou archive .zip';
 export const ACCEPT_ATTRIBUTE = ACCEPTED_EXTENSIONS.map(e => `.${e}`).join(',');
-
-interface Usage {
-  documentsCount: number;
-  totalBytes:     number;
-}
 
 const quote = (names: string[]) => names.map(n => `« ${n} »`).join(', ');
 
@@ -22,12 +17,15 @@ function extension(name: string): string {
 
 /**
  * Contrôles faits avant l'envoi, avec les plafonds renvoyés par le back
- * (`project.limits`). Renvoie le message à afficher, ou null si la sélection
- * peut partir. L'import est tout ou rien : un seul problème et rien n'est
- * envoyé. Le back refait tous ces contrôles, plus la signature des fichiers et
- * les doublons avec les documents déjà importés.
+ * (`project.limits`) : nombre de fichiers d'un envoi, format, fichier vide,
+ * taille d'un fichier. Les plafonds du projet (documents, Mo) sont comptés par
+ * le back seul, après développement des archives et retrait des doublons
+ * (lot 2a, décision Q1 a). Renvoie le message à afficher, ou null si la sélection
+ * peut partir : un seul problème et rien n'est envoyé. Les doublons (même nom,
+ * même contenu) ne sont plus refusés (lot 2a) : le back les écarte et les
+ * compte. Le back refait ces contrôles, après le développement des archives.
  */
-export function checkSelection(files: File[], limits: OnboardingLimits, usage: Usage): string | null {
+export function checkSelection(files: File[], limits: OnboardingLimits): string | null {
   if (files.length === 0) return null;
 
   if (files.length > limits.maxFilesPerUpload) {
@@ -45,20 +43,6 @@ export function checkSelection(files: File[], limits: OnboardingLimits, usage: U
   const tooLarge = files.filter(f => f.size > limits.maxFileBytes);
   if (tooLarge.length) {
     return `Un fichier pèse ${formatBytes(limits.maxFileBytes)} au plus : ${quote(tooLarge.map(f => f.name))}.`;
-  }
-
-  const seen = new Set<string>();
-  const repeated = new Set<string>();
-  for (const f of files) (seen.has(f.name) ? repeated : seen).add(f.name);
-  if (repeated.size) return `Même nom sélectionné deux fois : ${quote([...repeated])}.`;
-
-  if (usage.documentsCount + files.length > limits.maxDocumentsPerProject) {
-    return `Un projet compte ${limits.maxDocumentsPerProject} documents au plus (${usage.documentsCount} déjà importés).`;
-  }
-
-  const bytes = files.reduce((sum, f) => sum + f.size, 0);
-  if (usage.totalBytes + bytes > limits.maxProjectBytes) {
-    return `Un projet pèse ${formatBytes(limits.maxProjectBytes)} au plus (${formatBytes(usage.totalBytes)} déjà importés).`;
   }
 
   return null;

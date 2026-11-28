@@ -1,7 +1,7 @@
 import { apiClient } from '../../../shared/lib/apiClient';
 import type {
-  AnalysisQuota, Cadrage, CadrageForm, CadrageVersionSummary, OnboardingAnalysis, OnboardingDocument,
-  OnboardingNotice, OnboardingProject, OnboardingProjectSummary, SavedCadrage,
+  AnalysisQuota, Cadrage, CadrageForm, CadrageVersionSummary, DocumentPatch, DocumentTypeDef, ImportSummary,
+  OnboardingAnalysis, OnboardingDocument, OnboardingNotice, OnboardingProject, OnboardingProjectSummary, SavedCadrage,
 } from '../types';
 import type { AuditResponse } from '../lib/audit';
 import type { CardAction } from '../lib/reading';
@@ -32,12 +32,23 @@ export const onboardingApi = {
 
   listDocuments:   (projectId: string) =>
     apiClient.get<OnboardingDocument[]>(`${BASE}/projects/${projectId}/documents`),
-  /** Tout ou rien : un fichier refusé fait refuser l'envoi entier. */
+  /**
+   * 201 : les documents créés (illisibles compris) et la synthèse de l'import (`meta.summary`) :
+   * doublons écartés, illisibles, membres d'archive ignorés. Un fichier de premier niveau d'un
+   * format non accepté fait refuser l'envoi (415 UNSUPPORTED_FORMAT), comme un plafond dépassé.
+   */
   uploadDocuments: (projectId: string, files: File[]) => {
     const form = new FormData();
     for (const f of files) form.append('files', f, f.name);
-    return apiClient.postForm<OnboardingDocument[]>(`${BASE}/projects/${projectId}/documents`, form);
+    return apiClient.postFormWithMeta<OnboardingDocument[], { summary?: ImportSummary }>(
+      `${BASE}/projects/${projectId}/documents`, form);
   },
+  /** Type (même valeur = confirmation), usage ou date posés par l'utilisateur. 409 DOCUMENT_UNREADABLE. */
+  updateDocument:  (projectId: string, documentId: string, patch: DocumentPatch) =>
+    apiClient.patch<OnboardingDocument>(`${BASE}/projects/${projectId}/documents/${documentId}`, patch),
+  /** Les 7 types du projet, triés par rang. */
+  listDocumentTypes: (projectId: string) =>
+    apiClient.get<DocumentTypeDef[]>(`${BASE}/projects/${projectId}/document-types`),
   /** 204. */
   deleteDocument:  (projectId: string, documentId: string) =>
     apiClient.delete<void>(`${BASE}/projects/${projectId}/documents/${documentId}`),

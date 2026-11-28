@@ -42,8 +42,21 @@ export interface OnboardingProject extends OnboardingProjectSummary {
   unmeasuredDocuments?: number;
 }
 
-/** `zip` : une archive (un export Notion, par exemple), lue document par document par le pipeline. */
-export type OnboardingFormat = 'pdf' | 'docx' | 'pptx' | 'md' | 'zip';
+/** `zip` : anciennes lignes seulement (lot 2a : une archive est développée en documents, jamais stockée). */
+export type OnboardingFormat = 'pdf' | 'docx' | 'pptx' | 'xlsx' | 'md' | 'zip';
+
+/** Les 7 types de document (contrat lot 2a, section 1), dans l'ordre de leur rang par défaut. */
+export type DocumentTypeKey =
+  | 'conditions_contrats' | 'tarifs' | 'descriptions_offres' | 'procedures_internes'
+  | 'supports_formation' | 'communications_clients' | 'base_faq';
+
+export type DocumentUsage = 'client' | 'interne';
+/** Qui a posé la valeur : KnowDesk (classement) ou l'utilisateur (jamais écrasée ensuite). */
+export type ValueOrigin = 'knowdesk' | 'utilisateur';
+/** `titre` : dans le nom du fichier ; `corps` : dans le texte (avec sa page) ; `aucune` : cherchée, rien trouvé. */
+export type DateOrigin = 'titre' | 'corps' | 'utilisateur' | 'aucune';
+export type DocumentState = 'lu' | 'illisible';
+export type ClassificationStatus = 'en_attente' | 'en_cours' | 'termine' | 'echec';
 
 export interface OnboardingDocument {
   id:        string;
@@ -56,6 +69,52 @@ export interface OnboardingDocument {
   /** Figé par une analyse : ne peut plus être retiré. */
   locked:    boolean;
   createdAt: string;
+  // Lot 2a « Documents » (contrat, section 5).
+  /** Titre lisible proposé par KnowDesk ; null : l'écran montre le nom du fichier. */
+  title:                string | null;
+  documentType:         DocumentTypeKey | null;
+  typeOrigin:           ValueOrigin | null;
+  usage:                DocumentUsage | null;
+  usageOrigin:          ValueOrigin | null;
+  /** Type incertain (ou classement en échec) : badge « À vérifier » jusqu'à ce que l'utilisateur confirme ou change le type. */
+  toVerify:             boolean;
+  /** `YYYY-MM-DD`. */
+  date:                 string | null;
+  /** null : pas encore cherchée. */
+  dateOrigin:           DateOrigin | null;
+  /** Posée seulement avec `corps`. */
+  datePage:             number | null;
+  state:                DocumentState;
+  classificationStatus: ClassificationStatus;
+}
+
+/** Un type de document du projet (`GET …/document-types`), trié par rang. */
+export interface DocumentTypeDef {
+  key:          DocumentTypeKey;
+  name:         string;
+  rank:         number;
+  internalRule: 'plus_recent' | 'demander';
+}
+
+/** Synthèse d'un import (`meta.summary` du POST …/documents). */
+export interface ImportSummary {
+  /** Fichiers trouvés (archives développées, fichiers parasites exclus). */
+  received:    number;
+  /** Documents créés, illisibles compris. */
+  created:     number;
+  duplicates:  Array<{ filename: string; reason: 'nom' | 'contenu'; duplicateOf: string }>;
+  unreadable:  Array<{ id: string; filename: string }>;
+  /** Membres d'archive d'un format non accepté, ignorés. */
+  unsupported: Array<{ filename: string }>;
+}
+
+/** Ce que l'utilisateur corrige sur un document (PATCH, au moins un champ). */
+export interface DocumentPatch {
+  /** La valeur actuelle confirme le type proposé. */
+  documentType?: DocumentTypeKey;
+  usage?:        DocumentUsage;
+  /** null : date retirée. */
+  date?:         string | null;
 }
 
 export interface OnboardingNotice {

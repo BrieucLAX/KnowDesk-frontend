@@ -137,6 +137,9 @@ describe('base existante repérée (audit 0.12.0, lot Elyra v2)', () => {
     const none = baseAnnouncement({ base: { mode: 'build', reason: 'none', documentIds: [], briefingExcerpt: null } });
     expect(none?.title).toBe('Pas de base existante');
     expect(none?.reason).toContain('aucun fichier n\'est numéroté « NN- »');
+    // Lot 2a (audit 0.16.0 élargi) : la base est l'ensemble des documents du type « Base ou FAQ existante ».
+    expect(baseAnnouncement({ base: { mode: 'correct', reason: 'document_type', documentIds: ['a', 'b'], briefingExcerpt: null } })?.reason)
+      .toBe('C\'est le type choisi pour vos documents : « Base ou FAQ existante ».');
     expect(baseAnnouncement({ base: null })).toBeNull();
     expect(baseAnnouncement({})).toBeNull();
   });
