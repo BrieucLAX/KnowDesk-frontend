@@ -117,7 +117,10 @@ describe('Raisons du plan : liste fermée, un libellé par valeur', () => {
     const reasons = new Set<string>();
     for (const schema of Object.values(BACK_PLANS)) {
       const defs = (schema as { $defs?: Record<string, { properties?: Record<string, { enum?: string[] }> }> }).$defs ?? {};
-      for (const v of defs.UncoveredUnit?.properties?.reason?.enum ?? []) reasons.add(v);
+      // Plan 0.2.0 (2026-11-25) : `UncoveredUnit02`, la liste élargie.
+      for (const [name, def] of Object.entries(defs)) {
+        if (name.startsWith('UncoveredUnit')) for (const v of def.properties?.reason?.enum ?? []) reasons.add(v);
+      }
     }
     expect(reasons.size).toBeGreaterThan(0);
     expect([...reasons].sort()).toEqual(Object.keys(UNCOVERED_REASON_LABEL).sort());

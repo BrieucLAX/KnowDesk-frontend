@@ -68,13 +68,19 @@ export const isBuildActive = (b: Pick<OnboardingBuild, 'status'>) => b.status ==
 
 // ── Construction 0.1.0 : listes fermées du contrat, en clair ──
 
-export type ToVerifyReason = 'sentence_below_quotes' | 'joined_passages' | 'dated_change_without_date';
+export type ToVerifyReason =
+  | 'sentence_below_quotes' | 'joined_passages' | 'dated_change_without_date' | 'restored_from_sources';
 
-/** Pourquoi une phrase gardée est « À vérifier ». */
+/**
+ * Pourquoi une phrase gardée est « À vérifier ». `restored_from_sources` (construction 0.3.0 élargie,
+ * 2026-11-25) : une ligne de vos documents reprise mot pour mot en fin d'article, parce qu'aucun
+ * article n'écrivait sa valeur.
+ */
 export const TO_VERIFY_LABEL: Readonly<Record<ToVerifyReason, string>> = {
   sentence_below_quotes:     'vos documents ne la confirment pas mot pour mot.',
   joined_passages:           'cette phrase relie deux passages différents de vos documents.',
   dated_change_without_date: 'elle donne une nouvelle valeur sans sa date d\'effet.',
+  restored_from_sources:     'reprise mot pour mot de vos documents, car aucun article ne donnait cette valeur : vérifiez qu\'elle a sa place ici.',
 };
 
 export type RemovedReason =
@@ -168,10 +174,19 @@ export interface BuiltChapter { id: string; title: string; articles: BuiltArticl
 /** Une réponse de l'expert qu'aucun article ne porte (`card_without_article`, C-Q11). */
 export interface UnplacedAnswer { cardId: string }
 
+/**
+ * Une valeur de vos documents qu'aucun article n'écrit (articles vides de Test Elyra, 2026-11-25,
+ * Q3) : relevée par le code dans les sources d'un article (`missing_information` **avec** sa ligne en
+ * passage ; ceux de la rédaction n'en ont pas et restent cachés, C-Q11).
+ */
+export interface MissingValue { subjectId: string; note: string; passages: SourceRef[] }
+
 export interface Construction {
   chapters:        BuiltChapter[];
   /** Les cartes répondues dont la réponse ne figure dans aucun article, une fois chacune. */
   unplacedAnswers: UnplacedAnswer[];
+  /** Les valeurs de vos documents qu'aucun article n'écrit, dans l'ordre des articles. */
+  missingValues:   MissingValue[];
   preparationDate: string;
   articleCount:    number;
   writtenCount:    number;
@@ -271,15 +286,22 @@ export function readConstruction(raw: unknown): Construction | null {
   }));
   // C-Q11 : seules les réponses de l'expert qu'aucun article ne porte ; une carte une fois.
   const unplaced = new Set<string>();
+  const missingValues: MissingValue[] = [];
   for (const p of objs(raw.uncovered)) {
-    const cardId = oneOf(UNCOVERED_KINDS, p.kind) === 'card_without_article' ? strOrNull(p.card_id) : null;
+    const kind = oneOf(UNCOVERED_KINDS, p.kind);
+    const cardId = kind === 'card_without_article' ? strOrNull(p.card_id) : null;
     if (cardId !== null) unplaced.add(cardId);
+    const passages = refs(p.passages);
+    if (kind === 'missing_information' && passages.length > 0) {
+      missingValues.push({ subjectId: str(p.subject_id), note: str(p.note), passages });
+    }
   }
   const all = chapters.flatMap(c => c.articles);
   const blocks = all.flatMap(a => a.blocks);
   return {
     chapters,
     unplacedAnswers: [...unplaced].map(cardId => ({ cardId })),
+    missingValues,
     preparationDate: str(raw.preparation_date),
     articleCount:    all.length,
     writtenCount:    all.filter(a => a.written).length,
@@ -308,10 +330,18 @@ export function removedLabelAround(r: Pick<RemovedBlock, 'reason' | 'cardId'>): 
  * encore les autres raisons, garde sa légende d'origine.
  */
 export function verifyLegend(c: Pick<Construction, 'toVerifyReasons'>): string {
-  return c.toVerifyReasons.every(r => r === 'joined_passages')
-    ? 'elle relie deux passages différents de vos documents.'
-    : 'vos documents ne la confirment pas mot pour mot, ou elle relie deux passages différents de vos documents.';
+  const marked = c.toVerifyReasons.filter(r => r !== 'restored_from_sources');
+  const base = marked.every(r => r === 'joined_passages')
+    ? 'elle relie deux passages différents de vos documents'
+    : 'vos documents ne la confirment pas mot pour mot, ou elle relie deux passages différents de vos documents';
+  if (!c.toVerifyReasons.includes('restored_from_sources')) return `${base}.`;
+  const restored = 'elle reprend mot pour mot une ligne de vos documents qu\'aucun article ne donnait';
+  return marked.length === 0 ? `${restored}.` : `${base}, ou ${restored}.`;
 }
+
+/** Titre de l'encart des valeurs absentes : « 3 valeurs de vos documents ne figurent dans aucun article ». */
+export const missingValuesTitle = (n: number): string =>
+  n > 1 ? `${n} lignes de vos documents donnent une valeur qu'aucun article n'écrit` : `1 ligne de vos documents donne une valeur qu'aucun article n'écrit`;
 
 const plural = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : one}`;
 
