@@ -29,9 +29,9 @@ describe('lancement : règle du back', () => {
     const current = new Map([['c1', decision('c1', 'accept_side')], ['c3', decision('c3', 'later')]]);
     expect(blockingCardsLeft(cards, current)).toEqual({ left: 2, later: 1 });
     expect(blockingLeftLabel({ left: 2, later: 1 })).toBe(
-      'Encore 2 cartes bloquantes à trancher avant de préparer la nouvelle base. « Plus tard » ne tranche pas une carte bloquante (1 sur 2).',
+      'Encore 2 questions bloquantes sans réponse avant de préparer la nouvelle base. « Plus tard » ne compte pas comme une réponse à une question bloquante (1 sur 2).',
     );
-    expect(blockingLeftLabel({ left: 1, later: 0 })).toBe('Encore 1 carte bloquante à trancher avant de préparer la nouvelle base.');
+    expect(blockingLeftLabel({ left: 1, later: 0 })).toBe('Encore 1 question bloquante sans réponse avant de préparer la nouvelle base.');
   });
 
   it('une carte non bloquante laissée « Plus tard » ne retient pas la préparation', () => {

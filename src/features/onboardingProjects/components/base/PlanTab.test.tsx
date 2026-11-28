@@ -84,7 +84,7 @@ describe('« À clarifier » en mode construire : le bloc « Plan de la nouvelle
     expect(await screen.findByRole('heading', { name: 'Plan de la nouvelle base' })).toBeInTheDocument();
     expect(screen.queryByText(NO_BASE_TO_PREPARE)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Préparer le plan' })).toBeDisabled();
-    expect(screen.getByText(`La carte « ${REPLACEMENT.analysis.subject.trim()} » attend votre réponse.`)).toBeInTheDocument();
+    expect(screen.getByText(`La question « ${REPLACEMENT.analysis.subject.trim()} » attend votre réponse.`)).toBeInTheDocument();
     expect(onboardingApi.listCorrections).not.toHaveBeenCalled();
   });
 
@@ -94,7 +94,7 @@ describe('« À clarifier » en mode construire : le bloc « Plan de la nouvelle
     current.set(contradiction.id, decision(contradiction.id, 'later'));
     entry(current);
     expect(await screen.findByRole('button', { name: 'Préparer le plan' })).toBeDisabled();
-    expect(screen.getByText(/Encore 1 carte bloquante à trancher avant de préparer le plan\. « Plus tard » ne tranche pas/)).toBeInTheDocument();
+    expect(screen.getByText(/Encore 1 question bloquante sans réponse avant de préparer le plan\. « Plus tard » ne compte pas/)).toBeInTheDocument();
   });
 
   it('toutes les cartes bloquantes répondues : « Préparer le plan » lance le plan et ouvre « Nouvelle base »', async () => {

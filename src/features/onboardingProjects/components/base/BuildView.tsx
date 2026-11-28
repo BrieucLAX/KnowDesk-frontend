@@ -54,7 +54,7 @@ export function BuildEntry({ articleCount, builds, meta, launching, onLaunch, on
   );
   const next = (
     <p className="obp-plan__next">
-      Vous pouvez encore modifier vos réponses dans « À clarifier », puis préparer le plan à nouveau.
+      Vous pouvez encore modifier vos réponses dans « Questions », puis préparer le plan à nouveau.
     </p>
   );
   if (builds === null || meta === null) {
@@ -274,13 +274,12 @@ function articleDocumentCount(article: BuiltArticle): number {
   return new Set(article.blocks.filter(b => !b.fromExpert).flatMap(b => b.sources.map(s => s.documentId))).size;
 }
 
+// US 5.3 : pas de badge « N phrases à vérifier » en haut de l'article ; la phrase surlignée suffit.
 function ArticleView({ article, ctx, children }: { article: BuiltArticle; ctx: Ctx; children: React.ReactNode }) {
-  const toVerify = article.blocks.reduce((n, b) => n + b.toVerify.reduce((k, m) => k + m.passages.length, 0), 0);
   return (
     <article className="obp-plan-subject obp-build-article" id={articleAnchor(article.subjectId)}>
       <div className="obp-build-article__head">
         <h4 className="obp-plan-subject__title">{article.title}</h4>
-        {toVerify > 0 && <span className="obp-build-chip">{toVerify > 1 ? `${toVerify} phrases à vérifier` : '1 phrase à vérifier'}</span>}
       </div>
       <p className="obp-plan-subject__meta">
         <span>Cet article répondra à : {article.question}</span>

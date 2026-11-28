@@ -1,0 +1,420 @@
+<!doctype html>
+<meta charset="utf-8"><style data-dc-design-system-vars>@layer{:root{--surface:#fbf8f4;--surface-raised:#ffffff;--line:#e6ded3;--line-strong:#8a8076;--ink:#27211c;--ink-muted:#6b6158;--primary:#0e5c61;--primary-soft:#dcefed;--on-primary:#ffffff;--accent:#9b3b8c;--accent-soft:#f6e6f3;--link:#0e5c61;--focus:#0e5c61;--success:#2e7045;--success-soft:#e3f1e6;--warning:#7a5c00;--warning-soft:#fbf0c9;--danger:#b3261e;--danger-soft:#fbe5e2;--info:#2557a7;--info-soft:#e3ebf8;--shadow-sm:0 2px 8px rgba(39, 33, 28, 0.08);--shadow-lg:0 16px 48px rgba(39, 33, 28, 0.18);--space-2:8px;--space-4:16px;--space-6:24px;--space-8:32px;--radius-sm:6px;--radius-md:12px;--radius-lg:20px;--font-sans:"Plus Jakarta Sans", ui-sans-serif, system-ui, "Segoe UI", sans-serif;--text-display:700 36px/44px var(--font-sans);--text-title:700 26px/34px var(--font-sans);--text-heading:600 18px/26px var(--font-sans);--text-body:400 15px/24px var(--font-sans);--text-label:600 13px/18px var(--font-sans);--text-small:400 13px/20px var(--font-sans);}}</style>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Relecture des articles</title>
+<script src="./_runtime/react.js"></script>
+<script src="./_runtime/react-dom.js"></script>
+<script src="./_runtime/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fbf8f4}
+a{color:#0e5c61}a:hover{color:#0a4549}
+</style>
+</helmet>
+<div style="font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif; color: #27211c; background: #fbf8f4; display: flex; flex-wrap: wrap; min-height: 100vh; font-size: 15px; line-height: 24px">
+
+  <nav aria-label="Navigation principale" style="flex: 1 1 220px; box-sizing: border-box; padding: 24px 16px; background: #ffffff; border-right: 1px solid #e6ded3; display: flex; flex-direction: column; gap: 24px">
+    <div style="display: flex; align-items: center; gap: 12px; padding: 0 8px">
+      <span style="width: 36px; height: 36px; border-radius: 10px; background: #0e5c61; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700">K</span>
+      <span style="font-weight: 700; font-size: 18px">KnowDesk</span>
+    </div>
+    <a href="#" style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #dcefed; text-decoration: none; font-weight: 600; font-size: 14px">Onboarding</a>
+    <a href="#" style="margin-top: auto; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; text-decoration: none; font-size: 13px; font-weight: 600; color: #6b6158"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>Besoin d'aide ? Contactez-nous</a>
+  </nav>
+
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 0 0 48px">
+    <header style="background: #0e5c61; color: #ffffff; padding: 28px 48px 72px">
+      <div style="max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px">
+        <a href="#" style="color: #dcefed; font-size: 13px; font-weight: 600; text-decoration: none">← Mes projets</a>
+        <span style="font-size: 13px; font-weight: 600; color: #dcefed; letter-spacing: 0.02em">ELYRA ÉNERGIE · BASE DE CONNAISSANCE</span>
+        <h1 style="margin: 0; font-size: 36px; line-height: 44px; font-weight: 700; letter-spacing: -0.02em">Relisez vos articles</h1>
+        <p style="margin: 0; max-width: 640px; color: #ffffff">Vérifiez les phrases surlignées et complétez les articles sans source. Vous pouvez publier à tout moment : ce qui reste à faire sera signalé aux relecteurs.</p>
+      </div>
+    </header>
+    <div style="max-width: 1080px; margin: -44px auto 0; padding: 0 48px; display: flex; flex-direction: column; gap: 24px">
+
+      <ol aria-label="Étapes de l'onboarding" style="list-style: none; margin: 0; padding: 20px 24px; background: #ffffff; border: 1px solid #e6ded3; border-radius: 20px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+          <li style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; position: relative">
+            <span style="{{s.line}}"></span>
+            <span style="{{s.circle}}">
+              <sc-if value="{{s.done}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></sc-if>
+              <sc-if value="{{s.notDone}}" hint-placeholder-val="{{ true }}"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{s.icon}}"></path></svg></sc-if>
+            </span>
+            <span style="{{s.label}}">{{s.name}}</span>
+          </li>
+        </sc-for>
+      </ol>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+        <span></span>
+        <div style="display: flex; align-items: center; gap: 12px">
+          <div role="progressbar" aria-valuenow="{{reviewed}}" aria-valuemin="0" aria-valuemax="34" aria-label="Articles relus" style="width: 200px; height: 8px; background: #ffffff; border: 1px solid #e6ded3; border-radius: 8px; overflow: hidden"><div style="{{barStyle}}"></div></div>
+          <span style="font-size: 13px; font-weight: 600">{{progressLabel}}</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+        <aside aria-label="Articles" style="flex: 1 1 260px; max-width: 300px; display: flex; flex-direction: column; gap: 4px">
+          <sc-for list="{{cats}}" as="g" hint-placeholder-count="8">
+            <div style="border-bottom: 1px solid #e6ded3">
+              <button type="button" onClick="{{g.toggle}}" aria-expanded="{{g.expanded}}" style="font: inherit; color: #27211c; width: 100%; min-height: 44px; background: none; border: none; padding: 4px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; text-align: left">
+                <span style="font-size: 14px; font-weight: 600">{{g.name}}</span>
+                <span style="flex: none; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6b6158">{{g.meta}}<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#27211c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{g.chev}}"><path d="m6 9 6 6 6-6"></path></svg></span>
+              </button>
+              <sc-if value="{{g.open}}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 8px">
+                  <sc-for list="{{g.items}}" as="it" hint-placeholder-count="3">
+                    <button type="button" onClick="{{it.go}}" aria-current="{{it.cur}}" style="{{it.style}}">
+                      <span style="min-width: 0">{{it.title}}</span>
+                      <span style="{{it.badgeStyle}}">{{it.badge}}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <button type="button" onClick="{{goNew}}" style="font: inherit; font-size: 13px; font-weight: 600; color: #0e5c61; background: none; border: none; min-height: 44px; padding: 0; text-align: left; cursor: pointer">+ Ajouter un article</button>
+        </aside>
+
+        <div style="position: relative; flex: 999 1 480px; min-width: 0; display: flex; flex-direction: column">
+                  <sc-if value="{{pub.open}}" hint-placeholder-val="{{ false }}">
+                    <div role="dialog" aria-label="Public et usage de l'article" style="position: absolute; left: 32px; top: 64px; z-index: 6; width: 320px; background: #ffffff; border: 1px solid #e6ded3; border-radius: 12px; box-shadow: 0 2px 8px rgba(39, 33, 28, 0.08); padding: 16px; display: flex; flex-direction: column; gap: 12px">
+                      <div style="display: flex; flex-direction: column; gap: 6px"><label for="pub-p" style="font-size: 13px; font-weight: 600">Public</label><span style="position: relative; display: flex; align-items: center"><select id="pub-p" value="{{pub.draftP}}" onChange="{{pub.setP}}" style="font: inherit; font-size: 14px; line-height: 20px; color: #27211c; width: 100%; height: 36px; padding: 0 36px 0 12px; border: 1px solid #8a8076; border-radius: 10px; background: #ffffff; appearance: none; -webkit-appearance: none; cursor: pointer"><option>Tous les publics</option><option>Particuliers</option><option>Professionnels</option></select><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b6158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 12px; pointer-events: none"><path d="m6 9 6 6 6-6"></path></svg></span></div>
+                      <div style="display: flex; flex-direction: column; gap: 6px"><label for="pub-u" style="font-size: 13px; font-weight: 600">Usage</label><span style="position: relative; display: flex; align-items: center"><select id="pub-u" value="{{pub.draftU}}" onChange="{{pub.setU}}" style="font: inherit; font-size: 14px; line-height: 20px; color: #27211c; width: 100%; height: 36px; padding: 0 36px 0 12px; border: 1px solid #8a8076; border-radius: 10px; background: #ffffff; appearance: none; -webkit-appearance: none; cursor: pointer"><option>Clients et conseillers</option><option>Réservé aux conseillers</option></select><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b6158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 12px; pointer-events: none"><path d="m6 9 6 6 6-6"></path></svg></span><span style="font-size: 13px; line-height: 20px; color: #6b6158">Un article réservé aux conseillers ne sera jamais montré aux clients.</span></div>
+                      <div style="display: flex; gap: 8px; justify-content: flex-end">
+                        <button type="button" onClick="{{pub.toggle}}" style="font: inherit; font-size: 13px; font-weight: 600; min-height: 40px; padding: 0 12px; border: none; background: none; color: #0e5c61; cursor: pointer">Annuler</button>
+                        <button type="button" onClick="{{pub.save}}" style="font: inherit; font-size: 13px; font-weight: 600; min-height: 40px; padding: 0 16px; border-radius: 12px; border: none; background: #0e5c61; color: #ffffff; cursor: pointer">Enregistrer</button>
+                      </div>
+                    </div>
+                  </sc-if>
+
+          <sc-if value="{{v.isArt1}}" hint-placeholder-val="{{ true }}">
+          <article style="background: #ffffff; border: 1px solid #e6ded3; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 16px">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap">
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+                  <span style="font-size: 13px; color: #6b6158">Présentation de l'entreprise</span>
+                  <button type="button" onClick="{{pub.toggle}}" aria-expanded="{{pub.expanded}}" aria-label="Modifier le public et l'usage de l'article" style="font: inherit; font-size: 13px; line-height: 20px; font-weight: 600; color: #27211c; min-height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid #e6ded3; background: #ffffff; cursor: pointer; display: inline-flex; align-items: center; gap: 6px">{{pub.label}}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b6158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg></button>
+                </div>
+                <h2 style="margin: 0; font-size: 22px; line-height: 30px; font-weight: 700">Qui est Elyra Énergie ?</h2>
+                <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #9b3b8c"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-5 3.6L16.2 20 12 16.4 7.8 20 9 13.6 4 10l6.1-1.2z"></path></svg>Rédigé par KnowDesk à partir de 3 documents</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <sc-if value="{{a1.verified}}" hint-placeholder-val="{{ false }}"><span style="{{a1.badgeStyle}}">{{a1.badge}}</span></sc-if>
+                <button type="button" onClick="{{a1.toggleEdit}}" style="font: inherit; font-size: 13px; font-weight: 600; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #8a8076; background: #ffffff; color: #27211c; cursor: pointer">Modifier l'article</button>
+                <span style="position: relative">
+                  <button type="button" onClick="{{toggleMenu}}" aria-expanded="{{menuExpanded}}" aria-label="Autres actions sur l'article" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #e6ded3; background: #ffffff; color: #27211c; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg></button>
+                  <sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+                    <div role="menu" style="position: absolute; right: 0; top: 48px; z-index: 5; width: 220px; background: #ffffff; border: 1px solid #e6ded3; border-radius: 12px; box-shadow: 0 2px 8px rgba(39, 33, 28, 0.08); padding: 6px; display: flex; flex-direction: column">
+                      <button type="button" role="menuitem" onClick="{{toggleMenu}}" style="font: inherit; font-size: 14px; color: #27211c; text-align: left; min-height: 40px; padding: 0 12px; border: none; border-radius: 8px; background: #ffffff; cursor: pointer">Déplacer vers une catégorie…</button>
+                                            <span aria-hidden="true" style="height: 1px; background: #e6ded3; margin: 4px 0"></span>
+                      <button type="button" role="menuitem" onClick="{{toggleMenu}}" style="font: inherit; font-size: 14px; color: #b3261e; text-align: left; min-height: 40px; padding: 0 12px; border: none; border-radius: 8px; background: #ffffff; cursor: pointer; display: flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>Supprimer l'article</button>
+                    </div>
+                  </sc-if>
+                </span>
+              </div>
+            </div>
+
+            <sc-if value="{{a1.editing}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <div role="toolbar" aria-label="Mise en forme" style="display: flex; gap: 4px; padding: 4px; border: 1px solid #e6ded3; border-radius: 12px; align-self: flex-start">
+                  <button type="button" aria-label="Gras" style="width: 36px; height: 36px; border: none; border-radius: 8px; background: #ffffff; font-weight: 700; cursor: pointer">G</button>
+                  <button type="button" aria-label="Italique" style="width: 36px; height: 36px; border: none; border-radius: 8px; background: #ffffff; font-style: italic; cursor: pointer">I</button>
+                  <button type="button" aria-label="Liste à puces" style="width: 36px; height: 36px; border: none; border-radius: 8px; background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#27211c" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4" cy="6" r="1"></circle><circle cx="4" cy="12" r="1"></circle><circle cx="4" cy="18" r="1"></circle></svg></button>
+                  <button type="button" aria-label="Lien" style="width: 36px; height: 36px; border: none; border-radius: 8px; background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#27211c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"></path><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"></path></svg></button>
+                </div>
+                <label for="edit-a1" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Texte de l'article</label>
+                <textarea id="edit-a1" rows="7" style="font: inherit; color: #27211c; border: 1px solid #8a8076; border-radius: 12px; padding: 12px 16px; resize: vertical">Elyra Énergie fournit de l'électricité et du gaz naturel depuis 1946 ; elle est issue d'une régie locale. C'est le fournisseur historique de la Haute-Savoie et de la Savoie.
+
+Sur sa zone de desserte, elle est la seule à pouvoir vendre le tarif réglementé d'électricité. Partout ailleurs en France métropolitaine, elle propose uniquement des offres de marché.</textarea>
+                <div style="display: flex; gap: 8px; justify-content: flex-end">
+                  <button type="button" onClick="{{a1.toggleEdit}}" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; padding: 0 12px; border: none; background: none; color: #0e5c61; cursor: pointer">Annuler</button>
+                  <button type="button" onClick="{{a1.toggleEdit}}" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; padding: 0 20px; border-radius: 12px; border: none; background: #0e5c61; color: #ffffff; cursor: pointer">Enregistrer</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{a1.reading}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; flex-direction: column; gap: 16px">
+                <sc-if value="{{a1.pending}}" hint-placeholder-val="{{ true }}">
+                  <p style="margin: 0"><mark style="background: #fbf0c9; color: #27211c; border-bottom: 2px solid #7a5c00; padding: 1px 2px">Elyra Énergie fournit de l'électricité et du gaz naturel depuis 1946 ; elle est issue d'une régie locale.</mark> C'est le fournisseur historique de la Haute-Savoie et de la Savoie.</p>
+                </sc-if>
+                <sc-if value="{{a1.phraseEditing}}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; flex-direction: column; gap: 8px">
+                    <label for="phrase" style="font-size: 13px; font-weight: 600">Phrase à corriger</label>
+                    <textarea id="phrase" rows="2" style="font: inherit; color: #27211c; border: 2px solid #0e5c61; border-radius: 12px; padding: 10px 14px; resize: vertical">Elyra Énergie fournit de l'électricité et du gaz naturel depuis 1946 ; elle est issue d'une régie locale.</textarea>
+                    <div style="display: flex; gap: 8px">
+                      <button type="button" onClick="{{a1.validate}}" style="font: inherit; font-size: 13px; font-weight: 600; min-height: 44px; padding: 0 16px; border-radius: 12px; border: none; background: #0e5c61; color: #ffffff; cursor: pointer">Enregistrer</button>
+                      <button type="button" onClick="{{a1.cancelPhrase}}" style="font: inherit; font-size: 13px; font-weight: 600; min-height: 44px; padding: 0 12px; border: none; background: none; color: #0e5c61; cursor: pointer">Annuler</button>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{a1.verified}}" hint-placeholder-val="{{ false }}">
+                  <p style="margin: 0">Elyra Énergie fournit de l'électricité et du gaz naturel depuis 1946 ; elle est issue d'une régie locale. C'est le fournisseur historique de la Haute-Savoie et de la Savoie.</p>
+                </sc-if>
+
+                <sc-if value="{{a1.pending}}" hint-placeholder-val="{{ true }}">
+                  <div style="align-self: flex-start; max-width: 560px; background: #ffffff; border: 1px solid #e6ded3; border-radius: 12px; box-shadow: 0 2px 8px rgba(39, 33, 28, 0.08); padding: 16px; display: flex; flex-direction: column; gap: 12px">
+                    <span style="font-size: 13px; line-height: 20px"><strong>À vérifier :</strong> cette phrase réunit deux passages de vos documents.</span>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+                      <button type="button" onClick="{{a1.validate}}" style="font: inherit; font-size: 13px; font-weight: 600; min-height: 44px; padding: 0 16px; border-radius: 12px; border: none; background: #0e5c61; color: #ffffff; cursor: pointer">C'est juste</button>
+                      <button type="button" onClick="{{a1.editPhrase}}" style="font: inherit; font-size: 13px; font-weight: 600; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #8a8076; background: #ffffff; color: #27211c; cursor: pointer">Modifier</button>
+                      <button type="button" onClick="{{a1.toggleSrc}}" aria-expanded="{{a1.srcExpanded}}" style="font: inherit; font-size: 13px; font-weight: 600; min-height: 44px; padding: 0 12px; border: none; background: none; color: #0e5c61; cursor: pointer; display: flex; align-items: center; gap: 6px"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{a1.srcChev}}"><path d="m9 18 6-6-6-6"></path></svg>Voir les sources</button>
+                    </div>
+                    <sc-if value="{{a1.srcOpen}}" hint-placeholder-val="{{ false }}">
+                      <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px; line-height: 20px">
+                        <div style="border-left: 3px solid #e6ded3; padding-left: 12px">« [EXTRAIT DU DOCUMENT] »<br><span style="color: #6b6158">Présentation de l'entreprise · page 2</span></div>
+                        <div style="border-left: 3px solid #e6ded3; padding-left: 12px">« [EXTRAIT DU DOCUMENT] »<br><span style="color: #6b6158">Formation onboarding conseillers · diapositive 3</span></div>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+
+                <p style="margin: 0">Sur sa zone de desserte, elle est la seule à pouvoir vendre le tarif réglementé d'électricité. Partout ailleurs en France métropolitaine, elle propose uniquement des offres de marché.</p>
+                <span style="font-size: 13px; color: #6b6158">Sources : Présentation de l'entreprise, Formation onboarding conseillers, Fiche de cadrage</span>
+              </div>
+            </sc-if>
+          </article>
+          </sc-if>
+
+          <sc-if value="{{v.isArt4}}" hint-placeholder-val="{{ false }}">
+          <article style="background: #ffffff; border: 1px solid #e6ded3; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 16px">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap">
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+                  <span style="font-size: 13px; color: #6b6158">Présentation de l'entreprise</span>
+                  <button type="button" onClick="{{pub.toggle}}" aria-expanded="{{pub.expanded}}" aria-label="Modifier le public et l'usage de l'article" style="font: inherit; font-size: 13px; line-height: 20px; font-weight: 600; color: #27211c; min-height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid #e6ded3; background: #ffffff; cursor: pointer; display: inline-flex; align-items: center; gap: 6px">{{pub.label}}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b6158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg></button>
+                </div>
+                <h2 style="margin: 0; font-size: 22px; line-height: 30px; font-weight: 700">Comment résilier mon contrat ?</h2>
+              </div>
+              <span style="{{a4.badgeStyle}}">{{a4.badge}}</span>
+            </div>
+            <div style="background: #e3ebf8; border-radius: 12px; padding: 16px 20px; display: flex; gap: 12px; align-items: flex-start">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2557a7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex: none; margin-top: 2px"><circle cx="12" cy="12" r="9"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <span>Aucun passage de vos documents ne répond à cette question. Rédigez la réponse vous-même, ou ajoutez un document qui en parle.</span>
+                <span style="font-size: 13px; line-height: 20px"><strong>Cet article doit couvrir :</strong> délais, frais, démarches en ligne.</span>
+              </div>
+            </div>
+            <div role="toolbar" aria-label="Mise en forme" style="display: flex; gap: 4px; padding: 4px; border: 1px solid #e6ded3; border-radius: 12px; align-self: flex-start">
+              <button type="button" aria-label="Gras" style="width: 36px; height: 36px; border: none; border-radius: 8px; background: #ffffff; font-weight: 700; cursor: pointer">G</button>
+              <button type="button" aria-label="Italique" style="width: 36px; height: 36px; border: none; border-radius: 8px; background: #ffffff; font-style: italic; cursor: pointer">I</button>
+              <button type="button" aria-label="Liste à puces" style="width: 36px; height: 36px; border: none; border-radius: 8px; background: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#27211c" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"></path><circle cx="4" cy="6" r="1"></circle><circle cx="4" cy="12" r="1"></circle><circle cx="4" cy="18" r="1"></circle></svg></button>
+            </div>
+            <label for="redac" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Texte de l'article</label>
+            <textarea id="redac" rows="8" placeholder="Rédigez ici la réponse que les conseillers donneront au client." style="font: inherit; color: #27211c; border: 1px solid #8a8076; border-radius: 12px; padding: 12px 16px; resize: vertical"></textarea>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+              <a href="Documents.dc.html" style="font-size: 13px; font-weight: 600">Ajouter un document à la place</a>
+              <button type="button" onClick="{{a4.save}}" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; padding: 0 20px; border-radius: 12px; border: none; background: #0e5c61; color: #ffffff; cursor: pointer">Enregistrer l'article</button>
+            </div>
+            <span style="font-size: 13px; line-height: 20px; color: #6b6158">S'il reste vide, l'article sera publié comme « À compléter » et signalé aux relecteurs.</span>
+          </article>
+          </sc-if>
+
+          <sc-if value="{{v.isRead}}" hint-placeholder-val="{{ false }}">
+          <article style="background: #ffffff; border: 1px solid #e6ded3; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 16px">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap">
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+                  <span style="font-size: 13px; color: #6b6158">Présentation de l'entreprise</span>
+                  <button type="button" onClick="{{pub.toggle}}" aria-expanded="{{pub.expanded}}" aria-label="Modifier le public et l'usage de l'article" style="font: inherit; font-size: 13px; line-height: 20px; font-weight: 600; color: #27211c; min-height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid #e6ded3; background: #ffffff; cursor: pointer; display: inline-flex; align-items: center; gap: 6px">{{pub.label}}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b6158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg></button>
+                </div>
+                <h2 style="margin: 0; font-size: 22px; line-height: 30px; font-weight: 700">Dans quelles régions Elyra Énergie intervient-elle ?</h2>
+                <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #9b3b8c"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-5 3.6L16.2 20 12 16.4 7.8 20 9 13.6 4 10l6.1-1.2z"></path></svg>Rédigé par KnowDesk à partir de 3 documents</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 6px; background: #e3f1e6; color: #2e7045; font-size: 13px; font-weight: 600"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>Relu</span>
+                <button type="button" style="font: inherit; font-size: 13px; font-weight: 600; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #8a8076; background: #ffffff; color: #27211c; cursor: pointer">Modifier l'article</button>
+              </div>
+            </div>
+            <p style="margin: 0">[CONTENU DE L'ARTICLE]</p>
+            <span style="font-size: 13px; color: #6b6158">Sources : Présentation de l'entreprise, Fiche de cadrage, [DOCUMENT 3]</span>
+          </article>
+          </sc-if>
+
+          <sc-if value="{{v.isNew}}" hint-placeholder-val="{{ false }}">
+          <section style="background: #ffffff; border: 2px solid #0e5c61; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 14px">
+            <h2 style="margin: 0; font-size: 22px; line-height: 30px; font-weight: 700">Nouvel article</h2>
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <label for="n-titre" style="font-size: 13px; font-weight: 600">Titre, formulé comme la question du client</label>
+              <input id="n-titre" type="text" placeholder="Par exemple : Comment résilier mon contrat ?" style="font: inherit; color: #27211c; min-height: 44px; padding: 0 14px; border: 1px solid #8a8076; border-radius: 12px">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <label for="n-couvrir" style="font-size: 13px; font-weight: 600">Ce que l'article doit couvrir <span style="font-weight: 400; color: #6b6158">(facultatif)</span></label>
+              <textarea id="n-couvrir" rows="2" style="font: inherit; color: #27211c; border: 1px solid #8a8076; border-radius: 12px; padding: 10px 14px; resize: vertical"></textarea>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="n-cat" style="font-size: 13px; font-weight: 600">Catégorie</label>
+                <select id="n-cat" style="font: inherit; color: #27211c; min-height: 44px; padding: 0 14px; border: 1px solid #8a8076; border-radius: 12px; background: #ffffff"><option>Présentation de l'entreprise</option><option>[CATÉGORIE 2]</option></select>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="n-pub" style="font-size: 13px; font-weight: 600">Public</label>
+                <select id="n-pub" style="font: inherit; color: #27211c; min-height: 44px; padding: 0 14px; border: 1px solid #8a8076; border-radius: 12px; background: #ffffff"><option>Tous les publics</option><option>Particuliers</option><option>Professionnels</option></select>
+              </div>
+            </div>
+            <span style="font-size: 13px; line-height: 20px; color: #6b6158">Nous cherchons les passages de vos documents qui y répondent, puis nous rédigeons cet article. Cela prend quelques secondes.</span>
+            <div style="display: flex; gap: 8px; justify-content: flex-end">
+              <button type="button" onClick="{{goArt1}}" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; padding: 0 12px; border: none; background: none; color: #0e5c61; cursor: pointer">Annuler</button>
+              <button type="button" onClick="{{addArticle}}" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; padding: 0 20px; border-radius: 12px; border: none; background: #0e5c61; color: #ffffff; cursor: pointer">Ajouter et rédiger</button>
+            </div>
+          </section>
+          </sc-if>
+
+          <sc-if value="{{v.isWriting}}" hint-placeholder-val="{{ false }}">
+          <section style="background: #ffffff; border: 1px solid #e6ded3; border-radius: 20px; padding: 48px 32px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center">
+            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0e5c61" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.2-8.6"></path></svg>
+            <h2 style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 600">Rédaction en cours</h2>
+            <p style="margin: 0; color: #6b6158; max-width: 420px">Nous cherchons les sources et rédigeons « Comment changer d'offre en cours de contrat ? ». Vous pouvez continuer à relire les autres articles.</p>
+          </section>
+          </sc-if>
+        </div>
+      </div>
+
+      <footer style="position: sticky; bottom: 16px; z-index: 4; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 16px 20px; background: #ffffff; border: 1px solid #e6ded3; border-radius: 20px; box-shadow: 0 2px 8px rgba(39, 33, 28, 0.08)">
+        <div style="display: flex; flex-direction: column; gap: 2px; max-width: 600px">
+          <span style="font-weight: 600">Prêt à partager avec vos équipes ?</span>
+          <span style="font-size: 13px; line-height: 20px; color: #6b6158">{{footerText}}</span>
+        </div>
+        <a href="Fin.dc.html" style="font-size: 14px; font-weight: 600; min-height: 44px; padding: 0 20px; border-radius: 12px; background: #0e5c61; color: #ffffff; text-decoration: none; display: inline-flex; align-items: center">Publier pour relecture</a>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1360}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'a1', open: { c1: true }, a1: 'pending', a1src: false, a1edit: false, a4: 'empty', added: false, menu: false, pubOpen: false, pubP: 'Tous les publics', pubU: 'Clients et conseillers', draftP: 'Tous les publics', draftU: 'Clients et conseillers' };
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var stepDefs = [
+      { name: 'Documents', icon: 'M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z M14 2v4a2 2 0 0 0 2 2h4' },
+      { name: 'Contexte métier', icon: 'M3 21h18 M5 21V7l8-4v18 M19 21V11l-6-4 M9 9h1 M9 13h1 M9 17h1' },
+      { name: 'Questions', icon: 'M12 3v18 M5 7h14 M5 7l-3 7a3 3 0 0 0 6 0Z M19 7l-3 7a3 3 0 0 0 6 0Z M8 21h8' },
+      { name: 'Plan', icon: 'M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01' },
+      { name: 'Relecture et publication', icon: 'M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6' }
+    ];
+    var current = 4;
+    var steps = stepDefs.map(function (d, i) {
+      var done = i < current, cur = i === current;
+      return {
+        name: d.name, icon: d.icon, done: done, notDone: !done,
+        circle: 'position: relative; z-index: 1; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-sizing: border-box; ' +
+          (done ? 'background: #2e7045; color: #ffffff;' : cur ? 'background: #0e5c61; color: #ffffff; box-shadow: 0 0 0 6px #dcefed;' : 'background: #ffffff; color: #6b6158; border: 2px solid #e6ded3;'),
+        label: 'font-size: 13px; line-height: 18px; ' + (cur ? 'font-weight: 700; color: #0e5c61;' : done ? 'font-weight: 600; color: #27211c;' : 'font-weight: 600; color: #6b6158;'),
+        line: i === 0 ? 'display: none' : 'position: absolute; top: 21px; right: 50%; width: 100%; height: 3px; border-radius: 3px; background: ' + (i <= current ? '#2e7045' : '#e6ded3') + ';'
+      };
+    });
+
+    var B = 'flex: none; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 600; ';
+    var badges = {
+      verify: { t: '1 à vérifier', s: B + 'background: #fbf0c9; color: #7a5c00;' },
+      write: { t: 'À rédiger', s: B + 'background: #fbf0c9; color: #7a5c00;' },
+      writing: { t: 'En rédaction', s: B + 'background: #e3ebf8; color: #2557a7;' },
+      done: { t: 'Relu', s: B + 'background: #e3f1e6; color: #2e7045;' },
+      todo: { t: 'À relire', s: B + 'border: 1px solid #e6ded3; color: #6b6158;' }
+    };
+    var a1Done = st.a1 === 'done';
+    var a4Done = st.a4 === 'done';
+    var c1 = [
+      { id: 'a1', title: 'Qui est Elyra Énergie ?', status: a1Done ? 'done' : 'verify', view: 'a1' },
+      { id: 'a2', title: 'Dans quelles régions intervient-elle ?', status: 'done', view: 'read' },
+      { id: 'a3', title: 'Qui peut souscrire au tarif réglementé ?', status: 'done', view: 'read' },
+      { id: 'a4', title: 'Comment résilier mon contrat ?', status: a4Done ? 'done' : 'write', view: 'a4' }
+    ];
+    if (st.added) c1.push({ id: 'a5', title: 'Comment changer d’offre en cours de contrat ?', status: 'writing', view: 'writing' });
+    var c1Done = c1.filter(function (x) { return x.status === 'done'; }).length;
+    var catDefs = [
+      { key: 'c1', name: 'Présentation de l’entreprise', items: c1, doneN: c1Done, total: c1.length },
+      { key: 'c2', name: '[CATÉGORIE 2]', doneN: 5, total: 6 },
+      { key: 'c3', name: '[CATÉGORIE 3]', doneN: 4, total: 4 },
+      { key: 'c4', name: '[CATÉGORIE 4]', doneN: 5, total: 5 },
+      { key: 'c5', name: '[CATÉGORIE 5]', doneN: 4, total: 5 },
+      { key: 'c6', name: '[CATÉGORIE 6]', doneN: 4, total: 4 },
+      { key: 'c7', name: '[CATÉGORIE 7]', doneN: 3, total: 3 },
+      { key: 'c8', name: '[CATÉGORIE 8]', doneN: 1, total: 3 }
+    ];
+    var cats = catDefs.map(function (g) {
+      var isOpen = !!st.open[g.key];
+      var items = (g.items || [{ title: '[ARTICLE]', status: 'todo', view: null }, { title: '[ARTICLE]', status: 'done', view: null }]).map(function (it) {
+        var cur = it.view && st.view === it.view && (it.view !== 'read' || it.id === 'a2');
+        var b = badges[it.status];
+        return {
+          title: it.title, badge: b.t, badgeStyle: b.s, cur: cur ? 'true' : 'false',
+          go: function () { if (it.view) self.setState({ view: it.view, menu: false }); },
+          style: 'font: inherit; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 12px; border: none; color: #27211c; font-size: 14px; line-height: 20px; cursor: pointer; ' + (cur ? 'background: #dcefed; font-weight: 600;' : 'background: transparent;')
+        };
+      });
+      return {
+        name: g.name, meta: g.doneN + ' / ' + g.total, open: isOpen, expanded: isOpen ? 'true' : 'false',
+        chev: 'flex: none; transition: transform .15s; ' + (isOpen ? 'transform: rotate(180deg);' : ''),
+        toggle: function () { var o = Object.assign({}, st.open); o[g.key] = !isOpen; self.setState({ open: o }); },
+        items: items
+      };
+    });
+
+    var total = 34 + (st.added ? 1 : 0);
+    var reviewed = 26 + c1Done;
+    var toWrite = a4Done ? 0 : 1;
+    var notReviewed = total - reviewed - toWrite - (st.added ? 1 : 0);
+    var footerText = (notReviewed > 0 ? notReviewed + ' articles ne sont pas encore relus' : 'Tous les articles sont relus') +
+      (toWrite ? ' et 1 article est à compléter' : '') + ' : ils seront signalés aux relecteurs. Vous pourrez continuer à tout modifier après la publication.';
+
+    return {
+      steps: steps,
+      cats: cats,
+      reviewed: reviewed,
+      progressLabel: reviewed + ' articles relus sur ' + total,
+      barStyle: 'height: 100%; background: #0e5c61; width: ' + Math.round(reviewed / total * 100) + '%;',
+      footerText: footerText,
+      v: { isArt1: st.view === 'a1', isArt4: st.view === 'a4', isRead: st.view === 'read', isNew: st.view === 'new', isWriting: st.view === 'writing' },
+      a1: {
+        pending: st.a1 === 'pending', phraseEditing: st.a1 === 'editing', verified: a1Done,
+        editing: st.a1edit, reading: !st.a1edit,
+        badge: a1Done ? 'Relu' : '1 phrase à vérifier', badgeStyle: (a1Done ? badges.done.s : badges.verify.s) + ' font-size: 13px; padding: 2px 10px;',
+        validate: function () { self.setState({ a1: 'done' }); },
+        editPhrase: function () { self.setState({ a1: 'editing' }); },
+        cancelPhrase: function () { self.setState({ a1: 'pending' }); },
+        srcOpen: st.a1src, srcExpanded: st.a1src ? 'true' : 'false',
+        srcChev: 'flex: none; transition: transform .15s; ' + (st.a1src ? 'transform: rotate(90deg);' : ''),
+        toggleSrc: function () { self.setState({ a1src: !st.a1src }); },
+        toggleEdit: function () { self.setState({ a1edit: !st.a1edit }); }
+      },
+      a4: {
+        badge: a4Done ? 'Relu' : 'À rédiger par vous', badgeStyle: (a4Done ? badges.done.s : badges.write.s) + ' font-size: 13px; padding: 2px 10px;',
+        save: function () { self.setState({ a4: 'done' }); }
+      },
+      pub: {
+        label: st.pubP + ' · ' + st.pubU,
+        open: st.pubOpen, expanded: st.pubOpen ? 'true' : 'false',
+        draftP: st.draftP, draftU: st.draftU,
+        toggle: function () { self.setState({ pubOpen: !st.pubOpen, draftP: st.pubP, draftU: st.pubU, menu: false }); },
+        setP: function (e) { self.setState({ draftP: e.target.value }); },
+        setU: function (e) { self.setState({ draftU: e.target.value }); },
+        save: function () { self.setState({ pubOpen: false, pubP: self.state.draftP, pubU: self.state.draftU }); }
+      },
+      menuOpen: st.menu, menuExpanded: st.menu ? 'true' : 'false',
+      toggleMenu: function () { self.setState({ menu: !st.menu }); },
+      goNew: function () { self.setState({ view: 'new', menu: false }); },
+      goArt1: function () { self.setState({ view: 'a1' }); },
+      addArticle: function () { self.setState({ added: true, view: 'writing' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

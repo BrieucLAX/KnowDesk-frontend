@@ -3,7 +3,7 @@
   left: 50%;
   bottom: 24px;
   transform: translateX(-50%);
-  z-index: 100;
+  z-index: var(--z-floating);
   display: flex; align-items: center; gap: 16px;
   padding: 10px 16px;
   background: var(--neutral-900);

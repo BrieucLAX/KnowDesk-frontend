@@ -1,0 +1,31 @@
+<!-- @dsCard group="Formulaires" height=140 subtitle="Ligne de liste et formulaire" -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Select</title>
+<style>
+html, body { margin: 0; }
+body { background: var(--surface); }
+.stage { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.lab { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="cx-root stage">
+<div class="row">
+<label class="lab">Usage
+<span class="cx-select"><select><option selected>Client</option><option>Interne</option></select><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+</label>
+<label class="lab">Type de document
+<span class="cx-select"><select><option>Conditions générales et contrats</option><option selected>Tarifs</option><option>Supports de formation</option></select><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+</label>
+</div>
+<div class="cx-field" style="max-width: 320px;">
+<label class="cx-label" for="pub">Public</label>
+<span class="cx-select cx-select--lg cx-select--block"><select id="pub"><option>Tous les publics</option><option>[Public 1]</option><option>[Public 2]</option></select><svg class="cx-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+</div>
+</div>
+</body>
+</html>

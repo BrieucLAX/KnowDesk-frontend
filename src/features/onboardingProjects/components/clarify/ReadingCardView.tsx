@@ -55,7 +55,7 @@ export function ModelAnalysisBox({ analysis, documents }: { analysis: ModelAnaly
       </p>
       <dl className="obp-clarify-ai__body">
         {analysis.subject && <div><dt>Sujet</dt><dd>{analysis.subject}</dd></div>}
-        {analysis.reason && <div><dt>Pourquoi c'est à clarifier</dt><dd>{analysis.reason}</dd></div>}
+        {analysis.reason && <div><dt>Pourquoi cette question</dt><dd>{analysis.reason}</dd></div>}
         {analysis.proposal && <div><dt>Ce que l'IA propose</dt><dd>{analysis.proposal}</dd></div>}
       </dl>
     </KnowDeskBlock>
@@ -137,7 +137,7 @@ interface ReadingCardViewProps {
   card:     ReadingCard;
   /** Libellé de repérage : le sujet de la carte (cardTitle). */
   title:    string;
-  /** « Carte 3 sur 9 ». */
+  /** « Question 3 sur 9 ». */
   position: string;
 }
 

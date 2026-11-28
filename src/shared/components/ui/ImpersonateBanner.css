@@ -9,7 +9,7 @@
   background: var(--warning-soft); color: var(--ink);
   padding: 8px 20px; font-size: 15px; line-height: 24px;
   display: flex; align-items: center; gap: 12px;
-  z-index: 9999;
+  z-index: var(--z-floating);
 }
 .impersonate-banner__icon { flex-shrink: 0; color: var(--warning); }
 .impersonate-banner__text { flex: 1; }

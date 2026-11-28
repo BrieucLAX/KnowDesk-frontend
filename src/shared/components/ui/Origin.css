@@ -10,6 +10,8 @@
 }
 .kd-mention svg { flex-shrink: 0; }
 
+.kd-check { flex-shrink: 0; color: var(--accent); }
+
 .kd-block {
   display: flex; flex-direction: column; gap: 6px;
   padding: 12px var(--space-4); border-radius: var(--radius-md);

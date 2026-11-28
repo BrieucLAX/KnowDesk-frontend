@@ -98,7 +98,7 @@
   height: var(--topbar-h); background: var(--neutral-0);
   border-bottom: 1px solid var(--neutral-100);
   display: flex; align-items: center;
-  padding: 0 40px; position: sticky; top: 0; z-index: 10;
+  padding: 0 40px; position: sticky; top: 0; z-index: var(--z-sticky);
 }
 .topbar__search-wrap { flex: 1; max-width: 540px; margin: 0 auto; }
 
@@ -163,7 +163,7 @@
 .topbar--mobile .topbar__search-wrap--open { flex: 1; min-width: 0; max-width: none; margin: 0; }
 
 /* Volet de navigation */
-.mobile-nav { position: fixed; inset: 0; z-index: 150; }
+.mobile-nav { position: fixed; inset: 0; z-index: var(--z-floating); }
 .mobile-nav__overlay {
   position: absolute; inset: 0;
   background: var(--overlay);

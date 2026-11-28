@@ -178,7 +178,7 @@ class SlashPopup {
     this.el.style.position = 'absolute';
     this.el.style.top  = `${top}px`;
     this.el.style.left = `${left}px`;
-    this.el.style.zIndex = '1000';
+    this.el.style.zIndex = 'var(--z-modal)';
     this.root!.render(<SlashMenu ref={this.menuRef} items={items} command={commandFn} />);
   }
 

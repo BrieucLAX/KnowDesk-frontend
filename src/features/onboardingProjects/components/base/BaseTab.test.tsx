@@ -589,7 +589,7 @@ describe('Nouvelle base : préparation', () => {
     mockBase(PILOTE, []);
     const go = vi.fn();
     render(<BaseTab project={project} onGoToClarify={go} />);
-    fireEvent.click(await screen.findByRole('button', { name: 'Aller à « À clarifier »' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Aller à « Questions »' }));
     expect(go).toHaveBeenCalled();
   });
 
@@ -650,7 +650,7 @@ describe('« À clarifier » : Préparer la nouvelle base', () => {
     it('sans réponse : le bouton reste grisé, le message nomme la carte', async () => {
       render16(new Map());
       expect(await screen.findByRole('button', { name: 'Préparer la nouvelle base' })).toBeDisabled();
-      expect(screen.getByRole('status')).toHaveTextContent('La carte « La grille v2 annule et remplace la grille v1 » attend votre réponse.');
+      expect(screen.getByRole('status')).toHaveTextContent('La question « La grille v2 annule et remplace la grille v1 » attend votre réponse.');
     });
 
     it('« Plus tard » ne vaut pas une réponse', async () => {
@@ -669,7 +669,7 @@ describe('« À clarifier » : Préparer la nouvelle base', () => {
     const current = decided('accept_side', blocking.slice(1));
     current.set(blocking[1].id, { id: 'x', action: { type: 'later' } } as unknown as Decision);
     entry(current);
-    expect(await screen.findByText('Encore 2 cartes bloquantes à trancher avant de préparer la nouvelle base. « Plus tard » ne tranche pas une carte bloquante (1 sur 2).')).toBeInTheDocument();
+    expect(await screen.findByText('Encore 2 questions bloquantes sans réponse avant de préparer la nouvelle base. « Plus tard » ne compte pas comme une réponse à une question bloquante (1 sur 2).')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Préparer la nouvelle base' })).not.toBeInTheDocument();
   });
 

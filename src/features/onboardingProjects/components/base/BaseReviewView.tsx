@@ -281,7 +281,7 @@ export function BaseReviewView({ base, cardTitles, decisions = new Map(), editab
       </header>
 
       <p className="obp-base-legend">
-        Votre base est reprise telle quelle ; seules vos réponses dans « À clarifier » la modifient.{' '}
+        Votre base est reprise telle quelle ; seules vos réponses dans « Questions » la modifient.{' '}
         <ins>texte ajouté</ins> <del>texte retiré</del>{' '}
         Les sections sans modification sont repliées à leur place : ouvrez-les pour les lire.
         {toVerify.size > 0 && (

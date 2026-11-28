@@ -71,7 +71,7 @@ const answer = (cardId: string, action: Decision['action'], extra: Partial<Decis
 async function openSession() {
   render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
   fireEvent.click(await screen.findByRole('button', { name: 'Commencer' }));
-  return screen.findByRole('article', { name: /^Carte 1 sur/ });
+  return screen.findByRole('article', { name: /^Question 1 sur/ });
 }
 
 describe('À clarifier (audit 0.8.0)', () => {
@@ -92,7 +92,7 @@ describe('À clarifier (audit 0.8.0)', () => {
     const pharmacies = reading2.cards.find(c => c.rank === 2)!;
     await openSession();
     goTo(pharmacies.analysis.subject);
-    const article = await screen.findByRole('article', { name: new RegExp(`^Carte ${ordered2.indexOf(pharmacies) + 1} sur`) });
+    const article = await screen.findByRole('article', { name: new RegExp(`^Question ${ordered2.indexOf(pharmacies) + 1} sur`) });
     expect(within(article).getByText('Bloque la publication')).toBeInTheDocument();
     expect(within(article).getByText('Lecture d\'image à confirmer')).toBeInTheDocument();
     expect(article).not.toHaveTextContent('Ne bloque pas');
@@ -100,8 +100,8 @@ describe('À clarifier (audit 0.8.0)', () => {
 
   it('annonce le nombre de cartes et les regroupe par nature ; une détection absente ne se montre que dans les détails, en clair', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    expect(await screen.findByRole('heading', { name: '9 cartes à clarifier' })).toBeInTheDocument();
-    expect(screen.getByText('9 cartes : 3 changements datés, 1 erreur probable et 5 incomplets ou périmés.')).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: '9 questions attendent votre réponse' })).toBeInTheDocument();
+    expect(screen.getByText('9 questions : 3 changements datés, 1 erreur probable et 5 incomplets ou périmés.')).toBeInTheDocument();
     expect(await screen.findByText(/^\d+ bloquent la publication tant qu'elles n'ont pas de réponse, dont \d+ encore à traiter\.$/)).toBeInTheDocument();
 
     const headings = screen.getAllByRole('heading', { level: 3 }).map(h => h.textContent);
@@ -135,7 +135,7 @@ describe('À clarifier (audit 0.8.0)', () => {
   it('une carte : documents par nom de fichier, citations de chaque côté, analyse de l\'IA à part', async () => {
     const card = await openSession();
     expect(within(card).getByRole('heading', { level: 4 })).toHaveTextContent(dated.analysis.subject);
-    expect(within(card).getByText('Carte 1 sur 9')).toBeInTheDocument();
+    expect(within(card).getByText('Question 1 sur 9')).toBeInTheDocument();
     expect(within(card).getByText('Changement daté')).toBeInTheDocument();
     const sideA = within(card).getByRole('region', { name: 'Côté A' });
     expect(sideA).toHaveTextContent('03-cotisations-tarification.docx');
@@ -163,14 +163,14 @@ describe('À clarifier (audit 0.8.0)', () => {
   it('extrait lu par vision : la mention et l\'image à côté ; citation de la fiche de cadrage nommée comme telle', async () => {
     await openSession();
     goTo(ordered2[1].analysis.subject);
-    const card = await screen.findByRole('article', { name: /^Carte 2 sur/ });
+    const card = await screen.findByRole('article', { name: /^Question 2 sur/ });
     expect(within(card).getAllByText('Extrait transcrit par vision, non vérifié').length).toBeGreaterThan(0);
     expect(await within(card).findAllByRole('img')).not.toHaveLength(0);
     expect(onboardingApi.getAuditImage).toHaveBeenCalledWith('p1', 'a1', 'img_9d517478bad6ba9c');
 
     const withBriefing = reading2.cards.find(c => c.sides.some(s => s.quotes.some(q => q.kind === 'briefing')))!;
     goTo(withBriefing.analysis.subject);
-    const other = await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(withBriefing) + 1} sur 9` });
+    const other = await screen.findByRole('article', { name: `Question ${ordered2.indexOf(withBriefing) + 1} sur 9` });
     // Le côté de la fiche se présente comme la fiche de l'utilisateur, pas comme un document de la base.
     const fiche = within(other).getByRole('region', { name: 'Votre fiche de cadrage' });
     expect(fiche).toHaveTextContent('Ce que vous avez écrit, pas un document de la base.');
@@ -182,14 +182,14 @@ describe('À clarifier (audit 0.8.0)', () => {
     const card = { ...RESPONSE_2.reading!.cards[0] };
     const documentId = card.documentIds[0];
     const withRef = { ...card, absentReferences: [{ documentId, excerpt: 'voir grille complète en pièce jointe' }] };
-    const { container } = render(<ReadingCardView audit={audit} card={withRef} title="Grille" position="Carte 1 sur 1" />);
+    const { container } = render(<ReadingCardView audit={audit} card={withRef} title="Grille" position="Question 1 sur 1" />);
     const note = screen.getByRole('note', { name: 'Contenu absent de vos documents' });
     expect(note).toHaveTextContent('renvoie à un contenu qui n\'a pas été importé : « voir grille complète en pièce jointe ».');
     expect(note).toHaveTextContent('suivre la recommandation garde l\'existant, avec son avertissement');
     const order = [...container.querySelectorAll('.obp-clarify-absent, .obp-clarify-ai')].map(e => e.classList.contains('obp-clarify-ai') ? 'obp-clarify-ai' : e.className);
     expect(order).toEqual(['obp-clarify-absent', 'obp-clarify-ai']);
 
-    render(<ReadingCardView audit={audit} card={card} title="Sans renvoi" position="Carte 2 sur 2" />);
+    render(<ReadingCardView audit={audit} card={card} title="Sans renvoi" position="Question 2 sur 2" />);
     expect(screen.getAllByRole('note', { name: 'Contenu absent de vos documents' })).toHaveLength(1);
   });
 
@@ -204,7 +204,7 @@ describe('À clarifier (audit 0.8.0)', () => {
     vi.mocked(onboardingApi.answerCard).mockResolvedValue(answer(oneSidedWithRefused.id, { type: 'accept_side', side: 'A' }));
     await openSession();
     goTo(oneSidedWithRefused.analysis.subject);
-    const card = await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(oneSidedWithRefused) + 1} sur 9` });
+    const card = await screen.findByRole('article', { name: `Question ${ordered2.indexOf(oneSidedWithRefused) + 1} sur 9` });
     expect(oneSidedWithRefused.unverifiedQuotes).toHaveLength(1);
     expect(card.querySelectorAll('.obp-clarify-side')).toHaveLength(1);
     expect(within(card).getByRole('region', { name: `Côté ${oneSidedWithRefused.sides[0].label}` })).toBeInTheDocument();
@@ -229,7 +229,7 @@ describe('À clarifier (audit 0.8.0)', () => {
     await openSession();
     goTo(oneSidedBare.analysis.subject);
     const position = orderedCards(RESPONSE_3.reading!.cards).indexOf(oneSidedBare) + 1;
-    const card = await screen.findByRole('article', { name: `Carte ${position} sur ${RESPONSE_3.reading!.cards.length}` });
+    const card = await screen.findByRole('article', { name: `Question ${position} sur ${RESPONSE_3.reading!.cards.length}` });
     expect(card.querySelectorAll('.obp-clarify-side')).toHaveLength(1);
     expect(card).not.toHaveTextContent('L\'autre passage cité');
     expect(screen.getByText('Erreur probable : Ce passage est-il juste ?')).toBeInTheDocument();
@@ -298,7 +298,7 @@ describe('À clarifier (audit 0.8.0)', () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
     fireEvent.click(await screen.findByRole('button', { name: 'Reprendre' }));
     // Reprise sur la première carte à traiter : le premier « incomplet ou périmé ».
-    const card = await screen.findByRole('article', { name: /^Carte 5 sur 9/ });
+    const card = await screen.findByRole('article', { name: /^Question 5 sur 9/ });
     expect(within(card).getByText('Incomplet ou périmé')).toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Retenir un côté' })).not.toBeInTheDocument();
     const answers = screen.getByRole('group', { name: 'Répondre à la carte' });
@@ -314,17 +314,17 @@ describe('À clarifier (audit 0.8.0)', () => {
       answer(reading2.cards[1].id, { type: 'later' }),
     ]));
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    expect(await screen.findByText('1 sur 9 cartes répondues, 1 pour plus tard')).toBeInTheDocument();
+    expect(await screen.findByText('1 réponse sur 9, 1 pour plus tard')).toBeInTheDocument();
   });
 
   it('audit d\'une analyse précédente : les réponses se consultent, sans bouton de réponse', async () => {
     vi.mocked(onboardingApi.listDecisions).mockResolvedValue(state([answer(dated.id, { type: 'same_meaning' })], false));
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    fireEvent.click(await screen.findByRole('button', { name: 'Consulter les cartes' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Consulter les questions' }));
     // Ouverte sur la première carte sans réponse ; la carte 1 se consulte depuis la vue d'ensemble.
-    await screen.findByRole('article', { name: /^Carte 2 sur/ });
+    await screen.findByRole('article', { name: /^Question 2 sur/ });
     goTo(dated.analysis.subject);
-    await screen.findByRole('article', { name: /^Carte 1 sur/ });
+    await screen.findByRole('article', { name: /^Question 1 sur/ });
     expect(screen.getByText('Ils disent la même chose')).toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Répondre à la carte' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Annuler la réponse' })).not.toBeInTheDocument();
@@ -333,7 +333,7 @@ describe('À clarifier (audit 0.8.0)', () => {
   it('détails de l\'analyse : points écartés avec leur raison, citations non vérifiées comptées, jamais citées', async () => {
     vi.mocked(onboardingApi.getAudit).mockResolvedValue(RESPONSE_3);
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     const details = screen.getByText('Détails de l\'analyse').closest('details')!;
     expect(details).toHaveTextContent('Incomplet ou périmé · Ne cite que la fiche de cadrage');
     expect(details).toHaveTextContent('1 introuvable dans le corpus');
@@ -354,7 +354,7 @@ describe('À clarifier (audit 0.8.0)', () => {
       },
     });
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     const details = screen.getByText('Détails de l\'analyse').closest('details')!;
     expect(details).toHaveTextContent('Texte rendu par l\'IA (doc.pdf, reprend seulement la description d\'une image, pas son texte), qui n\'est pas une citation : Schéma des garanties.');
     expect(details).toHaveTextContent('Texte rendu par l\'IA (doc.pdf, autre raison), qui n\'est pas une citation : Texte rendu.');
@@ -375,7 +375,7 @@ describe('À clarifier (audit 0.8.0)', () => {
       ] },
     } as AuditResponse);
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     const details = screen.getByText('Détails de l\'analyse').closest('details')!;
     expect(details).toHaveTextContent('L\'analyse n\'a pas lu ces fichiers');
     expect(details).toHaveTextContent('Base 9c8d.csv : format non lu');
@@ -385,7 +385,7 @@ describe('À clarifier (audit 0.8.0)', () => {
   it('détails de l\'analyse : tous les fichiers lus, dit comme tel', async () => {
     vi.mocked(onboardingApi.getAudit).mockResolvedValue(RESPONSE_3);
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     expect(screen.getByText('Détails de l\'analyse').closest('details')!).toHaveTextContent('Tous les fichiers importés ont été lus.');
   });
 
@@ -466,7 +466,7 @@ describe('À clarifier (audit 0.8.0)', () => {
       } as never));
       await openSession();
       goTo(incomplete.analysis.subject);
-      await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(incomplete) + 1} sur 9` });
+      await screen.findByRole('article', { name: `Question ${ordered2.indexOf(incomplete) + 1} sur 9` });
       fireEvent.click(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' }));
       expect(screen.getByRole('note')).toHaveTextContent('Le passage sera complété dans la base, en suivant la recommandation.');
       fireEvent.click(screen.getByRole('button', { name: 'Enregistrer la réponse' }));
@@ -480,9 +480,9 @@ describe('À clarifier (audit 0.8.0)', () => {
       const other = ordered2.find(c => c.id !== dated.id && c.id !== incomplete.id)!;
       await openSession();
       goTo(other.analysis.subject);
-      await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(other) + 1} sur 9` });
+      await screen.findByRole('article', { name: `Question ${ordered2.indexOf(other) + 1} sur 9` });
       fireEvent.click(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' }));
-      expect(screen.getByRole('note')).toHaveTextContent('Consigne seule : rien n\'est ajouté ni tranché dans la base');
+      expect(screen.getByRole('note')).toHaveTextContent('Consigne seule : rien n\'est ajouté ni décidé dans la base');
       fireEvent.click(screen.getByRole('button', { name: 'Retour' }));
       expect(onboardingApi.answerCard).not.toHaveBeenCalled();
       expect(screen.getByRole('button', { name: 'Je suis la recommandation de l\'IA' })).toBeInTheDocument();
@@ -498,7 +498,7 @@ describe('À clarifier (audit 0.8.0)', () => {
       vi.mocked(onboardingApi.getAudit).mockResolvedValue(r);
       await openSession();
       goTo(oneSidedWithRefused.analysis.subject);
-      await screen.findByRole('article', { name: `Carte ${ordered2.indexOf(oneSidedWithRefused) + 1} sur 9` });
+      await screen.findByRole('article', { name: `Question ${ordered2.indexOf(oneSidedWithRefused) + 1} sur 9` });
       return screen.getByRole('group', { name: 'Recommandation de l\'IA' });
     };
     const BLOCKED = 'Le passage que retient cette recommandation n\'a pas pu être retrouvé dans vos documents : répondez vous-même ci-dessous.';
@@ -544,7 +544,7 @@ describe('À clarifier (audit 0.8.0)', () => {
       } as never)]);
       render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
       fireEvent.click(await screen.findByRole('button', { name: 'Reprendre' }));
-      const card = await screen.findByRole('article', { name: /^Carte \d+ sur 9$/ });
+      const card = await screen.findByRole('article', { name: /^Question \d+ sur 9$/ });
       expect(card).toBeInTheDocument();
       goTo(dated.analysis.subject);
       fireEvent.click(await screen.findByText('Historique'));
@@ -556,7 +556,7 @@ describe('À clarifier (audit 0.8.0)', () => {
   it('point 12 du plan v4 : ouvert depuis « Nouvelle base » sur une carte, « À clarifier » s\'ouvre sur elle', async () => {
     const target = ordered2[3];
     render(<AuditTab project={project} onGoToAnalysis={() => {}} openCardId={target.id} />);
-    const card = await screen.findByRole('article', { name: `Carte 4 sur ${ordered2.length}` });
+    const card = await screen.findByRole('article', { name: `Question 4 sur ${ordered2.length}` });
     expect(card).toHaveTextContent(target.analysis.subject);
   });
 
@@ -599,7 +599,7 @@ describe('À clarifier : versions d\'audit affichées (Base de co 2026 v4)', () 
     await openSession();
     expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
     goTo(absent.analysis.subject);
-    const card = await screen.findByRole('article', { name: new RegExp(`^Carte ${ordered.indexOf(absent) + 1} sur ${ordered.length}`) });
+    const card = await screen.findByRole('article', { name: new RegExp(`^Question ${ordered.indexOf(absent) + 1} sur ${ordered.length}`) });
     expect(within(card).getByRole('note', { name: 'Contenu absent de vos documents' }))
       .toHaveTextContent('« voir grille complète en pièce jointe »');
   });
@@ -609,7 +609,7 @@ describe('À clarifier : versions d\'audit affichées (Base de co 2026 v4)', () 
     await openSession();
     expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
     goTo(absent.analysis.subject);
-    const card = await screen.findByRole('article', { name: new RegExp(`^Carte ${ordered.indexOf(absent) + 1} sur ${ordered.length}`) });
+    const card = await screen.findByRole('article', { name: new RegExp(`^Question ${ordered.indexOf(absent) + 1} sur ${ordered.length}`) });
     expect(within(card).queryByRole('note', { name: 'Contenu absent de vos documents' })).not.toBeInTheDocument();
   });
 });
@@ -644,7 +644,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
     const card = byCheck(kind);
     await openSession();
     goTo(card.analysis.subject);
-    return screen.findByRole('article', { name: new RegExp(`^Carte ${ordered11.indexOf(card) + 1} sur ${ordered11.length}`) });
+    return screen.findByRole('article', { name: new RegExp(`^Question ${ordered11.indexOf(card) + 1} sur ${ordered11.length}`) });
   }
 
   const answerButtons = () => [
@@ -654,7 +654,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
 
   it('l\'audit 0.11.0 s\'affiche ; les cartes du code n\'ont ni « Analyse proposée par l\'IA » ni recommandation', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    expect(await screen.findByRole('heading', { name: `${reading11.cards.length} cartes à clarifier` })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: `${reading11.cards.length} questions attendent votre réponse` })).toBeInTheDocument();
     expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
     for (const kind of ['value_gap', 'outdated_content', 'period_gap', 'date_without_year']) {
       const card = byCheck(kind);
@@ -731,7 +731,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
 
   it('point écarté « mesure terminée » : sa raison, sa date de fin et le passage de la mesure, sans la proposition de l\'IA', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     const details = screen.getByText('Détails de l\'analyse').closest('details')!;
     const item = within(details).getByText(/Mesure terminée le/).closest('li')!;
     expect(item).toHaveTextContent('Changement daté · Mesure terminée le 29/09/2026 : elle n\'entre pas dans la base');
@@ -747,7 +747,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
 
   it('valeurs extraites et extraction : jamais affichées', async () => {
     const { container } = render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     const run = (RESPONSE_11.audit as { extraction_run: { prompt_id: string; model: string } }).extraction_run;
     const keys = (RESPONSE_11.audit as { extracted_values: Array<{ subject: { item_key: string } }> }).extracted_values.map(v => v.subject.item_key);
     expect(keys.length).toBeGreaterThan(0);
@@ -759,7 +759,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
       ...RESPONSE_11, reading: { ...reading11, unavailableDetections: ['temporary_notes', 'value_gaps', 'dates'] },
     });
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     const notes = screen.getAllByRole('note').map(n => n.textContent);
     expect(notes).toContain('Les écarts de valeurs entre documents (montants, tarifs) n\'ont pas pu être recherchés pour cette analyse.');
     expect(notes).toContain('Les dates (contenus périmés, périodes sans règle, dates sans année) n\'ont pas pu être vérifiées pour cette analyse.');
@@ -784,7 +784,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
       },
     });
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     const outage = 'Le modèle de lecture des images n\'a pas répondu : aucune des 3 images n\'a été lue, '
       + 'les informations qu\'elles contiennent ne sont pas analysées.';
     expect(screen.getAllByRole('note').map(n => n.textContent)).toContain(outage);
@@ -806,7 +806,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
       },
     });
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     const notes = screen.getAllByRole('note').map(n => n.textContent);
     expect(notes).toContain('1 image n\'a pas pu être lue : les informations qu\'elle contient ne sont pas analysées.');
     expect(screen.queryByText(/n'a pas répondu/)).not.toBeInTheDocument();
@@ -814,7 +814,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
 
   it('toutes les détections faites : aucun message', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     expect(screen.queryByText(/n'ont pas pu être/)).not.toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Images non lues' })).not.toBeInTheDocument();
   });
@@ -824,7 +824,7 @@ describe('À clarifier : audit 0.11.0, cartes du code (plan v6, B2 et C)', () =>
     const reading = RESPONSE_10.reading!;
     const first = orderedCards(reading.cards)[0];
     await openSession();
-    const card = screen.getByRole('article', { name: /^Carte 1 sur/ });
+    const card = screen.getByRole('article', { name: /^Question 1 sur/ });
     expect(within(card).getByText(NATURES[first.nature].label, { selector: '.obp-audit-tag' })).toBeInTheDocument();
     expect(within(card).getByText('Analyse proposée par l\'IA')).toBeInTheDocument();
     expect(within(card).queryByRole('complementary', { name: 'Relevé en comparant vos documents' })).not.toBeInTheDocument();
@@ -861,7 +861,7 @@ describe('À clarifier : des extraits utiles seulement, jamais de bloc vide (pla
     await openSession();
     for (const [i, card] of orderedD1.entries()) {
       goTo(card.analysis.subject);
-      const article = await screen.findByRole('article', { name: `Carte ${i + 1} sur ${orderedD1.length}` });
+      const article = await screen.findByRole('article', { name: `Question ${i + 1} sur ${orderedD1.length}` });
       const sides = [...article.querySelectorAll('.obp-clarify-side')];
       expect(sides).toHaveLength(card.sides.length);
       for (const side of sides) expect(side.querySelectorAll('blockquote, .obp-audit-source').length).toBeGreaterThan(0);
@@ -875,7 +875,7 @@ describe('À clarifier : des extraits utiles seulement, jamais de bloc vide (pla
     expect(card.sides.map(s => s.label)).toEqual(['B']);
     await openSession();
     goTo(card.analysis.subject);
-    const article = await screen.findByRole('article', { name: `Carte ${orderedD1.indexOf(card) + 1} sur ${orderedD1.length}` });
+    const article = await screen.findByRole('article', { name: `Question ${orderedD1.indexOf(card) + 1} sur ${orderedD1.length}` });
     expect(within(article).getByRole('region', { name: 'Côté B' })).toBeInTheDocument();
     expect(within(article).queryByRole('region', { name: 'Côté A' })).not.toBeInTheDocument();
     // Le sommaire n'est plus cité ; « Documents : » nomme encore son fichier (document_ids du pipeline).
@@ -890,7 +890,7 @@ describe('À clarifier : des extraits utiles seulement, jamais de bloc vide (pla
     for (const rank of [5, 6]) {
       const card = readingD1.cards.find(c => c.rank === rank)!;
       goTo(card.analysis.subject);
-      const article = await screen.findByRole('article', { name: `Carte ${orderedD1.indexOf(card) + 1} sur ${orderedD1.length}` });
+      const article = await screen.findByRole('article', { name: `Question ${orderedD1.indexOf(card) + 1} sur ${orderedD1.length}` });
       expect(article.querySelectorAll('.obp-clarify-side')).toHaveLength(1);
       expect(article.querySelector('.obp-clarify-sides--two')).toBeNull();
       expect(article.querySelector('.obp-clarify-sides')).not.toHaveTextContent('14-faq-transverse');
@@ -973,7 +973,7 @@ describe('Détails de l\'analyse : points écartés de l\'audit 0.13.0', () => {
 
   async function item(label: string) {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: /cartes à clarifier/ });
+    await screen.findByRole('heading', { name: /questions attendent votre réponse/ });
     const details = screen.getByText('Détails de l\'analyse').closest('details')!;
     return within(details).getByText(new RegExp(label)).closest('li')!;
   }
@@ -1038,7 +1038,7 @@ describe('À clarifier : audit 0.14.0, un écart en jours', () => {
     await openSession();
     expect(screen.queryByText(/ne sait pas afficher/)).not.toBeInTheDocument();
     goTo(gap.analysis.subject);
-    const article = await screen.findByRole('article', { name: new RegExp(`^Carte ${ordered11.indexOf(gap) + 1} sur ${ordered11.length}`) });
+    const article = await screen.findByRole('article', { name: new RegExp(`^Question ${ordered11.indexOf(gap) + 1} sur ${ordered11.length}`) });
     expect(within(article).getByText('Écart entre documents')).toBeInTheDocument();
     expect(within(article).getByRole('heading', { name: 'Côté A : 14 jours' })).toBeInTheDocument();
     expect(within(article).getByRole('heading', { name: 'Côté B : 1 jour' })).toBeInTheDocument();
@@ -1078,7 +1078,7 @@ describe('« Documents analysés » : tout l\'inventaire sous le nombre de docum
 
   it('replié sous le nombre de documents lus, avec son résumé', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: '13 cartes à clarifier' });
+    await screen.findByRole('heading', { name: '13 questions attendent votre réponse' });
     const line = screen.getByText('Fiche de cadrage version 1, 33 documents lus (dans 1 fichier importé).');
     const details = screen.getByText('Documents analysés').closest('details')!;
     expect(details).not.toHaveAttribute('open');
@@ -1089,7 +1089,7 @@ describe('« Documents analysés » : tout l\'inventaire sous le nombre de docum
 
   it('chaque document : son nom, son type et son statut ; un document lu dit combien de cartes le citent, 0 compris', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: '13 cartes à clarifier' });
+    await screen.findByRole('heading', { name: '13 questions attendent votre réponse' });
     const list = screen.getByRole('list', { name: 'Documents analysés' });
     expect(list.querySelectorAll('li')).toHaveLength(39);
     // Les notes sur les garanties d'origine : lues, mais sans carte.
@@ -1108,7 +1108,7 @@ describe('« Documents analysés » : tout l\'inventaire sous le nombre de docum
 
   it('le nombre de cartes compte chaque carte une fois par document, qu\'elle le nomme ou le cite', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: '13 cartes à clarifier' });
+    await screen.findByRole('heading', { name: '13 questions attendent votre réponse' });
     const list = screen.getByRole('list', { name: 'Documents analysés' });
     const reading = ELYRA.reading!;
     const fixe = reading.cards.filter(c => c.documentIds.some(id => id.includes('fiche_offre_elyra_fixe_2ans')));
@@ -1127,7 +1127,7 @@ describe('« Documents analysés » : tout l\'inventaire sous le nombre de docum
       },
     });
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
-    await screen.findByRole('heading', { name: '13 cartes à clarifier' });
+    await screen.findByRole('heading', { name: '13 questions attendent votre réponse' });
     const list = screen.getByRole('list', { name: 'Documents analysés' });
     expect(rowOf(list, 'Flyer_Parrainage_Octobre2026.pptx')).toHaveTextContent('Lu, cité par 1 carte, 2 images non lues');
   });
@@ -1135,7 +1135,7 @@ describe('« Documents analysés » : tout l\'inventaire sous le nombre de docum
   it('une carte ouverte : la liste laisse la place à la session', async () => {
     render(<AuditTab project={project} onGoToAnalysis={() => {}} />);
     fireEvent.click(await screen.findByRole('button', { name: 'Commencer' }));
-    await screen.findByRole('article', { name: /^Carte 1 sur/ });
+    await screen.findByRole('article', { name: /^Question 1 sur/ });
     expect(screen.queryByText('Documents analysés')).not.toBeInTheDocument();
   });
 });
@@ -1148,7 +1148,7 @@ describe('À clarifier (audit 0.16.0, plan-construire-v1, lot A)', () => {
   const replacement = cards.find(c => c.nature === 'remplacement_version')!;
   const reuse = cards.find(c => c.nature === 'reprise_version_remplacee')!;
   const ordered = orderedCards(cards);
-  const articleOf = (card: typeof grouped) => screen.findByRole('article', { name: new RegExp(`^Carte ${ordered.indexOf(card) + 1} sur`) });
+  const articleOf = (card: typeof grouped) => screen.findByRole('article', { name: new RegExp(`^Question ${ordered.indexOf(card) + 1} sur`) });
 
   beforeEach(() => {
     vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
@@ -1217,7 +1217,7 @@ describe('À clarifier (audit 0.16.0, plan-construire-v1, lot A)', () => {
     expect(within(answers).getAllByRole('button').map(b => b.textContent)).toEqual(['Je confirme', 'Autre réponse', 'Plus tard']);
     expect(screen.queryByRole('group', { name: /Recommandation/ })).not.toBeInTheDocument();
     // Les cartes rangées dessous se consultent, repliées.
-    const ranged = within(article).getByText('1 carte ligne par ligne rangée sous celle-ci, qui n\'est plus posée').closest('details')!;
+    const ranged = within(article).getByText('1 question réglée par KnowDesk avec celle-ci, qui ne vous est plus posée').closest('details')!;
     expect(ranged.open).toBe(false);
     expect(ranged).toHaveTextContent('Prix de l\'offre Elyra Fixe 2 ans (particuliers)');
     fireEvent.click(within(answers).getByRole('button', { name: 'Je confirme' }));
@@ -1288,7 +1288,7 @@ describe('Lecture v2 réelle d\'Elyra (audit 0.16.0) : de bout en bout', () => {
   const formation = reuses.find(c => c.analysis.subject.startsWith('2026-01-15_Formation_Onboarding'))!;
   const tableau = reuses.find(c => c.analysis.subject.startsWith('Tableau_comparatif_gamme_2026'))!;
   const ordered = orderedCards(cards);
-  const articleOf = (card: typeof replacement) => screen.findByRole('article', { name: new RegExp(`^Carte ${ordered.indexOf(card) + 1} sur`) });
+  const articleOf = (card: typeof replacement) => screen.findByRole('article', { name: new RegExp(`^Question ${ordered.indexOf(card) + 1} sur`) });
 
   beforeEach(() => {
     vi.mocked(onboardingApi.listAnalyses).mockReset().mockResolvedValue({ data: [analysis], meta: { quota: { used: 1, max: 5 } } });
@@ -1317,7 +1317,7 @@ describe('Lecture v2 réelle d\'Elyra (audit 0.16.0) : de bout en bout', () => {
     expect(differences).toHaveTextContent('Elyra Fixe 2 ans · Base · kWh € TTC (Base ou HP) : 0,2018 € → 0,1952 €');
     expect(differences).toHaveTextContent('Elyra Gaz Fixe 1 an · kWh € TTC : 0,1189 € → 0,1124 €');
     expect(within(article).queryByRole('complementary', { name: 'Analyse proposée par l\'IA' })).not.toBeInTheDocument();
-    const ranged = within(article).getByText('2 cartes ligne par ligne rangées sous celle-ci, qui ne sont plus posées').closest('details')!;
+    const ranged = within(article).getByText('2 questions réglées par KnowDesk avec celle-ci, qui ne vous sont plus posées').closest('details')!;
     expect(ranged.open).toBe(false);
     expect(ranged).toHaveTextContent('Prix de l\'offre Elyra Fixe 2 ans dans la grille tarifaire v1');
     const answers = screen.getByRole('group', { name: 'Répondre à la carte' });
@@ -1333,7 +1333,7 @@ describe('Lecture v2 réelle d\'Elyra (audit 0.16.0) : de bout en bout', () => {
     const article = await articleOf(formation);
     expect(article).toHaveTextContent('Ce document reprend les valeurs d\'une version remplacée ; ses valeurs seront mises à jour avec celles de la nouvelle.');
     expect(within(article).getByRole('region', { name: 'Les valeurs à mettre à jour' })).toHaveTextContent('TRVE HT – 8 %');
-    const ranged = within(article).getByText('1 carte ligne par ligne rangée sous celle-ci, qui n\'est plus posée').closest('details')!;
+    const ranged = within(article).getByText('1 question réglée par KnowDesk avec celle-ci, qui ne vous est plus posée').closest('details')!;
     expect(ranged).toHaveTextContent('Mention du tarif réglementé du gaz dans la formation onboarding');
     const answers = screen.getByRole('group', { name: 'Répondre à la carte' });
     expect(within(answers).getAllByRole('button').map(b => b.textContent)).toEqual([

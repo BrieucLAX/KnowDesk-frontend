@@ -92,7 +92,7 @@ export function DecisionActions({
       {current && <CurrentDecision question={question} current={current} />}
 
       {mode === 'menu' && (
-        <div className="obp-decision__actions" role="group" aria-label="Trancher la question">
+        <div className="obp-decision__actions" role="group" aria-label="Répondre à la question">
           {question.options.map((o, i) => (
             <Button key={i} variant="secondary" size="sm" disabled={busy}
               title={o.label} onClick={() => void submit(buildChoose(question, i))}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lock, Sparkles } from 'lucide-react';
+import { CircleCheck, Lock, Sparkles } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import './Origin.css';
 
@@ -48,7 +48,7 @@ export function KnowDeskBlock({ mention, children, actions, className, as = 'div
   );
 }
 
-/** Badge « Tranché automatiquement par KnowDesk » (cx-badge--accent), avec l'icône sparkles. */
+/** Badge « Réglé automatiquement par KnowDesk » (cx-badge--accent), avec l'icône sparkles. */
 export function KnowDeskBadge({ children, className }: MentionProps) {
   return (
     <span className={cn('badge badge--accent', className)}>
@@ -56,6 +56,14 @@ export function KnowDeskBadge({ children, className }: MentionProps) {
       {children}
     </span>
   );
+}
+
+/**
+ * Picto « cercle coché » en prune d'une question réglée par KnowDesk (US 3.1) : à droite du
+ * libellé, comme celui d'une question répondue (vert). Dit « Réglée par KnowDesk » aux lecteurs d'écran.
+ */
+export function KnowDeskCheck({ className }: { className?: string }) {
+  return <CircleCheck size={16} className={cn('kd-check', className)} role="img" aria-label="Réglée par KnowDesk" />;
 }
 
 /** Badge primary de ce que l'utilisateur a ajouté (« Ajouté par vous ») ou modifié (« Modifié par vous »). */

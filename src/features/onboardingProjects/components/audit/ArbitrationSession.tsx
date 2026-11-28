@@ -43,7 +43,7 @@ export function ArbitrationSession({ audit, projectId, analysisId, arbitration, 
   if (!list) {
     return (
       <div className="obp-arb">
-        <p className="obp-muted">Aucune question à trancher dans cet audit.</p>
+        <p className="obp-muted">Aucune question dans cet audit.</p>
         <Button variant="ghost" size="sm" onClick={onExit}>Revenir à l'audit</Button>
       </div>
     );
@@ -78,7 +78,7 @@ export function ArbitrationSession({ audit, projectId, analysisId, arbitration, 
           options={lists.map(l => ({ id: l.id, label: l.label, count: l.steps.length }))}
           value={list.id}
           onChange={setListId}
-          ariaLabel="Listes à trancher"
+          ariaLabel="Listes de questions"
         />
       )}
 

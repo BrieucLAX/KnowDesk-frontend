@@ -1,0 +1,38 @@
+/* ─────────────────────────────────────────────────────────────
+   Select — sélecteur natif (Select.tsx), fiche Select du design system CX.
+   36 px par défaut (ligne de liste ou de tableau), cx-select--lg à 48 px
+   (aligné sur les champs), cx-select--block sur toute la largeur.
+   La flèche chevron-down est à 12 px du bord droit ; 36 px sont réservés
+   à droite pour que le texte ne passe jamais dessous.
+   ───────────────────────────────────────────────────────────── */
+
+.cx-select { position: relative; display: inline-flex; align-items: center; max-width: 100%; }
+.cx-select select {
+  height: var(--select-h);
+  max-width: 100%;
+  padding: 0 36px 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+.cx-select select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.cx-select select:disabled { background: var(--surface); color: var(--ink-muted); cursor: not-allowed; }
+/* Erreur : même contour que les champs (.field-input--error). */
+.cx-select select[aria-invalid="true"] { border-color: var(--danger); box-shadow: inset 0 0 0 1px var(--danger); }
+.cx-select .cx-icon {
+  position: absolute; right: 12px;
+  width: 16px; height: 16px;
+  color: var(--ink-muted);
+  pointer-events: none;
+}
+
+.cx-select--lg select { height: var(--input-h); padding-left: var(--space-4); font-size: 15px; }
+.cx-select--block, .cx-select--block select { width: 100%; }

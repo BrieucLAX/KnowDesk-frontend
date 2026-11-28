@@ -6,7 +6,7 @@
    ───────────────────────────────────────────────────────────── */
 
 .actionbar {
-  position: sticky; bottom: calc(var(--space-4) + env(safe-area-inset-bottom)); z-index: 4;
+  position: sticky; bottom: calc(var(--space-4) + env(safe-area-inset-bottom)); z-index: var(--z-sticky);
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px var(--space-4);
   margin-top: var(--space-2);
   padding: var(--space-4) 20px;
