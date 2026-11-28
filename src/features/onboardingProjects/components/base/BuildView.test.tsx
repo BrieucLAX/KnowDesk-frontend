@@ -241,6 +241,20 @@ describe('« Articles rédigés » : chaque passage avec ses sources', () => {
     expect(container.textContent).not.toMatch(/\b(card|sub|ch|doc|blk|pt)_|duplicate|kept_block/);
   });
 
+  it('US 5.3 : pas de badge « N phrases à vérifier » en haut de l\'article ; la phrase reste surlignée dans le texte', async () => {
+    mock([buildRow()]);
+    show();
+    await openTab('Articles rédigés');
+    await screen.findByText('6 articles · 2 phrases à vérifier · 1 texte saisi par l\'expert');
+    const marks = document.querySelectorAll('.obp-build-article mark.obp-base-verify');
+    expect(marks.length).toBeGreaterThan(0);
+    for (const article of document.querySelectorAll('.obp-build-article')) {
+      const head = article.querySelector('.obp-build-article__head')!;
+      expect(head.textContent).not.toMatch(/à vérifier/);
+      expect(within(article as HTMLElement).queryByText(/^\d+ phrases? à vérifier$/)).not.toBeInTheDocument();
+    }
+  });
+
   it('par catégorie, chaque article : question, public, blocs, sources, sans aucun code', async () => {
     mock([buildRow()]);
     const { container } = show();

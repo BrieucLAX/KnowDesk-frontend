@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
+import { Select } from '../../../../shared/components/ui/Select';
 import { EmptyState } from '../../../../shared/components/ui/EmptyState';
 import { Tabs, TabPanel } from '../../../../shared/components/ui/Tabs';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
@@ -153,8 +154,8 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, kn
     return (
       <EmptyState
         title="Aucun plan pour l'instant"
-        description="Le plan de la nouvelle base se prépare depuis « À clarifier », une fois toutes les cartes bloquantes tranchées."
-        ctaLabel="Aller à « À clarifier »"
+        description="Le plan de la nouvelle base se prépare depuis « Questions », une fois que toutes les questions bloquantes ont une réponse."
+        ctaLabel="Aller à « Questions »"
         onCta={() => onGoToClarify()}
       />
     );
@@ -276,11 +277,11 @@ export function PlanTab({ projectId, analysisId, audit, cards, onGoToClarify, kn
           {succeeded.length > 1 && (
             <label className="obp-audit-picker">
               <span className="obp-muted">Version</span>
-              <select value={shownId ?? ''} onChange={e => setSelected(e.target.value)}>
+              <Select value={shownId ?? ''} onChange={e => setSelected(e.target.value)}>
                 {succeeded.map((p, i) => (
                   <option key={p.id} value={p.id}>{formatFull(p.finishedAt)}{i === 0 ? ' (la plus récente)' : ''}</option>
                 ))}
-              </select>
+              </Select>
             </label>
           )}
         </div>
@@ -385,7 +386,7 @@ export function PlanProgress({ plan, onGoToClarify }: { plan: OnboardingPlan; on
       {plan.status === 'failed' && (
         <>
           <p className="obp-analysis__error" role="alert">{planFailureMessage(plan.errorCode)}</p>
-          <Button variant="secondary" size="md" onClick={() => onGoToClarify()}>Aller à « À clarifier »</Button>
+          <Button variant="secondary" size="md" onClick={() => onGoToClarify()}>Aller à « Questions »</Button>
         </>
       )}
     </section>
@@ -552,7 +553,7 @@ export function PlanView({ projectId, planId, plan, audit, cards, comments, comm
 
       {footer ?? (
         <p className="obp-plan__next">
-          Vous pouvez encore modifier vos réponses dans « À clarifier », puis préparer le plan à nouveau.
+          Vous pouvez encore modifier vos réponses dans « Questions », puis préparer le plan à nouveau.
         </p>
       )}
     </div>

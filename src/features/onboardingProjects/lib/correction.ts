@@ -311,10 +311,10 @@ export function blockingCardsLeft(cards: ReadingCard[], current: ReadonlyMap<str
 
 export function blockingLeftLabel({ left, later }: { left: number; later: number }): string {
   const head = left > 1
-    ? `Encore ${left} cartes bloquantes à trancher avant de préparer la nouvelle base.`
-    : 'Encore 1 carte bloquante à trancher avant de préparer la nouvelle base.';
+    ? `Encore ${left} questions bloquantes sans réponse avant de préparer la nouvelle base.`
+    : 'Encore 1 question bloquante sans réponse avant de préparer la nouvelle base.';
   if (later === 0) return head;
-  return `${head} « Plus tard » ne tranche pas une carte bloquante${later < left ? ` (${later} sur ${left})` : ''}.`;
+  return `${head} « Plus tard » ne compte pas comme une réponse à une question bloquante${later < left ? ` (${later} sur ${left})` : ''}.`;
 }
 
 // ── Progression ───────────────────────────────────────────────

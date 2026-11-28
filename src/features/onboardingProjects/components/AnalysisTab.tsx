@@ -144,7 +144,7 @@ export function AnalysisTab({ project, onChanged, onOpenAudit }: AnalysisTabProp
             {latest ? 'Lancer une nouvelle analyse' : 'Lancer l\'analyse'}
           </h2>
           <p className="obp-muted">
-            L'analyse lit vos documents avec votre fiche de cadrage, puis prépare les questions à trancher.
+            L'analyse lit vos documents avec votre fiche de cadrage, puis prépare les questions auxquelles vous répondrez.
             Elle peut durer jusqu'à une heure.
           </p>
           <ul className="obp-launch__summary">

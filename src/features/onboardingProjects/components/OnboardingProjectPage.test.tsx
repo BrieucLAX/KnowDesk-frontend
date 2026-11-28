@@ -185,19 +185,19 @@ describe('Page projet : étapes terminées (lot 7b)', () => {
     const { unmount } = renderPage('audit');
     await waitFor(() => expect(step('Analyse (terminée)')).toBeInTheDocument());
     await screen.findByRole('button', { name: 'Reprendre' });
-    expect(step('À clarifier')).toBeInTheDocument();
+    expect(step('Questions')).toBeInTheDocument();
     unmount();
 
     vi.mocked(onboardingApi.listDecisions).mockResolvedValue(state(blocking.map(c => answer(c.id))));
     renderPage('audit');
-    await waitFor(() => expect(step('À clarifier (terminée)')).toBeInTheDocument());
+    await waitFor(() => expect(step('Questions (terminée)')).toBeInTheDocument());
   });
 
   it('« Nouvelle base » dit aussi ce qu\'elle a lu : l\'analyse réussie et les cartes bloquantes toutes répondues', async () => {
     vi.mocked(onboardingApi.listAnalyses).mockResolvedValue({ data: [analysis()], meta: { quota: { used: 1, max: 5 } } });
     vi.mocked(onboardingApi.listDecisions).mockResolvedValue(state(cards.filter(c => NATURES[c.nature].blocking).map(c => answer(c.id))));
     renderPage('base');
-    await waitFor(() => expect(step('À clarifier (terminée)')).toBeInTheDocument());
+    await waitFor(() => expect(step('Questions (terminée)')).toBeInTheDocument());
     expect(step('Analyse (terminée)')).toBeInTheDocument();
     expect(step('Nouvelle base')).toHaveAttribute('aria-current', 'step');
   });

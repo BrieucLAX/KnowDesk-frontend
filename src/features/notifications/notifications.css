@@ -21,7 +21,7 @@
   border-right: 1px solid var(--neutral-100);
   box-shadow: var(--shadow-lg);
   display: flex; flex-direction: column;
-  z-index: 200;
+  z-index: var(--z-floating);
   animation: slide-in-left 0.2s ease;
 }
 @keyframes slide-in-left {

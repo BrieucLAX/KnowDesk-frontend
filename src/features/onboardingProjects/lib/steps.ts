@@ -20,9 +20,9 @@ export const STEPS: readonly StepDef[] = [
     lead: 'Décrivez votre métier, pour que l\'analyse lise vos documents dans leur contexte.' },
   { id: 'analysis',  label: 'Analyse',          icon: FileSearch,
     lead: 'Lancez l\'analyse de vos documents avec votre fiche de cadrage, puis suivez son avancement.' },
-  // L'URL reste `audit`.
-  { id: 'audit',     label: 'À clarifier',      icon: Scale,
-    lead: 'Répondez aux cartes que l\'analyse a relevées dans vos documents.' },
+  // L'URL reste `audit`. « Questions » (US 3.1, lot étape A) : le mot « trancher » n'est plus employé.
+  { id: 'audit',     label: 'Questions',        icon: Scale,
+    lead: 'Répondez aux questions que l\'analyse a relevées dans vos documents.' },
   { id: 'base',      label: 'Nouvelle base',    icon: List,
     lead: 'Relisez la nouvelle base préparée à partir de vos documents et de vos réponses.' },
 ];

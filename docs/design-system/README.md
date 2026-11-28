@@ -77,7 +77,7 @@ Les écrans d'un parcours en étapes (comme l'onboarding) suivent tous la même 
 
 ## Composants
 
-Treize composants, en HTML et CSS, préfixés `cx-` : `Button`, `TextField`, `SearchBar`, `Badge`, `Alert`, `Card`, `SegmentedControl`, `Modal`, `PageHeader`, `Stepper`, `IconTile`, `ActionBar`, `KnowDeskContent`. Chacun a sa fiche avec les classes, ce que l'intégrateur fournit et les règles d'usage.
+Quatorze composants, en HTML et CSS, préfixés `cx-` : `Button`, `TextField`, `Select`, `SearchBar`, `Badge`, `Alert`, `Card`, `SegmentedControl`, `Modal`, `PageHeader`, `Stepper`, `IconTile`, `ActionBar`, `KnowDeskContent`. Chacun a sa fiche avec les classes, ce que l'intégrateur fournit et les règles d'usage.
 
 ## Pour les sessions de développement
 

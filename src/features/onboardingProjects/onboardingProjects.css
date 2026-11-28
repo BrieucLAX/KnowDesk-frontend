@@ -275,11 +275,6 @@
 .obp-audit-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
 .obp-audit-head .obp-section-title { margin: 0; }
 .obp-audit-picker { display: flex; align-items: center; gap: 8px; }
-.obp-audit-picker select {
-  height: 32px; padding: 0 8px;
-  border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
-  background: var(--neutral-0); color: var(--neutral-900); font: inherit; font-size: 13px;
-}
 .obp-audit-unsupported {
   margin: 0; padding: 12px 16px;
   background: var(--color-danger-bg); border: 1px solid var(--color-danger-border); border-radius: var(--radius-md);
@@ -441,6 +436,12 @@
 .obp-clarify-nav-group { display: flex; flex-direction: column; gap: 4px; }
 .obp-clarify-nav-group + .obp-clarify-nav-group { margin-top: 8px; }
 .obp-clarify-nav-group__title { margin: 0; font-size: 12px; font-weight: 600; color: var(--neutral-500); text-transform: uppercase; letter-spacing: .03em; }
+/* Étape « Questions » (US 3.1) : deux blocs dans la liste, un cercle coché à droite du libellé. */
+.obp-q-block { display: flex; flex-direction: column; gap: var(--space-2); }
+.obp-q-block + .obp-q-block { margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--line); }
+.obp-q-block ol { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.obp-q-block__title { margin: 0; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--ink); }
+.obp-q-check { flex-shrink: 0; color: var(--success); }
 
 .obp-clarify-nature { background: var(--brand-50); color: var(--brand-700); }
 .obp-clarify-nature--incomplete_or_outdated { background: var(--neutral-100); color: var(--neutral-700); }
@@ -839,7 +840,6 @@ p.obp-kb__blockers { padding-left: 14px; }
 /* « Voir l'article » amène l'article en haut de la vue : sous l'en-tête fixe de l'application (68 px), le titre et la question resteraient cachés. */
 .obp-build-article { scroll-margin-top: 84px; }
 .obp-build-article__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
-.obp-build-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--color-warning-bg); color: var(--neutral-900); font-size: 12px; font-weight: 600; }
 .obp-build-intertitle { margin: 8px 0 0; font-size: 14px; font-weight: 600; color: var(--neutral-900); }
 .obp-build-block { display: flex; flex-direction: column; gap: 4px; padding-left: 12px; border-left: 2px solid var(--neutral-100); }
 .obp-build-text { margin: 0; font-size: 14px; line-height: 1.55; color: var(--neutral-900); }
@@ -875,6 +875,7 @@ p.obp-kb__blockers { padding-left: 14px; }
 .obp-plan-edits__list { margin: 8px 0; padding-left: 20px; }
 .obp-plan-edits__list li, .obp-plan-gone li { margin: 4px 0; }
 .obp-plan-input { display: block; width: 100%; margin: 4px 0 12px; padding: 8px 10px; border: 1px solid var(--neutral-300); border-radius: 6px; font: inherit; background: var(--surface); color: var(--neutral-900); }
+.obp-plan-select { margin: var(--space-2) 0 var(--space-4); }
 .obp-plan-merge { margin-top: 8px; padding: 8px 12px; border-radius: 6px; background: var(--neutral-50); }
 .obp-plan-merge p { margin: 4px 0; }
 

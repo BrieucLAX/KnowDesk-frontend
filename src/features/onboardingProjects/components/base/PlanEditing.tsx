@@ -1,5 +1,6 @@
 import React, { useId, useState } from 'react';
 import { Button } from '../../../../shared/components/ui/Button';
+import { Select } from '../../../../shared/components/ui/Select';
 import { ConfirmDialog } from '../../../../shared/components/ui/ConfirmDialog';
 import { Modal } from '../../../../shared/components/ui/Modal';
 import { formatFull } from '../../../../shared/lib/formatDate';
@@ -185,11 +186,11 @@ function MoveDialog({ plan, subject, from, busy, onMove, onCancel }: {
       )}
     >
       <label htmlFor={chapterField} className="obp-base-label">Catégorie</label>
-      <select id={chapterField} className="obp-plan-input" value={chapterId}
+      <Select id={chapterField} size="lg" block wrapperClassName="obp-plan-select" value={chapterId}
         onChange={e => { setChapterId(e.target.value); setAfter(FIRST); }}>
         {plan.chapters.map((c, i) => <option key={c.id} value={c.id}>Catégorie {i + 1} · {c.title}</option>)}
         <option value={NEW_CHAPTER}>+ Nouvelle catégorie…</option>
-      </select>
+      </Select>
       {isNew ? (
         <>
           <label htmlFor={nameField} className="obp-base-label">Nom de la nouvelle catégorie</label>
@@ -199,10 +200,10 @@ function MoveDialog({ plan, subject, from, busy, onMove, onCancel }: {
       ) : (
         <>
           <label htmlFor={positionField} className="obp-base-label">Position</label>
-          <select id={positionField} className="obp-plan-input" value={position} onChange={e => setAfter(e.target.value)}>
+          <Select id={positionField} size="lg" block wrapperClassName="obp-plan-select" value={position} onChange={e => setAfter(e.target.value)}>
             <option value={FIRST}>En premier</option>
             {others.map(s => <option key={s.id} value={s.id}>Après « {s.title} »</option>)}
-          </select>
+          </Select>
         </>
       )}
     </Modal>
@@ -231,7 +232,7 @@ function MergeDialog({ plan, subject, busy, onMerge, onCancel }: {
       )}
     >
       <label htmlFor={field} className="obp-base-label">Réunir dans l'article</label>
-      <select id={field} className="obp-plan-input" value={intoId} onChange={e => setIntoId(e.target.value)}>
+      <Select id={field} size="lg" block wrapperClassName="obp-plan-select" value={intoId} onChange={e => setIntoId(e.target.value)}>
         <option value="">Choisir un article…</option>
         {plan.chapters.map((ch, i) => {
           const options = ch.subjects.filter(s => s.id !== subject.id);
@@ -241,7 +242,7 @@ function MergeDialog({ plan, subject, busy, onMerge, onCancel }: {
             </optgroup>
           );
         })}
-      </select>
+      </Select>
       {into && (
         <div className="obp-plan-merge" role="status">
           <p>

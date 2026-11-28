@@ -1,0 +1,88 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 1720,
+      "title": "2 · Contexte métier (fiche de cadrage guidée)",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Carte.dc.html",
+      "x": 1360,
+      "y": 0,
+      "w": 1280,
+      "h": 1400,
+      "title": "3 · Questions",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Plan.dc.html",
+      "x": 2720,
+      "y": 0,
+      "w": 1280,
+      "h": 1760,
+      "title": "4 · Plan à valider",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Relecture.dc.html",
+      "x": 4080,
+      "y": 0,
+      "w": 1280,
+      "h": 1360,
+      "title": "5 · Relecture et publication",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Documents.dc.html",
+      "x": -1360,
+      "y": 0,
+      "w": 1280,
+      "h": 1700,
+      "title": "1 · Documents (import et classement)",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Fin.dc.html",
+      "x": 5440,
+      "y": 0,
+      "w": 1280,
+      "h": 1240,
+      "title": "6 · Base publiée pour relecture",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Changer.dc.html",
+      "x": 1360,
+      "y": 1520,
+      "w": 1280,
+      "h": 1500,
+      "title": "3 · Changer une réponse réglée par KnowDesk",
+      "expand": "fill",
+      "is_interactive": true
+    }
+  ],
+  "annotations": [
+    {
+      "id": "titre",
+      "x": -1360,
+      "y": -300,
+      "w": 240,
+      "maxW": 8000,
+      "text": "KnowDesk · parcours d'onboarding cible",
+      "kind": "title1"
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

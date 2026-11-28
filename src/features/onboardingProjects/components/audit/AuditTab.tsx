@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button }     from '../../../../shared/components/ui/Button';
+import { Select } from '../../../../shared/components/ui/Select';
 import { Skeleton }   from '../../../../shared/components/ui/Skeleton';
 import { EmptyState } from '../../../../shared/components/ui/EmptyState';
 import { useToast }   from '../../../../shared/lib/useToast';
@@ -148,13 +149,13 @@ export function AuditTab({ project, onGoToAnalysis, onOpenBase, openCardId }: Au
         {analyses.length > 1 && (
           <label className="obp-audit-picker">
             <span className="obp-muted">Analyse</span>
-            <select value={current.id} onChange={e => setSelected(e.target.value)}>
+            <Select value={current.id} onChange={e => setSelected(e.target.value)}>
               {analyses.map((a, i) => (
                 <option key={a.id} value={a.id}>
                   {formatFull(a.finishedAt ?? a.createdAt)}{i === 0 ? ' (la plus récente)' : ''}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
         )}
       </div>

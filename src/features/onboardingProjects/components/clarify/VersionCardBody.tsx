@@ -44,10 +44,10 @@ function Ranged({ audit, cards }: { audit: Audit; cards: RangedCard[] }) {
     <details className="obp-clarify-version__ranged">
       <summary>
         {cards.length > 1
-          ? `${cards.length} cartes ligne par ligne rangées sous celle-ci, qui ne sont plus posées`
-          : '1 carte ligne par ligne rangée sous celle-ci, qui n\'est plus posée'}
+          ? `${cards.length} questions réglées par KnowDesk avec celle-ci, qui ne vous sont plus posées`
+          : '1 question réglée par KnowDesk avec celle-ci, qui ne vous est plus posée'}
       </summary>
-      <KnowDeskBadge>Tranché automatiquement par KnowDesk</KnowDeskBadge>
+      <KnowDeskBadge>Réglé automatiquement par KnowDesk</KnowDeskBadge>
       <ul>
         {cards.map(c => <li key={c.cardId}>{c.subject} (<DocNames audit={audit} ids={c.documentIds} />)</li>)}
       </ul>

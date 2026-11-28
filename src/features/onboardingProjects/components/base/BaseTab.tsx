@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Skeleton }   from '../../../../shared/components/ui/Skeleton';
+import { Select } from '../../../../shared/components/ui/Select';
 import { EmptyState } from '../../../../shared/components/ui/EmptyState';
 import { useToast }   from '../../../../shared/lib/useToast';
 import { usePolling } from '../../../../shared/lib/usePolling';
@@ -174,8 +175,8 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
       <>
         <EmptyState
           title="Aucune nouvelle base pour l'instant"
-          description="Elle se prépare depuis « À clarifier », une fois toutes les cartes bloquantes tranchées."
-          ctaLabel="Aller à « À clarifier »"
+          description="Elle se prépare depuis « Questions », une fois que toutes les questions bloquantes ont une réponse."
+          ctaLabel="Aller à « Questions »"
           onCta={() => onGoToClarify()}
         />
         {blocking.length > 0 && (
@@ -208,11 +209,11 @@ export function BaseTab({ project, onGoToClarify, onOpenValidation, onOpenKnowle
           {succeeded.length > 1 && (
             <label className="obp-audit-picker">
               <span className="obp-muted">Version</span>
-              <select value={shownId ?? ''} onChange={e => setSelected(e.target.value)}>
+              <Select value={shownId ?? ''} onChange={e => setSelected(e.target.value)}>
                 {succeeded.map((c, i) => (
                   <option key={c.id} value={c.id}>{formatFull(c.finishedAt)}{i === 0 ? ' (la plus récente)' : ''}</option>
                 ))}
-              </select>
+              </Select>
             </label>
           )}
         </div>

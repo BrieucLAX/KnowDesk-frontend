@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '../../../shared/components/ui/Button';
+import { Select } from '../../../shared/components/ui/Select';
 import { Input }  from '../../../shared/components/ui/Input';
 import { CADRAGE_LIMITS, CADRAGE_SECTIONS, type CadrageErrors, type CadrageSectionKey } from '../lib/cadrageForm';
 import { TextArea } from './TextArea';
@@ -339,9 +340,10 @@ export function LimitedDocumentsSection({ form, errors, documents, edit, readOnl
         >
           <div className="field">
             <label htmlFor={`obp-limited-${i}-doc`} className="field-label">Document</label>
-            <select
+            <Select
               id={`obp-limited-${i}-doc`}
-              className={`field-input${err(i, 'document') ? ' field-input--error' : ''}`}
+              size="lg"
+              block
               value={ld.document}
               disabled={readOnly}
               aria-invalid={!!err(i, 'document')}
@@ -352,7 +354,7 @@ export function LimitedDocumentsSection({ form, errors, documents, edit, readOnl
               {ld.document && !inProject.has(ld.document) && (
                 <option value={ld.document}>{ld.document} (absent du projet)</option>
               )}
-            </select>
+            </Select>
             {ld.document && !inProject.has(ld.document) && (
               <p className="obp-absent-note">
                 Ce document n'est plus dans le projet. Réimportez-le sous le même nom pour qu'il reprenne sa place.

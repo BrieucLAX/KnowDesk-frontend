@@ -24,10 +24,10 @@ interface PlanEntryProps {
 /** Le nombre de cartes bloquantes qui restent, dit pour le plan. */
 export function planBlockingLeftLabel({ left, later }: { left: number; later: number }): string {
   const head = left > 1
-    ? `Encore ${left} cartes bloquantes à trancher avant de préparer le plan.`
-    : 'Encore 1 carte bloquante à trancher avant de préparer le plan.';
+    ? `Encore ${left} questions bloquantes sans réponse avant de préparer le plan.`
+    : 'Encore 1 question bloquante sans réponse avant de préparer le plan.';
   if (later === 0) return head;
-  return `${head} « Plus tard » ne tranche pas une carte bloquante${later < left ? ` (${later} sur ${left})` : ''}.`;
+  return `${head} « Plus tard » ne compte pas comme une réponse à une question bloquante${later < left ? ` (${later} sur ${left})` : ''}.`;
 }
 
 /**

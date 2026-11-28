@@ -3,8 +3,8 @@ import { Button }   from '../../../../shared/components/ui/Button';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import { docNaming, fileName, type Audit } from '../../lib/audit';
 import {
-  baseAnnouncement, CARD_STATUS_LABEL, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, failedDetections, groupByNature,
-  isVersionCard, modelNatureLabel, NATURES, notYetDetections, orderedCards, rejectedPointLabel, toQuotes, unavailableLabel, unreadFiles, unreadImagesText, unverifiedCounts,
+  answersLabel, baseAnnouncement, cardProgress, cardStatus, cardTitle, clarifySummary, describeSummary, failedDetections, groupByNature,
+  isVersionCard, modelNatureLabel, NATURES, notYetDetections, orderedCards, rejectedPointLabel, settledQuestions, toQuotes, unavailableLabel, unreadFiles, unreadImagesText, unverifiedCounts,
   unverifiedReasonLabel, type Reading,
 } from '../../lib/reading';
 import type { Arbitration } from '../../hooks/useArbitration';
@@ -13,8 +13,9 @@ import { ClarifyQuote, CodeFactsBox, ModelAnalysisBox } from './ReadingCardView'
 import { CurrentAnswer } from './CardAnswers';
 import { StatusIcon } from '../../../../shared/components/ui/StatusIcon';
 import { Alert } from '../../../../shared/components/ui/Alert';
-import { KnowDeskMention } from '../../../../shared/components/ui/Origin';
+import { KnowDeskCheck, KnowDeskMention } from '../../../../shared/components/ui/Origin';
 import { fromDocuments } from '../../lib/format';
+import { AnsweredCheck } from './QuestionCheck';
 
 interface ClarifyViewProps {
   audit:       Audit;
@@ -25,8 +26,6 @@ interface ClarifyViewProps {
   /** « Préparer la nouvelle base » (dernière analyse seulement), sous le résumé. */
   correction?: React.ReactNode;
 }
-
-const STATUS_CLASS = { open: 'todo', answered: 'decided', later: 'later' } as const;
 
 /**
  * Vue d'ensemble de l'audit 0.8.0 : le nombre de cartes annoncé et son résumé (cartes par nature,
@@ -51,6 +50,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
   const notYet = notYetDetections(reading);
   const unverifiedTotal = Object.values(reading.unverifiedQuotes).reduce<number>((n, c) => n + (c ?? 0), 0);
   const base = baseAnnouncement(reading);
+  const settled = settledQuestions(reading.cards);
 
   return (
     <div className="obp-audit obp-clarify">
@@ -70,8 +70,8 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
       <section className="obp-audit-section" aria-labelledby="obp-clarify-title">
         <h3 id="obp-clarify-title" className="obp-section-title">
           {reading.cards.length === 0
-            ? 'Aucune carte à clarifier'
-            : `${reading.cards.length} ${reading.cards.length > 1 ? 'cartes' : 'carte'} à clarifier`}
+            ? 'Aucune question n\'attend votre réponse'
+            : `${reading.cards.length} ${reading.cards.length > 1 ? 'questions attendent' : 'question attend'} votre réponse`}
         </h3>
         <div className="obp-clarify-summary">
           {describeSummary(clarifySummary(reading.cards, current), ready).map(line => <p key={line}>{line}</p>)}
@@ -84,10 +84,10 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
         {ready && reading.cards.length > 0 && (
           <div className="obp-arb-entry">
             <Button variant="primary" size="md" onClick={() => onOpen(null)}>
-              {!arbitrable ? 'Consulter les cartes' : current.size > 0 ? 'Reprendre' : 'Commencer'}
+              {!arbitrable ? 'Consulter les questions' : current.size > 0 ? 'Reprendre' : 'Commencer'}
             </Button>
             <span className="obp-muted">
-              {p.answered} sur {p.total} {p.total > 1 ? 'cartes répondues' : 'carte répondue'}
+              {answersLabel(p.answered, p.total)}
               {p.later > 0 ? `, ${p.later} pour plus tard` : ''}
             </span>
           </div>
@@ -106,14 +106,13 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
           <ul className="obp-audit-list">
             {g.cards.map(c => {
               const decision = current.get(c.id);
-              const st = cardStatus(decision);
               return (
                 <li key={c.id} className="obp-clarify-row">
                   <button type="button" className="obp-clarify-row__open" onClick={() => onOpen(c.id)}>
                     <span className="obp-clarify-row__title">{cardTitle(c, ordered.indexOf(c) + 1)}</span>
                     {/* Le titre d'une carte de versions nomme déjà ses documents. */}
                     {!isVersionCard(c) && <span className="obp-clarify-row__docs"><DocNames audit={audit} ids={c.documentIds} /></span>}
-                    {ready && <span className={`obp-arb__status obp-arb__status--${STATUS_CLASS[st]}`}>{CARD_STATUS_LABEL[st]}</span>}
+                    {ready && cardStatus(decision) === 'answered' && <AnsweredCheck />}
                   </button>
                   {decision && <CurrentAnswer card={c} current={decision} docs={docs} />}
                 </li>
@@ -122,6 +121,27 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
           </ul>
         </section>
       ))}
+
+      {settled.length > 0 && (
+        // US 3.1 : les questions réglées par KnowDesk (cartes rangées sous une carte de versions),
+        // hors du compte des réponses ; chacune se lit sous la carte qui la règle.
+        <section className="obp-audit-section" aria-labelledby="obp-clarify-settled">
+          <h3 id="obp-clarify-settled" className="obp-section-title">
+            <KnowDeskMention>{`Réglées par KnowDesk · ${settled.length}`}</KnowDeskMention>
+          </h3>
+          <ul className="obp-audit-list">
+            {settled.map(({ ranged, byCardId }) => (
+              <li key={ranged.cardId} className="obp-clarify-row">
+                <button type="button" className="obp-clarify-row__open" onClick={() => onOpen(byCardId)}>
+                  <span className="obp-clarify-row__title">{ranged.subject}</span>
+                  <span className="obp-clarify-row__docs"><DocNames audit={audit} ids={ranged.documentIds} /></span>
+                  <KnowDeskCheck />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {!notesUnavailable && (
         <section className="obp-audit-section" aria-labelledby="obp-clarify-notes">
@@ -136,7 +156,7 @@ export function ClarifyView({ audit, reading, arbitration, onOpen, correction }:
                     {n.window.start || n.window.end
                       ? `Du ${n.window.start ?? '…'} au ${n.window.end ?? '…'}`
                       : 'Période non précisée'}
-                    <span className="obp-muted"> · rien à trancher</span>
+                    <span className="obp-muted"> · aucune réponse attendue</span>
                   </p>
                   {toQuotes(n.quotes).map((q, i) => <ClarifyQuote key={i} audit={audit} quote={q} />)}
                   <ModelAnalysisBox analysis={n.analysis} documents={n.documentIds.length} />

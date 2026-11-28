@@ -48,7 +48,7 @@
   background: var(--neutral-0); border: 1px solid var(--neutral-200);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  z-index: 60; max-height: 200px; overflow-y: auto;
+  z-index: var(--z-dropdown); max-height: 200px; overflow-y: auto;
   list-style: none; margin: 0; padding: 4px;
 }
 .chips-input__menu-item {

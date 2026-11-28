@@ -17,4 +17,5 @@ Un fond `cx-backdrop` qui couvre la page, et dedans une boîte `cx-modal` avec u
 ## Règles
 
 - Une modale par écran, jamais de modale dans une modale.
+- Le fond `cx-backdrop` passe au-dessus de tout le reste de la page (`z-index: 50`) : pastilles du Stepper, barre d'action collante, menus. Aucun autre élément ne doit dépasser cette valeur.
 - Pour une simple information, préférer un `cx-alert` dans la page.

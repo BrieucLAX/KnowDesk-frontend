@@ -308,7 +308,7 @@ export const NATURES: Readonly<Record<CardNature, { label: string; plural: strin
 };
 
 /** Libellé de la nature, avec un repli pour une valeur inconnue. */
-export const natureLabel = (n: string): string => (n in NATURES ? NATURES[n as CardNature].label : 'Point à clarifier');
+export const natureLabel = (n: string): string => (n in NATURES ? NATURES[n as CardNature].label : 'Question');
 
 /** Natures du modèle d'un point écarté (avant conversion en carte). */
 const MODEL_NATURES: Readonly<Record<string, string>> = {
@@ -703,6 +703,36 @@ export function cardProgress(cards: ReadingCard[], current: ReadonlyMap<string, 
 }
 
 /**
+ * Étape « Questions » (US 3.1) : « N réponses sur M ». M ne compte que les questions qui attendent
+ * une réponse de l'utilisateur (`reading.cards`) ; les questions réglées par KnowDesk (cartes
+ * rangées sous une carte de versions) n'y entrent jamais. « Plus tard » n'est pas une réponse.
+ */
+export function answersLabel(answered: number, total: number): string {
+  return `${answered} ${answered > 1 ? 'réponses' : 'réponse'} sur ${total}`;
+}
+
+/** Une question réglée par KnowDesk : une carte rangée, et la carte de versions qui la règle. */
+export interface SettledQuestion { ranged: RangedCard; byCardId: string }
+
+/**
+ * Les questions réglées par KnowDesk, sans statut nouveau : les cartes ligne par ligne rangées sous
+ * une carte de versions (« plus posées », `rangedCards`), une seule fois chacune, dans l'ordre des cartes.
+ */
+export function settledQuestions(cards: ReadingCard[]): SettledQuestion[] {
+  const seen = new Set<string>();
+  const out: SettledQuestion[] = [];
+  for (const card of orderedCards(cards)) {
+    const ranged = [...(card.replacement?.rangedCards ?? []), ...(card.versionReuse?.rangedCards ?? [])];
+    for (const r of ranged) {
+      if (seen.has(r.cardId)) continue;
+      seen.add(r.cardId);
+      out.push({ ranged: r, byCardId: card.id });
+    }
+  }
+  return out;
+}
+
+/**
  * Résumé de la vue d'ensemble : cartes par nature, dans l'ordre d'affichage ; celles qui bloquent
  * la publication (isBlocking), dont celles encore à traiter (« Plus tard » compris).
  */
@@ -716,19 +746,19 @@ export function clarifySummary(cards: ReadingCard[], current: ReadonlyMap<string
   };
 }
 
-/** Le résumé en clair : « 10 cartes : 2 contradictions, 1 erreur probable et 7 incomplets ou périmés. » */
+/** Le résumé en clair : « 10 questions : 2 contradictions, 1 erreur probable et 7 incomplets ou périmés. » */
 export function describeSummary(s: ReturnType<typeof clarifySummary>, withStatus: boolean): string[] {
   if (s.total === 0) return [];
   const parts = s.byNature.map(({ nature, count }) =>
     `${count} ${(count > 1 ? NATURES[nature].plural : NATURES[nature].label).toLowerCase()}`);
   const list = parts.length > 1 ? `${parts.slice(0, -1).join(', ')} et ${parts[parts.length - 1]}` : parts[0];
-  const lines = [`${s.total} ${s.total > 1 ? 'cartes' : 'carte'} : ${list}.`];
+  const lines = [`${s.total} ${s.total > 1 ? 'questions' : 'question'} : ${list}.`];
 
   if (s.blocking === 0) lines.push('Aucune ne bloque la publication.');
   else if (withStatus && s.blockingOpen === 0) {
     lines.push(s.blocking > 1
-      ? `Les ${s.blocking} cartes qui bloquaient la publication ont toutes une réponse.`
-      : 'La carte qui bloquait la publication a une réponse.');
+      ? `Les ${s.blocking} questions qui bloquaient la publication ont toutes une réponse.`
+      : 'La question qui bloquait la publication a une réponse.');
   } else {
     const head = s.blocking > 1
       ? `${s.blocking} bloquent la publication tant qu'elles n'ont pas de réponse`
@@ -794,7 +824,7 @@ export function recommendationOutcome(card: ReadingCard, name: (documentId: stri
   if ((card.absentReferences ?? []).length > 0) {
     return 'La base restera telle quelle, avec son avertissement : la source renvoie à un contenu absent de vos documents. Une précision de votre part s\'appliquera seule.';
   }
-  return 'Consigne seule : rien n\'est ajouté ni tranché dans la base par cette réponse ; la recommandation sert de consigne.';
+  return 'Consigne seule : rien n\'est ajouté ni décidé dans la base par cette réponse ; la recommandation sert de consigne.';
 }
 
 const FOLLOWED_EFFECT: Record<string, string> = {
@@ -1053,4 +1083,4 @@ export function versionCardsWaiting(cards: ReadingCard[], current: ReadonlyMap<s
 }
 
 export const versionCardWaitingMessage = (card: ReadingCard): string =>
-  `La carte « ${card.analysis.subject.trim()} » attend votre réponse.`;
+  `La question « ${card.analysis.subject.trim()} » attend votre réponse.`;

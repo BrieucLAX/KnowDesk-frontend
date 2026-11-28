@@ -110,7 +110,7 @@ export function AuditView({ audit, arbitration, questionFooter }: AuditViewProps
 
       {toVerify.length > 0 && (
         <Section id="obp-audit-to-verify" title="Points à vérifier visuellement" count={toVerify.length}>
-          <p className="obp-muted">Un des côtés a été lu dans une image : comparez l'extrait à l'image avant de trancher.</p>
+          <p className="obp-muted">Un des côtés a été lu dans une image : comparez l'extrait à l'image avant de répondre.</p>
           {toVerify.map((g, i) => <AuditQuestionGroup key={g[0].id} audit={audit} group={g} title={`Point à vérifier ${i + 1}`} footer={questionFooter} />)}
         </Section>
       )}
@@ -131,7 +131,7 @@ export function AuditView({ audit, arbitration, questionFooter }: AuditViewProps
             <ul className="obp-audit-list">
               {audit.automaticDecisions.map(d => (
                 <li key={d.id} className="obp-audit-card">
-                  <KnowDeskBadge>Tranché automatiquement par KnowDesk</KnowDeskBadge>
+                  <KnowDeskBadge>Réglé automatiquement par KnowDesk</KnowDeskBadge>
                   {d.rationale && <p className="obp-audit-question__text">{d.rationale}</p>}
                   {d.evidence.map((s, j) => <AuditSource key={j} audit={audit} source={s} />)}
                 </li>

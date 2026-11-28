@@ -101,16 +101,16 @@ describe('reading', () => {
     const all = [...cards, v];
     const none = new Map<string, Decision>();
     expect(describeSummary(clarifySummary(all, none), true)).toEqual([
-      '5 cartes : 1 contradiction, 2 changements datés, 1 erreur probable et 1 incomplet ou périmé.',
+      '5 questions : 1 contradiction, 2 changements datés, 1 erreur probable et 1 incomplet ou périmé.',
       '4 bloquent la publication tant qu\'elles n\'ont pas de réponse, dont 4 encore à traiter.',
     ]);
     const some = new Map([['c1', decision('c1', { type: 'same_meaning' })], ['d1', decision('d1', { type: 'later' })]]);
     expect(describeSummary(clarifySummary(all, some), true)[1]).toBe('4 bloquent la publication tant qu\'elles n\'ont pas de réponse, dont 3 encore à traiter.');
     expect(describeSummary(clarifySummary(all, some), false)[1]).toBe('4 bloquent la publication tant qu\'elles n\'ont pas de réponse.');
     const done = new Map(['c1', 'd1', 'd2', 'v'].map(id => [id, decision(id, { type: 'same_meaning' })]));
-    expect(describeSummary(clarifySummary(all, done), true)[1]).toBe('Les 4 cartes qui bloquaient la publication ont toutes une réponse.');
+    expect(describeSummary(clarifySummary(all, done), true)[1]).toBe('Les 4 questions qui bloquaient la publication ont toutes une réponse.');
     expect(describeSummary(clarifySummary([card('c', 'contradiction', 1)], none), true)).toEqual([
-      '1 carte : 1 contradiction.', '1 bloque la publication tant qu\'elle n\'a pas de réponse, dont 1 encore à traiter.',
+      '1 question : 1 contradiction.', '1 bloque la publication tant qu\'elle n\'a pas de réponse, dont 1 encore à traiter.',
     ]);
     expect(describeSummary(clarifySummary([card('i', 'incomplete_or_outdated', 1)], none), true)[1]).toBe('Aucune ne bloque la publication.');
     expect(describeSummary(clarifySummary([], none), true)).toEqual([]);
@@ -190,7 +190,7 @@ describe('« Je suis la recommandation de l\'IA »', () => {
     const error = card('c2', 'probable_error', 1, [{ label: 'A', quotes: [doc('fiche')] }, { label: 'B', quotes: [doc('faq')] }]);
     expect(recommendationOutcome(reco(error, { type: 'accept_side', side: 'A' }), name)).toBe('Le côté A (fiche.docx) sera retenu dans la base.');
     expect(recommendationOutcome(reco(dated, { type: 'complete' }), name)).toBe('Le passage sera complété dans la base, en suivant la recommandation.');
-    expect(recommendationOutcome(reco(dated, null), name)).toMatch(/^Consigne seule : rien n'est ajouté ni tranché/);
+    expect(recommendationOutcome(reco(dated, null), name)).toMatch(/^Consigne seule : rien n'est ajouté ni décidé/);
     const absent = { ...reco(dated, null), absentReferences: [{ documentId: 'email', excerpt: 'voir grille complète en pièce jointe' }] };
     expect(recommendationOutcome(absent, name)).toBe('La base restera telle quelle, avec son avertissement : la source renvoie à un contenu absent de vos documents. Une précision de votre part s\'appliquera seule.');
   });
@@ -336,7 +336,7 @@ describe('Audit 0.16.0 : valeurs regroupées et cartes de versions', () => {
     const card = { id: 'v', nature: 'remplacement_version', rank: 1, analysis: { subject: ' X annule et remplace Y ', reason: '', proposal: '' } } as ReadingCard;
     expect(isVersionCard(card)).toBe(true);
     expect(isBlocking(card)).toBe(true);
-    expect(versionCardWaitingMessage(card)).toBe('La carte « X annule et remplace Y » attend votre réponse.');
+    expect(versionCardWaitingMessage(card)).toBe('La question « X annule et remplace Y » attend votre réponse.');
     expect(versionCardsWaiting([card], new Map())).toEqual([card]);
     expect(versionCardsWaiting([card], new Map([['v', { action: { type: 'later' } } as Decision]]))).toEqual([card]);
     expect(versionCardsWaiting([card], new Map([['v', { action: { type: 'confirm_replacement' } } as Decision]]))).toEqual([]);
